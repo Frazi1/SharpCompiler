@@ -41,15 +41,18 @@ statement: ( declaration
 	| ifstatement
 	| whilestatement
 	| forstatement
-	| funcdeclaration) ;
+	| funcdeclaration
+	| returnstatement
+	| funccall) ;
 
 number :	NUMBER
 		| ID
 		| CHAR;
 mathexpression: term ;
 
-expression:mathexpression
-			| boolexpression;
+expression:  funccallbody
+			| boolexpression
+			| mathexpression;
 
 declaration: TYPE^ ID ';'!
 			| longdeclaration;
@@ -89,12 +92,19 @@ forstatement: FOR^ '('! longdeclarationbody ';'! boolexpression ';'! assignmentb
 
 funcdeclaration: TYPE ID^ '('! paramsdeclaration? ')'! block;
 
-paramsdeclaration: (declarationbody (','! declarationbody)* )  -> ^(PARAMETERS (declarationbody)* );
+funccallbody: ID^ '(' expressioncommalist? ')';
 
+funccall: funccallbody ';'!;
+
+expressioncommalist: expression ( ','! expression)* -> ^(PARAMETERS (expression)* );
+
+paramsdeclaration: ( declarationbody ( ','! declarationbody)* )  -> ^(PARAMETERS ( declarationbody)* );
 
 block: '{'! statementlist '}'!;
 
 statementlist: statement* -> ^(BLOCK statement*) ;
+
+returnstatement: RETURN^ expression ';'! ;
 
 /*
  * Lexer Rules
@@ -108,7 +118,7 @@ SUB:    '-'     ;
 MUL:    '*'     ;
 DIV:    '/'     ;
 ASSIGN: '='     ;
-FUNCT:'funct';
+RETURN:'return';
 TRUE: 'true'    ;
 FALSE: 'false'  ; 
 EQ:		'=='	;
