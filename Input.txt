@@ -31,7 +31,7 @@ print C / 2;
 if(d>9)
 {
 	int k = 8;
-	//while( true || false)
+	while( true || false)
 	y = 7;
 }
 else

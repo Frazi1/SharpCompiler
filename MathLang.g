@@ -38,7 +38,8 @@ public execute:
 
 statement: ( declaration 
 	| assignment
-	| ifstatement) ;
+	| ifstatement
+	| whilestatement) ;
 
 number :	NUMBER
 		| ID;
@@ -71,6 +72,9 @@ boolvar: TRUE
 		| compare;
 
 ifstatement: IF^ '('! boolexpression ')'! (block | statement) (ELSE! (block | statement))* ;
+
+whilestatement: WHILE^ '('! boolexpression ')'! (block | statement);
+
 
 block: '{'! statementlist '}'!;
 
