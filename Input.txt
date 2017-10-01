@@ -24,6 +24,17 @@ if ( A * 4 == 7)
 
 print C / 2;
 */
-int a = 1;
-u = (8-6)*3;
-bool i = true && false || ( a > 6*(67 + 8)  && a>2);
+//int a = 1;
+//u = (8-6)*3;
+//bool i = true && false || ( a > 6*(67 + 8)  && a>2);
+
+if(d>9)
+{
+	int k = 8;
+	//while( true || false)
+	y = 7;
+}
+else
+{
+	int y =0-8; int y =0-8;
+}

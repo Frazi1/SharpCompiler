@@ -14,6 +14,7 @@ tokens {
   PRINT   = 'print'   ;
   INPUT   = 'input'   ;
   IF = 'if'           ;
+  ELSE = 'else'		  ;
   FOR = 'for'         ;
   FUNCTION = 'function' ;
   RETURN = 'return'   ;
@@ -21,7 +22,6 @@ tokens {
   BLOCK               ;
   PROGRAM             ;
   PARAMS              ;
-  VAR				;
 }
 
 
@@ -33,12 +33,12 @@ tokens {
  */
 
 public execute:
-	statement*
+	statementlist EOF!
 ;
 
-statement: (expression 
-	| declaration 
-	| assignment) ;
+statement: ( declaration 
+	| assignment
+	| ifstatement) ;
 
 number :	NUMBER
 		| ID;
@@ -70,6 +70,11 @@ boolvar: TRUE
 		| FALSE
 		| compare;
 
+ifstatement: IF^ '('! boolexpression ')'! (block | statement) (ELSE! (block | statement))* ;
+
+block: '{'! statementlist '}'!;
+
+statementlist: statement* -> ^(BLOCK statement*) ;
 
 /*
  * Lexer Rules
