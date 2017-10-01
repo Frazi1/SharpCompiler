@@ -14,7 +14,10 @@ namespace MathLang
 
 
     public static void Main(string[] args) {
-      try {
+      try
+      {
+
+          int Y = 't' + 7;
         // в зависимости от наличия параметров командной строки разбираем
         // либо файл с именем, переданным первым параметром, либо стандартный ввод
         ICharStream input = args.Length == 1 ? (ICharStream)new ANTLRFileStream(args[0])

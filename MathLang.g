@@ -39,10 +39,13 @@ public execute:
 statement: ( declaration 
 	| assignment
 	| ifstatement
-	| whilestatement) ;
+	| whilestatement
+	| forstatement
+	| funcdeclaration) ;
 
 number :	NUMBER
-		| ID;
+		| ID
+		| CHAR;
 mathexpression: term ;
 
 expression:mathexpression
@@ -50,7 +53,12 @@ expression:mathexpression
 
 declaration: TYPE^ ID ';'!
 			| longdeclaration;
+
+declarationbody: TYPE^ ID ;
+
 longdeclaration:TYPE ID ASSIGN expression ';'! -> ^(ASSIGN ^(TYPE ID) expression) ;
+
+longdeclarationbody: TYPE ID ASSIGN expression -> ^(ASSIGN ^(TYPE ID) expression) ;
 
 variable: (TYPE | ARRAY)^ ID;
 add: mul ( (ADD | SUB)^ mul )*;
@@ -62,8 +70,10 @@ term: add;
 group: '('! term ')'! | number;
 
 assignment: ID ASSIGN^ expression ';'!;
+assignmentbody: ID ASSIGN^ expression ;
+
 boolexpression: boolterm;
-boolterm: or;
+boolterm: or ( (EQ | NEQ)^ or )?;
 or: and (OR^ and)*;
 and: boolgroup (AND^ boolgroup)*;
 boolgroup: '('! boolterm ')'! | boolvar;
@@ -74,6 +84,12 @@ boolvar: TRUE
 ifstatement: IF^ '('! boolexpression ')'! (block | statement) (ELSE! (block | statement))* ;
 
 whilestatement: WHILE^ '('! boolexpression ')'! (block | statement);
+
+forstatement: FOR^ '('! longdeclarationbody ';'! boolexpression ';'! assignmentbody ')'! (block | statement);
+
+funcdeclaration: TYPE ID^ '('! paramsdeclaration? ')'! block;
+
+paramsdeclaration: (declarationbody (','! declarationbody)* )  -> ^(PARAMETERS (declarationbody)* );
 
 
 block: '{'! statementlist '}'!;
@@ -92,7 +108,7 @@ SUB:    '-'     ;
 MUL:    '*'     ;
 DIV:    '/'     ;
 ASSIGN: '='     ;
-
+FUNCT:'funct';
 TRUE: 'true'    ;
 FALSE: 'false'  ; 
 EQ:		'=='	;
@@ -101,7 +117,7 @@ GR:		'>'		;
 GREQ:   '>='	;
 LS:		'<'		;
 LSEQ:	'<='	;
-
+PARAMETERS: 'parameters';
 OR:		'||'	;
 AND:	'&&'	;
 WS:
@@ -109,7 +125,9 @@ WS:
     $channel=Hidden;
   }
 ;
+CHAR:  '\''('a'..'z')'\'' ;
 ID:		('a'..'z')+;
+
 
 
 SL_COMMENT:
