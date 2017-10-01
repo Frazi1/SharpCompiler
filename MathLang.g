@@ -14,6 +14,7 @@ tokens {
   PRINT   = 'print'   ;
   INPUT   = 'input'   ;
   IF = 'if'           ;
+  ELSE = 'else';
   FOR = 'for'         ;
   FUNCTION = 'function' ;
   RETURN = 'return'   ;
@@ -21,7 +22,6 @@ tokens {
   BLOCK               ;
   PROGRAM             ;
   PARAMS              ;
-  VAR				;
 }
 
 
@@ -33,23 +33,31 @@ tokens {
  */
 
 public execute:
-	statement*
+	statementlist EOF!
 ;
 
-statement: (expression 
-	| declaration 
-	| assignment) ;
+statementlist: statement* -> ^(BLOCK statement*) ;
 
-number :	NUMBER
+statement: (
+	declaration 
+	| assignment
+	| ifstatement
+	| whilestatement
+	| forstatement) ;
+
+number : NUMBER
 		| ID;
 mathexpression: term ;
 
-expression:mathexpression
+expression: mathexpression
 			| boolexpression;
 
-declaration: TYPE^ ID ';'!
+declaration: TYPE^ ID';'!
 			| longdeclaration;
-longdeclaration:TYPE ID ASSIGN expression ';'! -> ^(ASSIGN ^(TYPE ID) expression) ;
+longdeclaration: TYPE ID ASSIGN expression ';'! -> ^(ASSIGN ^(TYPE ID) expression) ;
+
+declarationbody: TYPE^ ID ;
+longdeclarationbody: TYPE ID ASSIGN expression  -> ^(ASSIGN ^(TYPE ID) expression) ;
 
 variable: (TYPE | ARRAY)^ ID;
 add: mul ( (ADD | SUB)^ mul )*;
@@ -61,6 +69,8 @@ term: add;
 group: '('! term ')'! | number;
 
 assignment: ID ASSIGN^ expression ';'!;
+assignmentbody: ID ASSIGN^ expression ;
+
 boolexpression: boolterm;
 boolterm: or;
 or: and (OR^ and)*;
@@ -68,9 +78,16 @@ and: boolgroup (AND^ boolgroup)*;
 boolgroup: '('! boolterm ')'! | boolvar;
 boolvar: TRUE
 		| FALSE
-		| compare;
+		| compare
+;
 
+ifstatement: IF^ '('! boolexpression ')'! (block | statement) (ELSE! (block | statement))* ;
 
+whilestatement: WHILE^ '('! boolexpression ')'! (block | statement);
+
+forstatement: FOR '('! longdeclarationbody ';' boolexpression ';' assignmentbody ')'! (block | statement);
+
+block: '{'! statementlist '}'!;
 /*
  * Lexer Rules
  */
@@ -84,8 +101,10 @@ MUL:    '*'     ;
 DIV:    '/'     ;
 ASSIGN: '='     ;
 
-TRUE: 'true'    ;
-FALSE: 'false'  ; 
+
+TRUE:  'true'   ;
+FALSE: 'false'  ;
+
 EQ:		'=='	;
 NEQ:	'!='	;
 GR:		'>'		;

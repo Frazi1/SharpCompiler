@@ -14,8 +14,14 @@ namespace MathLang
 
 
     public static void Main(string[] args) {
-      try {
-        // в зависимости от наличия параметров командной строки разбираем
+      try
+      {
+          bool k = true;
+          for (int i=0; i < 10; k=false)
+          {
+              
+          }
+          // в зависимости от наличия параметров командной строки разбираем
         // либо файл с именем, переданным первым параметром, либо стандартный ввод
         ICharStream input = args.Length == 1 ? (ICharStream)new ANTLRFileStream(args[0])
                                              : (ICharStream)new ANTLRReaderStream(Console.In);
