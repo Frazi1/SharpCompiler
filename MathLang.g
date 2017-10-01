@@ -36,34 +36,71 @@ public execute:
 	statement*
 ;
 
-statement: (expression | declaration) ';'! ;
-number :	NUMBER ;
-expression: term ;
-declaration: variable (ASSIGN expression)? -> ^(ASSIGN (variable expression)?);
-variable: (TYPE | ARRAY) ID;
+statement: (expression 
+	| declaration 
+	| assignment) ;
+
+number :	NUMBER
+		| ID;
+mathexpression: term ;
+
+expression:mathexpression
+			| boolexpression;
+
+declaration: TYPE^ ID ';'!
+			| longdeclaration;
+longdeclaration:TYPE ID ASSIGN expression ';'! -> ^(ASSIGN ^(TYPE ID) expression) ;
+
+variable: (TYPE | ARRAY)^ ID;
 add: mul ( (ADD | SUB)^ mul )*;
 mul: group ( (MUL | DIV)^ group)*;
+compare: add ( ( GREQ | LSEQ | NEQ | EQ | GR | LS)^ add )?  ;
 
 term: add;
 
-group: '(' term ')' | number;
+group: '('! term ')'! | number;
+
+assignment: ID ASSIGN^ expression ';'!;
+boolexpression: boolterm;
+boolterm: or;
+or: and (OR^ and)*;
+and: boolgroup (AND^ boolgroup)*;
+boolgroup: '('! boolterm ')'! | boolvar;
+boolvar: TRUE
+		| FALSE
+		| compare;
+
+
 /*
  * Lexer Rules
  */
 ARRAY: (TYPE '[]');
-TYPE:	'int';
+TYPE:	'int' | 'bool' | 'char';
+ACCESS_MODIFIER: 'public' | 'private';
 NUMBER: ('0'..'9')+ ;
-ID:		('a'..'z')+;
 ADD:    '+'     ;
 SUB:    '-'     ;
 MUL:    '*'     ;
 DIV:    '/'     ;
 ASSIGN: '='     ;
+
+TRUE: 'true'    ;
+FALSE: 'false'  ; 
+EQ:		'=='	;
+NEQ:	'!='	;
+GR:		'>'		;
+GREQ:   '>='	;
+LS:		'<'		;
+LSEQ:	'<='	;
+
+OR:		'||'	;
+AND:	'&&'	;
 WS:
   ( ' ' | '\t' |  '\f' | '\r' | '\n' )+ {
     $channel=Hidden;
   }
 ;
+ID:		('a'..'z')+;
 
 
 SL_COMMENT:

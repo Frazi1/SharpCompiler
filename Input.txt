@@ -25,4 +25,5 @@ if ( A * 4 == 7)
 print C / 2;
 */
 int a = 1;
-int b = 2;
+u = (8-6)*3;
+bool i = true && false || ( a > 6*(67 + 8)  && a>2);
