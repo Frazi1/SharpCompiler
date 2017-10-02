@@ -56,9 +56,10 @@ mathexpression: term ;
 
 expression:  
 			 newexpression
-			| funccallbody
-			| boolexpression
-			| mathexpression
+		/*	| funccallbody
+		*	| boolexpression
+		*	| mathexpression
+		*/
 ;
 
 declaration: declarationbody ';'!
@@ -98,8 +99,8 @@ funccallbody: ID^ '(' expressioncommalist? ')';
 funccall: funccallbody ';'!;
 expressioncommalist: expression ( ','! expression)* -> ^(PARAMETERS (expression)* );
 
-
-newexpression: KEYWORD_NEW TYPE ( ( '['! number ']'! ('{'! expressioncommalist? '}'!)* ) );
+/*ARRAY HERE*/
+newexpression: KNEW TYPE0 SQRBL! NUMBER SQRBR! ;/*'['! NUMBER ']'! -> ^(PARAMETERS KNEW TYPE0);*/
 
 block: '{'! statementlist '}'!;
 
@@ -108,11 +109,12 @@ statementlist: statement* -> ^(BLOCK statement*) ;
 /*
  * Lexer Rules
  */
-TYPE:	TYPEDEF | ARRAY;
-TYPEDEF: 'int' | 'bool' | 'char';
-ARRAY: (TYPEDEF '[]');
+KNEW: 'new';
+SQRBL:'[';
+SQRBR:']';
+TYPE0:	'int' | 'bool' | 'char' ;
+TYPE:	TYPE0 (SQRBL SQRBR)+;
 ACCESS_MODIFIER: 'public' | 'private';
-KEYWORD_NEW: 'new';
 NUMBER: ('0'..'9')+ ;
 ADD:    '+'     ;
 SUB:    '-'     ;

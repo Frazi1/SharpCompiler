@@ -17,12 +17,6 @@ namespace MathLang
         {
             try
             {
-                int a = 5;
-                int b = new int();
-                int[] ra = new int['i'];
-                Console.WriteLine(7 + -8);
-                int Y = 7 + -8;
-
                 // в зависимости от наличия параметров командной строки разбираем
                 // либо файл с именем, переданным первым параметром, либо стандартный ввод
                 ICharStream input = args.Length == 1 ? (ICharStream)new ANTLRFileStream(args[0])
