@@ -1,9 +1,9 @@
 //int i = 8+f(k);
 int a()
 {
-	int[] arr;
+	int[] arr = new int[5];
 	char u = -(7-(-3));
-	bool b = !(!b&&true);
+	 b = !(!b&&true);
 	return u;
 	t(4*(6+5+(2*3)), !true==true, g(2));
 	return t(y());

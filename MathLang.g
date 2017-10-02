@@ -22,6 +22,9 @@ tokens {
   BLOCK               ;
   PROGRAM             ;
   PARAMS              ;
+  VARDECLARATION = 'vardeclaration';
+  FUNCDECLARATION = 'funcdeclaration';
+  VARASSIGNMENT = 'varassignment';
 }
 
 
@@ -51,18 +54,19 @@ number :  NUMBER
 		| CHAR;
 mathexpression: term ;
 
-expression:  funccallbody
+expression:  
+			 newexpression
+			| funccallbody
 			| boolexpression
-			| mathexpression;
+			| mathexpression
+;
 
 declaration: declarationbody ';'!
 			| longdeclaration;
 
-declarationbody: TYPE^ ID ;
+declarationbody: TYPE ID -> ^(VARDECLARATION TYPE ID) ;
 longdeclaration: longdeclarationbody ';'! ;
-longdeclarationbody: TYPE ID ASSIGN expression -> ^(ASSIGN ^(TYPE ID) expression) ;
-
-variable: (TYPE | ARRAY)^ ID;
+longdeclarationbody: TYPE ID ASSIGN expression -> ^(VARDECLARATION TYPE ID expression) ;
 
 add: mul ( (ADD | SUB)^ mul )*;
 mul: group ( (MUL | DIV)^ group)*;
@@ -71,7 +75,7 @@ term: add;
 group: (SUB^)? '('! term ')'! | number;
 
 assignment: assignmentbody ';'!;
-assignmentbody: ID ASSIGN^ expression ;
+assignmentbody: ID ASSIGN expression -> ^(VARASSIGNMENT ID expression);
 
 boolexpression: boolterm ;
 boolterm: or ( (EQ | NEQ)^ or )?;
@@ -87,16 +91,20 @@ whilestatement: WHILE^ '('! boolexpression ')'! (block | statement);
 forstatement: FOR^ '('! longdeclarationbody ';'! boolexpression ';'! assignmentbody ')'! (block | statement);
 returnstatement: RETURN^ expression ';'! ;
 
-funcdeclaration: TYPE ID^ '('! paramsdeclaration? ')'! block -> ^(ID ^(RETURNS TYPE) '('! paramsdeclaration? ')'! block);
+funcdeclaration: TYPE ID^ '('! paramsdeclaration? ')'! block -> ^(FUNCDECLARATION ID ^(RETURNS TYPE) '('! paramsdeclaration? ')'! block);
 paramsdeclaration: ( declarationbody ( ','! declarationbody)* )  -> ^(PARAMETERS ( declarationbody)* );
 
 funccallbody: ID^ '(' expressioncommalist? ')';
 funccall: funccallbody ';'!;
 expressioncommalist: expression ( ','! expression)* -> ^(PARAMETERS (expression)* );
 
+
+newexpression: KEYWORD_NEW TYPE ( ( '['! number ']'! ('{'! expressioncommalist? '}'!)* ) );
+
 block: '{'! statementlist '}'!;
 
 statementlist: statement* -> ^(BLOCK statement*) ;
+
 /*
  * Lexer Rules
  */
@@ -104,6 +112,7 @@ TYPE:	TYPEDEF | ARRAY;
 TYPEDEF: 'int' | 'bool' | 'char';
 ARRAY: (TYPEDEF '[]');
 ACCESS_MODIFIER: 'public' | 'private';
+KEYWORD_NEW: 'new';
 NUMBER: ('0'..'9')+ ;
 ADD:    '+'     ;
 SUB:    '-'     ;
