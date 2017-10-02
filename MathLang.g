@@ -47,6 +47,7 @@ statement: ( declaration
 
 number :  NUMBER
 		| ID
+		| funccallbody
 		| CHAR;
 mathexpression: term ;
 
@@ -67,7 +68,7 @@ add: mul ( (ADD | SUB)^ mul )*;
 mul: group ( (MUL | DIV)^ group)*;
 compare: add ( ( GREQ | LSEQ | NEQ | EQ | GR | LS)^ add )?  ;
 term: add;
-group: '('! term ')'! | number;
+group: (SUB^)? '('! term ')'! | number;
 
 assignment: assignmentbody ';'!;
 assignmentbody: ID ASSIGN^ expression ;
@@ -99,8 +100,9 @@ statementlist: statement* -> ^(BLOCK statement*) ;
 /*
  * Lexer Rules
  */
-ARRAY: (TYPE '[]');
-TYPE:	'int' | 'bool' | 'char';
+TYPE:	TYPEDEF | ARRAY;
+TYPEDEF: 'int' | 'bool' | 'char';
+ARRAY: (TYPEDEF '[]');
 ACCESS_MODIFIER: 'public' | 'private';
 NUMBER: ('0'..'9')+ ;
 ADD:    '+'     ;
