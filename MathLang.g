@@ -45,7 +45,7 @@ statement: ( declaration
 	| returnstatement
 	| funccall) ;
 
-number :	NUMBER
+number :  NUMBER
 		| ID
 		| CHAR;
 mathexpression: term ;
@@ -54,58 +54,48 @@ expression:  funccallbody
 			| boolexpression
 			| mathexpression;
 
-declaration: TYPE^ ID ';'!
+declaration: declarationbody ';'!
 			| longdeclaration;
 
 declarationbody: TYPE^ ID ;
-
-longdeclaration:TYPE ID ASSIGN expression ';'! -> ^(ASSIGN ^(TYPE ID) expression) ;
-
+longdeclaration: longdeclarationbody ';'! ;
 longdeclarationbody: TYPE ID ASSIGN expression -> ^(ASSIGN ^(TYPE ID) expression) ;
 
 variable: (TYPE | ARRAY)^ ID;
+
 add: mul ( (ADD | SUB)^ mul )*;
 mul: group ( (MUL | DIV)^ group)*;
 compare: add ( ( GREQ | LSEQ | NEQ | EQ | GR | LS)^ add )?  ;
-
 term: add;
-
 group: '('! term ')'! | number;
 
-assignment: ID ASSIGN^ expression ';'!;
+assignment: assignmentbody ';'!;
 assignmentbody: ID ASSIGN^ expression ;
 
-boolexpression: boolterm;
+boolexpression: boolterm ;
 boolterm: or ( (EQ | NEQ)^ or )?;
 or: and (OR^ and)*;
 and: boolgroup (AND^ boolgroup)*;
-boolgroup: '('! boolterm ')'! | boolvar;
+boolgroup: (NOT^)? ( '('! boolterm ')'! | boolvar );
 boolvar: TRUE
 		| FALSE
 		| compare;
 
 ifstatement: IF^ '('! boolexpression ')'! (block | statement) (ELSE! (block | statement))* ;
-
 whilestatement: WHILE^ '('! boolexpression ')'! (block | statement);
-
 forstatement: FOR^ '('! longdeclarationbody ';'! boolexpression ';'! assignmentbody ')'! (block | statement);
+returnstatement: RETURN^ expression ';'! ;
 
-funcdeclaration: TYPE ID^ '('! paramsdeclaration? ')'! block;
+funcdeclaration: TYPE ID^ '('! paramsdeclaration? ')'! block -> ^(ID ^(RETURNS TYPE) '('! paramsdeclaration? ')'! block);
+paramsdeclaration: ( declarationbody ( ','! declarationbody)* )  -> ^(PARAMETERS ( declarationbody)* );
 
 funccallbody: ID^ '(' expressioncommalist? ')';
-
 funccall: funccallbody ';'!;
-
 expressioncommalist: expression ( ','! expression)* -> ^(PARAMETERS (expression)* );
-
-paramsdeclaration: ( declarationbody ( ','! declarationbody)* )  -> ^(PARAMETERS ( declarationbody)* );
 
 block: '{'! statementlist '}'!;
 
 statementlist: statement* -> ^(BLOCK statement*) ;
-
-returnstatement: RETURN^ expression ';'! ;
-
 /*
  * Lexer Rules
  */
@@ -118,7 +108,8 @@ SUB:    '-'     ;
 MUL:    '*'     ;
 DIV:    '/'     ;
 ASSIGN: '='     ;
-RETURN:'return';
+RETURN:	'return';
+RETURNS:'returns';
 TRUE: 'true'    ;
 FALSE: 'false'  ; 
 EQ:		'=='	;
@@ -127,6 +118,7 @@ GR:		'>'		;
 GREQ:   '>='	;
 LS:		'<'		;
 LSEQ:	'<='	;
+NOT:	'!'		;
 PARAMETERS: 'parameters';
 OR:		'||'	;
 AND:	'&&'	;
