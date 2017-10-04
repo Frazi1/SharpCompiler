@@ -28,6 +28,7 @@ tokens {
   ARRAYELEMENTASSIGNMENT = 'arrayelementassignment';
   ARRAYELEMENT = 'arrayelement';
   NEWWORD = 'newword';
+  NEWVAR = 'newvar';
 }
 
 
@@ -73,7 +74,8 @@ declaration: declarationbody ';'!
 
 declarationbody: TYPE ID -> ^(VARDECLARATION TYPE ID) ;
 longdeclaration: longdeclarationbody ';'! ;
-longdeclarationbody: TYPE ID ASSIGN expression -> ^(VARDECLARATION TYPE ID expression) ;
+longdeclarationbody: (TYPE0 ID ASSIGN expression -> ^(VARDECLARATION TYPE0 ID expression)) 
+		| (TYPE ID ASSIGN expression -> ^(VARDECLARATION TYPE ID expression) );
 
 add: mul ( (ADD | SUB)^ mul )*;
 mul: group ( (MUL | DIV)^ group)*;
@@ -107,7 +109,8 @@ funccall: funccallbody ';'!;
 expressioncommalist: expression ( ','! expression)* -> ^(PARAMETERS (expression)* );
 
 /*ARRAY HERE*/
-newexpression: KNEW TYPE0 SQRBL! NUMBER SQRBR! NUMBER -> ^(NEWWORD TYPE0 NUMBER);
+newexpression: (KNEW TYPE0 SQRBL! NUMBER SQRBR! NUMBER -> ^(NEWWORD TYPE0 NUMBER))  
+		| (KNEW TYPE0 '()' -> ^(NEWVAR TYPE0));
 
 block: '{'! statementlist '}'!;
 
@@ -119,8 +122,9 @@ statementlist: statement* -> ^(BLOCK statement*) ;
 KNEW: 'new';
 SQRBL:'[';
 SQRBR:']';
-TYPE0:	'int' | 'bool' | 'char' ;
-TYPE:	TYPE0 (SQRBL SQRBR)+;
+
+TYPE:	('int' | 'bool' | 'char') SQRBL SQRBR;
+TYPE0:	('int' | 'bool' | 'char') ;
 ACCESS_MODIFIER: 'public' | 'private';
 NUMBER: ('0'..'9')+ ;
 ADD:    '+'     ;
