@@ -25,6 +25,9 @@ tokens {
   VARDECLARATION = 'vardeclaration';
   FUNCDECLARATION = 'funcdeclaration';
   VARASSIGNMENT = 'varassignment';
+  ARRAYELEMENTASSIGNMENT = 'arrayelementassignment';
+  ARRAYELEMENT = 'arrayelement';
+  NEWWORD = 'newword';
 }
 
 
@@ -51,16 +54,19 @@ statement: ( declaration
 number :  NUMBER
 		| ID
 		| funccallbody
-		| CHAR;
+		| CHAR
+		| arrayelement;
 mathexpression: term ;
 
 expression:  
 			 newexpression
-		/*	| funccallbody
-		*	| boolexpression
-		*	| mathexpression
-		*/
+		| funccallbody
+		| boolexpression
+		| mathexpression
+		
 ;
+
+arrayelement:  ID '[' number ']' -> ^(ARRAYELEMENT ID number) ;
 
 declaration: declarationbody ';'!
 			| longdeclaration;
@@ -76,7 +82,8 @@ term: add;
 group: (SUB^)? '('! term ')'! | number;
 
 assignment: assignmentbody ';'!;
-assignmentbody: ID ASSIGN expression -> ^(VARASSIGNMENT ID expression);
+assignmentbody: (ID ASSIGN expression -> ^(VARASSIGNMENT ID expression)) | 
+	( arrayelement ASSIGN expression -> ^(ARRAYELEMENTASSIGNMENT arrayelement expression));
 
 boolexpression: boolterm ;
 boolterm: or ( (EQ | NEQ)^ or )?;
@@ -100,7 +107,7 @@ funccall: funccallbody ';'!;
 expressioncommalist: expression ( ','! expression)* -> ^(PARAMETERS (expression)* );
 
 /*ARRAY HERE*/
-newexpression: KNEW TYPE0 SQRBL! NUMBER SQRBR! ;/*'['! NUMBER ']'! -> ^(PARAMETERS KNEW TYPE0);*/
+newexpression: KNEW TYPE0 SQRBL! NUMBER SQRBR! NUMBER -> ^(NEWWORD TYPE0 NUMBER);
 
 block: '{'! statementlist '}'!;
 

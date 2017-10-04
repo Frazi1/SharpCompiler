@@ -17,6 +17,7 @@ namespace MathLang
         {
             try
             {
+                //var arr = new int[8] { 1,2,3};
                 // в зависимости от наличия параметров командной строки разбираем
                 // либо файл с именем, переданным первым параметром, либо стандартный ввод
                 ICharStream input = args.Length == 1 ? (ICharStream)new ANTLRFileStream(args[0])
