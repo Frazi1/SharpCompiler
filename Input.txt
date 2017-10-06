@@ -1,6 +1,10 @@
-int[] arr = new char [8];
-//int[] arr = new char []{'t', 't'};
-int y = new int();
+void testfunc(){
+	int[] b;
+	int[,,][] b = new int[1] {1,2,4};
+	int a = new int(true){!(false!=true), 5*(21-13)};
+	new int();
 
-//arr[5] = 123;
-//k = 7;
+
+}
+
+

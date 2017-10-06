@@ -24,11 +24,14 @@ tokens {
   PARAMS              ;
   VARDECLARATION = 'vardeclaration';
   FUNCDECLARATION = 'funcdeclaration';
+  ARRAYDECLARATION = 'arraydeclaration';
   VARASSIGNMENT = 'varassignment';
   ARRAYELEMENTASSIGNMENT = 'arrayelementassignment';
   ARRAYELEMENT = 'arrayelement';
   NEWWORD = 'newword';
   NEWVAR = 'newvar';
+  ARRAY_INITIALIZER = 'array_initializer';
+  OBJECT_INITIALIZER = 'object_initializer';
 }
 
 
@@ -50,8 +53,13 @@ statement: ( declaration
 	| forstatement
 	| funcdeclaration
 	| returnstatement
-	| funccall) ;
+	| funccall
+	| newexpression ';'!) ;
 
+type: TYPE ;
+//array_type: TYPE ('[' ']')+ ; 
+array_type: TYPE ARRAY_DECLARATION_MARK;
+any_type: type | array_type | VOID;
 number :  NUMBER
 		| ID
 		| funccallbody
@@ -72,10 +80,12 @@ arrayelement:  ID '[' number ']' -> ^(ARRAYELEMENT ID number) ;
 declaration: declarationbody ';'!
 			| longdeclaration;
 
-declarationbody: TYPE ID -> ^(VARDECLARATION TYPE ID) ;
+declarationbody: (type ID -> ^(VARDECLARATION type ID) )
+				| (array_type ID -> ^(ARRAYDECLARATION array_type ID))
+				;
 longdeclaration: longdeclarationbody ';'! ;
-longdeclarationbody: (TYPE0 ID ASSIGN expression -> ^(VARDECLARATION TYPE0 ID expression)) 
-		| (TYPE ID ASSIGN expression -> ^(VARDECLARATION TYPE ID expression) );
+longdeclarationbody: (type ID ASSIGN expression  -> ^(VARDECLARATION type ID expression))
+					| (array_type ID ASSIGN expression -> ^(ARRAYDECLARATION array_type ID expression));
 
 add: mul ( (ADD | SUB)^ mul )*;
 mul: group ( (MUL | DIV)^ group)*;
@@ -101,7 +111,7 @@ whilestatement: WHILE^ '('! boolexpression ')'! (block | statement);
 forstatement: FOR^ '('! longdeclarationbody ';'! boolexpression ';'! assignmentbody ')'! (block | statement);
 returnstatement: RETURN^ expression ';'! ;
 
-funcdeclaration: TYPE ID^ '('! paramsdeclaration? ')'! block -> ^(FUNCDECLARATION ID ^(RETURNS TYPE) '('! paramsdeclaration? ')'! block);
+funcdeclaration: any_type ID^ '('! paramsdeclaration? ')'! block -> ^(FUNCDECLARATION ID ^(RETURNS any_type) '('! paramsdeclaration? ')'! block);
 paramsdeclaration: ( declarationbody ( ','! declarationbody)* )  -> ^(PARAMETERS ( declarationbody)* );
 
 funccallbody: ID^ '(' expressioncommalist? ')';
@@ -109,8 +119,10 @@ funccall: funccallbody ';'!;
 expressioncommalist: expression ( ','! expression)* -> ^(PARAMETERS (expression)* );
 
 /*ARRAY HERE*/
-newexpression: (KNEW TYPE0 SQRBL! NUMBER SQRBR! NUMBER -> ^(NEWWORD TYPE0 NUMBER))  
-		| (KNEW TYPE0 '()' -> ^(NEWVAR TYPE0));
+object_initializer:  '{' expressioncommalist '}' -> ^(OBJECT_INITIALIZER expressioncommalist) ;
+newexpression: simple_var_initializer | array_initializer ;
+simple_var_initializer: KNEW type '(' expressioncommalist? ')' object_initializer? -> ^(NEWVAR type expressioncommalist? object_initializer?);
+array_initializer: KNEW type '[' number ']' object_initializer? -> ^(ARRAY_INITIALIZER type '['! number? ']'! object_initializer?);
 
 block: '{'! statementlist '}'!;
 
@@ -120,11 +132,12 @@ statementlist: statement* -> ^(BLOCK statement*) ;
  * Lexer Rules
  */
 KNEW: 'new';
+ARRAY_DECLARATION_MARK: (SQRBL ','* SQRBR)+;
 SQRBL:'[';
 SQRBR:']';
 
-TYPE:	('int' | 'bool' | 'char') SQRBL SQRBR;
-TYPE0:	('int' | 'bool' | 'char') ;
+TYPE: 'int' | 'bool' | 'char';
+VOID: 'void';
 ACCESS_MODIFIER: 'public' | 'private';
 NUMBER: ('0'..'9')+ ;
 ADD:    '+'     ;
