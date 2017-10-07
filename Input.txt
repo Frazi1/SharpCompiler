@@ -1,21 +1,18 @@
 
 void testfunc(int a)
 {
-	//int[] b;
-	//int[] b = new int[1] {1,2,4};
-	//int[] a = new int[]{!(false!=true), 5*(21-13)};
-	//new int();
-	//int a  = new int(){8};
-
-	int innerfunc(int[] inpu, char inpus)
+	do
 	{
-		return 3;
-	}
-	do{
 		Console.WriteLine(innerfunc(new int[5]{1,2,3,4,5}));
 
 	} while(true!=true);
-		int adssads = Console.ReadLine(kjlkdjalsk);
+int adssads = Console.ReadLine();
 	innerfunc(1);
+
+
 }
 
+		int y()
+	{
+	y = 7;
+	}

@@ -1,4 +1,4 @@
-// $ANTLR 3.3 Nov 30, 2010 12:50:56 MathLang.g 2017-10-07 22:00:05
+// $ANTLR 3.3 Nov 30, 2010 12:50:56 MathLang.g 2017-10-07 22:54:57
 
 // The variable 'variable' is assigned but its value is never used.
 #pragma warning disable 219
@@ -954,12 +954,13 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = T__61;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:32:7: ( ',' )
+			// MathLang.g:32:7: ( '()' )
 			DebugEnterAlt(1);
-			// MathLang.g:32:9: ','
+			// MathLang.g:32:9: '()'
 			{
 			DebugLocation(32, 9);
-			Match(','); 
+			Match("()"); 
+
 
 			}
 
@@ -989,12 +990,12 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = T__62;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:33:7: ( '{' )
+			// MathLang.g:33:7: ( ',' )
 			DebugEnterAlt(1);
-			// MathLang.g:33:9: '{'
+			// MathLang.g:33:9: ','
 			{
 			DebugLocation(33, 9);
-			Match('{'); 
+			Match(','); 
 
 			}
 
@@ -1024,12 +1025,12 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = T__63;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:34:7: ( '}' )
+			// MathLang.g:34:7: ( '{' )
 			DebugEnterAlt(1);
-			// MathLang.g:34:9: '}'
+			// MathLang.g:34:9: '{'
 			{
 			DebugLocation(34, 9);
-			Match('}'); 
+			Match('{'); 
 
 			}
 
@@ -1059,12 +1060,12 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = T__64;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:35:7: ( '.' )
+			// MathLang.g:35:7: ( '}' )
 			DebugEnterAlt(1);
-			// MathLang.g:35:9: '.'
+			// MathLang.g:35:9: '}'
 			{
 			DebugLocation(35, 9);
-			Match('.'); 
+			Match('}'); 
 
 			}
 
@@ -1094,13 +1095,12 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = T__65;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:36:7: ( 'WriteLine' )
+			// MathLang.g:36:7: ( '.' )
 			DebugEnterAlt(1);
-			// MathLang.g:36:9: 'WriteLine'
+			// MathLang.g:36:9: '.'
 			{
 			DebugLocation(36, 9);
-			Match("WriteLine"); 
-
+			Match('.'); 
 
 			}
 
@@ -1130,12 +1130,12 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = T__66;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:37:7: ( 'Write' )
+			// MathLang.g:37:7: ( 'WriteLine' )
 			DebugEnterAlt(1);
-			// MathLang.g:37:9: 'Write'
+			// MathLang.g:37:9: 'WriteLine'
 			{
 			DebugLocation(37, 9);
-			Match("Write"); 
+			Match("WriteLine"); 
 
 
 			}
@@ -1166,12 +1166,12 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = T__67;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:38:7: ( 'ReadLine' )
+			// MathLang.g:38:7: ( 'Write' )
 			DebugEnterAlt(1);
-			// MathLang.g:38:9: 'ReadLine'
+			// MathLang.g:38:9: 'Write'
 			{
 			DebugLocation(38, 9);
-			Match("ReadLine"); 
+			Match("Write"); 
 
 
 			}
@@ -1202,12 +1202,12 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = T__68;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:39:7: ( 'Read' )
+			// MathLang.g:39:7: ( 'ReadLine' )
 			DebugEnterAlt(1);
-			// MathLang.g:39:9: 'Read'
+			// MathLang.g:39:9: 'ReadLine'
 			{
 			DebugLocation(39, 9);
-			Match("Read"); 
+			Match("ReadLine"); 
 
 
 			}
@@ -1238,12 +1238,12 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = T__69;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:40:7: ( '()' )
+			// MathLang.g:40:7: ( 'Read' )
 			DebugEnterAlt(1);
-			// MathLang.g:40:9: '()'
+			// MathLang.g:40:9: 'Read'
 			{
 			DebugLocation(40, 9);
-			Match("()"); 
+			Match("Read"); 
 
 
 			}
@@ -1274,11 +1274,11 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = KNEW;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:147:5: ( 'new' )
+			// MathLang.g:148:5: ( 'new' )
 			DebugEnterAlt(1);
-			// MathLang.g:147:7: 'new'
+			// MathLang.g:148:7: 'new'
 			{
-			DebugLocation(147, 7);
+			DebugLocation(148, 7);
 			Match("new"); 
 
 
@@ -1310,11 +1310,11 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = CONSOLE_WORD;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:148:13: ( 'Console' )
+			// MathLang.g:149:13: ( 'Console' )
 			DebugEnterAlt(1);
-			// MathLang.g:148:15: 'Console'
+			// MathLang.g:149:15: 'Console'
 			{
-			DebugLocation(148, 15);
+			DebugLocation(149, 15);
 			Match("Console"); 
 
 
@@ -1346,13 +1346,13 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = ARRAY_DECLARATION_MARK;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:149:23: ( SQRBL SQRBR )
+			// MathLang.g:150:23: ( SQRBL SQRBR )
 			DebugEnterAlt(1);
-			// MathLang.g:149:25: SQRBL SQRBR
+			// MathLang.g:150:25: SQRBL SQRBR
 			{
-			DebugLocation(149, 25);
+			DebugLocation(150, 25);
 			mSQRBL(); 
-			DebugLocation(149, 31);
+			DebugLocation(150, 31);
 			mSQRBR(); 
 
 			}
@@ -1383,11 +1383,11 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = SQRBL;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:150:6: ( '[' )
+			// MathLang.g:151:6: ( '[' )
 			DebugEnterAlt(1);
-			// MathLang.g:150:7: '['
+			// MathLang.g:151:7: '['
 			{
-			DebugLocation(150, 7);
+			DebugLocation(151, 7);
 			Match('['); 
 
 			}
@@ -1418,11 +1418,11 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = SQRBR;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:151:6: ( ']' )
+			// MathLang.g:152:6: ( ']' )
 			DebugEnterAlt(1);
-			// MathLang.g:151:7: ']'
+			// MathLang.g:152:7: ']'
 			{
-			DebugLocation(151, 7);
+			DebugLocation(152, 7);
 			Match(']'); 
 
 			}
@@ -1453,7 +1453,7 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = TYPE;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:152:5: ( 'int' | 'bool' | 'char' )
+			// MathLang.g:153:5: ( 'int' | 'bool' | 'char' )
 			int alt1=3;
 			try { DebugEnterDecision(1, decisionCanBacktrack[1]);
 			switch (input.LA(1))
@@ -1487,9 +1487,9 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 			{
 			case 1:
 				DebugEnterAlt(1);
-				// MathLang.g:152:7: 'int'
+				// MathLang.g:153:7: 'int'
 				{
-				DebugLocation(152, 7);
+				DebugLocation(153, 7);
 				Match("int"); 
 
 
@@ -1497,9 +1497,9 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 				break;
 			case 2:
 				DebugEnterAlt(2);
-				// MathLang.g:152:15: 'bool'
+				// MathLang.g:153:15: 'bool'
 				{
-				DebugLocation(152, 15);
+				DebugLocation(153, 15);
 				Match("bool"); 
 
 
@@ -1507,9 +1507,9 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 				break;
 			case 3:
 				DebugEnterAlt(3);
-				// MathLang.g:152:24: 'char'
+				// MathLang.g:153:24: 'char'
 				{
-				DebugLocation(152, 24);
+				DebugLocation(153, 24);
 				Match("char"); 
 
 
@@ -1543,11 +1543,11 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = VOID;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:153:5: ( 'void' )
+			// MathLang.g:154:5: ( 'void' )
 			DebugEnterAlt(1);
-			// MathLang.g:153:7: 'void'
+			// MathLang.g:154:7: 'void'
 			{
-			DebugLocation(153, 7);
+			DebugLocation(154, 7);
 			Match("void"); 
 
 
@@ -1579,12 +1579,12 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = NUMBER;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:154:7: ( ( '0' .. '9' )+ )
+			// MathLang.g:155:7: ( ( '0' .. '9' )+ )
 			DebugEnterAlt(1);
-			// MathLang.g:154:9: ( '0' .. '9' )+
+			// MathLang.g:155:9: ( '0' .. '9' )+
 			{
-			DebugLocation(154, 9);
-			// MathLang.g:154:9: ( '0' .. '9' )+
+			DebugLocation(155, 9);
+			// MathLang.g:155:9: ( '0' .. '9' )+
 			int cnt2=0;
 			try { DebugEnterSubRule(2);
 			while (true)
@@ -1604,9 +1604,9 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 				{
 				case 1:
 					DebugEnterAlt(1);
-					// MathLang.g:154:10: '0' .. '9'
+					// MathLang.g:155:10: '0' .. '9'
 					{
-					DebugLocation(154, 10);
+					DebugLocation(155, 10);
 					MatchRange('0','9'); 
 
 					}
@@ -1656,11 +1656,11 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = ADD;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:155:4: ( '+' )
+			// MathLang.g:156:4: ( '+' )
 			DebugEnterAlt(1);
-			// MathLang.g:155:9: '+'
+			// MathLang.g:156:9: '+'
 			{
-			DebugLocation(155, 9);
+			DebugLocation(156, 9);
 			Match('+'); 
 
 			}
@@ -1691,11 +1691,11 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = SUB;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:156:4: ( '-' )
+			// MathLang.g:157:4: ( '-' )
 			DebugEnterAlt(1);
-			// MathLang.g:156:9: '-'
+			// MathLang.g:157:9: '-'
 			{
-			DebugLocation(156, 9);
+			DebugLocation(157, 9);
 			Match('-'); 
 
 			}
@@ -1726,11 +1726,11 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = MUL;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:157:4: ( '*' )
+			// MathLang.g:158:4: ( '*' )
 			DebugEnterAlt(1);
-			// MathLang.g:157:9: '*'
+			// MathLang.g:158:9: '*'
 			{
-			DebugLocation(157, 9);
+			DebugLocation(158, 9);
 			Match('*'); 
 
 			}
@@ -1761,11 +1761,11 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = DIV;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:158:4: ( '/' )
+			// MathLang.g:159:4: ( '/' )
 			DebugEnterAlt(1);
-			// MathLang.g:158:9: '/'
+			// MathLang.g:159:9: '/'
 			{
-			DebugLocation(158, 9);
+			DebugLocation(159, 9);
 			Match('/'); 
 
 			}
@@ -1796,11 +1796,11 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = ASSIGN;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:159:7: ( '=' )
+			// MathLang.g:160:7: ( '=' )
 			DebugEnterAlt(1);
-			// MathLang.g:159:9: '='
+			// MathLang.g:160:9: '='
 			{
-			DebugLocation(159, 9);
+			DebugLocation(160, 9);
 			Match('='); 
 
 			}
@@ -1831,11 +1831,11 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = RETURN;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:160:7: ( 'return' )
+			// MathLang.g:161:7: ( 'return' )
 			DebugEnterAlt(1);
-			// MathLang.g:160:9: 'return'
+			// MathLang.g:161:9: 'return'
 			{
-			DebugLocation(160, 9);
+			DebugLocation(161, 9);
 			Match("return"); 
 
 
@@ -1867,11 +1867,11 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = TRUE;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:161:5: ( 'true' )
+			// MathLang.g:162:5: ( 'true' )
 			DebugEnterAlt(1);
-			// MathLang.g:161:9: 'true'
+			// MathLang.g:162:9: 'true'
 			{
-			DebugLocation(161, 9);
+			DebugLocation(162, 9);
 			Match("true"); 
 
 
@@ -1903,11 +1903,11 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = FALSE;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:162:6: ( 'false' )
+			// MathLang.g:163:6: ( 'false' )
 			DebugEnterAlt(1);
-			// MathLang.g:162:9: 'false'
+			// MathLang.g:163:9: 'false'
 			{
-			DebugLocation(162, 9);
+			DebugLocation(163, 9);
 			Match("false"); 
 
 
@@ -1939,11 +1939,11 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = EQ;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:163:3: ( '==' )
+			// MathLang.g:164:3: ( '==' )
 			DebugEnterAlt(1);
-			// MathLang.g:163:6: '=='
+			// MathLang.g:164:6: '=='
 			{
-			DebugLocation(163, 6);
+			DebugLocation(164, 6);
 			Match("=="); 
 
 
@@ -1975,11 +1975,11 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = NEQ;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:164:4: ( '!=' )
+			// MathLang.g:165:4: ( '!=' )
 			DebugEnterAlt(1);
-			// MathLang.g:164:6: '!='
+			// MathLang.g:165:6: '!='
 			{
-			DebugLocation(164, 6);
+			DebugLocation(165, 6);
 			Match("!="); 
 
 
@@ -2011,11 +2011,11 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = GR;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:165:3: ( '>' )
+			// MathLang.g:166:3: ( '>' )
 			DebugEnterAlt(1);
-			// MathLang.g:165:6: '>'
+			// MathLang.g:166:6: '>'
 			{
-			DebugLocation(165, 6);
+			DebugLocation(166, 6);
 			Match('>'); 
 
 			}
@@ -2046,11 +2046,11 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = GREQ;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:166:5: ( '>=' )
+			// MathLang.g:167:5: ( '>=' )
 			DebugEnterAlt(1);
-			// MathLang.g:166:9: '>='
+			// MathLang.g:167:9: '>='
 			{
-			DebugLocation(166, 9);
+			DebugLocation(167, 9);
 			Match(">="); 
 
 
@@ -2082,11 +2082,11 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = LS;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:167:3: ( '<' )
+			// MathLang.g:168:3: ( '<' )
 			DebugEnterAlt(1);
-			// MathLang.g:167:6: '<'
+			// MathLang.g:168:6: '<'
 			{
-			DebugLocation(167, 6);
+			DebugLocation(168, 6);
 			Match('<'); 
 
 			}
@@ -2117,11 +2117,11 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = LSEQ;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:168:5: ( '<=' )
+			// MathLang.g:169:5: ( '<=' )
 			DebugEnterAlt(1);
-			// MathLang.g:168:7: '<='
+			// MathLang.g:169:7: '<='
 			{
-			DebugLocation(168, 7);
+			DebugLocation(169, 7);
 			Match("<="); 
 
 
@@ -2153,11 +2153,11 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = NOT;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:169:4: ( '!' )
+			// MathLang.g:170:4: ( '!' )
 			DebugEnterAlt(1);
-			// MathLang.g:169:6: '!'
+			// MathLang.g:170:6: '!'
 			{
-			DebugLocation(169, 6);
+			DebugLocation(170, 6);
 			Match('!'); 
 
 			}
@@ -2188,11 +2188,11 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = OR;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:170:3: ( '||' )
+			// MathLang.g:171:3: ( '||' )
 			DebugEnterAlt(1);
-			// MathLang.g:170:6: '||'
+			// MathLang.g:171:6: '||'
 			{
-			DebugLocation(170, 6);
+			DebugLocation(171, 6);
 			Match("||"); 
 
 
@@ -2224,11 +2224,11 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = AND;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:171:4: ( '&&' )
+			// MathLang.g:172:4: ( '&&' )
 			DebugEnterAlt(1);
-			// MathLang.g:171:6: '&&'
+			// MathLang.g:172:6: '&&'
 			{
-			DebugLocation(171, 6);
+			DebugLocation(172, 6);
 			Match("&&"); 
 
 
@@ -2260,12 +2260,12 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = WS;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:172:3: ( ( ' ' | '\\t' | '\\f' | '\\r' | '\\n' )+ )
+			// MathLang.g:173:3: ( ( ' ' | '\\t' | '\\f' | '\\r' | '\\n' )+ )
 			DebugEnterAlt(1);
-			// MathLang.g:173:3: ( ' ' | '\\t' | '\\f' | '\\r' | '\\n' )+
+			// MathLang.g:174:3: ( ' ' | '\\t' | '\\f' | '\\r' | '\\n' )+
 			{
-			DebugLocation(173, 3);
-			// MathLang.g:173:3: ( ' ' | '\\t' | '\\f' | '\\r' | '\\n' )+
+			DebugLocation(174, 3);
+			// MathLang.g:174:3: ( ' ' | '\\t' | '\\f' | '\\r' | '\\n' )+
 			int cnt3=0;
 			try { DebugEnterSubRule(3);
 			while (true)
@@ -2287,7 +2287,7 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 					DebugEnterAlt(1);
 					// MathLang.g:
 					{
-					DebugLocation(173, 3);
+					DebugLocation(174, 3);
 					if ((input.LA(1)>='\t' && input.LA(1)<='\n')||(input.LA(1)>='\f' && input.LA(1)<='\r')||input.LA(1)==' ')
 					{
 						input.Consume();
@@ -2319,7 +2319,7 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 
 			} finally { DebugExitSubRule(3); }
 
-			DebugLocation(173, 41);
+			DebugLocation(174, 41);
 
 			    _channel=Hidden;
 			  
@@ -2352,23 +2352,23 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = CHAR;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:177:5: ( '\\'' ( 'a' .. 'z' ) '\\'' )
+			// MathLang.g:178:5: ( '\\'' ( 'a' .. 'z' ) '\\'' )
 			DebugEnterAlt(1);
-			// MathLang.g:177:8: '\\'' ( 'a' .. 'z' ) '\\''
+			// MathLang.g:178:8: '\\'' ( 'a' .. 'z' ) '\\''
 			{
-			DebugLocation(177, 8);
+			DebugLocation(178, 8);
 			Match('\''); 
-			DebugLocation(177, 12);
-			// MathLang.g:177:12: ( 'a' .. 'z' )
+			DebugLocation(178, 12);
+			// MathLang.g:178:12: ( 'a' .. 'z' )
 			DebugEnterAlt(1);
-			// MathLang.g:177:13: 'a' .. 'z'
+			// MathLang.g:178:13: 'a' .. 'z'
 			{
-			DebugLocation(177, 13);
+			DebugLocation(178, 13);
 			MatchRange('a','z'); 
 
 			}
 
-			DebugLocation(177, 22);
+			DebugLocation(178, 22);
 			Match('\''); 
 
 			}
@@ -2399,12 +2399,12 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = ID;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:178:3: ( ( 'a' .. 'z' )+ )
+			// MathLang.g:179:3: ( ( 'a' .. 'z' )+ )
 			DebugEnterAlt(1);
-			// MathLang.g:178:6: ( 'a' .. 'z' )+
+			// MathLang.g:179:6: ( 'a' .. 'z' )+
 			{
-			DebugLocation(178, 6);
-			// MathLang.g:178:6: ( 'a' .. 'z' )+
+			DebugLocation(179, 6);
+			// MathLang.g:179:6: ( 'a' .. 'z' )+
 			int cnt4=0;
 			try { DebugEnterSubRule(4);
 			while (true)
@@ -2424,9 +2424,9 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 				{
 				case 1:
 					DebugEnterAlt(1);
-					// MathLang.g:178:7: 'a' .. 'z'
+					// MathLang.g:179:7: 'a' .. 'z'
 					{
-					DebugLocation(178, 7);
+					DebugLocation(179, 7);
 					MatchRange('a','z'); 
 
 					}
@@ -2476,15 +2476,15 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = SL_COMMENT;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:182:11: ( '//' ( options {greedy=false; } : . )* ( '\\r' )? '\\n' )
+			// MathLang.g:183:11: ( '//' ( options {greedy=false; } : . )* ( '\\r' )? '\\n' )
 			DebugEnterAlt(1);
-			// MathLang.g:183:3: '//' ( options {greedy=false; } : . )* ( '\\r' )? '\\n'
+			// MathLang.g:184:3: '//' ( options {greedy=false; } : . )* ( '\\r' )? '\\n'
 			{
-			DebugLocation(183, 3);
+			DebugLocation(184, 3);
 			Match("//"); 
 
-			DebugLocation(183, 8);
-			// MathLang.g:183:8: ( options {greedy=false; } : . )*
+			DebugLocation(184, 8);
+			// MathLang.g:184:8: ( options {greedy=false; } : . )*
 			try { DebugEnterSubRule(5);
 			while (true)
 			{
@@ -2511,9 +2511,9 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 				{
 				case 1:
 					DebugEnterAlt(1);
-					// MathLang.g:183:36: .
+					// MathLang.g:184:36: .
 					{
-					DebugLocation(183, 36);
+					DebugLocation(184, 36);
 					MatchAny(); 
 
 					}
@@ -2529,8 +2529,8 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 
 			} finally { DebugExitSubRule(5); }
 
-			DebugLocation(183, 40);
-			// MathLang.g:183:40: ( '\\r' )?
+			DebugLocation(184, 40);
+			// MathLang.g:184:40: ( '\\r' )?
 			int alt6=2;
 			try { DebugEnterSubRule(6);
 			try { DebugEnterDecision(6, decisionCanBacktrack[6]);
@@ -2545,9 +2545,9 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 			{
 			case 1:
 				DebugEnterAlt(1);
-				// MathLang.g:183:40: '\\r'
+				// MathLang.g:184:40: '\\r'
 				{
-				DebugLocation(183, 40);
+				DebugLocation(184, 40);
 				Match('\r'); 
 
 				}
@@ -2556,9 +2556,9 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 			}
 			} finally { DebugExitSubRule(6); }
 
-			DebugLocation(183, 46);
+			DebugLocation(184, 46);
 			Match('\n'); 
-			DebugLocation(183, 51);
+			DebugLocation(184, 51);
 
 			    _channel=Hidden;
 			  
@@ -2591,15 +2591,15 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 		{
 			int _type = ML_COMMENT;
 			int _channel = DefaultTokenChannel;
-			// MathLang.g:187:11: ( '/*' ( options {greedy=false; } : . )* '*/' )
+			// MathLang.g:188:11: ( '/*' ( options {greedy=false; } : . )* '*/' )
 			DebugEnterAlt(1);
-			// MathLang.g:188:3: '/*' ( options {greedy=false; } : . )* '*/'
+			// MathLang.g:189:3: '/*' ( options {greedy=false; } : . )* '*/'
 			{
-			DebugLocation(188, 3);
+			DebugLocation(189, 3);
 			Match("/*"); 
 
-			DebugLocation(188, 8);
-			// MathLang.g:188:8: ( options {greedy=false; } : . )*
+			DebugLocation(189, 8);
+			// MathLang.g:189:8: ( options {greedy=false; } : . )*
 			try { DebugEnterSubRule(7);
 			while (true)
 			{
@@ -2633,9 +2633,9 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 				{
 				case 1:
 					DebugEnterAlt(1);
-					// MathLang.g:188:36: .
+					// MathLang.g:189:36: .
 					{
-					DebugLocation(188, 36);
+					DebugLocation(189, 36);
 					MatchAny(); 
 
 					}
@@ -2651,10 +2651,10 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 
 			} finally { DebugExitSubRule(7); }
 
-			DebugLocation(188, 40);
+			DebugLocation(189, 40);
 			Match("*/"); 
 
-			DebugLocation(188, 45);
+			DebugLocation(189, 45);
 
 			    _channel=Hidden;
 			  
@@ -3323,14 +3323,14 @@ public partial class MathLangLexer : Antlr.Runtime.Lexer
 			"\xFFFF\x1\x6E\x1\x69\x1\xFFFF\x1\x7A\x1\x67\x1\xFFFF\x1\x6E\x1\x6D\x1"+
 			"\x65\x1\x6E\x1\x74\x1\x7A\x1\xFFFF";
 		private const string DFA8_acceptS =
-			"\xC\xFFFF\x1\x15\x1\xFFFF\x1\x17\x1\x18\x1\x19\x1\x1A\x1\x1B\x2\xFFFF"+
+			"\xC\xFFFF\x1\x15\x1\xFFFF\x1\x17\x1\x19\x1\x1A\x1\x1B\x1\x1C\x2\xFFFF"+
 			"\x1\x22\x1\xFFFF\x1\x25\x2\xFFFF\x1\x28\x1\x29\x1\x2A\x1\x2B\x6\xFFFF"+
-			"\x1\x38\x1\x39\x1\x3A\x1\x3B\x1\x3C\x10\xFFFF\x1\x20\x1\x16\x2\xFFFF"+
+			"\x1\x38\x1\x39\x1\x3A\x1\x3B\x1\x3C\x10\xFFFF\x1\x18\x1\x16\x2\xFFFF"+
 			"\x1\x24\x1\x23\x2\xFFFF\x1\x3D\x1\x3E\x1\x2C\x1\x31\x1\x2D\x1\xFFFF\x1"+
 			"\x32\x1\x37\x1\x34\x1\x33\x1\x36\x1\x35\x4\xFFFF\x1\x3\x5\xFFFF\x1\x8"+
 			"\xE\xFFFF\x1\x26\x1\xFFFF\x1\x5\x8\xFFFF\x1\x21\xA\xFFFF\x1\x4\x2\xFFFF"+
-			"\x1\x12\x4\xFFFF\x1\x27\x5\xFFFF\x1\x1E\x1\x1F\x1\x2F\x1\x1\x1\xFFFF"+
-			"\x1\x2\x2\xFFFF\x1\x30\x1\x7\x4\xFFFF\x1\x10\x3\xFFFF\x1\x1C\x1\x1D\x7"+
+			"\x1\x12\x4\xFFFF\x1\x27\x5\xFFFF\x1\x1F\x1\x20\x1\x2F\x1\x1\x1\xFFFF"+
+			"\x1\x2\x2\xFFFF\x1\x30\x1\x7\x4\xFFFF\x1\x10\x3\xFFFF\x1\x1D\x1\x1E\x7"+
 			"\xFFFF\x1\xF\x1\x11\x1\x13\x1\x2E\x8\xFFFF\x1\x6\xB\xFFFF\x1\x14\xF\xFFFF"+
 			"\x1\xE\x2\xFFFF\x1\xC\x3\xFFFF\x1\x9\x2\xFFFF\x1\xA\x2\xFFFF\x1\xB\x6"+
 			"\xFFFF\x1\xD";

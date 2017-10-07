@@ -46,8 +46,10 @@ tokens {
  */
 
 public execute:
-	statementlist EOF!
+	func_list EOF!
 ;
+
+func_list : funcdeclaration* -> ^(PROGRAM funcdeclaration*)  ;
 
 statement: ( declaration 
 	| assignment
@@ -55,7 +57,6 @@ statement: ( declaration
 	| whilestatement
 	| dowhilestatement
 	| forstatement
-	| funcdeclaration
 	| returnstatement
 	| funccall
 	| newexpression
@@ -111,14 +112,14 @@ boolgroup: (NOT^)? ( '('! boolterm ')'! | boolvar );
 boolvar: TRUE
 		| FALSE
 		| compare;
-
+		
 ifstatement: IF^ '('! boolexpression ')'! (block | statement) (ELSE! (block | statement))* ;
 whilestatement: WHILE^ '('! boolexpression ')'! (block | statement);
 forstatement: FOR^ '('! longdeclarationbody ';'! boolexpression ';'! assignmentbody ')'! (block | statement);
 returnstatement: RETURN^ expression ';'! ;
 dowhilestatement: DO^ (block | statement) WHILE! '('! boolexpression ')'! ';'! ;
 
-funcdeclaration: any_type ID^ '('! paramsdeclaration? ')'! block -> ^(FUNCDECLARATION ID ^(RETURN_TYPE any_type) '('! paramsdeclaration? ')'! block);
+funcdeclaration: any_type ID^ ( '('! paramsdeclaration? ')'! | '()'!) block -> ^(FUNCDECLARATION ID ^(RETURN_TYPE any_type) '('! paramsdeclaration? ')'! block);
 paramsdeclaration: ( declarationbody ( ','! declarationbody)* )  -> ^(PARAMETERS ( declarationbody)* );
 
 funccallbody: ID^ '(' expressioncommalist? ')' -> ^(FUNC_CALL ^(ID ^(PARAMETERS expressioncommalist)?));
