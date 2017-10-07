@@ -12,9 +12,10 @@ void testfunc(int a)
 		return 3;
 	}
 	do{
-		innerfunc(new int[5]{1,2,3,4,5});
-	} while(true!=true);
+		Console.WriteLine(innerfunc(new int[5]{1,2,3,4,5}));
 
-	//innerfunc(1);
+	} while(true!=true);
+		int adssads = Console.ReadLine(kjlkdjalsk);
+	innerfunc(1);
 }
 

@@ -14,6 +14,9 @@ namespace MathLang
         
         public static void Main(string[] args)
         {
+            Console.Write(new int());
+            //int u = Console.ReadLine();
+            //garrrr
             try
             {
                 // в зависимости от наличия параметров командной строки разбираем

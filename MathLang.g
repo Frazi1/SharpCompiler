@@ -58,7 +58,9 @@ statement: ( declaration
 	| funcdeclaration
 	| returnstatement
 	| funccall
-	| newexpression) ;
+	| newexpression
+	| console_write_statement
+	| console_read_statement ) ;
 
 type: TYPE ;
 array_type: TYPE ARRAY_DECLARATION_MARK!;
@@ -75,6 +77,7 @@ expression:
 		| funccallbody
 		| boolexpression
 		| mathexpression
+		| console_read_body
 		
 ;
 
@@ -133,10 +136,16 @@ block: '{'! statementlist '}'!;
 
 statementlist: statement* -> ^(BLOCK statement*) ;
 
+console_write_statement: CONSOLE_WORD '.'! ('WriteLine' | 'Write') '('! expression ')'! ';'! -> ^(PRINT expression)  ;
+console_read_statement: console_read_body ';'! ;
+
+console_read_body: CONSOLE_WORD '.'! ('ReadLine' | 'Read') '()' -> INPUT  ;
+
 /*
  * Lexer Rules
  */
 KNEW: 'new';
+CONSOLE_WORD: 'Console';
 ARRAY_DECLARATION_MARK: SQRBL SQRBR;
 SQRBL:'[';
 SQRBR:']';
