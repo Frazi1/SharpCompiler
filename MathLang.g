@@ -28,10 +28,12 @@ tokens {
   VARASSIGNMENT = 'varassignment';
   ARRAYELEMENTASSIGNMENT = 'arrayelementassignment';
   ARRAYELEMENT = 'arrayelement';
-  NEWWORD = 'newword';
   NEWVAR = 'newvar';
   ARRAY_INITIALIZER = 'array_initializer';
   OBJECT_INITIALIZER = 'object_initializer';
+  FUNC_CALL = 'func_call';
+  RETURN_TYPE = 'return_type';
+  PARAMETERS = 'parameters';
 }
 
 
@@ -54,10 +56,9 @@ statement: ( declaration
 	| funcdeclaration
 	| returnstatement
 	| funccall
-	| newexpression ';'!) ;
+	| newexpression) ;
 
 type: TYPE ;
-//array_type: TYPE ('[' ']')+ ; 
 array_type: TYPE ARRAY_DECLARATION_MARK;
 any_type: type | array_type | VOID;
 number :  NUMBER
@@ -85,7 +86,7 @@ declarationbody: (type ID -> ^(VARDECLARATION type ID) )
 				;
 longdeclaration: longdeclarationbody ';'! ;
 longdeclarationbody: (type ID ASSIGN expression  -> ^(VARDECLARATION type ID expression))
-					| (array_type ID ASSIGN expression -> ^(ARRAYDECLARATION array_type ID expression));
+					| (array_type ID ASSIGN newexpression -> ^(ARRAYDECLARATION array_type ID newexpression));
 
 add: mul ( (ADD | SUB)^ mul )*;
 mul: group ( (MUL | DIV)^ group)*;
@@ -111,18 +112,19 @@ whilestatement: WHILE^ '('! boolexpression ')'! (block | statement);
 forstatement: FOR^ '('! longdeclarationbody ';'! boolexpression ';'! assignmentbody ')'! (block | statement);
 returnstatement: RETURN^ expression ';'! ;
 
-funcdeclaration: any_type ID^ '('! paramsdeclaration? ')'! block -> ^(FUNCDECLARATION ID ^(RETURNS any_type) '('! paramsdeclaration? ')'! block);
+funcdeclaration: any_type ID^ '('! paramsdeclaration? ')'! block -> ^(FUNCDECLARATION ID ^(RETURN_TYPE any_type) '('! paramsdeclaration? ')'! block);
 paramsdeclaration: ( declarationbody ( ','! declarationbody)* )  -> ^(PARAMETERS ( declarationbody)* );
 
-funccallbody: ID^ '(' expressioncommalist? ')';
+funccallbody: ID^ '(' expressioncommalist? ')' -> ^(FUNC_CALL ^(ID ^(PARAMETERS expressioncommalist)?));
 funccall: funccallbody ';'!;
 expressioncommalist: expression ( ','! expression)* -> ^(PARAMETERS (expression)* );
 
 /*ARRAY HERE*/
 object_initializer:  '{' expressioncommalist '}' -> ^(OBJECT_INITIALIZER expressioncommalist) ;
-newexpression: simple_var_initializer | array_initializer ;
-simple_var_initializer: KNEW type '(' expressioncommalist? ')' object_initializer? -> ^(NEWVAR type expressioncommalist? object_initializer?);
-array_initializer: KNEW type '[' number ']' object_initializer? -> ^(ARRAY_INITIALIZER type '['! number? ']'! object_initializer?);
+newexpression: KNEW! initializer;
+initializer: (simple_var_initializer | array_initializer);
+simple_var_initializer: type '(' expressioncommalist? ')' object_initializer? -> ^(NEWVAR type expressioncommalist? object_initializer?);
+array_initializer: type '[' number ']' object_initializer? -> ^(ARRAY_INITIALIZER type '['! number? ']'! object_initializer?);
 
 block: '{'! statementlist '}'!;
 
@@ -132,13 +134,11 @@ statementlist: statement* -> ^(BLOCK statement*) ;
  * Lexer Rules
  */
 KNEW: 'new';
-ARRAY_DECLARATION_MARK: (SQRBL ','* SQRBR)+;
+ARRAY_DECLARATION_MARK: SQRBL SQRBR;
 SQRBL:'[';
 SQRBR:']';
-
 TYPE: 'int' | 'bool' | 'char';
 VOID: 'void';
-ACCESS_MODIFIER: 'public' | 'private';
 NUMBER: ('0'..'9')+ ;
 ADD:    '+'     ;
 SUB:    '-'     ;
@@ -146,9 +146,8 @@ MUL:    '*'     ;
 DIV:    '/'     ;
 ASSIGN: '='     ;
 RETURN:	'return';
-RETURNS:'returns';
-TRUE: 'true'    ;
-FALSE: 'false'  ; 
+TRUE:   'true'  ;
+FALSE:  'false' ; 
 EQ:		'=='	;
 NEQ:	'!='	;
 GR:		'>'		;
@@ -156,7 +155,6 @@ GREQ:   '>='	;
 LS:		'<'		;
 LSEQ:	'<='	;
 NOT:	'!'		;
-PARAMETERS: 'parameters';
 OR:		'||'	;
 AND:	'&&'	;
 WS:
