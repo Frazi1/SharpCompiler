@@ -59,7 +59,7 @@ statement: ( declaration
 	| newexpression) ;
 
 type: TYPE ;
-array_type: TYPE ARRAY_DECLARATION_MARK;
+array_type: TYPE ARRAY_DECLARATION_MARK!;
 any_type: type | array_type | VOID;
 number :  NUMBER
 		| ID
@@ -117,14 +117,14 @@ paramsdeclaration: ( declarationbody ( ','! declarationbody)* )  -> ^(PARAMETERS
 
 funccallbody: ID^ '(' expressioncommalist? ')' -> ^(FUNC_CALL ^(ID ^(PARAMETERS expressioncommalist)?));
 funccall: funccallbody ';'!;
-expressioncommalist: expression ( ','! expression)* -> ^(PARAMETERS (expression)* );
+expressioncommalist: expression ( ','! expression)*;
 
 /*ARRAY HERE*/
-object_initializer:  '{' expressioncommalist '}' -> ^(OBJECT_INITIALIZER expressioncommalist) ;
+object_initializer:  '{' expressioncommalist '}' -> ^(PARAMETERS expressioncommalist) ;
 newexpression: KNEW! initializer;
 initializer: (simple_var_initializer | array_initializer);
-simple_var_initializer: type '(' expressioncommalist? ')' object_initializer? -> ^(NEWVAR type expressioncommalist? object_initializer?);
-array_initializer: type '[' number ']' object_initializer? -> ^(ARRAY_INITIALIZER type '['! number? ']'! object_initializer?);
+simple_var_initializer: type '(' ')' -> ^(NEWVAR type);
+array_initializer: type (('[' number ']') | ARRAY_DECLARATION_MARK) object_initializer? -> ^(ARRAY_INITIALIZER type number? object_initializer?);
 
 block: '{'! statementlist '}'!;
 
