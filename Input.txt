@@ -11,6 +11,9 @@ void testfunc(int a)
 	{
 		return 3;
 	}
+	do{
+		innerfunc(new int[5]{1,2,3,4,5});
+	} while(true!=true);
 
 	//innerfunc(1);
 }

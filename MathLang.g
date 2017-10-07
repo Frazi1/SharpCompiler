@@ -19,6 +19,7 @@ tokens {
   FUNCTION = 'function' ;
   RETURN = 'return'   ;
   WHILE = 'while'     ;
+  DO = 'do'     ;
   BLOCK               ;
   PROGRAM             ;
   PARAMS              ;
@@ -52,6 +53,7 @@ statement: ( declaration
 	| assignment
 	| ifstatement
 	| whilestatement
+	| dowhilestatement
 	| forstatement
 	| funcdeclaration
 	| returnstatement
@@ -111,6 +113,7 @@ ifstatement: IF^ '('! boolexpression ')'! (block | statement) (ELSE! (block | st
 whilestatement: WHILE^ '('! boolexpression ')'! (block | statement);
 forstatement: FOR^ '('! longdeclarationbody ';'! boolexpression ';'! assignmentbody ')'! (block | statement);
 returnstatement: RETURN^ expression ';'! ;
+dowhilestatement: DO^ (block | statement) WHILE! '('! boolexpression ')'! ';'! ;
 
 funcdeclaration: any_type ID^ '('! paramsdeclaration? ')'! block -> ^(FUNCDECLARATION ID ^(RETURN_TYPE any_type) '('! paramsdeclaration? ')'! block);
 paramsdeclaration: ( declarationbody ( ','! declarationbody)* )  -> ^(PARAMETERS ( declarationbody)* );

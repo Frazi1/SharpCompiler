@@ -11,8 +11,7 @@ namespace MathLang
     {
         // "культуронезависимый" формат для чисел (с разделителем точкой)
         public static readonly NumberFormatInfo NFI = new NumberFormatInfo();
-
-
+        
         public static void Main(string[] args)
         {
             try
