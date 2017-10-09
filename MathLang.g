@@ -122,7 +122,7 @@ dowhilestatement: DO^ (block | statement) WHILE! '('! boolexpression ')'! ';'! ;
 funcdeclaration: any_type ID^ ( '('! paramsdeclaration? ')'! | '()'!) block -> ^(FUNCDECLARATION ID ^(RETURN_TYPE any_type) '('! paramsdeclaration? ')'! block);
 paramsdeclaration: ( declarationbody ( ','! declarationbody)* )  -> ^(PARAMETERS ( declarationbody)* );
 
-funccallbody: ID^ '(' expressioncommalist? ')' -> ^(FUNC_CALL ^(ID ^(PARAMETERS expressioncommalist)?));
+funccallbody: ID^ ( '(' expressioncommalist? ')' |  '()' ) -> ^(FUNC_CALL ^(ID ^(PARAMETERS expressioncommalist)?));
 funccall: funccallbody ';'!;
 expressioncommalist: expression ( ','! expression)*;
 
@@ -130,7 +130,7 @@ expressioncommalist: expression ( ','! expression)*;
 object_initializer:  '{' expressioncommalist '}' -> ^(PARAMETERS expressioncommalist) ;
 newexpression: KNEW! initializer;
 initializer: (simple_var_initializer | array_initializer);
-simple_var_initializer: type '(' ')' -> ^(NEWVAR type);
+simple_var_initializer: type '()' -> ^(NEWVAR type);
 array_initializer: type (('[' number ']') | ARRAY_DECLARATION_MARK) object_initializer? -> ^(ARRAY_INITIALIZER type number? object_initializer?);
 
 block: '{'! statementlist '}'!;
