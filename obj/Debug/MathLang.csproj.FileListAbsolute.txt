@@ -23,3 +23,10 @@ D:\Универ\MathLangTree_Antlr\obj\Debug\MathLang.csprojResolveAssemblyRefer
 D:\Универ\MathLangTree_Antlr\obj\Debug\MathLang.csproj.CoreCompileInputs.cache
 D:\Универ\MathLangTree_Antlr\obj\Debug\MathLang.exe
 D:\Универ\MathLangTree_Antlr\obj\Debug\MathLang.pdb
+D:\Programming\syntax_anylyzer\bin\Debug\MathLang.exe
+D:\Programming\syntax_anylyzer\bin\Debug\MathLang.pdb
+D:\Programming\syntax_anylyzer\bin\Debug\Antlr3.Runtime.dll
+D:\Programming\syntax_anylyzer\obj\Debug\MathLang.csprojResolveAssemblyReference.cache
+D:\Programming\syntax_anylyzer\obj\Debug\MathLang.csproj.CoreCompileInputs.cache
+D:\Programming\syntax_anylyzer\obj\Debug\MathLang.exe
+D:\Programming\syntax_anylyzer\obj\Debug\MathLang.pdb

@@ -1,18 +1,25 @@
 
 void testfunc(int a)
 {
+	//TODO: int a, int b = 3;
+	//TODO: Console.Writeline();
+	//нормальные имена
+	
 	do
 	{
-		Console.WriteLine(innerfunc(new int[5]{1,2,3,4,5}));
+		int[] a = new int[]{1,2,3};
+		int[] b = new int [5];
 
 	} while(true!=true);
-int adssads = Console.ReadLine();
-	innerfunc(1);
+
+	innerfunc(1, new int[t[7]]);
 
 
 }
 
-		int y()
+	int y()
 	{
 	y = 7;
 	}
+
+	
