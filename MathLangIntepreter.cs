@@ -12,6 +12,7 @@ namespace MathLang
 {
   public class MathLangIntepreter
   {
+
     // "культуронезависимый" формат для чисел (с разделителем точкой)
     public static readonly NumberFormatInfo NFI = new NumberFormatInfo();
     // набор переменных

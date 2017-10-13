@@ -17,7 +17,7 @@ static class Petenka
 
 		} while(true!=true);
 
-		inne78754gb7t64fg6_____SRUAHTUHSARUISAR__rfunc(1, new int[t[7]]);
+		_rfunc(1, new int[t[7]]);
 	
 		char c = '&';
 		char c = '╕';
@@ -29,4 +29,9 @@ static class Petenka
 			y = 7;
 	}
 
+}
+
+static class Valera
+{
+	
 }

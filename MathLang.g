@@ -92,6 +92,7 @@ expression:
 		
 		
 ;
+extended_id: ID ('.' ID)* ;
 
 arrayelement:  ID '[' number ']' -> ^(ARRAYELEMENT ID number) ;
 static_declaration:  MODIFIER declaration -> ^(STATIC_DECLARATION declaration);
