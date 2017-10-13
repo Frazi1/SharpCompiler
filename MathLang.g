@@ -23,18 +23,21 @@ tokens {
   BLOCK               ;
   PROGRAM             ;
   PARAMS              ;
-  VARDECLARATION = 'vardeclaration';
-  FUNCDECLARATION = 'funcdeclaration';
-  ARRAYDECLARATION = 'arraydeclaration';
-  VARASSIGNMENT = 'varassignment';
-  ARRAYELEMENTASSIGNMENT = 'arrayelementassignment';
-  ARRAYELEMENT = 'arrayelement';
-  NEWVAR = 'newvar';
-  ARRAY_INITIALIZER = 'array_initializer';
-  OBJECT_INITIALIZER = 'object_initializer';
-  FUNC_CALL = 'func_call';
-  RETURN_TYPE = 'return_type';
-  PARAMETERS = 'parameters';
+  VARDECLARATION ;
+  FUNCDECLARATION ;
+  ARRAYDECLARATION ;
+  VARASSIGNMENT ;
+  ARRAYELEMENTASSIGNMENT;
+  ARRAYELEMENT ;
+  NEWVAR;
+  ARRAY_INITIALIZER ;
+  OBJECT_INITIALIZER;
+  FUNC_CALL ;
+  RETURN_TYPE;
+  PARAMETERS ;
+  STATIC_DECLARATION;
+  CLASSBLOCK;
+  CLASS_WORD = 'class';
 }
 
 
@@ -46,8 +49,16 @@ tokens {
  */
 
 public execute:
-	func_list EOF!
+	class_list EOF!  -> ^(PROGRAM class_list) 
 ;
+
+class_declaration: MODIFIER CLASS_WORD ID class_block -> ^(CLASS_WORD ID class_block) ;
+
+class_block: '{'! static_func_or_var_declaration* '}'! -> ^(CLASSBLOCK static_func_or_var_declaration * );
+
+static_func_or_var_declaration: static_declaration | funcdeclaration ;
+
+class_list:  class_declaration* ;
 
 func_list : funcdeclaration* -> ^(PROGRAM funcdeclaration*)  ;
 
@@ -83,7 +94,7 @@ expression:
 ;
 
 arrayelement:  ID '[' number ']' -> ^(ARRAYELEMENT ID number) ;
-
+static_declaration:  MODIFIER declaration -> ^(STATIC_DECLARATION declaration);
 declaration: declarationbody ';'!
 			| longdeclaration;
 
@@ -119,7 +130,7 @@ forstatement: FOR^ OPEN_BRACE! longdeclarationbody ';'! boolexpression ';'! assi
 returnstatement: RETURN^ expression ';'! ;
 dowhilestatement: DO^ (block | statement) WHILE! OPEN_BRACE! boolexpression CLOSE_BRACE! ';'! ;
 
-funcdeclaration: any_type ID^ ( OPEN_BRACE! paramsdeclaration? CLOSE_BRACE! ) block -> ^(FUNCDECLARATION ID ^(RETURN_TYPE any_type) OPEN_BRACE! paramsdeclaration? CLOSE_BRACE! block);
+funcdeclaration: MODIFIER any_type ID^ ( OPEN_BRACE! paramsdeclaration? CLOSE_BRACE! ) block -> ^(FUNCDECLARATION ID ^(RETURN_TYPE any_type) OPEN_BRACE! paramsdeclaration? CLOSE_BRACE! block);
 paramsdeclaration: ( declarationbody ( ','! declarationbody)* )  -> ^(PARAMETERS ( declarationbody)* );
 
 funccallbody: ID^ OPEN_BRACE expressioncommalist? CLOSE_BRACE -> ^(FUNC_CALL ^(ID ^(PARAMETERS expressioncommalist)?));
@@ -178,9 +189,12 @@ WS:
     $channel=Hidden;
   }
 ;
-CHAR:  '\''('a'..'z')'\'' ;
-ID:		('a'..'z')+;
-
+MODIFIER: 'static';
+//CHAR:  '\''('a'..'z')'\'' ;
+CHAR:  '\'' . '\'' ;
+ID:		( 'a'..'z' | 'A'..'Z' | '_' )
+        ( 'a'..'z' | 'A'..'Z' | '_' | '0'..'9' )*
+;
 
 
 SL_COMMENT:

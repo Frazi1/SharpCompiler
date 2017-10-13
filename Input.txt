@@ -1,25 +1,32 @@
-
-void testfunc(int a)
+п»ї
+static class Petenka
 {
-	//TODO: int a, int b = 3;
-	//TODO: Console.Writeline();
-	//нормальные имена
+
+	static int ieatchildren =6;
+
+	static void testfunc(int a)
+	{
+		//TODO: int a, int b = 3;
+		//TODO: Console.Writeline();
+		//РЅРѕСЂРјР°Р»СЊРЅС‹Рµ РёРјРµРЅР°
 	
-	do
-	{
-		int[] a = new int[]{1,2,3};
-		int[] b = new int [5];
+		do
+		{
+			int[] a = new int[]{1,2,3};
+			int[] b = new int [5];
 
-	} while(true!=true);
+		} while(true!=true);
 
-	innerfunc(1, new int[t[7]]);
-
-
-}
-
-	int y()
-	{
-	y = 7;
+		inne78754gb7t64fg6_____SRUAHTUHSARUISAR__rfunc(1, new int[t[7]]);
+	
+		char c = '&';
+		char c = 'в••';
+		char strange = 'г‚ё';
 	}
 
-	
+	static int y()
+	{
+			y = 7;
+	}
+
+}
