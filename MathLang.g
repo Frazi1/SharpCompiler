@@ -38,6 +38,7 @@ tokens {
   STATIC_DECLARATION;
   CLASSBLOCK;
   CLASS_WORD = 'class';
+  CALL;
 }
 
 
@@ -92,7 +93,9 @@ expression:
 		
 		
 ;
-extended_id: ID ('.' ID)* ;
+extended_id: id (DOT! extended_id)* -> ^(id extended_id*);
+
+id: ID;
 
 arrayelement:  ID '[' number ']' -> ^(ARRAYELEMENT ID number) ;
 static_declaration:  MODIFIER declaration -> ^(STATIC_DECLARATION declaration);
@@ -134,7 +137,7 @@ dowhilestatement: DO^ (block | statement) WHILE! OPEN_BRACE! boolexpression CLOS
 funcdeclaration: MODIFIER any_type ID^ ( OPEN_BRACE! paramsdeclaration? CLOSE_BRACE! ) block -> ^(FUNCDECLARATION ID ^(RETURN_TYPE any_type) OPEN_BRACE! paramsdeclaration? CLOSE_BRACE! block);
 paramsdeclaration: ( declarationbody ( ','! declarationbody)* )  -> ^(PARAMETERS ( declarationbody)* );
 
-funccallbody: ID^ OPEN_BRACE expressioncommalist? CLOSE_BRACE -> ^(FUNC_CALL ^(ID ^(PARAMETERS expressioncommalist)?));
+funccallbody: extended_id^ OPEN_BRACE expressioncommalist? CLOSE_BRACE -> ^(FUNC_CALL extended_id ^(PARAMETERS expressioncommalist)?);
 funccall: funccallbody ';'!;
 expressioncommalist: expression ( ','! expression)*;
 
@@ -190,6 +193,7 @@ WS:
     $channel=Hidden;
   }
 ;
+DOT: '.';
 MODIFIER: 'static';
 //CHAR:  '\''('a'..'z')'\'' ;
 CHAR:  '\'' . '\'' ;

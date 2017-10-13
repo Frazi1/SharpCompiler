@@ -21,17 +21,8 @@ static class Petenka
 	
 		char c = '&';
 		char c = '╕';
-		char strange = 'ジ';
+		TestClass.YUYUCLASS.ValeraBoy.ValeraGirl.yuyuTestClass.YUYUCLASS.ValeraBoy.ValeraGirl(4);
 	}
 
-	static int y()
-	{
-			y = 7;
-	}
 
-}
-
-static class Valera
-{
-	
 }
