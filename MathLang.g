@@ -41,6 +41,7 @@ tokens {
   CALL;
   VARS;
   MULT_DECL;
+  MULT_ARRAY_DECL;
 }
 
 
@@ -100,26 +101,21 @@ extended_id: ID (DOT! ID)? -> ^(ID ID?);
 arrayelement:  extended_id OPEN_SQUARE_BRACE number CLOSE_SQUARE_BRACE -> ^(ARRAYELEMENT extended_id number) ;
 static_declaration:  MODIFIER declaration -> ^(STATIC_DECLARATION declaration);
 
-declaration: type d_list ';' -> ^(MULT_DECL type d_list) ;
+declaration: var_declaration | array_declaration;
+var_declaration: type d_list ';' -> ^(MULT_DECL type d_list) ;
+array_declaration: array_type d_array_list ';' -> ^(MULT_ARRAY_DECL array_type d_array_list) ;
 
 d_list: d (','! d)* -> ^( VARS d d * ) ;
+d_array_list: d_array (','! d_array)* -> ^( VARS d_array d_array * ) ;
 
 d: declarationbody_d | longdeclarationbody_d ;
+d_array: declarationbody_array_d | longdeclarationbody_array_d;
 
-/*declaration:  declarationbody ';'!
-			| longdeclarationbody ';'! ;
+declarationbody_d: (ID -> ^(VARDECLARATION ID) );				
+declarationbody_array_d: ( ID -> ^(ARRAYDECLARATION ID));
 
-*/
-/*var_declaration: ID -> ^(VARDECLARATION ID);
-array_declaration: ID -> ^(ARRAYDECLARATION ID))
-*/
-
-declarationbody_d: (ID -> ^(VARDECLARATION ID) )
-				//| (array_type ID -> ^(ARRAYDECLARATION array_type ID))
-				;
-longdeclarationbody_d: (ID ASSIGN expression  -> ^(VARDECLARATION ID expression))
-					//| (array_type ID ASSIGN newexpression -> ^(ARRAYDECLARATION array_type ID newexpression))
-					;
+longdeclarationbody_d: (ID ASSIGN expression  -> ^(VARDECLARATION ID expression));
+longdeclarationbody_array_d: (ID ASSIGN newexpression -> ^(ARRAYDECLARATION ID newexpression));
 
 
 declarationbody: (type ID -> ^(VARDECLARATION type ID) )

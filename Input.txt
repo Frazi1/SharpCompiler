@@ -13,6 +13,7 @@ static class Petenka
 		bool t;
 
 		int u = 7, u, i = 7*7 , l = new int();
+		int[] a, b = new int[3];
 
 		do
 		{
