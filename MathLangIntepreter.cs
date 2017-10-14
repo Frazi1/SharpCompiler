@@ -12,7 +12,10 @@ namespace MathLang
 {
   public class MathLangIntepreter
   {
-
+      static class valera
+      {
+          static int ieatchildren = 6, u;
+        }
     // "культуронезависимый" формат для чисел (с разделителем точкой)
     public static readonly NumberFormatInfo NFI = new NumberFormatInfo();
     // набор переменных

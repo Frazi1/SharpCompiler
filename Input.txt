@@ -2,22 +2,26 @@
 static class Petenka
 {
 
-	static int ieatchildren =6;
+	static int ieatchildren =6,u;
 
-	static void testfunc(int a)
+	static void testfunc(int a, char t)
 	{
 		//TODO: int a, int b = 3;
 		//TODO: Console.Writeline();
 		//нормальные имена
 	
+		bool t;
+
+		int u = 7, u, i = 7*7 , l = new int();
+
 		do
 		{
-			int[] a = new int[]{1,2,3};
-			int[] b = new int [5];
+			//int[] a = new int[]{1,2,3};
+			//int[] b = new int [5];
 
 		} while(true!=true);
 
-		_rfunc(1, new int[t.a[7]]);
+		//_rfunc(1, new int[t.a[7]]);
 	
 		char c = '&';
 		char c = '╕';

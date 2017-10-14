@@ -39,6 +39,8 @@ tokens {
   CLASSBLOCK;
   CLASS_WORD = 'class';
   CALL;
+  VARS;
+  MULT_DECL;
 }
 
 
@@ -95,17 +97,37 @@ expression:
 ;
 extended_id: ID (DOT! ID)? -> ^(ID ID?);
 
-arrayelement:  extended_id '[' number ']' -> ^(ARRAYELEMENT extended_id number) ;
+arrayelement:  extended_id OPEN_SQUARE_BRACE number CLOSE_SQUARE_BRACE -> ^(ARRAYELEMENT extended_id number) ;
 static_declaration:  MODIFIER declaration -> ^(STATIC_DECLARATION declaration);
-declaration: declarationbody ';'!
-			| longdeclaration;
+
+declaration: type d_list ';' -> ^(MULT_DECL type d_list) ;
+
+d_list: d (','! d)* -> ^( VARS d d * ) ;
+
+d: declarationbody_d | longdeclarationbody_d ;
+
+/*declaration:  declarationbody ';'!
+			| longdeclarationbody ';'! ;
+
+*/
+/*var_declaration: ID -> ^(VARDECLARATION ID);
+array_declaration: ID -> ^(ARRAYDECLARATION ID))
+*/
+
+declarationbody_d: (ID -> ^(VARDECLARATION ID) )
+				//| (array_type ID -> ^(ARRAYDECLARATION array_type ID))
+				;
+longdeclarationbody_d: (ID ASSIGN expression  -> ^(VARDECLARATION ID expression))
+					//| (array_type ID ASSIGN newexpression -> ^(ARRAYDECLARATION array_type ID newexpression))
+					;
+
 
 declarationbody: (type ID -> ^(VARDECLARATION type ID) )
 				| (array_type ID -> ^(ARRAYDECLARATION array_type ID))
 				;
-longdeclaration: longdeclarationbody ';'! ;
-longdeclarationbody: (type ID ASSIGN expression  -> ^(VARDECLARATION type ID expression))
-					| (array_type ID ASSIGN newexpression -> ^(ARRAYDECLARATION array_type ID newexpression));
+longdeclarationbody: ( type ID ASSIGN expression  -> ^(VARDECLARATION type ID expression))
+					| (array_type ID ASSIGN newexpression -> ^(ARRAYDECLARATION array_type ID newexpression))
+					;
 
 add: mul ( (ADD | SUB)^ mul )*;
 mul: group ( (MUL | DIV)^ group)*;
