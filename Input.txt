@@ -17,12 +17,14 @@ static class Petenka
 
 		} while(true!=true);
 
-		_rfunc(1, new int[t[7]]);
+		_rfunc(1, new int[t.a[7]]);
 	
 		char c = '&';
 		char c = '╕';
-		TestClass.YUYUCLASS.ValeraBoy.ValeraGirl.yuyuTestClass.YUYUCLASS.ValeraBoy.ValeraGirl(4);
-	}
+		TestClass.ValeraGirl(4);
+		TestClass.ValeraVar = 3;
+		TestClass.valeraArray[3] = t.u;
+		}
 
 
 }

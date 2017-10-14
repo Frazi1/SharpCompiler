@@ -79,7 +79,7 @@ type: TYPE ;
 array_type: TYPE ARRAY_DECLARATION_MARK!;
 any_type: type | array_type | VOID;
 number :  NUMBER
-		| ID
+		| extended_id
 		| funccallbody
 		| CHAR
 		| arrayelement;
@@ -93,11 +93,9 @@ expression:
 		
 		
 ;
-extended_id: id (DOT! extended_id)* -> ^(id extended_id*);
+extended_id: ID (DOT! ID)? -> ^(ID ID?);
 
-id: ID;
-
-arrayelement:  ID '[' number ']' -> ^(ARRAYELEMENT ID number) ;
+arrayelement:  extended_id '[' number ']' -> ^(ARRAYELEMENT extended_id number) ;
 static_declaration:  MODIFIER declaration -> ^(STATIC_DECLARATION declaration);
 declaration: declarationbody ';'!
 			| longdeclaration;
@@ -116,7 +114,7 @@ term: add;
 group: (SUB^)? OPEN_BRACE! term CLOSE_BRACE! | number;
 
 assignment: assignmentbody ';'!;
-assignmentbody: (ID ASSIGN expression -> ^(VARASSIGNMENT ID expression)) | 
+assignmentbody: (extended_id ASSIGN expression -> ^(VARASSIGNMENT extended_id expression)) | 
 	( arrayelement ASSIGN expression -> ^(ARRAYELEMENTASSIGNMENT arrayelement expression));
 
 boolexpression: boolterm ;
