@@ -1,14 +1,15 @@
 ﻿
-static class Petenka
+static class Cl
 {
 
-	static int ieatchildren =6,u;
+	static int iiii =6,u;
 
-	static void testfunc(int a, char t)
+	static char[] nn, i = new char[8] ;
+
+	static void testfunc(int[] a, char t)
 	{
-		//TODO: int a, int b = 3;
-		//TODO: Console.Writeline();
-		//нормальные имена
+		int a,  b = 3;
+		
 	
 		bool t;
 
@@ -17,8 +18,10 @@ static class Petenka
 
 		do
 		{
-			//int[] a = new int[]{1,2,3};
-			//int[] b = new int [5];
+			int[] a = new int[]{1,2,3};
+			
+			
+			int[] b = new int [5];
 
 		} while(true!=true);
 
@@ -28,8 +31,16 @@ static class Petenka
 		char c = '╕';
 		TestClass.ValeraGirl(4);
 		TestClass.ValeraVar = 3;
-		TestClass.valeraArray[3] = t.u;
+		TestClass.valeraArray[((3+4))] = t.u;
 		}
 
+		static bool y = true && false;
 
+		static int u()
+		{
+			while(tt())
+			{
+				p = 6;
+			}
+		}
 }

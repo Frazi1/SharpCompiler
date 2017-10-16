@@ -26,10 +26,10 @@ namespace MathLang
         {
 
             int i , lk = 8;
-            int[] a, b = new int[2], c;
+            int[] a, b = new int[5], c;
 
             ValeraOuter.valera.valera_child = 5;
-            Console.Write(new int());
+            //Console.Write(new int());
             //int u = Console.ReadLine();
             //garrrr
             try

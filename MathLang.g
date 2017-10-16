@@ -85,7 +85,9 @@ number :  NUMBER
 		| extended_id
 		| funccallbody
 		| CHAR
-		| arrayelement;
+		| arrayelement
+		
+		;
 mathexpression: term ;
 
 expression:  
@@ -98,7 +100,7 @@ expression:
 ;
 extended_id: ID (DOT! ID)? -> ^(ID ID?);
 
-arrayelement:  extended_id OPEN_SQUARE_BRACE number CLOSE_SQUARE_BRACE -> ^(ARRAYELEMENT extended_id number) ;
+arrayelement:  extended_id OPEN_SQUARE_BRACE mathexpression CLOSE_SQUARE_BRACE -> ^(ARRAYELEMENT extended_id mathexpression) ;
 static_declaration:  MODIFIER declaration -> ^(STATIC_DECLARATION declaration);
 
 declaration: var_declaration | array_declaration;
@@ -162,7 +164,7 @@ object_initializer:  '{' expressioncommalist '}' -> ^(PARAMETERS expressioncomma
 newexpression: KNEW! initializer;
 initializer: (simple_var_initializer | array_initializer);
 simple_var_initializer: type OPEN_BRACE CLOSE_BRACE -> ^(NEWVAR type);
-array_initializer: type ((OPEN_SQUARE_BRACE number CLOSE_SQUARE_BRACE) | ARRAY_DECLARATION_MARK) object_initializer? -> ^(ARRAY_INITIALIZER type number? object_initializer?);
+array_initializer: type ((OPEN_SQUARE_BRACE mathexpression CLOSE_SQUARE_BRACE) | ARRAY_DECLARATION_MARK) object_initializer? -> ^(ARRAY_INITIALIZER type mathexpression? object_initializer?);
 
 block: '{'! statementlist '}'!;
 

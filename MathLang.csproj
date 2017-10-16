@@ -48,18 +48,14 @@
   <ItemGroup>
     <Content Include="Input.txt" />
   </ItemGroup>
-
-
   <ItemGroup>
     <AntlrGrammarFile Include="MathLang.g" />
   </ItemGroup>
-
   <PropertyGroup>
     <AntlrLexerFile>@(AntlrGrammarFile->'%(RelativeDir)%(Filename)Lexer.cs')</AntlrLexerFile>
     <AntlrParserFile>@(AntlrGrammarFile->'%(RelativeDir)%(Filename)Parser.cs')</AntlrParserFile>
     <AntlrTokensFile>@(AntlrGrammarFile->'%(RelativeDir)%(Filename).tokens')</AntlrTokensFile>
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Include="$(AntlrLexerFile)">
       <AutoGen>True</AutoGen>
@@ -80,11 +76,9 @@
       <DependentUpon>@(AntlrGrammarFile)</DependentUpon>
     </Content>
   </ItemGroup>
-
   <PropertyGroup>
     <JavaHome>C:\Program_Files\Java\jdk7</JavaHome>
   </PropertyGroup>
-
   <Target Name="GenerateAntlrCode" Inputs="@(AntlrGrammarFile)" Outputs="$(AntlrLexerFile);$(AntlrParserFile)">
     <Exec Command="&quot;$(JavaHome)\bin\java&quot; -classpath antlr\java\antlr-3.3-complete.jar org.antlr.Tool -message-format vs2005 @(AntlrGrammarFile)" />
     <!--Exec Command="&quot;antlr\.net\antlr3.exe&quot; -message-format vs2005 @(AntlrGrammarFile)" /-->
@@ -92,9 +86,7 @@
   <Target Name="CleanAntlrCode">
     <Delete Files="$(AntlrLexerFile);$(AntlrParserFile)" />
   </Target>
-
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-
   <PropertyGroup>
     <BuildDependsOn>GenerateAntlrCode;$(BuildDependsOn)</BuildDependsOn>
   </PropertyGroup>
