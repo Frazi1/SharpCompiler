@@ -43,6 +43,10 @@ namespace MathLang
                 MathLangParser parser = new MathLangParser(tokens);
                 ITree program = (ITree)parser.execute().Tree;
                 AstNodePrinter.Print(program);
+                Tree.Nodes.Program astProgram = new Tree.Nodes.Program();
+                astProgram.Run(program as CommonTree);
+                int noop = 0;
+
                 //Console.WriteLine();
                 //MathLangIntepreter.Execute(program);
             }

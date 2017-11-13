@@ -1,9 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Antlr.Runtime.Tree;
+using MathLang.Extensions;
+using SyntaxNodeType = MathLang.MathLangParser;
 
 namespace MathLang.Tree.Nodes
 {
     public interface IExpression : INode
     {
+        void Run(CommonTree tree);
     }
 
     public interface IStatement : INode
@@ -14,31 +19,79 @@ namespace MathLang.Tree.Nodes
     public class Program : INode
     {
         public INode Parent { get; set; }
-        public List<ClassNode> ClassNodes { get; }
+        public List<Class> ClassNodes { get; }
 
-        public Program(List<ClassNode> classNodes)
+        //public Program(List<Class> classNodes)
+        //{
+        //    ClassNodes = classNodes;
+        //}
+
+        public Program()
         {
-            ClassNodes = classNodes;
+            ClassNodes = new List<Class>();
         }
 
+        public void Run(CommonTree syntaxProgram)
+        {
+            syntaxProgram.Children
+                .Cast<CommonTree>()
+                .ForEach(syntaxClass =>
+                {
+                    Class @class = new Class();
+                    ClassNodes.Add(@class);
+                    @class.Parent = this;
+                    @class.Run(syntaxClass);
+                });
+        }
     }
 
-    public class ClassNode : INode
+    public class Class : INode
     {
         public INode Parent { get; set; }
 
-        public string Name { get; }
+        public string Name { get; set; }
         public List<VariableDeclaration> VarDeclarationNodes { get; }
         public List<FunctionDeclaration> FunctionDeclarationNodes { get; }
 
-        public ClassNode(string name, List<VariableDeclaration> varDeclarationNodes, List<FunctionDeclaration> functionDeclarationNodes)
+        //public Class(string name, List<VariableDeclaration> varDeclarationNodes, List<FunctionDeclaration> functionDeclarationNodes)
+        //{
+        //    Name = name;
+        //    VarDeclarationNodes = varDeclarationNodes;
+        //    FunctionDeclarationNodes = functionDeclarationNodes;
+        //}
+
+        public Class()
         {
-            Name = name;
-            VarDeclarationNodes = varDeclarationNodes;
-            FunctionDeclarationNodes = functionDeclarationNodes;
+            VarDeclarationNodes = new List<VariableDeclaration>();
+            FunctionDeclarationNodes = new List<FunctionDeclaration>();
+        }
+
+        public void Run(CommonTree syntaxClass)
+        {
+            Name = syntaxClass.Children[0].Text;
+            var classblock = syntaxClass.GetChild(1) as CommonTree;
+            classblock.Children
+                .Cast<CommonTree>()
+                .ForEach(child =>
+            {
+                if (child.Type == SyntaxNodeType.STATIC_DECLARATION)
+                {
+                    List<VariableDeclaration> variableList 
+                        =  TreeHelper.RunMultiDeclaration(this, child.GetChild(0) as CommonTree);
+                    VarDeclarationNodes.AddRange(variableList);
+                }
+                else if (child.Type == SyntaxNodeType.FUNCDECLARATION)
+                {
+                    FunctionDeclaration function = new FunctionDeclaration();
+                    FunctionDeclarationNodes.Add(function);
+                    function.Parent = this;
+                    function.Run(child);
+                }
+            });
         }
     }
 
+    
     public class FunctionDeclaration : INode
     {
         public INode Parent { get; set; }
@@ -48,13 +101,22 @@ namespace MathLang.Tree.Nodes
         public List<Parameter> ParameterNodes { get; }
         public List<IStatement> StatementNodes { get; }
 
-        public FunctionDeclaration(List<IStatement> statementNodes, List<Parameter> parameterNodes,
-            ReturnType returnType, string name)
+        //public FunctionDeclaration(List<IStatement> statementNodes, List<Parameter> parameterNodes,
+        //    ReturnType returnType, string name)
+        //{
+        //    StatementNodes = statementNodes;
+        //    ParameterNodes = parameterNodes;
+        //    ReturnType = returnType;
+        //    Name = name;
+        //}
+        public FunctionDeclaration()
         {
-            StatementNodes = statementNodes;
-            ParameterNodes = parameterNodes;
-            ReturnType = returnType;
-            Name = name;
+            
+        }
+
+        public void Run(CommonTree child)
+        {
+            throw new System.NotImplementedException();
         }
     }
 
@@ -75,15 +137,29 @@ namespace MathLang.Tree.Nodes
     {
         public INode Parent { get; set; }
 
-        public string Name { get; }
-        public ReturnType ReturnType { get; }
-        public IExpression Value { get; }
 
-        public VariableDeclaration(ReturnType returnType, string name, IExpression value)
+        public string Name { get; set; }
+        public ReturnType ReturnType { get; set; }
+        public IExpression Value { get; set; }
+
+        //public VariableDeclaration(ReturnType returnType, string name, IExpression value)
+        //{
+        //    ReturnType = returnType;
+        //    Name = name;
+        //    Value = value;
+        //}
+        public VariableDeclaration()
+        {
+            
+        }
+
+        public void Run(ReturnType returnType, CommonTree syntaxVariableDeclaration)
         {
             ReturnType = returnType;
-            Name = name;
-            Value = value;
+            Name = syntaxVariableDeclaration.GetChild(0).Text;
+            var syntaxValueExpression = syntaxVariableDeclaration.GetChild(1) as CommonTree;
+            Value = TreeHelper.RunExpression(syntaxValueExpression);
+            Value.Run(syntaxValueExpression);
         }
     }
 }

@@ -40,10 +40,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AstNodePrinter.cs" />
+    <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="IntepreterException.cs" />
     <Compile Include="MathAstNode.cs" />
     <Compile Include="MathLangIntepreter.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Tree\Nodes\Expression.cs" />
+    <Compile Include="Tree\Nodes\ExpressionType.cs" />
+    <Compile Include="Tree\Nodes\INode.cs" />
+    <Compile Include="Tree\Nodes\Nodes.cs" />
+    <Compile Include="Tree\Nodes\ReturnType.cs" />
+    <Compile Include="Tree\TreeHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Input.txt" />

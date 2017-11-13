@@ -2,45 +2,45 @@
 static class Cl
 {
 
-	static int iiii =6,u;
+	static bool iiii = 7+7-6*2 > 3;
 
-	static char[] nn, i = new char[8] ;
-
-	static void testfunc(int[] a, char t)
-	{
-		int a,  b = 3;
-		
-	
-		bool t;
-
-		int u = 7, u, i = 7*7 , l = new int();
-		int[] a, b = new int[3];
-
-		do
-		{
-			int[] a = new int[]{1,2,3};
-			
-			
-			int[] b = new int [5];
-
-		} while(true!=true);
-
-		//_rfunc(1, new int[t.a[7]]);
-	
-		char c = '&';
-		char c = '╕';
-		TestClass.ValeraGirl(4);
-		TestClass.ValeraVar = 3;
-		TestClass.valeraArray[((3+4))] = t.u;
-		}
-
-		static bool y = true && false;
-
-		static int u()
-		{
-			while(tt())
-			{
-				p = 6;
-			}
-		}
+//	static char[] nn, i = new char[8] ;
+//
+//	static void testfunc(int[] a, char t)
+//	{
+//		int a,  b = 3;
+//		
+//	
+//		bool t;
+//
+//		int u = 7, u, i = 7*7 , l = new int();
+//		int[] a, b = new int[3];
+//
+//		do
+//		{
+//			int[] a = new int[]{1,2,3};
+//			
+//			
+//			int[] b = new int [5];
+//
+//		} while(true!=true);
+//
+//		//_rfunc(1, new int[t.a[7]]);
+//	
+//		char c = '&';
+//		char c = '╕';
+//		TestClass.ValeraGirl(4);
+//		TestClass.ValeraVar = 3;
+//		TestClass.valeraArray[((3+4))] = t.u;
+//		}
+//
+//		static bool y = true && false;
+//
+//		static int u()
+//		{
+//			while(tt())
+//			{
+//				p = 6;
+//			}
+//		}
 }

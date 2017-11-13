@@ -1,7 +1,7 @@
-﻿namespace MathLang.Tree
+﻿namespace MathLang.Tree.Nodes
 {
     public interface INode
     {
-        public INode Parent { get; set; }
+        INode Parent { get; set; }
     }
 }
