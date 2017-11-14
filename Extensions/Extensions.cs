@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MathLang.Extensions
 {
@@ -13,11 +14,9 @@ namespace MathLang.Extensions
                 action(item);
         }
 
-        public static TResult Cast<TInput, TResult>(this TInput input)
-            where TResult : class
-            where TInput : class
+        public static TResult CastTo<TResult>(this object input)
         {
-            return input as TResult;
+            return (TResult) input;
         }
     }
 }
