@@ -3,6 +3,7 @@ using System.Globalization;
 
 using Antlr.Runtime;
 using Antlr.Runtime.Tree;
+using MathLang.Extensions;
 
 
 namespace MathLang
@@ -44,7 +45,7 @@ namespace MathLang
                 ITree program = (ITree)parser.execute().Tree;
                 AstNodePrinter.Print(program);
                 Tree.Nodes.Program astProgram = new Tree.Nodes.Program();
-                astProgram.Run(program as CommonTree);
+                astProgram.Construct(program.CastTo<CommonTree>());
                 int noop = 0;
 
                 //Console.WriteLine();

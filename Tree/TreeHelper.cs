@@ -11,23 +11,18 @@ namespace MathLang.Tree
 {
     public static class TreeHelper
     {
-        public static List<VariableDeclaration> RunMultiDeclaration(Class parentClass, CommonTree syntaxMultiDeclaration)
+        public static List<VariableDeclaration> RunMultiDeclaration(ClassDeclaration parentClassDeclaration, CommonTree syntaxMultiDeclaration)
         {
             ReturnType returnType = GetReturnType(syntaxMultiDeclaration.GetChild(0).Text);
             List<VariableDeclaration> variableList = new List<VariableDeclaration>();
 
             syntaxMultiDeclaration
-                 .GetChild(1)
-                 .Cast<ITree, CommonTree>()
-                 .Children
-                 //.Skip(1)
-                 .Cast<CommonTree>()
+                 .GetChild(1).CastTo<CommonTree>()
+                 .Children.Cast<CommonTree>()
                  .ForEach(varDecl =>
                  {
-                     VariableDeclaration variable = new VariableDeclaration();
-                     variable.Parent = parentClass;
-                     variable.Run(returnType, varDecl);
-                     //parentClass.VarDeclarationNodes.Add(variable);
+                     VariableDeclaration variable = new VariableDeclaration(parentClassDeclaration, returnType);
+                     variable.Construct(varDecl);
                      variableList.Add(variable);
                  });
             return variableList;
@@ -66,31 +61,25 @@ namespace MathLang.Tree
             }
         }
 
-        public static IExpression RunExpression(CommonTree syntaxExpression)
+        public static IExpression GetExpression(INode parent, CommonTree syntaxExpression)
         {
             if (syntaxExpression.Type == FUNC_CALL)
             {
-                FunctionCallExpression functionCallExpression = new FunctionCallExpression();
-                //functionCallExpression.Run(syntaxExpression);
-                return functionCallExpression;
+                return new FunctionCallExpression(parent);
             }
-           
             else if (IsAtomNode(syntaxExpression.Type))
             {
-                AtomExpression atomExpression = new AtomExpression();
-                return atomExpression;
+                return new AtomExpression(parent);
             }
             else
             {
-                Expression expression = new Expression();
-                //expression.Run(syntaxExpression);
-                return expression;
+                return new Expression(parent);
             }
         }
 
         public static bool IsAtomNode(int type)
         {
-            return new[] {TRUE, FALSE, NUMBER, CHAR, ID}
+            return new[] { TRUE, FALSE, NUMBER, CHAR, ID }
                 .Contains(type);
         }
     }
