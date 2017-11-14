@@ -2,6 +2,7 @@
 {
     public enum ReturnType
     {
+        Unset,
         Bool,
         Int,
         Double,
