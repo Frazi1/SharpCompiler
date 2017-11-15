@@ -4,8 +4,13 @@ static class Cl
 
 	//static bool iiii = 7+7-6*2 > 3;
 	//static int myInt = 3;
-	static char myChar= 'h';
-	static int TEST_INT = 3 + myInt;
+	//static char myChar= 'h';
+	//static int TEST_INT = 3 + myInt;
+
+	static void TestFunc()
+	{
+		Test();
+	}
 
 //	static char[] nn, i = new char[8] ;
 //

@@ -2,6 +2,7 @@
 {
     public enum ExpressionType
     {
+        Unset = 0,
         Add,
         Sub,
         Mul,
@@ -14,6 +15,7 @@
         NotEqual,
         Not,
         Or,
-        And
+        And,
+        FunctionCall
     }
 }
