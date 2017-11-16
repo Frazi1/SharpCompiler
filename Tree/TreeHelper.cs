@@ -97,7 +97,7 @@ namespace MathLang.Tree
             
             switch (syntaxStatement.Type)
             {
-                case IF: return new IfStatement(functionParent).AsListOf<IStatement>();
+                case IF: return new IfStatement(functionParent, parentScope).AsListOf<IStatement>();
                 case DO: return new DoWhileStatement(functionParent).AsListOf<IStatement>();
                 case WHILE: return new WhileStatement(functionParent).AsListOf<IStatement>();
                 case FOR: return new ForStatement(functionParent).AsListOf<IStatement>();

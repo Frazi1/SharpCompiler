@@ -7,10 +7,12 @@ namespace MathLang.Tree
     public class IfStatement : IStatement
     {
         public INode Parent { get; }
-
-        public IfStatement(INode parent)
+        public Scope Scope { get; }
+        
+        public IfStatement(INode parent, Scope parentScope)
         {
             Parent = parent;
+            Scope = new LocalScope(parentScope, true);
         }
 
         public void Construct(CommonTree tree)
