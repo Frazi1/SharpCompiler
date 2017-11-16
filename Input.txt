@@ -6,10 +6,13 @@ static class Cl
 	//static int myInt = 3;
 	//static char myChar= 'h';
 	//static int TEST_INT = 3 + myInt;
+	//static int not_init;
 
 	static void TestFunc()
 	{
-		Test();
+		//Test();
+		int a;
+		a = 3;
 	}
 
 //	static char[] nn, i = new char[8] ;
