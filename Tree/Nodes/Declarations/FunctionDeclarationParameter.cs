@@ -17,7 +17,7 @@ namespace MathLang.Tree.Nodes
         public FunctionDeclarationParameter(INode parent, Scope parentScope, ReturnType returnType) 
             : base(parent, parentScope, returnType)
         {
-            
+            Initialized = true;
         }
 
         public override void Construct(CommonTree tree)

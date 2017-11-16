@@ -2,15 +2,15 @@
 static class Cl
 {
 
-	//static bool iiii = 7+7-6*2 > 3;
-	//static int myInt = 3;
-	//static char myChar= 'h';
-	//static int TEST_INT = 3 + myInt;
-	//static int not_init;
+	static bool iiii = 7+7-6*2 > 3;
+	static int myInt = 3;
+	static char myChar= 'h';
+	static int TEST_INT = 3 + myInt;
+	static int not_init;
 
-	static void TestFunc()
+	static void TestFunc(bool param1, int param2)
 	{
-		//Test();
+		Test();
 		int a;
 		a = 3;
 	}
