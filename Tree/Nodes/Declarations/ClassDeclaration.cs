@@ -8,14 +8,16 @@ namespace MathLang.Tree.Nodes
     public class ClassDeclaration : INode
     {
         public INode Parent { get; }
+        public Scope Scope { get; }
 
         public string Name { get; set; }
         public List<VariableDeclaration> VarDeclarationNodes { get; }
         public List<FunctionDeclaration> FunctionDeclarationNodes { get; }
 
-        public ClassDeclaration(INode parent)
+        public ClassDeclaration(INode parent, Scope parentScope)
         {
             Parent = parent;
+            Scope = new LocalScope(parentScope, true);
             VarDeclarationNodes = new List<VariableDeclaration>();
             FunctionDeclarationNodes = new List<FunctionDeclaration>();
         }
@@ -31,13 +33,14 @@ namespace MathLang.Tree.Nodes
                     if (child.Type == MathLangParser.STATIC_DECLARATION)
                     {
                         List<VariableDeclaration> variableList 
-                            =  TreeHelper.RunMultiDeclaration(this, child.GetChild(0).CastTo<CommonTree>());
+                            =  TreeHelper.RunMultiDeclaration(this, Scope, child.GetChild(0).CastTo<CommonTree>());
                         VarDeclarationNodes.AddRange(variableList);
                     }
                     else if (child.Type == MathLangParser.FUNCDECLARATION)
                     {
-                        FunctionDeclaration function = new FunctionDeclaration(this);
+                        FunctionDeclaration function = new FunctionDeclaration(this, Scope);
                         FunctionDeclarationNodes.Add(function);
+                        Scope.AddFunction(function);
                         function.Construct(child);
                     }
                 });

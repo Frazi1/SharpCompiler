@@ -63,6 +63,8 @@
     <Compile Include="Tree\Nodes\Enums\ReturnType.cs" />
     <Compile Include="Tree\Nodes\Declarations\VariableDeclaration.cs" />
     <Compile Include="Tree\Nodes\Statements\ReturnStatement.cs" />
+    <Compile Include="Tree\Scopes\LocalScope.cs" />
+    <Compile Include="Tree\Scopes\Scope.cs" />
     <Compile Include="Tree\TreeHelper.cs" />
     <Compile Include="Tree\Nodes\Statements\VariableAssignmentStatement.cs" />
     <Compile Include="Tree\Nodes\Statements\WhileStatement.cs" />

@@ -6,7 +6,8 @@ namespace MathLang.Tree.Nodes
     public class VariableDeclaration : IStatement
     {
         public INode Parent { get; }
-
+        public Scope Scope { get; }
+        
         public string Name { get; set; }
         public ReturnType ReturnType { get; }
         public IExpression Value { get; set; }
@@ -14,13 +15,14 @@ namespace MathLang.Tree.Nodes
         //This may be useful for semantics
         public bool Initialized { get; private set; }
         
-        public VariableDeclaration(INode parent, ReturnType returnType)
+        public VariableDeclaration(INode parent, Scope parentScope, ReturnType returnType)
         {
             Parent = parent;
+            Scope = new LocalScope(parentScope, false);
             ReturnType = returnType;
         }
 
-        public void Construct(CommonTree syntaxVariableDeclaration)
+        public virtual void Construct(CommonTree syntaxVariableDeclaration)
         {
             Name = syntaxVariableDeclaration.GetChild(0).Text;
             //Check if we have a value assigned to the variable

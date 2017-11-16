@@ -8,15 +8,17 @@ namespace MathLang.Tree.Nodes
     public class FunctionDeclaration : INode
     {
         public INode Parent { get; }
+        public Scope Scope { get; }
 
         public string Name { get; set; }
         public ReturnType ReturnType { get; set; }
         public List<FunctionDeclarationParameter> ParameterNodes { get; }
         public List<IStatement> StatementNodes { get; }
 
-        public FunctionDeclaration(INode parent)
+        public FunctionDeclaration(INode parent, Scope parentScope)
         {
             Parent = parent;
+            Scope = new LocalScope(parentScope, true);
             ParameterNodes = new List<FunctionDeclarationParameter>();
             StatementNodes = new List<IStatement>();
         }
@@ -32,29 +34,36 @@ namespace MathLang.Tree.Nodes
                 syntaxParametersNode.Children.Cast<CommonTree>()
                     .ForEach(syntaxParameter =>
                     {
-                        FunctionDeclarationParameter functionDeclarationParameter = new FunctionDeclarationParameter(this);
+                        FunctionDeclarationParameter functionDeclarationParameter =
+                            new FunctionDeclarationParameter(this, Scope,
+                                TreeHelper.GetReturnType(syntaxParameter.GetChild(0).Text));
                         ParameterNodes.Add(functionDeclarationParameter);
+                        Scope.AddVariable(functionDeclarationParameter);
                         functionDeclarationParameter.Construct(syntaxParameter);
                     });
             }
 
+            //Statements
             var syntaxStatementBlock = syntaxFunctionDeclaration.GetChild(3).CastTo<CommonTree>();
             if (syntaxStatementBlock.ChildCount > 0)
             {
                 syntaxStatementBlock.Children.Cast<CommonTree>()
                     .ForEach(syntaxStatement =>
                     {
-                        List<IStatement> statements = TreeHelper.GetStatements(this, syntaxStatement);
+                        List<IStatement> statements = TreeHelper.GetStatements(this, Scope, syntaxStatement);
                         StatementNodes.AddRange(statements);
                         statements.ForEach(statement =>
                         {
                             //if it is a variable we must not call Construct, because it was already constructed in TreeHelper
-                            if (statement is VariableDeclaration)
+                            if (statement is VariableDeclaration variable)
+                            {
+                                Scope.AddVariable(variable);
                                 return;
+                            }
                             statement.Construct(syntaxStatement);
                         });
-                    } );
-            }   
+                    });
+            }
         }
     }
 }
