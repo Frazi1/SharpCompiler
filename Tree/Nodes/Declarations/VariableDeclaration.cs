@@ -29,7 +29,7 @@ namespace MathLang.Tree.Nodes
             if (syntaxVariableDeclaration.ChildCount > 1)
             {
                 var syntaxValueExpression = syntaxVariableDeclaration.GetChild(1).CastTo<CommonTree>();
-                Value = TreeHelper.GetExpression(this, syntaxValueExpression);
+                Value = TreeHelper.GetExpression(this, Scope, syntaxValueExpression);
                 Value.Construct(syntaxValueExpression);
                 Initialized = true;
             }

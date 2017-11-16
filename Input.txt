@@ -12,7 +12,7 @@ static class Cl
 	{
 		//Test();
 		int a;
-		//a = 3;
+		a = 3;
 	}
 
 //	static char[] nn, i = new char[8] ;

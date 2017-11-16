@@ -62,19 +62,19 @@ namespace MathLang.Tree
             }
         }
 
-        public static IExpression GetExpression(INode parent, CommonTree syntaxExpression)
+        public static IExpression GetExpression(INode parent, Scope parentScope, CommonTree syntaxExpression)
         {
             if (syntaxExpression.Type == FUNC_CALL)
             {
-                return new FunctionCall(parent);
+                return new FunctionCall(parent, parentScope);
             }
             else if (IsAtomNode(syntaxExpression.Type))
             {
-                return new AtomExpression(parent);
+                return new Atom(parent, parentScope);
             }
             else
             {
-                return new Expression(parent);
+                return new Expression(parent, parentScope);
             }
         }
 
@@ -89,14 +89,19 @@ namespace MathLang.Tree
         //so everything will be a list of 1 element (in most cases)
         public static List<IStatement> GetStatements(INode functionParent, Scope parentScope, CommonTree syntaxStatement)
         {
-
+            //Fucking switch does not allow usage of "if" so...
+            if (IsAtomNode(syntaxStatement.Type))
+            {
+                return new Atom(functionParent, parentScope).AsListOf<IStatement>();
+            }
+            
             switch (syntaxStatement.Type)
             {
                 case IF: return new IfStatement(functionParent).AsListOf<IStatement>();
                 case DO: return new DoWhileStatement(functionParent).AsListOf<IStatement>();
                 case WHILE: return new WhileStatement(functionParent).AsListOf<IStatement>();
                 case FOR: return new ForStatement(functionParent).AsListOf<IStatement>();
-                case VARASSIGNMENT: return new VariableAssignmentStatement(functionParent).AsListOf<IStatement>();
+                case VARASSIGNMENT: return new VariableAssignmentStatement(functionParent, parentScope).AsListOf<IStatement>();
                 //Not to implement
                 //case ARRAYELEMENTASSIGNMENT: return new ArrayElementAssignmentStatement(functionParent).AsListOf<IStatement>();
                 //Think something up here because we dont want MULT_DECL to be in the new tree
@@ -106,8 +111,7 @@ namespace MathLang.Tree
                 //case MULT_ARRAY_DECL:
 
                 case RETURN: return new ReturnStatement(functionParent).AsListOf<IStatement>();
-                case FUNC_CALL: return new FunctionCall(functionParent).AsListOf<IStatement>();
-
+                case FUNC_CALL: return new FunctionCall(functionParent, parentScope).AsListOf<IStatement>(); 
                 //Cannot be here
                 //case VARDECLARATION: return new VariableDeclaration();
                 default: throw new ArgumentOutOfRangeException(nameof(syntaxStatement.Type));
