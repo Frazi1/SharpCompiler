@@ -1,6 +1,6 @@
 ﻿using Antlr.Runtime.Tree;
 
-namespace MathLang.Tree.Nodes
+namespace MathLang.Tree.Nodes.Interfaces
 {
     public interface INode
     {

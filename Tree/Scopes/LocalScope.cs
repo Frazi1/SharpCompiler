@@ -1,6 +1,6 @@
-﻿using MathLang.Tree.Nodes;
+﻿using MathLang.Tree.Nodes.Declarations;
 
-namespace MathLang.Tree
+namespace MathLang.Tree.Scopes
 {
     public class LocalScope : Scope
     {

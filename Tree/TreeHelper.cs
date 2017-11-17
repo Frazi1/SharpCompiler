@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Antlr.Runtime.Tree;
 using MathLang.Extensions;
-using MathLang.Tree.Nodes;
+using MathLang.Tree.Nodes.Declarations;
+using MathLang.Tree.Nodes.Enums;
+using MathLang.Tree.Nodes.Expressions;
+using MathLang.Tree.Nodes.Interfaces;
+using MathLang.Tree.Nodes.Statements;
+using MathLang.Tree.Scopes;
 using static MathLang.MathLangParser;
-using SyntaxNodeTypes = MathLang.MathLangParser;
 
 namespace MathLang.Tree
 {

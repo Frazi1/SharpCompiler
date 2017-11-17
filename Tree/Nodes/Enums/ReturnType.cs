@@ -1,4 +1,4 @@
-﻿namespace MathLang.Tree.Nodes
+﻿namespace MathLang.Tree.Nodes.Enums
 {
     public enum ReturnType
     {

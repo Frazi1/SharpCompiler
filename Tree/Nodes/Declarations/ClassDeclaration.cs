@@ -2,8 +2,10 @@
 using System.Linq;
 using Antlr.Runtime.Tree;
 using MathLang.Extensions;
+using MathLang.Tree.Nodes.Interfaces;
+using MathLang.Tree.Scopes;
 
-namespace MathLang.Tree.Nodes
+namespace MathLang.Tree.Nodes.Declarations
 {
     public class ClassDeclaration : INode
     {

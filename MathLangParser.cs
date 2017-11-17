@@ -1,4 +1,4 @@
-// $ANTLR 3.3 Nov 30, 2010 12:50:56 MathLang.g 2017-11-17 11:47:37
+// $ANTLR 3.3 Nov 30, 2010 12:50:56 MathLang.g 2017-11-17 21:00:33
 
 // The variable 'variable' is assigned but its value is never used.
 #pragma warning disable 219
@@ -301,8 +301,8 @@ public partial class MathLangParser : Antlr.Runtime.Parser
 		object CLASS_WORD4_tree=null;
 		object ID5_tree=null;
 		RewriteRuleITokenStream stream_CLASS_WORD=new RewriteRuleITokenStream(adaptor,"token CLASS_WORD");
-		RewriteRuleITokenStream stream_ID=new RewriteRuleITokenStream(adaptor,"token ID");
 		RewriteRuleITokenStream stream_MODIFIER=new RewriteRuleITokenStream(adaptor,"token MODIFIER");
+		RewriteRuleITokenStream stream_ID=new RewriteRuleITokenStream(adaptor,"token ID");
 		RewriteRuleSubtreeStream stream_class_block=new RewriteRuleSubtreeStream(adaptor,"rule class_block");
 		try { DebugEnterRule(GrammarFileName, "class_declaration");
 		DebugLocation(59, 86);
@@ -2056,8 +2056,8 @@ public partial class MathLangParser : Antlr.Runtime.Parser
 		object ID39_tree=null;
 		object DOT40_tree=null;
 		object ID41_tree=null;
-		RewriteRuleITokenStream stream_ID=new RewriteRuleITokenStream(adaptor,"token ID");
 		RewriteRuleITokenStream stream_DOT=new RewriteRuleITokenStream(adaptor,"token DOT");
+		RewriteRuleITokenStream stream_ID=new RewriteRuleITokenStream(adaptor,"token ID");
 
 		try { DebugEnterRule(GrammarFileName, "extended_id");
 		DebugLocation(101, 39);
@@ -2208,8 +2208,8 @@ public partial class MathLangParser : Antlr.Runtime.Parser
 
 		object OPEN_SQUARE_BRACE43_tree=null;
 		object CLOSE_SQUARE_BRACE45_tree=null;
-		RewriteRuleITokenStream stream_CLOSE_SQUARE_BRACE=new RewriteRuleITokenStream(adaptor,"token CLOSE_SQUARE_BRACE");
 		RewriteRuleITokenStream stream_OPEN_SQUARE_BRACE=new RewriteRuleITokenStream(adaptor,"token OPEN_SQUARE_BRACE");
+		RewriteRuleITokenStream stream_CLOSE_SQUARE_BRACE=new RewriteRuleITokenStream(adaptor,"token CLOSE_SQUARE_BRACE");
 		RewriteRuleSubtreeStream stream_extended_id=new RewriteRuleSubtreeStream(adaptor,"rule extended_id");
 		RewriteRuleSubtreeStream stream_mathexpression=new RewriteRuleSubtreeStream(adaptor,"rule mathexpression");
 		try { DebugEnterRule(GrammarFileName, "arrayelement");
@@ -2245,7 +2245,7 @@ public partial class MathLangParser : Antlr.Runtime.Parser
 
 			{
 			// AST REWRITE
-			// elements: extended_id, mathexpression
+			// elements: mathexpression, extended_id
 			// token labels: 
 			// rule labels: retval
 			// token list labels: 
@@ -2612,7 +2612,7 @@ public partial class MathLangParser : Antlr.Runtime.Parser
 
 			{
 			// AST REWRITE
-			// elements: d_list, type
+			// elements: type, d_list
 			// token labels: 
 			// rule labels: retval
 			// token list labels: 
@@ -3980,7 +3980,7 @@ public partial class MathLangParser : Antlr.Runtime.Parser
 
 				{
 				// AST REWRITE
-				// elements: ID, type
+				// elements: type, ID
 				// token labels: 
 				// rule labels: retval
 				// token list labels: 
@@ -4149,8 +4149,8 @@ public partial class MathLangParser : Antlr.Runtime.Parser
 		object ASSIGN84_tree=null;
 		RewriteRuleITokenStream stream_ID=new RewriteRuleITokenStream(adaptor,"token ID");
 		RewriteRuleITokenStream stream_ASSIGN=new RewriteRuleITokenStream(adaptor,"token ASSIGN");
-		RewriteRuleSubtreeStream stream_newexpression=new RewriteRuleSubtreeStream(adaptor,"rule newexpression");
 		RewriteRuleSubtreeStream stream_expression=new RewriteRuleSubtreeStream(adaptor,"rule expression");
+		RewriteRuleSubtreeStream stream_newexpression=new RewriteRuleSubtreeStream(adaptor,"rule newexpression");
 		RewriteRuleSubtreeStream stream_array_type=new RewriteRuleSubtreeStream(adaptor,"rule array_type");
 		RewriteRuleSubtreeStream stream_type=new RewriteRuleSubtreeStream(adaptor,"rule type");
 		try { DebugEnterRule(GrammarFileName, "longdeclarationbody");
@@ -4302,7 +4302,7 @@ public partial class MathLangParser : Antlr.Runtime.Parser
 
 				{
 				// AST REWRITE
-				// elements: newexpression, ID, array_type
+				// elements: ID, array_type, newexpression
 				// token labels: 
 				// rule labels: retval
 				// token list labels: 
@@ -5115,8 +5115,8 @@ public partial class MathLangParser : Antlr.Runtime.Parser
 		object ASSIGN104_tree=null;
 		object ASSIGN107_tree=null;
 		RewriteRuleITokenStream stream_ASSIGN=new RewriteRuleITokenStream(adaptor,"token ASSIGN");
-		RewriteRuleSubtreeStream stream_expression=new RewriteRuleSubtreeStream(adaptor,"rule expression");
 		RewriteRuleSubtreeStream stream_extended_id=new RewriteRuleSubtreeStream(adaptor,"rule extended_id");
+		RewriteRuleSubtreeStream stream_expression=new RewriteRuleSubtreeStream(adaptor,"rule expression");
 		RewriteRuleSubtreeStream stream_arrayelement=new RewriteRuleSubtreeStream(adaptor,"rule arrayelement");
 		try { DebugEnterRule(GrammarFileName, "assignmentbody");
 		DebugLocation(137, 87);
@@ -6992,13 +6992,13 @@ public partial class MathLangParser : Antlr.Runtime.Parser
 		object ID165_tree=null;
 		object OPEN_BRACE166_tree=null;
 		object CLOSE_BRACE168_tree=null;
+		RewriteRuleITokenStream stream_MODIFIER=new RewriteRuleITokenStream(adaptor,"token MODIFIER");
+		RewriteRuleITokenStream stream_OPEN_BRACE=new RewriteRuleITokenStream(adaptor,"token OPEN_BRACE");
 		RewriteRuleITokenStream stream_CLOSE_BRACE=new RewriteRuleITokenStream(adaptor,"token CLOSE_BRACE");
 		RewriteRuleITokenStream stream_ID=new RewriteRuleITokenStream(adaptor,"token ID");
-		RewriteRuleITokenStream stream_OPEN_BRACE=new RewriteRuleITokenStream(adaptor,"token OPEN_BRACE");
-		RewriteRuleITokenStream stream_MODIFIER=new RewriteRuleITokenStream(adaptor,"token MODIFIER");
+		RewriteRuleSubtreeStream stream_any_type=new RewriteRuleSubtreeStream(adaptor,"rule any_type");
 		RewriteRuleSubtreeStream stream_paramsdeclaration=new RewriteRuleSubtreeStream(adaptor,"rule paramsdeclaration");
 		RewriteRuleSubtreeStream stream_block=new RewriteRuleSubtreeStream(adaptor,"rule block");
-		RewriteRuleSubtreeStream stream_any_type=new RewriteRuleSubtreeStream(adaptor,"rule any_type");
 		try { DebugEnterRule(GrammarFileName, "funcdeclaration");
 		DebugLocation(155, 189);
 		try
@@ -7054,7 +7054,7 @@ public partial class MathLangParser : Antlr.Runtime.Parser
 
 			{
 			// AST REWRITE
-			// elements: ID, paramsdeclaration, any_type, block
+			// elements: any_type, paramsdeclaration, ID, block
 			// token labels: 
 			// rule labels: retval
 			// token list labels: 
@@ -7351,8 +7351,8 @@ public partial class MathLangParser : Antlr.Runtime.Parser
 
 		object OPEN_BRACE174_tree=null;
 		object CLOSE_BRACE176_tree=null;
-		RewriteRuleITokenStream stream_CLOSE_BRACE=new RewriteRuleITokenStream(adaptor,"token CLOSE_BRACE");
 		RewriteRuleITokenStream stream_OPEN_BRACE=new RewriteRuleITokenStream(adaptor,"token OPEN_BRACE");
+		RewriteRuleITokenStream stream_CLOSE_BRACE=new RewriteRuleITokenStream(adaptor,"token CLOSE_BRACE");
 		RewriteRuleSubtreeStream stream_extended_id=new RewriteRuleSubtreeStream(adaptor,"rule extended_id");
 		RewriteRuleSubtreeStream stream_expressioncommalist=new RewriteRuleSubtreeStream(adaptor,"rule expressioncommalist");
 		try { DebugEnterRule(GrammarFileName, "funccallbody");
@@ -8059,8 +8059,8 @@ public partial class MathLangParser : Antlr.Runtime.Parser
 
 		object OPEN_BRACE190_tree=null;
 		object CLOSE_BRACE191_tree=null;
-		RewriteRuleITokenStream stream_CLOSE_BRACE=new RewriteRuleITokenStream(adaptor,"token CLOSE_BRACE");
 		RewriteRuleITokenStream stream_OPEN_BRACE=new RewriteRuleITokenStream(adaptor,"token OPEN_BRACE");
+		RewriteRuleITokenStream stream_CLOSE_BRACE=new RewriteRuleITokenStream(adaptor,"token CLOSE_BRACE");
 		RewriteRuleSubtreeStream stream_type=new RewriteRuleSubtreeStream(adaptor,"rule type");
 		try { DebugEnterRule(GrammarFileName, "simple_var_initializer");
 		DebugLocation(166, 69);
@@ -8184,9 +8184,9 @@ public partial class MathLangParser : Antlr.Runtime.Parser
 		object OPEN_SQUARE_BRACE193_tree=null;
 		object CLOSE_SQUARE_BRACE195_tree=null;
 		object ARRAY_DECLARATION_MARK196_tree=null;
-		RewriteRuleITokenStream stream_CLOSE_SQUARE_BRACE=new RewriteRuleITokenStream(adaptor,"token CLOSE_SQUARE_BRACE");
-		RewriteRuleITokenStream stream_ARRAY_DECLARATION_MARK=new RewriteRuleITokenStream(adaptor,"token ARRAY_DECLARATION_MARK");
 		RewriteRuleITokenStream stream_OPEN_SQUARE_BRACE=new RewriteRuleITokenStream(adaptor,"token OPEN_SQUARE_BRACE");
+		RewriteRuleITokenStream stream_ARRAY_DECLARATION_MARK=new RewriteRuleITokenStream(adaptor,"token ARRAY_DECLARATION_MARK");
+		RewriteRuleITokenStream stream_CLOSE_SQUARE_BRACE=new RewriteRuleITokenStream(adaptor,"token CLOSE_SQUARE_BRACE");
 		RewriteRuleSubtreeStream stream_mathexpression=new RewriteRuleSubtreeStream(adaptor,"rule mathexpression");
 		RewriteRuleSubtreeStream stream_type=new RewriteRuleSubtreeStream(adaptor,"rule type");
 		RewriteRuleSubtreeStream stream_object_initializer=new RewriteRuleSubtreeStream(adaptor,"rule object_initializer");
@@ -8310,7 +8310,7 @@ public partial class MathLangParser : Antlr.Runtime.Parser
 
 			{
 			// AST REWRITE
-			// elements: type, object_initializer, mathexpression
+			// elements: object_initializer, mathexpression, type
 			// token labels: 
 			// rule labels: retval
 			// token list labels: 

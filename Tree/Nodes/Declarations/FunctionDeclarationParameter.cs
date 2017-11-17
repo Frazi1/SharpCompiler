@@ -1,6 +1,9 @@
 ﻿using Antlr.Runtime.Tree;
+using MathLang.Tree.Nodes.Enums;
+using MathLang.Tree.Nodes.Interfaces;
+using MathLang.Tree.Scopes;
 
-namespace MathLang.Tree.Nodes
+namespace MathLang.Tree.Nodes.Declarations
 {
     public class FunctionDeclarationParameter : VariableDeclaration
     {
