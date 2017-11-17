@@ -11,7 +11,7 @@ namespace MathLang.Tree
 {
     public static class TreeHelper
     {
-        public static List<VariableDeclaration> RunMultiDeclaration(ClassDeclaration parentClassDeclaration, CommonTree syntaxMultiDeclaration)
+        public static List<VariableDeclaration> RunMultiDeclaration(INode parentNode, Scope parentScope, CommonTree syntaxMultiDeclaration)
         {
             ReturnType returnType = GetReturnType(syntaxMultiDeclaration.GetChild(0).Text);
             List<VariableDeclaration> variableList = new List<VariableDeclaration>();
@@ -21,7 +21,7 @@ namespace MathLang.Tree
                  .Children.Cast<CommonTree>()
                  .ForEach(varDecl =>
                  {
-                     VariableDeclaration variable = new VariableDeclaration(parentClassDeclaration, returnType);
+                     VariableDeclaration variable = new VariableDeclaration(parentNode, parentScope, returnType);
                      variable.Construct(varDecl);
                      variableList.Add(variable);
                  });
@@ -57,23 +57,24 @@ namespace MathLang.Tree
                 case NOT: return ExpressionType.Not;
                 case OR: return ExpressionType.Or;
                 case AND: return ExpressionType.And;
+                case FUNC_CALL: return ExpressionType.FunctionCall;
                 default: throw new ArgumentException(nameof(type));
             }
         }
 
-        public static IExpression GetExpression(INode parent, CommonTree syntaxExpression)
+        public static IExpression GetExpression(INode parent, Scope parentScope, CommonTree syntaxExpression)
         {
             if (syntaxExpression.Type == FUNC_CALL)
             {
-                return new FunctionCallExpression(parent);
+                return new FunctionCall(parent, parentScope);
             }
             else if (IsAtomNode(syntaxExpression.Type))
             {
-                return new AtomExpression(parent);
+                return new Atom(parent, parentScope);
             }
             else
             {
-                return new Expression(parent);
+                return new Expression(parent, parentScope);
             }
         }
 
@@ -81,6 +82,40 @@ namespace MathLang.Tree
         {
             return new[] { TRUE, FALSE, NUMBER, CHAR, ID }
                 .Contains(type);
+        }
+
+        
+        //We need a list here because we get a list of variable declarations from MULT_DECL syntax node
+        //so everything will be a list of 1 element (in most cases)
+        public static List<IStatement> GetStatements(INode functionParent, Scope parentScope, CommonTree syntaxStatement)
+        {
+            //Fucking switch does not allow usage of "if" so...
+            if (IsAtomNode(syntaxStatement.Type))
+            {
+                return new Atom(functionParent, parentScope).AsListOf<IStatement>();
+            }
+            
+            switch (syntaxStatement.Type)
+            {
+                case IF: return new IfStatement(functionParent).AsListOf<IStatement>();
+                case DO: return new DoWhileStatement(functionParent).AsListOf<IStatement>();
+                case WHILE: return new WhileStatement(functionParent).AsListOf<IStatement>();
+                case FOR: return new ForStatement(functionParent).AsListOf<IStatement>();
+                case VARASSIGNMENT: return new VariableAssignmentStatement(functionParent, parentScope).AsListOf<IStatement>();
+                //Not to implement
+                //case ARRAYELEMENTASSIGNMENT: return new ArrayElementAssignmentStatement(functionParent).AsListOf<IStatement>();
+                //Think something up here because we dont want MULT_DECL to be in the new tree
+                case MULT_DECL: return RunMultiDeclaration(functionParent, parentScope ,syntaxStatement).AsListOf<IStatement>();
+
+                //And here
+                //case MULT_ARRAY_DECL:
+
+                case RETURN: return new ReturnStatement(functionParent).AsListOf<IStatement>();
+                case FUNC_CALL: return new FunctionCall(functionParent, parentScope).AsListOf<IStatement>(); 
+                //Cannot be here
+                //case VARDECLARATION: return new VariableDeclaration();
+                default: throw new ArgumentOutOfRangeException(nameof(syntaxStatement.Type));
+            }
         }
     }
 }

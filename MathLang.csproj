@@ -45,20 +45,29 @@
     <Compile Include="MathAstNode.cs" />
     <Compile Include="MathLangIntepreter.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Tree\Nodes\Expressions\AtomExpression.cs" />
+    <Compile Include="Tree\Nodes\Statements\ArrayElementAssignmentStatement.cs" />
+    <Compile Include="Tree\Nodes\Statements\DoWhileStatement.cs" />
+    <Compile Include="Tree\Nodes\Statements\ForStatement.cs" />
+    <Compile Include="Tree\Nodes\Statements\IfStatement.cs" />
+    <Compile Include="Tree\Nodes\Expressions\Atom.cs" />
     <Compile Include="Tree\Nodes\Declarations\ClassDeclaration.cs" />
     <Compile Include="Tree\Nodes\Expressions\Expression.cs" />
     <Compile Include="Tree\Nodes\Enums\ExpressionType.cs" />
-    <Compile Include="Tree\Nodes\Expressions\FunctionCallExpression.cs" />
+    <Compile Include="Tree\Nodes\Expressions\FunctionCall.cs" />
     <Compile Include="Tree\Nodes\Declarations\FunctionDeclaration.cs" />
     <Compile Include="Tree\Nodes\Interfaces\IExpression.cs" />
     <Compile Include="Tree\Nodes\Interfaces\INode.cs" />
     <Compile Include="Tree\Nodes\Interfaces\IStatement.cs" />
     <Compile Include="Tree\Nodes\Program.cs" />
-    <Compile Include="Tree\Nodes\Declarations\Parameter.cs" />
+    <Compile Include="Tree\Nodes\Declarations\FunctionDeclarationParameter.cs" />
     <Compile Include="Tree\Nodes\Enums\ReturnType.cs" />
     <Compile Include="Tree\Nodes\Declarations\VariableDeclaration.cs" />
+    <Compile Include="Tree\Nodes\Statements\ReturnStatement.cs" />
+    <Compile Include="Tree\Scopes\LocalScope.cs" />
+    <Compile Include="Tree\Scopes\Scope.cs" />
     <Compile Include="Tree\TreeHelper.cs" />
+    <Compile Include="Tree\Nodes\Statements\VariableAssignmentStatement.cs" />
+    <Compile Include="Tree\Nodes\Statements\WhileStatement.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Input.txt" />

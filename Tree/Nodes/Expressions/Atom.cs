@@ -1,19 +1,21 @@
 ﻿using System;
-using System.Linq;
 using Antlr.Runtime.Tree;
+using MathLang.Tree.Nodes;
 
-namespace MathLang.Tree.Nodes
+namespace MathLang.Tree
 {
-    public class AtomExpression : IExpression
+    public class Atom : IExpression, IStatement
     {
         public INode Parent { get; }
-
+        public Scope Scope { get; }
+        
         public ReturnType Type { get; private set; }
         public string Value { get; set; }
 
-        public AtomExpression(INode parent)
+        public Atom(INode parent, Scope parentScope)
         {
             Parent = parent;
+            Scope = new LocalScope(parentScope, false);
         }
 
         public void Construct(CommonTree node)
