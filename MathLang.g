@@ -147,7 +147,7 @@ boolvar: TRUE
 		| compare;
 		
 ifstatement: IF^ OPEN_BRACE! boolexpression CLOSE_BRACE! (block | statement) (ELSE! (block | statement))* ;
-whilestatement: WHILE^ OPEN_BRACE! boolexpression CLOSE_BRACE! (block | statement);
+whilestatement: WHILE^ OPEN_BRACE! boolexpression CLOSE_BRACE! ((block | statement) | ';'!)  ;
 forstatement: FOR^ OPEN_BRACE! longdeclarationbody ';'! boolexpression ';'! assignmentbody CLOSE_BRACE! (block | statement);
 returnstatement: RETURN^ expression ';'! ;
 dowhilestatement: DO^ (block | statement) WHILE! OPEN_BRACE! boolexpression CLOSE_BRACE! ';'! ;
