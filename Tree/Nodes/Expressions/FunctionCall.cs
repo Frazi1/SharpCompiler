@@ -2,19 +2,22 @@
 using System.Linq;
 using Antlr.Runtime.Tree;
 using MathLang.Extensions;
+using MathLang.Tree.Nodes;
 
-namespace MathLang.Tree.Nodes
+namespace MathLang.Tree
 {
     public class FunctionCall : IExpression, IStatement
     {
         public INode Parent { get; }
-
+        public Scope Scope { get; }
+        
         public string Name { get; set; }
         public List<IExpression> FunctionCallParameters { get; } = new List<IExpression>();
 
-        public FunctionCall(INode parent)
+        public FunctionCall(INode parent, Scope parentScope)
         {
             Parent = parent;
+            Scope = new LocalScope(parentScope, false);
         }
 
         public void Construct(CommonTree syntaxFuncCallExpression)
@@ -32,7 +35,7 @@ namespace MathLang.Tree.Nodes
                     .Children.Cast<CommonTree>()
                     .ForEach(syntaxfuncCallParam =>
                     {
-                        IExpression parameter = TreeHelper.GetExpression(this, syntaxfuncCallParam);             
+                        IExpression parameter = TreeHelper.GetExpression(this, Scope, syntaxfuncCallParam);             
                         parameter.Construct(syntaxfuncCallParam);
                         FunctionCallParameters.Add(parameter);
                     });

@@ -8,10 +8,13 @@ namespace MathLang.Tree.Nodes
     public class Program : INode
     {
         public INode Parent { get; set; }
-        public List<ClassDeclaration> ClassNodes { get; }
+        public Scope Scope { get; }
 
-        public Program()
+        public List<ClassDeclaration> ClassNodes { get; }
+        
+        public Program(Scope parentScope)
         {
+            Scope = new LocalScope(parentScope, true);
             ClassNodes = new List<ClassDeclaration>();
         }
 
@@ -21,8 +24,9 @@ namespace MathLang.Tree.Nodes
                 .Cast<CommonTree>()
                 .ForEach(syntaxClass =>
                 {
-                    ClassDeclaration classDeclaration = new ClassDeclaration(this);
+                    ClassDeclaration classDeclaration = new ClassDeclaration(this, Scope);
                     ClassNodes.Add(classDeclaration);
+                    Scope.AddClass(classDeclaration);
                     classDeclaration.Construct(syntaxClass);
                 });
         }

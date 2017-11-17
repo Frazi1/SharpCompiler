@@ -2,21 +2,27 @@
 
 namespace MathLang.Tree.Nodes
 {
-    public class FunctionDeclarationParameter : INode
+    public class FunctionDeclarationParameter : VariableDeclaration
     {
-        public INode Parent { get; }
+        //public INode Parent { get; }
 
-        public string Name { get; private set; }
-        public ReturnType ReturnType { get; private set; }
+        //public string Name { get; private set; }
+        //public ReturnType ReturnType { get; private set; }
 
-        public FunctionDeclarationParameter(INode parent)
+        //public FunctionDeclarationParameter(INode parent)
+        //{
+        //    Parent = parent;
+        //}
+
+        public FunctionDeclarationParameter(INode parent, Scope parentScope, ReturnType returnType) 
+            : base(parent, parentScope, returnType)
         {
-            Parent = parent;
+            Initialized = true;
         }
 
-        public void Construct(CommonTree tree)
+        public override void Construct(CommonTree tree)
         {
-            ReturnType = TreeHelper.GetReturnType(tree.GetChild(0).Text);
+            //ReturnType = TreeHelper.GetReturnType(tree.GetChild(0).Text);
             Name = tree.GetChild(1).Text;
             //Add to scope
         }

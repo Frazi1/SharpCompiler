@@ -44,7 +44,7 @@ namespace MathLang
                 MathLangParser parser = new MathLangParser(tokens);
                 ITree program = (ITree)parser.execute().Tree;
                 AstNodePrinter.Print(program);
-                Tree.Nodes.Program astProgram = new Tree.Nodes.Program();
+                Tree.Nodes.Program astProgram = new Tree.Nodes.Program(null);
                 astProgram.Construct(program.CastTo<CommonTree>());
                 int noop = 0;
 
