@@ -15,8 +15,8 @@ namespace MathLang.Tree.Nodes.Statements
         public Scope Scope { get; }
 
         public IExpression ConditionExpression { get; private set; }
-        public List<IStatement> TrueCaseStatements { get; } = new List<IStatement>();
-        public List<IStatement> FalseCaseStatements { get; } = new List<IStatement>();
+        public IStatement TrueCaseBlockStatement { get; private set; }
+        public IStatement FasleCaseBlockStatement { get; private set; }
         
         public IfStatement(INode parent, Scope parentScope)
         {
@@ -37,16 +37,18 @@ namespace MathLang.Tree.Nodes.Statements
             
             //True
             var syntaxTrueStatementsBlock = syntaxIf.GetChild(1).CastTo<CommonTree>();
-            if (syntaxTrueStatementsBlock.ChildCount > 0)
-            {
-                syntaxTrueStatementsBlock.Children.Cast<CommonTree>()
-                    .ForEach(syntaxStatement =>
-                    {
-                        var statements = TreeHelper.GetStatements(this, Scope, syntaxStatement);
-                    });
-            }
-            
+            TrueCaseBlockStatement = TreeHelper.GetStatements(this, Scope, syntaxTrueStatementsBlock)
+                .First();
+            TrueCaseBlockStatement.Construct(syntaxTrueStatementsBlock);
+
+
             //False
+            if(syntaxIf.ChildCount < 3)
+                return;
+            var syntaxFalseStatementsBlock = syntaxIf.GetChild(2).CastTo<CommonTree>();
+            FasleCaseBlockStatement = TreeHelper.GetStatements(this, Scope, syntaxFalseStatementsBlock)
+                .First();
+            FasleCaseBlockStatement.Construct(syntaxFalseStatementsBlock);
 
         }
     }
