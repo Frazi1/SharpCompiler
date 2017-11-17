@@ -2,8 +2,12 @@
 using System.Linq;
 using Antlr.Runtime.Tree;
 using MathLang.Extensions;
+using MathLang.Tree.Nodes.Enums;
+using MathLang.Tree.Nodes.Interfaces;
+using MathLang.Tree.Nodes.Statements;
+using MathLang.Tree.Scopes;
 
-namespace MathLang.Tree.Nodes
+namespace MathLang.Tree.Nodes.Declarations
 {
     public class FunctionDeclaration : INode
     {
@@ -13,14 +17,14 @@ namespace MathLang.Tree.Nodes
         public string Name { get; set; }
         public ReturnType ReturnType { get; set; }
         public List<FunctionDeclarationParameter> ParameterNodes { get; }
-        public List<IStatement> StatementNodes { get; }
+        public BlockStatement StatemenBlock { get; private set; }
 
         public FunctionDeclaration(INode parent, Scope parentScope)
         {
             Parent = parent;
             Scope = new LocalScope(parentScope, true);
             ParameterNodes = new List<FunctionDeclarationParameter>();
-            StatementNodes = new List<IStatement>();
+            StatemenBlock = new BlockStatement(this, Scope);
         }
 
         public void Construct(CommonTree syntaxFunctionDeclaration)
@@ -45,25 +49,26 @@ namespace MathLang.Tree.Nodes
 
             //Statements
             var syntaxStatementBlock = syntaxFunctionDeclaration.GetChild(3).CastTo<CommonTree>();
-            if (syntaxStatementBlock.ChildCount > 0)
-            {
-                syntaxStatementBlock.Children.Cast<CommonTree>()
-                    .ForEach(syntaxStatement =>
-                    {
-                        List<IStatement> statements = TreeHelper.GetStatements(this, Scope, syntaxStatement);
-                        StatementNodes.AddRange(statements);
-                        statements.ForEach(statement =>
-                        {
-                            //if it is a variable we must not call Construct, because it was already constructed in TreeHelper
-                            if (statement is VariableDeclaration variable)
-                            {
-                                Scope.AddVariable(variable);
-                                return;
-                            }
-                            statement.Construct(syntaxStatement);
-                        });
-                    });
-            }
+            StatemenBlock.Construct(syntaxStatementBlock);
+            //    if (syntaxStatementBlock.ChildCount > 0)
+            //    {
+            //        syntaxStatementBlock.Children.Cast<CommonTree>()
+            //            .ForEach(syntaxStatement =>
+            //            {
+            //                List<IStatement> statements = TreeHelper.GetStatements(this, Scope, syntaxStatement);
+            //                StatementNodes.AddRange(statements);
+            //                statements.ForEach(statement =>
+            //                {
+            //                    //if it is a variable we must not call Construct, because it was already constructed in TreeHelper
+            //                    if (statement is VariableDeclaration variable)
+            //                    {
+            //                        Scope.AddVariable(variable);
+            //                        return;
+            //                    }
+            //                    statement.Construct(syntaxStatement);
+            //                });
+            //            });
+            //    }
         }
     }
 }

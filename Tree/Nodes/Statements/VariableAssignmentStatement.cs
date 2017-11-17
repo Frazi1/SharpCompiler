@@ -1,10 +1,11 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Antlr.Runtime.Tree;
 using MathLang.Extensions;
-using MathLang.Tree.Nodes;
+using MathLang.Tree.Nodes.Interfaces;
+using MathLang.Tree.Scopes;
 
-namespace MathLang.Tree
+
+namespace MathLang.Tree.Nodes.Statements
 {
     public class VariableAssignmentStatement : IStatement
     {

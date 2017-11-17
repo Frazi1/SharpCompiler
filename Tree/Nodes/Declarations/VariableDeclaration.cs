@@ -1,7 +1,11 @@
-﻿using Antlr.Runtime.Tree;
+﻿using System;
+using Antlr.Runtime.Tree;
 using MathLang.Extensions;
+using MathLang.Tree.Nodes.Enums;
+using MathLang.Tree.Nodes.Interfaces;
+using MathLang.Tree.Scopes;
 
-namespace MathLang.Tree.Nodes
+namespace MathLang.Tree.Nodes.Declarations
 {
     public class VariableDeclaration : IStatement
     {
@@ -9,6 +13,7 @@ namespace MathLang.Tree.Nodes
 
         public INode Parent { get; }
         public Scope Scope { get; }
+        public bool IsConstructed { get; private set; }
         
         public string Name { get; set; }
         public ReturnType ReturnType { get; }
@@ -35,6 +40,7 @@ namespace MathLang.Tree.Nodes
 
         public virtual void Construct(CommonTree syntaxVariableDeclaration)
         {
+            if(IsConstructed) throw new InvalidOperationException("Variable already constructed-");
             Name = syntaxVariableDeclaration.GetChild(0).Text;
             //Check if we have a value assigned to the variable
             if (syntaxVariableDeclaration.ChildCount > 1)
@@ -44,6 +50,7 @@ namespace MathLang.Tree.Nodes
                 Value.Construct(syntaxValueExpression);
                 Initialized = true;
             }
+            IsConstructed = true;
         }
     }
 }

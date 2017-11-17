@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Antlr.Runtime.Misc;
-using MathLang.Tree.Nodes;
+using MathLang.Tree.Nodes.Declarations;
 
-namespace MathLang.Tree
+namespace MathLang.Tree.Scopes
 {
     public abstract class Scope
     {

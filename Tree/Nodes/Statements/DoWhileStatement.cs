@@ -1,8 +1,8 @@
 ﻿using System;
 using Antlr.Runtime.Tree;
-using MathLang.Tree.Nodes;
+using MathLang.Tree.Nodes.Interfaces;
 
-namespace MathLang.Tree
+namespace MathLang.Tree.Nodes.Statements
 {
     public class DoWhileStatement: IStatement
     {
