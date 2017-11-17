@@ -103,7 +103,7 @@ namespace MathLang.Tree
             {
                 case IF: return new IfStatement(parentNode, parentScope).AsListOf<IStatement>();
                 case DO: return new DoWhileStatement(parentNode).AsListOf<IStatement>();
-                case WHILE: return new WhileStatement(parentNode).AsListOf<IStatement>();
+                case WHILE: return new WhileStatement(parentNode, parentScope).AsListOf<IStatement>();
                 case FOR: return new ForStatement(parentNode).AsListOf<IStatement>();
                 case VARASSIGNMENT: return new VariableAssignmentStatement(parentNode, parentScope).AsListOf<IStatement>();
                 
