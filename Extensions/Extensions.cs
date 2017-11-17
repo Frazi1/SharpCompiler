@@ -16,7 +16,25 @@ namespace MathLang.Extensions
 
         public static TResult CastTo<TResult>(this object input)
         {
-            return (TResult) input;
+            if(input == null) throw new NullReferenceException(nameof(input));
+            return (TResult)input;
+        }
+
+        public static List<T> AsList<T>(this T item, params T[] otherItems)
+        {
+            var list = new List<T> { item };
+            list.AddRange(otherItems);
+            return list;
+        }
+
+        public static List<TResult> AsListOf<TResult>(this IEnumerable enumerable)
+        {
+            return enumerable.Cast<TResult>().ToList();
+        }
+        
+        public static List<TResult> AsListOf<TResult>(this object item, params object[] otherItems)
+        {
+            return item.AsList(otherItems).Cast<TResult>().ToList();
         }
     }
 }

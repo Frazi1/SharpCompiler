@@ -56,13 +56,22 @@ VarDecl
     } 
 }
 
-? 
+expression
 {
-    ? child1;
-    ? child2;
+    //? child1;
+    //? child2;
 
-    string sing;
+   // string sing;
 
+   run(node n) 
+   {
+		Type = n.Type;
+		switch(n.Type) 
+		{
+			case newExpr: 
+		}
+   }
+   
     run(node n)
     {
 

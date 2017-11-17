@@ -23,11 +23,11 @@ namespace MathLang
             }
         }
 
+        public static int Test(int a) => a;
+        
         public static void Main(string[] args)
         {
 
-            int i , lk = 8;
-            int[] a, b = new int[5], c;
 
             ValeraOuter.valera.valera_child = 5;
             //Console.Write(new int());
@@ -44,7 +44,7 @@ namespace MathLang
                 MathLangParser parser = new MathLangParser(tokens);
                 ITree program = (ITree)parser.execute().Tree;
                 AstNodePrinter.Print(program);
-                Tree.Nodes.Program astProgram = new Tree.Nodes.Program();
+                Tree.Nodes.Program astProgram = new Tree.Nodes.Program(null);
                 astProgram.Construct(program.CastTo<CommonTree>());
                 int noop = 0;
                 //Console.WriteLine();

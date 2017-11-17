@@ -1,27 +1,69 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Antlr.Runtime.Tree;
+using MathLang.Extensions;
 
 namespace MathLang.Tree.Nodes
 {
     public class FunctionDeclaration : INode
     {
         public INode Parent { get; }
+        public Scope Scope { get; }
 
         public string Name { get; set; }
         public ReturnType ReturnType { get; set; }
-        public List<Parameter> ParameterNodes { get; }
+        public List<FunctionDeclarationParameter> ParameterNodes { get; }
         public List<IStatement> StatementNodes { get; }
 
-        public FunctionDeclaration(INode parent)
+        public FunctionDeclaration(INode parent, Scope parentScope)
         {
             Parent = parent;
-            ParameterNodes = new List<Parameter>();
+            Scope = new LocalScope(parentScope, true);
+            ParameterNodes = new List<FunctionDeclarationParameter>();
             StatementNodes = new List<IStatement>();
         }
 
-        public void Construct(CommonTree child)
+        public void Construct(CommonTree syntaxFunctionDeclaration)
         {
-            throw new System.NotImplementedException();
+            Name = syntaxFunctionDeclaration.GetChild(0).Text;
+            ReturnType = TreeHelper.GetReturnType(syntaxFunctionDeclaration.GetChild(1).GetChild(0).Text);
+            //Parameters
+            var syntaxParametersNode = syntaxFunctionDeclaration.GetChild(2).CastTo<CommonTree>();
+            if (syntaxParametersNode.ChildCount > 0)
+            {
+                syntaxParametersNode.Children.Cast<CommonTree>()
+                    .ForEach(syntaxParameter =>
+                    {
+                        FunctionDeclarationParameter functionDeclarationParameter =
+                            new FunctionDeclarationParameter(this, Scope,
+                                TreeHelper.GetReturnType(syntaxParameter.GetChild(0).Text));
+                        ParameterNodes.Add(functionDeclarationParameter);
+                        Scope.AddVariable(functionDeclarationParameter);
+                        functionDeclarationParameter.Construct(syntaxParameter);
+                    });
+            }
+
+            //Statements
+            var syntaxStatementBlock = syntaxFunctionDeclaration.GetChild(3).CastTo<CommonTree>();
+            if (syntaxStatementBlock.ChildCount > 0)
+            {
+                syntaxStatementBlock.Children.Cast<CommonTree>()
+                    .ForEach(syntaxStatement =>
+                    {
+                        List<IStatement> statements = TreeHelper.GetStatements(this, Scope, syntaxStatement);
+                        StatementNodes.AddRange(statements);
+                        statements.ForEach(statement =>
+                        {
+                            //if it is a variable we must not call Construct, because it was already constructed in TreeHelper
+                            if (statement is VariableDeclaration variable)
+                            {
+                                Scope.AddVariable(variable);
+                                return;
+                            }
+                            statement.Construct(syntaxStatement);
+                        });
+                    });
+            }
         }
     }
 }
