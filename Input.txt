@@ -16,12 +16,8 @@ static class Cl
 		if(a<3){
 			a= 4;
 		}
-		else if (a > 4){
-			a = 10;
-		}
-		else 
-		{
-			a=100;
+		else if {
+			int b = 200;
 		}
 		
 	}

@@ -29,7 +29,14 @@ namespace MathLang.Tree.Nodes.Statements
                 .ForEach(syntaxStatement =>
                 {
                     var statements = TreeHelper.GetStatements(this, Scope, syntaxStatement);
-                    statements.ForEach(statement => statement.Construct(syntaxStatement));
+                    statements.ForEach(statement =>
+                    {
+                        //If type is MULT_DECL we must not call construct because variables were already constructed in TreeHelper
+                        if(syntaxStatement.Type == MathLangParser.MULT_DECL)
+                            return;
+
+                        statement.Construct(syntaxStatement);
+                    });
                     Statements.AddRange(statements);
                     
                     //Find all variable declarations and add them to scope
