@@ -87,33 +87,37 @@ namespace MathLang.Tree
         
         //We need a list here because we get a list of variable declarations from MULT_DECL syntax node
         //so everything will be a list of 1 element (in most cases)
-        public static List<IStatement> GetStatements(INode functionParent, Scope parentScope, CommonTree syntaxStatement)
+        public static List<IStatement> GetStatements(INode parentNode, Scope parentScope, CommonTree syntaxStatement)
         {
             //Fucking switch does not allow usage of "if" so...
             if (IsAtomNode(syntaxStatement.Type))
             {
-                return new Atom(functionParent, parentScope).AsListOf<IStatement>();
+                return new Atom(parentNode, parentScope).AsListOf<IStatement>();
             }
             
             switch (syntaxStatement.Type)
             {
-                case IF: return new IfStatement(functionParent, parentScope).AsListOf<IStatement>();
-                case DO: return new DoWhileStatement(functionParent).AsListOf<IStatement>();
-                case WHILE: return new WhileStatement(functionParent).AsListOf<IStatement>();
-                case FOR: return new ForStatement(functionParent).AsListOf<IStatement>();
-                case VARASSIGNMENT: return new VariableAssignmentStatement(functionParent, parentScope).AsListOf<IStatement>();
+                case IF: return new IfStatement(parentNode, parentScope).AsListOf<IStatement>();
+                case DO: return new DoWhileStatement(parentNode).AsListOf<IStatement>();
+                case WHILE: return new WhileStatement(parentNode).AsListOf<IStatement>();
+                case FOR: return new ForStatement(parentNode).AsListOf<IStatement>();
+                case VARASSIGNMENT: return new VariableAssignmentStatement(parentNode, parentScope).AsListOf<IStatement>();
+                
                 //Not to implement
                 //case ARRAYELEMENTASSIGNMENT: return new ArrayElementAssignmentStatement(functionParent).AsListOf<IStatement>();
-                //Think something up here because we dont want MULT_DECL to be in the new tree
-                case MULT_DECL: return RunMultiDeclaration(functionParent, parentScope ,syntaxStatement).AsListOf<IStatement>();
+                
+                case MULT_DECL: return RunMultiDeclaration(parentNode, parentScope ,syntaxStatement).AsListOf<IStatement>();
 
                 //And here
                 //case MULT_ARRAY_DECL:
 
-                case RETURN: return new ReturnStatement(functionParent).AsListOf<IStatement>();
-                case FUNC_CALL: return new FunctionCall(functionParent, parentScope).AsListOf<IStatement>(); 
+                case RETURN: return new ReturnStatement(parentNode).AsListOf<IStatement>();
+                case FUNC_CALL: return new FunctionCall(parentNode, parentScope).AsListOf<IStatement>();
+
                 //Cannot be here
                 //case VARDECLARATION: return new VariableDeclaration();
+
+                case BLOCK: return new BlockStatement(parentNode, parentScope).AsListOf<IStatement>();
                 default: throw new ArgumentOutOfRangeException(nameof(syntaxStatement.Type));
             }
         }
