@@ -39,8 +39,7 @@ namespace MathLang.Tree.Nodes.Declarations
                     .ForEach(syntaxParameter =>
                     {
                         FunctionDeclarationParameter functionDeclarationParameter =
-                            new FunctionDeclarationParameter(this, Scope,
-                                TreeHelper.GetReturnType(syntaxParameter.GetChild(0).Text));
+                            new FunctionDeclarationParameter(this, Scope);
                         ParameterNodes.Add(functionDeclarationParameter);
                         Scope.AddVariable(functionDeclarationParameter);
                         functionDeclarationParameter.Construct(syntaxParameter);

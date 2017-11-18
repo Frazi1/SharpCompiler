@@ -16,6 +16,7 @@
         Not,
         Or,
         And,
-        FunctionCall
+        FunctionCall,
+        VariableDeclaration
     }
 }

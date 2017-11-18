@@ -2,66 +2,78 @@
 static class Cl
 {
 
-	//static bool iiii = 7+7-6*2 > 3;
-	//static int myInt = 3;
-	//static char myChar= 'h';
-	//static int TEST_INT = 3 + myInt;
-	//static int not_init;
+	static bool iiii = 7+7-6*2 > 3, gggg = false, ccccc;
+	static int myInt = 3;
+	static char myChar= 'h';
+	static int TEST_INT = 3 + myInt;
+	static int not_init;
 
 	static void TestFunc(bool param1, int param2)
 	{
+	int b = 3;
+	b = 12222;
 		//Test();
 		//int a;
 		//a = 3;
-		if(a<3){
-			a= 4;
+		//if(a<3){
+		//	a= 4;
+		//}
+		//else if(true) {
+		//	int b = 200;
+		//}
+		//;;
+		//while(d){while(ffff) while(y);}
+		//while(1*6>9);
+		//int a, b = 30, c, d = 10, ssss;
+		//while(asshole) {;}
+		for(int a = 10; a < 5; a = a+1)
+			a= 2;
+			
+		while(kot == true)
+		{
+			FUCK_THAT_SHIT(K_HERAM == true);
 		}
-		else if {
-			int b = 200;
-		}
-		;;
-		while(d){while(ffff) while(y);}
-		while(1*6>9);
 		
 	}
 
-//	static char[] nn, i = new char[8] ;
-//
-//	static void testfunc(int[] a, char t)
-//	{
-//		int a,  b = 3;
-//		
-//	
-//		bool t;
-//
-//		int u = 7, u, i = 7*7 , l = new int();
-//		int[] a, b = new int[3];
-//
-//		do
-//		{
-//			int[] a = new int[]{1,2,3};
-//			
-//			
-//			int[] b = new int [5];
-//
-//		} while(true!=true);
-//
-//		//_rfunc(1, new int[t.a[7]]);
-//	
-//		char c = '&';
-//		char c = '╕';
-//		TestClass.ValeraGirl(4);
-//		TestClass.ValeraVar = 3;
-//		TestClass.valeraArray[((3+4))] = t.u;
-//		}
-//
-//		static bool y = true && false;
-//
-//		static int u()
-//		{
-//			while(tt())
-//			{
-//				p = 6;
-//			}
-//		}
+	//static char[] nn, i = new char[8] ;
+
+	//static void testfunc(int[] a, char t)
+	//{
+		//int a,  b = 3;
+		//
+	    //
+		//bool t;
+        //
+		//int u = 7, u, i = 7*7 , l = new int();
+		//int[] a, b = new int[3];
+        //
+		//do
+		//{
+		//	int[] a = new int[]{1,2,3};
+		//	
+		//	
+		//	int[] b = new int [5];
+        //
+		//} while(true!=true);
+        //
+		////_rfunc(1, new int[t.a[7]]);
+	    //
+		//char c = '&';
+		//char c = '╕';
+		//TestClass.ValeraGirl(4);
+		//TestClass.ValeraVar = 3;
+		//TestClass.valeraArray[((3+4))] = t.u;
+		//}
+        //
+		//static bool y = true && false;
+        //
+		//static int u()
+		//{
+		//	while(tt())
+		//	{
+		//		p = 6;
+		//	}
+		//}
+	//}
 }

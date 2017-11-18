@@ -7,7 +7,7 @@ using MathLang.Tree.Scopes;
 
 namespace MathLang.Tree.Nodes.Declarations
 {
-    public class VariableDeclaration : IStatement
+    public class VariableDeclaration : IStatement, IExpression
     {
         private IExpression _value;
 
@@ -15,8 +15,8 @@ namespace MathLang.Tree.Nodes.Declarations
         public Scope Scope { get; }
         public bool IsConstructed { get; private set; }
         
-        public string Name { get; set; }
-        public ReturnType ReturnType { get; }
+        public string Name { get; private set; }
+        public ReturnType ReturnType { get; private set; }
 
         public IExpression Value
         {
@@ -31,21 +31,21 @@ namespace MathLang.Tree.Nodes.Declarations
         //This may be useful for semantics
         public bool Initialized { get; protected set; }
         
-        public VariableDeclaration(INode parent, Scope parentScope, ReturnType returnType)
+        public VariableDeclaration(INode parent, Scope parentScope)
         {
             Parent = parent;
             Scope = new LocalScope(parentScope, false);
-            ReturnType = returnType;
         }
 
         public virtual void Construct(CommonTree syntaxVariableDeclaration)
         {
             if(IsConstructed) throw new InvalidOperationException("Variable already constructed-");
-            Name = syntaxVariableDeclaration.GetChild(0).Text;
+            ReturnType = TreeHelper.GetReturnType(syntaxVariableDeclaration.GetChild(0).Text);
+            Name = syntaxVariableDeclaration.GetChild(1).Text;
             //Check if we have a value assigned to the variable
-            if (syntaxVariableDeclaration.ChildCount > 1)
+            if (syntaxVariableDeclaration.ChildCount > 2)
             {
-                var syntaxValueExpression = syntaxVariableDeclaration.GetChild(1).CastTo<CommonTree>();
+                var syntaxValueExpression = syntaxVariableDeclaration.GetChild(2).CastTo<CommonTree>();
                 Value = TreeHelper.GetExpression(this, Scope, syntaxValueExpression);
                 Value.Construct(syntaxValueExpression);
                 Initialized = true;
