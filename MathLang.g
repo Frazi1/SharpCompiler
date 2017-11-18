@@ -41,6 +41,9 @@ tokens {
   CALL;
   VARS;
   MULT_ARRAY_DECL;
+  FOR_INITIALIZATION;
+  FOR_CONDITION;
+  FOR_ITERATION;
 }
 
 
@@ -146,9 +149,11 @@ boolvar: TRUE
 		| FALSE
 		| compare;
 		
-ifstatement: IF^ OPEN_BRACE! boolexpression CLOSE_BRACE! (block | statement) (ELSE! (block | statement))* ;
-whilestatement: WHILE^ OPEN_BRACE! boolexpression CLOSE_BRACE! (block | statement)  ;
-forstatement: FOR^ OPEN_BRACE! longdeclarationbody ';'! boolexpression ';'! assignmentbody CLOSE_BRACE! (block | statement);
+block_or_statement: block | statement;
+ifstatement: IF^ OPEN_BRACE! boolexpression CLOSE_BRACE! block_or_statement (ELSE! block_or_statement)* ;
+whilestatement: WHILE^ OPEN_BRACE! boolexpression CLOSE_BRACE! block_or_statement  ;
+forstatement: FOR^ OPEN_BRACE! longdeclarationbody? ';'! boolexpression? ';'! assignmentbody? CLOSE_BRACE! block_or_statement
+		-> ^(FOR ^(FOR_INITIALIZATION longdeclarationbody) ^(FOR_CONDITION boolexpression) ^(FOR_ITERATION assignmentbody) block_or_statement);
 returnstatement: RETURN^ expression ';'! ;
 dowhilestatement: DO^ (block | statement) WHILE! OPEN_BRACE! boolexpression CLOSE_BRACE! ';'! ;
 emptystatement: ';'! ;

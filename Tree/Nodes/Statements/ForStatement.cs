@@ -23,7 +23,6 @@ namespace MathLang.Tree.Nodes.Statements
         }
         public void Construct(CommonTree syntaxFor)
         {
-            return;
             //Initialization
             var syntaxForInitialization = syntaxFor.GetChild(0).CastTo<CommonTree>();
             if (syntaxForInitialization.ChildCount > 0)

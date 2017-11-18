@@ -7,15 +7,15 @@ using MathLang.Tree.Scopes;
 
 namespace MathLang.Tree.Nodes.Statements
 {
-    public class VariableAssignmentStatement : IStatement
+    public class VariableAssignment : IStatement, IExpression
     {
         public INode Parent { get; }
         public Scope Scope { get; }
         
         public string VariableName { get; private set; }
-        public IStatement AssignmentValue { get; private set; }
+        public IExpression AssignmentValue { get; private set; }
         
-        public VariableAssignmentStatement(INode parent, Scope parentScope)
+        public VariableAssignment(INode parent, Scope parentScope)
         {
             Parent = parent;
             Scope = new LocalScope(parentScope, false);
@@ -25,7 +25,7 @@ namespace MathLang.Tree.Nodes.Statements
         {
             VariableName = tree.GetChild(0).Text;
             var assignmentSyntax = tree.GetChild(1).CastTo<CommonTree>();
-            AssignmentValue = TreeHelper.GetStatements(this, Scope, assignmentSyntax).First();
+            AssignmentValue = TreeHelper.GetExpression(this, Scope, assignmentSyntax);
             AssignmentValue.Construct(assignmentSyntax);
         }
     }

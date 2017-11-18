@@ -10,6 +10,8 @@ static class Cl
 
 	static void TestFunc(bool param1, int param2)
 	{
+	int b = 3;
+	b = 12222;
 		//Test();
 		//int a;
 		//a = 3;
@@ -24,7 +26,13 @@ static class Cl
 		//while(1*6>9);
 		//int a, b = 30, c, d = 10, ssss;
 		//while(asshole) {;}
-		for(int a = 10; a < 5; a = a+1);
+		for(int a = 10; a < 5; a = a+1)
+			a= 2;
+			
+		while(kot == true)
+		{
+			FUCK_THAT_SHIT(K_HERAM == true);
+		}
 		
 	}
 

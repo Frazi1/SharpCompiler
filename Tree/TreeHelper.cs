@@ -46,6 +46,7 @@ namespace MathLang.Tree
                 case OR: return ExpressionType.Or;
                 case AND: return ExpressionType.And;
                 case FUNC_CALL: return ExpressionType.FunctionCall;
+                case VARDECLARATION: return ExpressionType.VariableDeclaration;
                 default: throw new ArgumentException(nameof(type));
             }
         }
@@ -58,10 +59,10 @@ namespace MathLang.Tree
             }
             switch (syntaxExpression.Type)
             {
-                case FUNC_CALL:
-                    return new FunctionCall(parent, parentScope);
-                //case VARDECLARATION: return new VariableDeclaration(parent, parentScope, GetReturnType() );
-                    
+                case FUNC_CALL: return new FunctionCall(parent, parentScope);
+                case VARDECLARATION: return new VariableDeclaration(parent, parentScope);
+                case VARASSIGNMENT: return new VariableAssignment(parent, parentScope);
+
             }
             return new Expression(parent, parentScope);
         }
@@ -89,7 +90,7 @@ namespace MathLang.Tree
                 case DO: return new DoWhileStatement(parentNode).AsListOf<IStatement>();
                 case WHILE: return new WhileStatement(parentNode, parentScope).AsListOf<IStatement>();
                 case FOR: return new ForStatement(parentNode, parentScope).AsListOf<IStatement>();
-                case VARASSIGNMENT: return new VariableAssignmentStatement(parentNode, parentScope).AsListOf<IStatement>();
+                case VARASSIGNMENT: return new VariableAssignment(parentNode, parentScope).AsListOf<IStatement>();
                 
                 //Not to implement
                 //case ARRAYELEMENTASSIGNMENT: return new ArrayElementAssignmentStatement(functionParent).AsListOf<IStatement>();
