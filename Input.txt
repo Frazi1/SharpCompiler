@@ -32,6 +32,7 @@ static class Cl
 		while(kot == true)
 		{
 			FUCK_THAT_SHIT(K_HERAM == true);
+			return DEATH;
 		}
 		
 	}

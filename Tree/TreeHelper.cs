@@ -100,7 +100,7 @@ namespace MathLang.Tree
                 //And here
                 //case MULT_ARRAY_DECL:
 
-                case RETURN: return new ReturnStatement(parentNode).AsListOf<IStatement>();
+                case RETURN: return new ReturnStatement(parentNode, parentScope).AsListOf<IStatement>();
                 case FUNC_CALL: return new FunctionCall(parentNode, parentScope).AsListOf<IStatement>();
 
                 case VARDECLARATION: return new VariableDeclaration(parentNode, parentScope).AsListOf<IStatement>();
