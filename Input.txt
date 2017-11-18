@@ -1,13 +1,14 @@
 ﻿
 static class Cl
 {
-	static int testInt = testId;
-	static bool iiii = 7+7-6*2 > 3, gggg = false, ccccc;
-	static int myInt = 3;
-	static char myChar= 'h';
-	static int TEST_INT = 3 + myInt;
-	static int not_init;
-
+	//static int testInt = testId;
+	//static bool iiii = 7+7-6*2 > 3, gggg = false, ccccc;
+	//static int myInt = 3;
+	//static char myChar= 'h';
+	//static int TEST_INT = 3 + myInt;
+	//static int not_init;
+	static int[] array = new int[10], barray;
+	
 	static void TestFunc(bool param1, int param2)
 	{
 	int b = 3;

@@ -108,19 +108,19 @@ static_declaration:  MODIFIER declaration -> ^(STATIC_DECLARATION declaration);
 declaration: var_declaration 
  | array_declaration;
 var_declaration: t=type! d_list[t.Tree] ';'!;
-array_declaration: array_type d_array_list ';' -> ^(MULT_ARRAY_DECL array_type d_array_list) ;
+array_declaration: at=array_type! d_array_list[at.Tree] ';'!;
 
 d_list[object type]: d[type] (','! d[type])* ;
-d_array_list: d_array (','! d_array)* -> ^( VARS d_array d_array * ) ;
+d_array_list[object type]: d_array[type] (','! d_array[type])* ;
 
 d[object type]: declarationbody_d[type] | longdeclarationbody_d[type] ;
-d_array: declarationbody_array_d | longdeclarationbody_array_d;
+d_array[object type]: declarationbody_array_d[type] | longdeclarationbody_array_d[type];
 
 declarationbody_d[object type]: (ID -> ^(VARDECLARATION {$type} ID) );				
-declarationbody_array_d: ( ID -> ^(ARRAYDECLARATION ID));
+declarationbody_array_d[object type]: ( ID -> ^(ARRAYDECLARATION {$type} ID));
 
 longdeclarationbody_d[object type]: (ID ASSIGN expression  -> ^(VARDECLARATION {$type} ID expression));
-longdeclarationbody_array_d: (ID ASSIGN newexpression -> ^(ARRAYDECLARATION ID newexpression));
+longdeclarationbody_array_d[object type]: (ID ASSIGN newexpression -> ^(ARRAYDECLARATION {$type} ID newexpression));
 
 
 declarationbody: (type ID -> ^(VARDECLARATION type ID) )
