@@ -40,7 +40,6 @@ tokens {
   CLASS_WORD = 'class';
   CALL;
   VARS;
-  MULT_DECL;
   MULT_ARRAY_DECL;
 }
 

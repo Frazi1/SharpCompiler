@@ -28,7 +28,7 @@ static class Cl
 		
 	}
 
-	static char[] nn, i = new char[8] ;
+	//static char[] nn, i = new char[8] ;
 
 	//static void testfunc(int[] a, char t)
 	//{

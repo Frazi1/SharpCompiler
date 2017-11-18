@@ -15,22 +15,6 @@ namespace MathLang.Tree
 {
     public static class TreeHelper
     {
-        public static List<VariableDeclaration> RunMultiDeclaration(INode parentNode, Scope parentScope, CommonTree syntaxMultiDeclaration)
-        {
-            ReturnType returnType = GetReturnType(syntaxMultiDeclaration.GetChild(0).Text);
-            List<VariableDeclaration> variableList = new List<VariableDeclaration>();
-
-            syntaxMultiDeclaration
-                 .GetChild(1).CastTo<CommonTree>()
-                 .Children.Cast<CommonTree>()
-                 .ForEach(varDecl =>
-                 {
-                     VariableDeclaration variable = new VariableDeclaration(parentNode, parentScope, returnType);
-                     variable.Construct(varDecl);
-                     variableList.Add(variable);
-                 });
-            return variableList;
-        }
 
         public static ReturnType GetReturnType(string type)
         {
@@ -68,18 +52,18 @@ namespace MathLang.Tree
 
         public static IExpression GetExpression(INode parent, Scope parentScope, CommonTree syntaxExpression)
         {
-            if (syntaxExpression.Type == FUNC_CALL)
-            {
-                return new FunctionCall(parent, parentScope);
-            }
-            else if (IsAtomNode(syntaxExpression.Type))
+            if (IsAtomNode(syntaxExpression.Type))
             {
                 return new Atom(parent, parentScope);
             }
-            else
+            switch (syntaxExpression.Type)
             {
-                return new Expression(parent, parentScope);
+                case FUNC_CALL:
+                    return new FunctionCall(parent, parentScope);
+                //case VARDECLARATION: return new VariableDeclaration(parent, parentScope, GetReturnType() );
+                    
             }
+            return new Expression(parent, parentScope);
         }
 
         public static bool IsAtomNode(int type)
@@ -104,22 +88,21 @@ namespace MathLang.Tree
                 case IF: return new IfStatement(parentNode, parentScope).AsListOf<IStatement>();
                 case DO: return new DoWhileStatement(parentNode).AsListOf<IStatement>();
                 case WHILE: return new WhileStatement(parentNode, parentScope).AsListOf<IStatement>();
-                case FOR: return new ForStatement(parentNode).AsListOf<IStatement>();
+                case FOR: return new ForStatement(parentNode, parentScope).AsListOf<IStatement>();
                 case VARASSIGNMENT: return new VariableAssignmentStatement(parentNode, parentScope).AsListOf<IStatement>();
                 
                 //Not to implement
                 //case ARRAYELEMENTASSIGNMENT: return new ArrayElementAssignmentStatement(functionParent).AsListOf<IStatement>();
                 
-                case MULT_DECL: return RunMultiDeclaration(parentNode, parentScope ,syntaxStatement).AsListOf<IStatement>();
-
+                //case MULT_DECL: return RunMultiDeclaration(parentNode, parentScope ,syntaxStatement).AsListOf<IStatement>();
+                
                 //And here
                 //case MULT_ARRAY_DECL:
 
                 case RETURN: return new ReturnStatement(parentNode).AsListOf<IStatement>();
                 case FUNC_CALL: return new FunctionCall(parentNode, parentScope).AsListOf<IStatement>();
 
-                //Cannot be here
-                //case VARDECLARATION: return new VariableDeclaration();
+                case VARDECLARATION: return new VariableDeclaration(parentNode, parentScope).AsListOf<IStatement>();
 
                 case BLOCK: return new BlockStatement(parentNode, parentScope).AsListOf<IStatement>();
                 default: throw new ArgumentOutOfRangeException(nameof(syntaxStatement.Type));

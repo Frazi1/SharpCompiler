@@ -34,9 +34,19 @@ namespace MathLang.Tree.Nodes.Declarations
                 {
                     if (child.Type == MathLangParser.STATIC_DECLARATION)
                     {
-                        List<VariableDeclaration> variableList 
-                            =  TreeHelper.RunMultiDeclaration(this, Scope, child.GetChild(0).CastTo<CommonTree>());
-                        VarDeclarationNodes.AddRange(variableList);
+                        //List<VariableDeclaration> variableList 
+                        //    =  TreeHelper.RunMultiDeclaration(this, Scope, child.GetChild(0).CastTo<CommonTree>());
+                        //VarDeclarationNodes.AddRange(variableList);
+                        child.Children.Cast<CommonTree>()
+                            .Select(syntaxVariableDeclaration =>
+                            {
+                                var variableDeclaration = TreeHelper
+                                    .GetStatements(this, Scope, syntaxVariableDeclaration).First()
+                                    .CastTo<VariableDeclaration>();
+                                variableDeclaration.Construct(syntaxVariableDeclaration);
+                                return variableDeclaration;
+                            })
+                            .ForEach(declaration => VarDeclarationNodes.Add(declaration));
                     }
                     else if (child.Type == MathLangParser.FUNCDECLARATION)
                     {

@@ -32,8 +32,7 @@ namespace MathLang.Tree.Nodes.Statements
             {
                 var syntaxBlockOrSingleStatement = syntaxWhile.GetChild(1).CastTo<CommonTree>();
 
-                if (syntaxBlockOrSingleStatement.Type == MathLangParser.MULT_DECL
-                    || syntaxBlockOrSingleStatement.Type == MathLangParser.MULT_ARRAY_DECL)
+                if (syntaxBlockOrSingleStatement.Type == MathLangParser.MULT_ARRAY_DECL)
                     
                     throw new InvalidOperationException("Single declarations are not supported");
 
