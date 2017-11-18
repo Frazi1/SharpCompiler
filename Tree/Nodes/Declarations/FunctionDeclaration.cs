@@ -14,17 +14,16 @@ namespace MathLang.Tree.Nodes.Declarations
         public INode Parent { get; }
         public Scope Scope { get; }
 
-        public string Name { get; set; }
-        public ReturnType ReturnType { get; set; }
-        public List<FunctionDeclarationParameter> ParameterNodes { get; }
+        public string Name { get; private set; }
+        public ReturnType ReturnType { get; private set; }
         public BlockStatement StatemenBlock { get; private set; }
+
+        public List<FunctionDeclarationParameter> ParameterNodes { get; } = new List<FunctionDeclarationParameter>();
 
         public FunctionDeclaration(INode parent, Scope parentScope)
         {
             Parent = parent;
             Scope = new LocalScope(parentScope, true);
-            ParameterNodes = new List<FunctionDeclarationParameter>();
-            StatemenBlock = new BlockStatement(this, Scope);
         }
 
         public void Construct(CommonTree syntaxFunctionDeclaration)
@@ -48,26 +47,9 @@ namespace MathLang.Tree.Nodes.Declarations
 
             //Statements
             var syntaxStatementBlock = syntaxFunctionDeclaration.GetChild(3).CastTo<CommonTree>();
+            StatemenBlock = TreeHelper.GetStatements(this, Scope, syntaxStatementBlock)
+                .First().CastTo<BlockStatement>();
             StatemenBlock.Construct(syntaxStatementBlock);
-            //    if (syntaxStatementBlock.ChildCount > 0)
-            //    {
-            //        syntaxStatementBlock.Children.Cast<CommonTree>()
-            //            .ForEach(syntaxStatement =>
-            //            {
-            //                List<IStatement> statements = TreeHelper.GetStatements(this, Scope, syntaxStatement);
-            //                StatementNodes.AddRange(statements);
-            //                statements.ForEach(statement =>
-            //                {
-            //                    //if it is a variable we must not call Construct, because it was already constructed in TreeHelper
-            //                    if (statement is VariableDeclaration variable)
-            //                    {
-            //                        Scope.AddVariable(variable);
-            //                        return;
-            //                    }
-            //                    statement.Construct(syntaxStatement);
-            //                });
-            //            });
-            //    }
         }
     }
 }
