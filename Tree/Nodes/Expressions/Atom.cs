@@ -20,17 +20,11 @@ namespace MathLang.Tree.Nodes.Expressions
             Scope = new LocalScope(parentScope, false);
         }
 
-        public void Construct(CommonTree node)
+        public virtual void Construct(CommonTree node)
         {
             Value = node.Text;
 
-            if (node.Type == MathLangParser.ID)
-            {
-                if (node.ChildCount > 0)
-                {
-                    Value += "." + node.GetChild(0).Text;
-                }
-            }
+
             switch (node.Type)
             {
                 case MathLangParser.TRUE: Type = ReturnType.Bool; break;
@@ -38,7 +32,6 @@ namespace MathLang.Tree.Nodes.Expressions
                 case MathLangParser.CHAR: Type = ReturnType.Char; break;
                 case MathLangParser.NUMBER: Type = ReturnType.Int; break;
                 //If we have a variable then we must look up its type in the scope (which we don't have at the moment)
-                case MathLangParser.ID: Type = ReturnType.Unset; break;
                 default: throw new ArgumentOutOfRangeException(nameof(node.Type));
             }
         }

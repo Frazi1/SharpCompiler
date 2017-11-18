@@ -45,6 +45,7 @@
     <Compile Include="MathAstNode.cs" />
     <Compile Include="MathLangIntepreter.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Tree\Nodes\Expressions\VariableReference.cs" />
     <Compile Include="Tree\Nodes\Statements\ArrayElementAssignmentStatement.cs" />
     <Compile Include="Tree\Nodes\Statements\BlockStatement.cs" />
     <Compile Include="Tree\Nodes\Statements\DoWhileStatement.cs" />

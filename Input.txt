@@ -1,7 +1,7 @@
 ﻿
 static class Cl
 {
-
+	static int testInt = testId;
 	static bool iiii = 7+7-6*2 > 3, gggg = false, ccccc;
 	static int myInt = 3;
 	static char myChar= 'h';

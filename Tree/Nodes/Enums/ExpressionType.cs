@@ -17,6 +17,7 @@
         Or,
         And,
         FunctionCall,
-        VariableDeclaration
+        VariableDeclaration,
+        VariableReference
     }
 }
