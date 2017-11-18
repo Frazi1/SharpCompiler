@@ -103,20 +103,21 @@ extended_id: ID (DOT! ID)? -> ^(ID ID?);
 arrayelement:  extended_id OPEN_SQUARE_BRACE mathexpression CLOSE_SQUARE_BRACE -> ^(ARRAYELEMENT extended_id mathexpression) ;
 static_declaration:  MODIFIER declaration -> ^(STATIC_DECLARATION declaration);
 
-declaration: var_declaration | array_declaration;
-var_declaration: type d_list ';' -> ^(MULT_DECL type d_list) ;
+declaration: var_declaration 
+ | array_declaration;
+var_declaration: t=type! d_list[t.Tree] ';'!;
 array_declaration: array_type d_array_list ';' -> ^(MULT_ARRAY_DECL array_type d_array_list) ;
 
-d_list: d (','! d)* -> ^( VARS d d * ) ;
+d_list[object type]: d[type] (','! d[type])* ;
 d_array_list: d_array (','! d_array)* -> ^( VARS d_array d_array * ) ;
 
-d: declarationbody_d | longdeclarationbody_d ;
+d[object type]: declarationbody_d[type] | longdeclarationbody_d[type] ;
 d_array: declarationbody_array_d | longdeclarationbody_array_d;
 
-declarationbody_d: (ID -> ^(VARDECLARATION ID) );				
+declarationbody_d[object type]: (ID -> ^(VARDECLARATION {$type} ID) );				
 declarationbody_array_d: ( ID -> ^(ARRAYDECLARATION ID));
 
-longdeclarationbody_d: (ID ASSIGN expression  -> ^(VARDECLARATION ID expression));
+longdeclarationbody_d[object type]: (ID ASSIGN expression  -> ^(VARDECLARATION {$type} ID expression));
 longdeclarationbody_array_d: (ID ASSIGN newexpression -> ^(ARRAYDECLARATION ID newexpression));
 
 
