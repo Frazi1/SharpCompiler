@@ -50,14 +50,15 @@ namespace MathLang.Extensions
             }
         }
 
-        protected void PrintVarDeclaration(string ind, VariableDeclaration variableDeclaration, bool isFinal)
+        protected void PrintVarDeclaration(string ind, Declaration declaration, bool isFinal)
         {
+
             Console.WriteLine($"{ind}{indentBranchBar}" +
-                              $" {variableDeclaration.Name} " +
-                              $"({variableDeclaration.ReturnType})");
-            if (variableDeclaration.Value != null)
+                              $" {declaration.Name} " +
+                              $"({declaration.ReturnType})");
+            if (declaration.Value != null)
             {
-                Print(ind + (isFinal? indent : indentBar) , variableDeclaration.Value);
+                Print(ind + (isFinal? indent : indentBar) , declaration.Value);
             }
         }
 
@@ -73,7 +74,7 @@ namespace MathLang.Extensions
             }
         }
 
-        protected void Print(string ind, IExpression)
+        protected void PrintExpresion(string ind, IExpression expression, bool isFinal)
         {
 
         }
