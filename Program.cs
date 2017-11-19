@@ -47,6 +47,10 @@ namespace MathLang
                 Tree.Nodes.Program astProgram = new Tree.Nodes.Program(null);
                 astProgram.Construct(program.CastTo<CommonTree>());
                 int noop = 0;
+
+                TreeConsolePrinter tp= new TreeConsolePrinter();
+                tp.Print(astProgram);
+
                 //Console.WriteLine();
                 //MathLangIntepreter.Execute(program);
             }

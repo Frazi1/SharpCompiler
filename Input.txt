@@ -1,8 +1,15 @@
 ﻿
+static class classsd
+{
+	static char myChar= 'h';
+
+}
+
 static class Cl
 {
+
 	//static int testInt = testId;
-	//static bool iiii = 7+7-6*2 > 3, gggg = false, ccccc;
+	static bool iiii = 7+7-6*2 > 3, gggg = false, ccccc;
 	//static int myInt = 3;
 	//static char myChar= 'h';
 	//static int TEST_INT = 3 + myInt;
