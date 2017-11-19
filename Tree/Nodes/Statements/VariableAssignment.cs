@@ -8,7 +8,7 @@ using MathLang.Tree.Scopes;
 
 namespace MathLang.Tree.Nodes.Statements
 {
-    public class VariableAssignment : IStatement, IExpression
+    public class VariableAssignment : IStatement
     {
         public INode Parent { get; }
         public Scope Scope { get; }

@@ -1,5 +1,7 @@
 ﻿using System;
 using Antlr.Runtime.Tree;
+using MathLang.Extensions;
+using MathLang.Tree.Nodes.Expressions;
 using MathLang.Tree.Nodes.Interfaces;
 using MathLang.Tree.Scopes;
 
@@ -10,15 +12,27 @@ namespace MathLang.Tree.Nodes.Statements
         public INode Parent { get; }
         public Scope Scope { get; }
 
+        public ArrayElementReference ArrayElementReference { get; private set; }
+        public IExpression AssignmentExpression { get; private set; }
+
         public ArrayElementAssignment(INode parent, Scope parentScope)
         {
             Parent = parent;
             Scope = new LocalScope(parentScope, false);
         }
         
-        public void Construct(CommonTree tree)
+        public void Construct(CommonTree syntaxArrayElementAssignment)
         {
-            throw new NotImplementedException();
+            //Array element reference
+            var syntaxArrayElementReference = syntaxArrayElementAssignment.GetChild(0).CastTo<CommonTree>();
+            ArrayElementReference = TreeHelper.GetExpression(this, Scope, syntaxArrayElementReference)
+                .CastTo<ArrayElementReference>();
+            ArrayElementReference.Construct(syntaxArrayElementReference);
+
+            //Assignment Value
+            var syntaxAssignmentExpression = syntaxArrayElementAssignment.GetChild(1).CastTo<CommonTree>();
+            AssignmentExpression = TreeHelper.GetExpression(this, Scope, syntaxAssignmentExpression);
+            AssignmentExpression.Construct(syntaxAssignmentExpression);
         }
     }
 }

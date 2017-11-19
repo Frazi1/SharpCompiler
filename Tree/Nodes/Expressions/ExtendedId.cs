@@ -27,6 +27,11 @@ namespace MathLang.Tree.Nodes.Expressions
             syntaxExtendedId.Children.Cast<CommonTree>()
                 .ForEach(id => IdList.Add(id.Text));
         }
+
+        public override string ToString()
+        {
+            return GetFullPath;
+        }
     }
 
 }

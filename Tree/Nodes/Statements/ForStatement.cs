@@ -11,8 +11,8 @@ namespace MathLang.Tree.Nodes.Statements
         public INode Parent { get; }
         public Scope Scope { get; }
 
-        public IExpression InitializationExpression{ get; private set; }
-        public IExpression IterationExpression { get; private set; } 
+        public IStatement InitializationStatement{ get; private set; }
+        public IStatement IterationStatement { get; private set; } 
         public IExpression ConditionExpression { get; private set; }
         public IStatement BlockOrSingleStatement { get; private set; }
 
@@ -31,9 +31,9 @@ namespace MathLang.Tree.Nodes.Statements
                 syntaxForInitialization.Children.Cast<CommonTree>()
                     .ForEach(syntaxVarDeclarationOrAssignment =>
                     {
-                        InitializationExpression =
-                            TreeHelper.GetExpression(this, Scope, syntaxVarDeclarationOrAssignment);
-                        InitializationExpression.Construct(syntaxVarDeclarationOrAssignment);
+                        InitializationStatement =
+                            TreeHelper.GetStatements(this, Scope, syntaxVarDeclarationOrAssignment).First();
+                        InitializationStatement.Construct(syntaxVarDeclarationOrAssignment);
                     });
             }
 
@@ -56,9 +56,9 @@ namespace MathLang.Tree.Nodes.Statements
                 syntaxForIteration.Children.Cast<CommonTree>()
                     .ForEach(syntaxVarAssignment =>
                     {
-                        IterationExpression =  TreeHelper.GetExpression(this, Scope, syntaxVarAssignment);
+                        IterationStatement =  TreeHelper.GetStatements(this, Scope, syntaxVarAssignment).First();
                         //if(iterationExpression is Varial)
-                        IterationExpression.Construct(syntaxVarAssignment);
+                        IterationStatement.Construct(syntaxVarAssignment);
                     });
             }
 

@@ -62,8 +62,8 @@ namespace MathLang.Tree
             switch (syntaxExpression.Type)
             {
                 case FUNC_CALL: return new FunctionCall(parent, parentScope);
-                case VARDECLARATION: return new VariableDeclaration(parent, parentScope);
-                case VARASSIGNMENT: return new VariableAssignment(parent, parentScope);
+                //case VARDECLARATION: return new VariableDeclaration(parent, parentScope);
+                //case VARASSIGNMENT: return new VariableAssignment(parent, parentScope);
                 case ID: return new VariableReference(parent, parentScope);
                 case ARRAY_INITIALIZER: return new NewArray(parent, parentScope);
                 case ARRAYELEMENT: return new ArrayElementReference(parent, parentScope);

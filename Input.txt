@@ -15,7 +15,9 @@ static class Cl
 	//static int TEST_INT = 3 + myInt;
 	//static int not_init;
 	static int[] array = new int[]{};
-	
+	static int[] array2 = new int[]{5,6,7};
+	static int[] array2 = new int[68+4];
+	static int[] array3 = new int[6-(4)]{5,8};
 	static void TestFunc(bool param1, int param2)
 	{
 		int a = Cl.array[3];

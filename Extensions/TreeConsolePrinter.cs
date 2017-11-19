@@ -86,7 +86,7 @@ namespace MathLang.Extensions
             if (expression is Expression ex)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"{ParseExpressionType(ex.ExpressionType)} {ParseExpressionType(ex.ExpressionType)}");
+                                  $"{ParseExpressionType(ex.ExpressionType)}");
 
                                 
                 PrintExpresion($"{ind}{(isFinal? indent : indentBar)}", ex.Left, ex.Right == null);
@@ -112,15 +112,50 @@ namespace MathLang.Extensions
                 return;
             }
 
-            if (expression is NewArray)
-            {
-
-            }
-
             if (expression is VariableReference varRef)
             {
-                varRef.
+                Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
+                                  $"{varRef.Name.ToString()}");
             }
+
+            if (expression is NewArray newArr)
+            {
+                Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
+                                  $"{newArr.ReturnType}");
+
+                if (newArr.ArraySize != null)
+                {
+                    Console.WriteLine($"{ind}{(isFinal ? indent : indentBranchBar)}" +
+                                      $"{(newArr.InitializationParameters.Count == 0 ? indentEndBar : indentBranchBar)}" +
+                                      $"size");
+
+                    PrintExpresion($"{ind}{(isFinal ? indent : indentBar)}" +
+                                   $"{(newArr.InitializationParameters.Count == 0 ? indent : indentBar)}",
+                        newArr.ArraySize, true);
+                }
+
+                if (newArr.InitializationParameters.Count != 0)
+                {
+                    Console.WriteLine($"{ind}{(isFinal ? indent : indentBranchBar)}" +
+                                      $"{indentEndBar}" +
+                                      $"init params");
+
+                    for (int p =0; p < newArr.InitializationParameters.Count; p++)
+                    {
+                        PrintExpresion($"{ind}{(isFinal ? indent : indentBar)}" +
+                                       $"{indent}",
+                            newArr.InitializationParameters[p], p+1 == newArr.InitializationParameters.Count);
+                    }
+                }
+                return;
+            }
+
+            if (expression is FunctionCall fc)
+            {
+                Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
+                                  $"{fc.}");
+            }
+
         }
 
         protected string ParseExpressionType(ExpressionType ex)

@@ -7,7 +7,7 @@ using MathLang.Tree.Scopes;
 
 namespace MathLang.Tree.Nodes.Expressions
 {
-    public class ArrayElementReference: IExpression, IStatement
+    public class ArrayElementReference: IExpression
     {
         public INode Parent { get; }
         public Scope Scope { get; }
