@@ -15,7 +15,6 @@ namespace MathLang.Tree.Nodes.Expressions
             
         }
 
-        /// <inheritdoc />
         public override void Construct(CommonTree syntaxVariableReference)
         {
             Value = syntaxVariableReference.Text;

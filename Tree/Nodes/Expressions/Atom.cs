@@ -10,7 +10,7 @@ namespace MathLang.Tree.Nodes.Expressions
     {
         public INode Parent { get; }
         public Scope Scope { get; }
-        
+
         public ReturnType Type { get; private set; }
         public string Value { get; set; }
 
@@ -26,7 +26,7 @@ namespace MathLang.Tree.Nodes.Expressions
 
 
             switch (node.Type)
-            {
+            {                
                 case MathLangParser.TRUE: Type = ReturnType.Bool; break;
                 case MathLangParser.FALSE: Type = ReturnType.Bool; break;
                 case MathLangParser.CHAR: Type = ReturnType.Char; break;
