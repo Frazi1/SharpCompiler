@@ -11,8 +11,10 @@ static class Cl
 	
 	static void TestFunc(bool param1, int param2)
 	{
-	int b = 3;
-	b = 12222;
+		int a = Cl.array[3];
+		//array[5] = 10;
+	//int b = 3;
+	//b = 12222;
 		//Test();
 		//int a;
 		//a = 3;

@@ -48,6 +48,7 @@ namespace MathLang.Tree
                 case FUNC_CALL: return ExpressionType.FunctionCall;
                 case VARDECLARATION: return ExpressionType.VariableDeclaration;
                 case ID: return ExpressionType.VariableReference;
+                case ARRAYELEMENT: return ExpressionType.ArrayElementReference;
                 default: throw new ArgumentException(nameof(type));
             }
         }
@@ -65,6 +66,8 @@ namespace MathLang.Tree
                 case VARASSIGNMENT: return new VariableAssignment(parent, parentScope);
                 case ID: return new VariableReference(parent, parentScope);
                 case ARRAY_INITIALIZER: return new NewArray(parent, parentScope);
+                case ARRAYELEMENT: return new ArrayElementReference(parent, parentScope);
+                case EXTENDED_ID: return new ExtendedId(parent, parentScope);
             }
             return new Expression(parent, parentScope);
         }
@@ -93,11 +96,6 @@ namespace MathLang.Tree
                 case WHILE: return new WhileStatement(parentNode, parentScope).AsListOf<IStatement>();
                 case FOR: return new ForStatement(parentNode, parentScope).AsListOf<IStatement>();
                 case VARASSIGNMENT: return new VariableAssignment(parentNode, parentScope).AsListOf<IStatement>();
-                
-                //Not to implement
-                //case ARRAYELEMENTASSIGNMENT: return new ArrayElementAssignmentStatement(functionParent).AsListOf<IStatement>();
-                
-
                 case RETURN: return new ReturnStatement(parentNode, parentScope).AsListOf<IStatement>();
                 case FUNC_CALL: return new FunctionCall(parentNode, parentScope).AsListOf<IStatement>();
                 case VARDECLARATION: return new VariableDeclaration(parentNode, parentScope).AsListOf<IStatement>();
@@ -105,6 +103,9 @@ namespace MathLang.Tree
                 case BLOCK: return new BlockStatement(parentNode, parentScope).AsListOf<IStatement>();
                 case ARRAYDECLARATION: return new ArrayDeclaration(parentNode, parentScope).AsListOf<IStatement>();
                 case ARRAY_INITIALIZER: return new NewArray(parentNode, parentScope).AsListOf<IStatement>();
+                case ARRAYELEMENTASSIGNMENT: return new ArrayElementAssignment(parentNode, parentScope).AsListOf<IStatement>();
+                case ARRAYELEMENT: return new ArrayElementReference(parentNode, parentScope).AsListOf<IStatement>();
+                case EXTENDED_ID: return new ExtendedId(parentNode, parentScope).AsListOf<IStatement>();
                 default: throw new ArgumentOutOfRangeException(nameof(syntaxStatement.Type));
             }
         }

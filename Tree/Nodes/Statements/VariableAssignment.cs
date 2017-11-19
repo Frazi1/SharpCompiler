@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Antlr.Runtime.Tree;
 using MathLang.Extensions;
+using MathLang.Tree.Nodes.Expressions;
 using MathLang.Tree.Nodes.Interfaces;
 using MathLang.Tree.Scopes;
 
@@ -12,7 +13,7 @@ namespace MathLang.Tree.Nodes.Statements
         public INode Parent { get; }
         public Scope Scope { get; }
         
-        public string VariableName { get; private set; }
+        public ExtendedId VariableName { get; private set; }
         public IExpression AssignmentValue { get; private set; }
         
         public VariableAssignment(INode parent, Scope parentScope)
@@ -23,7 +24,10 @@ namespace MathLang.Tree.Nodes.Statements
         
         public void Construct(CommonTree tree)
         {
-            VariableName = tree.GetChild(0).Text;
+            var syntaxExtendedId = tree.GetChild(0).CastTo<CommonTree>();
+            VariableName = TreeHelper.GetExpression(this, Scope, syntaxExtendedId).CastTo<ExtendedId>();
+            VariableName.Construct(syntaxExtendedId);
+
             var assignmentSyntax = tree.GetChild(1).CastTo<CommonTree>();
             AssignmentValue = TreeHelper.GetExpression(this, Scope, assignmentSyntax);
             AssignmentValue.Construct(assignmentSyntax);
