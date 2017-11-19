@@ -17,7 +17,7 @@ namespace MathLang.Tree.Nodes.Expressions
         public Atom(INode parent, Scope parentScope)
         {
             Parent = parent;
-            Scope = new LocalScope(parentScope, false);
+            Scope = parentScope;
         }
 
         public virtual void Construct(CommonTree node)

@@ -32,7 +32,7 @@ namespace MathLang.Tree.Nodes.Declarations
         protected Declaration(INode parent, Scope parentScope)
         {
             Parent = parent;
-            Scope = new LocalScope(parentScope, false);
+            Scope = parentScope;
         }
 
         public virtual void Construct(CommonTree syntaxVariableDeclaration)

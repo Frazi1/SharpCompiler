@@ -18,7 +18,7 @@ namespace MathLang.Tree.Nodes.Statements
         public BlockStatement(INode parent, Scope parentScope)
         {
             Parent = parent;
-            Scope = new LocalScope(parentScope, true);
+            Scope = new LocalScope(parentScope);
         }
         
         public void Construct(CommonTree syntaxBlock)
@@ -36,9 +36,9 @@ namespace MathLang.Tree.Nodes.Statements
                     Statements.AddRange(statements);
                     
                     //Find all variable declarations and add them to scope
-                    statements.FindAll(statement => statement is VariableDeclaration)
-                        .Cast<VariableDeclaration>()
-                        .ForEach(variable => Scope.AddVariable(variable));
+//                    statements.FindAll(statement => statement is VariableDeclaration)
+//                        .Cast<VariableDeclaration>()
+//                        .ForEach(variable => Scope.AddVariable(variable));
                 });
         }
     }

@@ -19,13 +19,14 @@ namespace MathLang.Tree.Nodes.Declarations
         public ClassDeclaration(INode parent, Scope parentScope)
         {
             Parent = parent;
-            Scope = new LocalScope(parentScope, true);
+            Scope = new LocalScope(parentScope);
         }
 
         public void Construct(CommonTree syntaxClass)
         {
             Name = syntaxClass.Children[0].Text;
             var classblock = syntaxClass.GetChild(1).CastTo<CommonTree>();
+            if(classblock.ChildCount == 0) return;
             classblock.Children
                 .Cast<CommonTree>()
                 .ForEach(child =>
@@ -50,7 +51,7 @@ namespace MathLang.Tree.Nodes.Declarations
                     {
                         FunctionDeclaration function = new FunctionDeclaration(this, Scope);
                         FunctionDeclarationNodes.Add(function);
-                        Scope.AddFunction(function);
+//                        Scope.AddFunction(function);
                         function.Construct(child);
                     }
                 });

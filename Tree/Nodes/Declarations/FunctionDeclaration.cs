@@ -23,7 +23,7 @@ namespace MathLang.Tree.Nodes.Declarations
         public FunctionDeclaration(INode parent, Scope parentScope)
         {
             Parent = parent;
-            Scope = new LocalScope(parentScope, true);
+            Scope = new LocalScope(parentScope);
         }
 
         public void Construct(CommonTree syntaxFunctionDeclaration)
@@ -40,7 +40,7 @@ namespace MathLang.Tree.Nodes.Declarations
                         FunctionDeclarationParameter functionDeclarationParameter =
                             new FunctionDeclarationParameter(this, Scope);
                         ParameterNodes.Add(functionDeclarationParameter);
-                        Scope.AddVariable(functionDeclarationParameter);
+//                        Scope.AddVariable(functionDeclarationParameter);
                         functionDeclarationParameter.Construct(syntaxParameter);
                     });
             }

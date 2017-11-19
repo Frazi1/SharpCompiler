@@ -19,7 +19,7 @@ namespace MathLang.Tree.Nodes.Expressions
         public Expression(INode parent, Scope parentScope)
         {
             Parent = parent;
-            Scope = new LocalScope(parentScope, false);
+            Scope = parentScope;
         }
 
         public void Construct(CommonTree syntaxExpressionNode)

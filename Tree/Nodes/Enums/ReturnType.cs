@@ -50,6 +50,16 @@
         {
             return Name;
         }
+
+        public static bool operator ==(ReturnType a, ReturnType b)
+        {
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(ReturnType a, ReturnType b)
+        {
+            return !(a == b);
+        }
     }
 
     public abstract class SimpleReturnType : ReturnType

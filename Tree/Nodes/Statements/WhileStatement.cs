@@ -17,7 +17,7 @@ namespace MathLang.Tree.Nodes.Statements
         public WhileStatement(INode parent, Scope parentScope)
         {
             Parent = parent;
-            this.Scope = new LocalScope(parentScope, false);
+            this.Scope = parentScope;
         }
 
         public void Construct(CommonTree syntaxWhile)
