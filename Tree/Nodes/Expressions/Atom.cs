@@ -11,7 +11,7 @@ namespace MathLang.Tree.Nodes.Expressions
         public INode Parent { get; }
         public Scope Scope { get; }
 
-        public ReturnType Type { get; private set; }
+        public ReturnType ReturnType { get; private set; }
         public string Value { get; set; }
 
         public Atom(INode parent, Scope parentScope)
@@ -27,10 +27,10 @@ namespace MathLang.Tree.Nodes.Expressions
 
             switch (node.Type)
             {                
-                case MathLangParser.TRUE: Type = ReturnType.Bool; break;
-                case MathLangParser.FALSE: Type = ReturnType.Bool; break;
-                case MathLangParser.CHAR: Type = ReturnType.Char; break;
-                case MathLangParser.NUMBER: Type = ReturnType.Int; break;
+                case MathLangParser.TRUE: ReturnType = ReturnType.Bool; break;
+                case MathLangParser.FALSE: ReturnType = ReturnType.Bool; break;
+                case MathLangParser.CHAR: ReturnType = ReturnType.Char; break;
+                case MathLangParser.NUMBER: ReturnType = ReturnType.Int; break;
                 //If we have a variable then we must look up its type in the scope (which we don't have at the moment)
                 default: throw new ArgumentOutOfRangeException(nameof(node.Type));
             }

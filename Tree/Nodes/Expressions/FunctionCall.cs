@@ -2,6 +2,7 @@
 using System.Linq;
 using Antlr.Runtime.Tree;
 using MathLang.Extensions;
+using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Interfaces;
 using MathLang.Tree.Scopes;
 
@@ -13,6 +14,7 @@ namespace MathLang.Tree.Nodes.Expressions
         public Scope Scope { get; }
         
         public ExtendedId Name { get; private set; }
+        public ReturnType ReturnType { get; private set; }
         public List<IExpression> FunctionCallParameters { get; } = new List<IExpression>();
 
         public FunctionCall(INode parent, Scope parentScope)
@@ -23,10 +25,9 @@ namespace MathLang.Tree.Nodes.Expressions
 
         public void Construct(CommonTree syntaxFuncCallExpression)
         {
-            var syntaxExtendedId = syntaxFuncCallExpression.GetChild(0).CastTo<CommonTree>();
+			ReturnType = ReturnType.Unset;            var syntaxExtendedId = syntaxFuncCallExpression.GetChild(0).CastTo<CommonTree>();
             Name = TreeHelper.GetExpression(this, Scope, syntaxExtendedId).CastTo<ExtendedId>();
             Name.Construct(syntaxExtendedId);
-
             if (syntaxFuncCallExpression.ChildCount > 1)
             {
                 syntaxFuncCallExpression.GetChild(1).CastTo<CommonTree>()

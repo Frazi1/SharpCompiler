@@ -12,6 +12,7 @@ namespace MathLang.Tree.Nodes.Expressions
         public Scope Scope { get;}
 
         public ExpressionType ExpressionType { get; set; }
+        public ReturnType ReturnType { get; private set; }
         public IExpression Left { get; set; }
         public IExpression Right { get; set; }
 
@@ -33,6 +34,13 @@ namespace MathLang.Tree.Nodes.Expressions
                 Right = TreeHelper.GetExpression(this, Scope, syntaxRight);
                 Right.Construct(syntaxRight);
             }
+
+            if (Right == null) ReturnType = Left.ReturnType;
+            else
+                ReturnType = Left.ReturnType.Equals(Right.ReturnType) 
+                    ? Left.ReturnType 
+                    : ReturnType.Unset;
         }
+
     }
 }

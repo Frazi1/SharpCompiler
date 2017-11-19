@@ -1,6 +1,7 @@
 ﻿using Antlr.Runtime.Tree;
 using MathLang.Extensions;
 using MathLang.Tree.Nodes.Declarations;
+using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Interfaces;
 using MathLang.Tree.Scopes;
 
@@ -11,6 +12,7 @@ namespace MathLang.Tree.Nodes.Expressions
         public INode Parent { get; }
         public Scope Scope { get; }
 
+        public ReturnType ReturnType => Name.ReturnType;
         public ExtendedId Name { get; private set; }
         public VariableDeclaration VariableDeclaration { get; private set; }
 
@@ -26,5 +28,6 @@ namespace MathLang.Tree.Nodes.Expressions
             Name = TreeHelper.GetExpression(this, Scope, syntaxExtendedId).CastTo<ExtendedId>();
             Name.Construct(syntaxExtendedId);
         }
+
     }
 }
