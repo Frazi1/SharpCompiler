@@ -45,6 +45,7 @@ tokens {
   FOR_CONDITION;
   FOR_ITERATION;
   ARRAY_SIZE;
+  EXTENDED_ID;
 }
 
 
@@ -101,7 +102,7 @@ expression:
 		
 		
 ;
-extended_id: ID (DOT! ID)? -> ^(ID ID?);
+extended_id: ID (DOT! ID)? -> ^(EXTENDED_ID ID ID?);
 
 arrayelement:  extended_id OPEN_SQUARE_BRACE mathexpression CLOSE_SQUARE_BRACE -> ^(ARRAYELEMENT extended_id mathexpression) ;
 static_declaration:  MODIFIER declaration -> ^(STATIC_DECLARATION declaration);
