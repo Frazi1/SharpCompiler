@@ -50,6 +50,23 @@ tokens {
 
 @lexer::namespace { MathLang }
 @parser::namespace { MathLang }
+@lexer::members
+{
+	public override void ReportError(RecognitionException e)
+    {
+        base.ReportError(e);
+		ErrorService.Instance.Handle(e);
+    }
+}
+
+@parser::members
+{
+	public override void ReportError(RecognitionException e)
+    {
+        base.ReportError(e);
+		ErrorService.Instance.Handle(e);
+    }
+}
 
 /*
  * Parser Rules
