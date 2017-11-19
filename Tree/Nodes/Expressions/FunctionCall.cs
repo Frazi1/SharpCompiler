@@ -12,7 +12,7 @@ namespace MathLang.Tree.Nodes.Expressions
         public INode Parent { get; }
         public Scope Scope { get; }
         
-        public string Name { get; set; }
+        public ExtendedId Name { get; private set; }
         public List<IExpression> FunctionCallParameters { get; } = new List<IExpression>();
 
         public FunctionCall(INode parent, Scope parentScope)
@@ -23,12 +23,9 @@ namespace MathLang.Tree.Nodes.Expressions
 
         public void Construct(CommonTree syntaxFuncCallExpression)
         {
-            var syntaxName = syntaxFuncCallExpression.GetChild(0).CastTo<CommonTree>();
-            Name = syntaxName.Text;
-            if (syntaxName.ChildCount > 0)
-            {
-                Name += "." + syntaxName.GetChild(0).Text;
-            }
+            var syntaxExtendedId = syntaxFuncCallExpression.GetChild(0).CastTo<CommonTree>();
+            Name = TreeHelper.GetExpression(this, Scope, syntaxExtendedId).CastTo<ExtendedId>();
+            Name.Construct(syntaxExtendedId);
 
             if (syntaxFuncCallExpression.ChildCount > 1)
             {
