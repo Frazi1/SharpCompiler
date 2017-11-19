@@ -47,6 +47,7 @@ namespace MathLang.Tree
                 case AND: return ExpressionType.And;
                 case FUNC_CALL: return ExpressionType.FunctionCall;
                 case VARDECLARATION: return ExpressionType.VariableDeclaration;
+                case ID: return ExpressionType.VariableReference;
                 default: throw new ArgumentException(nameof(type));
             }
         }
@@ -62,14 +63,15 @@ namespace MathLang.Tree
                 case FUNC_CALL: return new FunctionCall(parent, parentScope);
                 case VARDECLARATION: return new VariableDeclaration(parent, parentScope);
                 case VARASSIGNMENT: return new VariableAssignment(parent, parentScope);
-
+                case ID: return new VariableReference(parent, parentScope);
+                case ARRAY_INITIALIZER: return new NewArray(parent, parentScope);
             }
             return new Expression(parent, parentScope);
         }
 
         public static bool IsAtomNode(int type)
         {
-            return new[] { TRUE, FALSE, NUMBER, CHAR, ID }
+            return new[] { TRUE, FALSE, NUMBER, CHAR/*, ID*/ }
                 .Contains(type);
         }
 
@@ -95,17 +97,14 @@ namespace MathLang.Tree
                 //Not to implement
                 //case ARRAYELEMENTASSIGNMENT: return new ArrayElementAssignmentStatement(functionParent).AsListOf<IStatement>();
                 
-                //case MULT_DECL: return RunMultiDeclaration(parentNode, parentScope ,syntaxStatement).AsListOf<IStatement>();
-                
-                //And here
-                //case MULT_ARRAY_DECL:
 
                 case RETURN: return new ReturnStatement(parentNode, parentScope).AsListOf<IStatement>();
                 case FUNC_CALL: return new FunctionCall(parentNode, parentScope).AsListOf<IStatement>();
-
                 case VARDECLARATION: return new VariableDeclaration(parentNode, parentScope).AsListOf<IStatement>();
-
+                case ID: return new VariableReference(parentNode, parentScope).AsListOf<IStatement>();
                 case BLOCK: return new BlockStatement(parentNode, parentScope).AsListOf<IStatement>();
+                case ARRAYDECLARATION: return new ArrayDeclaration(parentNode, parentScope).AsListOf<IStatement>();
+                case ARRAY_INITIALIZER: return new NewArray(parentNode, parentScope).AsListOf<IStatement>();
                 default: throw new ArgumentOutOfRangeException(nameof(syntaxStatement.Type));
             }
         }

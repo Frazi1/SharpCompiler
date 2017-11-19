@@ -13,15 +13,13 @@ namespace MathLang.Tree.Nodes.Declarations
         public Scope Scope { get; }
 
         public string Name { get; set; }
-        public List<VariableDeclaration> VarDeclarationNodes { get; }
-        public List<FunctionDeclaration> FunctionDeclarationNodes { get; }
+        public List<Declaration> VarDeclarationNodes { get; } = new List<Declaration>();
+        public List<FunctionDeclaration> FunctionDeclarationNodes { get; } = new List<FunctionDeclaration>();
 
         public ClassDeclaration(INode parent, Scope parentScope)
         {
             Parent = parent;
             Scope = new LocalScope(parentScope, true);
-            VarDeclarationNodes = new List<VariableDeclaration>();
-            FunctionDeclarationNodes = new List<FunctionDeclaration>();
         }
 
         public void Construct(CommonTree syntaxClass)
@@ -42,7 +40,7 @@ namespace MathLang.Tree.Nodes.Declarations
                             {
                                 var variableDeclaration = TreeHelper
                                     .GetStatements(this, Scope, syntaxVariableDeclaration).First()
-                                    .CastTo<VariableDeclaration>();
+                                    .CastTo<Declaration>();
                                 variableDeclaration.Construct(syntaxVariableDeclaration);
                                 return variableDeclaration;
                             })
