@@ -44,6 +44,7 @@ tokens {
   FOR_INITIALIZATION;
   FOR_CONDITION;
   FOR_ITERATION;
+  ARRAY_SIZE;
 }
 
 
@@ -166,11 +167,12 @@ funccall: funccallbody ';'!;
 expressioncommalist: expression ( ','! expression)*;
 
 /*ARRAY HERE*/
-object_initializer:  '{' expressioncommalist '}' -> ^(PARAMETERS expressioncommalist) ;
+object_initializer:  '{' expressioncommalist? '}' -> ^(PARAMETERS expressioncommalist?) ;
 newexpression: KNEW! initializer;
 initializer: (simple_var_initializer | array_initializer);
 simple_var_initializer: type OPEN_BRACE CLOSE_BRACE -> ^(NEWVAR type);
-array_initializer: type ((OPEN_SQUARE_BRACE mathexpression CLOSE_SQUARE_BRACE) | ARRAY_DECLARATION_MARK) object_initializer? -> ^(ARRAY_INITIALIZER type mathexpression? object_initializer?);
+array_initializer: type ((OPEN_SQUARE_BRACE mathexpression CLOSE_SQUARE_BRACE) | ARRAY_DECLARATION_MARK) object_initializer 
+		-> ^(ARRAY_INITIALIZER type ^(ARRAY_SIZE mathexpression?) object_initializer);
 
 block: '{'! statementlist '}'!;
 

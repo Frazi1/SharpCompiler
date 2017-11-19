@@ -7,7 +7,7 @@ static class Cl
 	//static char myChar= 'h';
 	//static int TEST_INT = 3 + myInt;
 	//static int not_init;
-	static int[] array = new int[10], barray;
+	static int[] array = new int[]{};
 	
 	static void TestFunc(bool param1, int param2)
 	{
