@@ -2,6 +2,12 @@
 {
 	static int a = charVar;
 	static char charVar = 1;	
-	static int testBool = 1 < 2;
+	//static int testBool = 1 < 2;
+	static int testSt = Valera2.a;
+}
+
+static class Valera2
+{
+	static bool a = 10;
 }
 

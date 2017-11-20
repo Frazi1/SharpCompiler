@@ -83,25 +83,18 @@ namespace MathLang.Tree.Semantics
         {
             //Process assignment value
             IExpression variableDeclarationValueExpression = variableDeclaration.Value;
-            if (variableDeclarationValueExpression != null)
+            if (variableDeclarationValueExpression == null) return;
+            variableDeclarationValueExpression.Process();
+            if (variableDeclaration.ReturnType == variableDeclarationValueExpression.ReturnType) return;
+            if (!variableDeclarationValueExpression.ReturnType.IsCastableTo(variableDeclaration.ReturnType))
             {
-                variableDeclarationValueExpression.Process();
-                if (variableDeclaration.ReturnType != variableDeclarationValueExpression.ReturnType)
-                {
-                    if (variableDeclarationValueExpression.ReturnType.IsCastableTo(variableDeclaration.ReturnType))
-                    {
-                        var castExpression = new CastExpression(parentNode: variableDeclarationValueExpression.Parent,
-                            parentScope: variableDeclarationValueExpression.Scope,
-                            targetReturnType: variableDeclaration.ReturnType,
-                            value: variableDeclarationValueExpression);
-                    }
-                    else
-                    {
-                        throw new ScopeException(
-                            $"Variable \"{variableDeclaration.Name}\" return type {variableDeclaration.ReturnType} is different from {variableDeclarationValueExpression.ReturnType} ");
-                    }
-                }
+                throw new ScopeException(
+                    $"Variable \"{variableDeclaration.Name}\" return type {variableDeclaration.ReturnType} is different from {variableDeclarationValueExpression.ReturnType} ");
             }
+            var castExpression = new CastExpression(parentNode: variableDeclarationValueExpression.Parent,
+                parentScope: variableDeclarationValueExpression.Scope,
+                targetReturnType: variableDeclaration.ReturnType,
+                value: variableDeclarationValueExpression);
         }
 
         #region Expressions
@@ -130,9 +123,9 @@ namespace MathLang.Tree.Semantics
         {
             var scope = extendedId.Scope;
             var declaration = scope.GlobalVariableSearch(extendedId.GetFullPath);
-            if (declaration == null)
-                throw new ScopeException($"Variable with name \"{extendedId.GetFullPath}\" does not exist.");
-            extendedId.ReturnType = declaration.ReturnType;
+            extendedId.ReturnType = declaration != null
+                ? declaration.ReturnType
+                : throw new ScopeException($"Variable with name \"{extendedId.GetFullPath}\" does not exist.");
         }
 
         private static void Process(this VariableReference variableReference)
@@ -152,20 +145,18 @@ namespace MathLang.Tree.Semantics
             expression.Right?.Process();
             if (expression.Right == null)
             {
-                if (expression.ReturnType != expression.Left.ReturnType)
+                if (expression.ReturnType == expression.Left.ReturnType) return;
+                if (expression.Left.ReturnType.IsCastableTo(expression.ReturnType))
                 {
-                    if (expression.Left.ReturnType.IsCastableTo(expression.ReturnType))
-                    {
-                        var castExpression = new CastExpression(parentNode: expression,
-                            parentScope: expression.Scope,
-                            targetReturnType: expression.ReturnType,
-                            value: expression.Left);
-                        expression.Left.Parent = castExpression;
-                    }
-                    else
-                        throw new ExpressionException(
-                            $"Return type {expression.Left.ReturnType} does not match {expression.ReturnType}");
+                    var castExpression = new CastExpression(parentNode: expression,
+                        parentScope: expression.Scope,
+                        targetReturnType: expression.ReturnType,
+                        value: expression.Left);
+                    expression.Left.Parent = castExpression;
                 }
+                else
+                    throw new ExpressionException(
+                        $"Return type {expression.Left.ReturnType} does not match {expression.ReturnType}");
             }
             else if (expression.Left.ReturnType != expression.Right.ReturnType)
             {
@@ -185,6 +176,7 @@ namespace MathLang.Tree.Semantics
         private static void Process(this Atom atom)
         {
             //Nothing to do now
+            //throw new InvalidOperationException("atom");
         }
 
         #endregion
