@@ -155,7 +155,7 @@ ifstatement: IF^ OPEN_BRACE! boolexpression CLOSE_BRACE! block_or_statement (ELS
 whilestatement: WHILE^ OPEN_BRACE! boolexpression CLOSE_BRACE! block_or_statement  ;
 forstatement: FOR^ OPEN_BRACE! longdeclarationbody? ';'! boolexpression? ';'! assignmentbody? CLOSE_BRACE! block_or_statement
 		-> ^(FOR ^(FOR_INITIALIZATION longdeclarationbody) ^(FOR_CONDITION boolexpression) ^(FOR_ITERATION assignmentbody) block_or_statement);
-returnstatement: RETURN^ expression ';'! ;
+returnstatement: RETURN^ expression? ';'! ;
 dowhilestatement: DO^ (block | statement) WHILE! OPEN_BRACE! boolexpression CLOSE_BRACE! ';'! ;
 emptystatement: ';'! ;
 
