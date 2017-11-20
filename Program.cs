@@ -49,10 +49,11 @@ namespace MathLang
                 //AST
                 Tree.Nodes.Program astProgram = new Tree.Nodes.Program();
                 astProgram.Construct(program.CastTo<CommonTree>());
-                astProgram.Process();
+                SemanticsRunner.Run(astProgram);
                 int noop = 0;
                 //Console.WriteLine();
                 //MathLangIntepreter.Execute(program);
+                
             }
             catch (Exception e)
             {
