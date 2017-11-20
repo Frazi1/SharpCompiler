@@ -9,7 +9,7 @@ namespace MathLang.Tree.Nodes.Declarations
 {
     public class ClassDeclaration : INode
     {
-        public INode Parent { get; }
+        public INode Parent { get; set; }
         public Scope Scope { get; }
 
         public string Name { get; set; }

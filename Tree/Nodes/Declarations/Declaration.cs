@@ -11,7 +11,7 @@ namespace MathLang.Tree.Nodes.Declarations
     {
         private IExpression _value;
 
-        public INode Parent { get; }
+        public INode Parent { get; set; }
         public Scope Scope { get; }
         public bool IsConstructed { get; private set; }
 

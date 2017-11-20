@@ -13,7 +13,7 @@ namespace MathLang.Tree.Nodes.Expressions
     {
         protected List<string> IdList { get; } = new List<string>();
 
-        public INode Parent { get; }
+        public INode Parent { get; set; }
         public Scope Scope { get; }
 
         public string GetFullPath => string.Join(".", IdList);

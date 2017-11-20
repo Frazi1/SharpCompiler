@@ -10,7 +10,7 @@ namespace MathLang.Tree.Nodes.Statements
 {
     public class BlockStatement: IStatement
     {
-        public INode Parent { get; }
+        public INode Parent { get; set; }
         public Scope Scope { get; }
 
         public List<IStatement> Statements { get; } = new List<IStatement>();

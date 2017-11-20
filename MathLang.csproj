@@ -48,6 +48,8 @@
     <Compile Include="Tree\Nodes\Declarations\Declaration.cs" />
     <Compile Include="Tree\Nodes\Expressions\ArrayElementReference.cs" />
     <Compile Include="Tree\Nodes\Expressions\BoolExpression.cs" />
+    <Compile Include="Tree\Nodes\Expressions\CastExpression\CastExpression.cs" />
+    <Compile Include="Tree\Nodes\Expressions\CastExpression\CastsTable.cs" />
     <Compile Include="Tree\Nodes\Expressions\CharExpression.cs" />
     <Compile Include="Tree\Nodes\Expressions\ExtendedId.cs" />
     <Compile Include="Tree\Nodes\Expressions\IntExpression.cs" />

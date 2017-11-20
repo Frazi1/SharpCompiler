@@ -8,7 +8,7 @@ namespace MathLang.Tree.Nodes.Expressions
 {
     public abstract class Atom : IExpression, IStatement
     {
-        public INode Parent { get; }
+        public INode Parent { get; set; }
         public Scope Scope { get; }
 
         public ReturnType ReturnType { get; protected set; }

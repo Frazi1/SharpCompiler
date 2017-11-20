@@ -10,7 +10,7 @@ namespace MathLang.Tree.Nodes
 {
     public class Program : INode
     {
-        public INode Parent { get; } = null;
+        public INode Parent { get; set; } = null;
         public Scope Scope { get; }
 
         public List<ClassDeclaration> ClassNodes { get; }

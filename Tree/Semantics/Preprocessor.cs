@@ -87,8 +87,20 @@ namespace MathLang.Tree.Semantics
             {
                 variableDeclarationValueExpression.Process();
                 if (variableDeclaration.ReturnType != variableDeclarationValueExpression.ReturnType)
-                    throw new ScopeException(
-                        $"Variable \"{variableDeclaration.Name}\" return type {variableDeclaration.ReturnType} is different from {variableDeclarationValueExpression.ReturnType} ");
+                {
+                    if (variableDeclarationValueExpression.ReturnType.IsCastableTo(variableDeclaration.ReturnType))
+                    {
+                        var castExpression = new CastExpression(parentNode: variableDeclarationValueExpression.Parent,
+                            parentScope: variableDeclarationValueExpression.Scope,
+                            targetReturnType: variableDeclaration.ReturnType,
+                            value: variableDeclarationValueExpression);
+                    }
+                    else
+                    {
+                        throw new ScopeException(
+                            $"Variable \"{variableDeclaration.Name}\" return type {variableDeclaration.ReturnType} is different from {variableDeclarationValueExpression.ReturnType} ");
+                    }
+                }
             }
         }
 
@@ -140,14 +152,33 @@ namespace MathLang.Tree.Semantics
             expression.Right?.Process();
             if (expression.Right == null)
             {
-                if(expression.ReturnType != expression.Left.ReturnType)
-                    throw new ExpressionException($"Return type {expression.Left.ReturnType} does not match {expression.ReturnType}");
-            } 
+                if (expression.ReturnType != expression.Left.ReturnType)
+                {
+                    if (expression.Left.ReturnType.IsCastableTo(expression.ReturnType))
+                    {
+                        var castExpression = new CastExpression(parentNode: expression,
+                            parentScope: expression.Scope,
+                            targetReturnType: expression.ReturnType,
+                            value: expression.Left);
+                        expression.Left.Parent = castExpression;
+                    }
+                    else
+                        throw new ExpressionException(
+                            $"Return type {expression.Left.ReturnType} does not match {expression.ReturnType}");
+                }
+            }
             else if (expression.Left.ReturnType != expression.Right.ReturnType)
             {
-                //TODO: cast expressions here
-                //if("left castable to right?")
-                throw new ExpressionException($"Can not compare {expression.Left.ReturnType} tot {expression.Right.ReturnType}");
+                if (expression.Right.ReturnType.IsCastableTo(expression.Left.ReturnType))
+                {
+                    var castExpression = new CastExpression(parentNode: expression,
+                        parentScope: expression.Scope,
+                        targetReturnType: expression.Left.ReturnType,
+                        value: expression.Right);
+                }
+                else
+                    throw new ExpressionException(
+                        $"Can not compare {expression.Left.ReturnType} tot {expression.Right.ReturnType}");
             }
         }
 
@@ -155,6 +186,7 @@ namespace MathLang.Tree.Semantics
         {
             //Nothing to do now
         }
+
         #endregion
 
         private static void Process(this FunctionDeclaration functionDeclaration)

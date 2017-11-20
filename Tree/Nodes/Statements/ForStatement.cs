@@ -8,7 +8,7 @@ namespace MathLang.Tree.Nodes.Statements
 {
     public class ForStatement : IStatement
     {
-        public INode Parent { get; }
+        public INode Parent { get; set; }
         public Scope Scope { get; }
 
         public IStatement InitializationStatement{ get; private set; }

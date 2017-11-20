@@ -10,7 +10,7 @@ namespace MathLang.Tree.Nodes.Expressions
 {
     public class FunctionCall : IExpression, IStatement
     {
-        public INode Parent { get; }
+        public INode Parent { get; set; }
         public Scope Scope { get; }
         
         public ExtendedId Name { get; private set; }

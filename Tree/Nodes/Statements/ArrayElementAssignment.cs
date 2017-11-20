@@ -9,7 +9,7 @@ namespace MathLang.Tree.Nodes.Statements
 {
     public class ArrayElementAssignment : IStatement
     {
-        public INode Parent { get; }
+        public INode Parent { get; set; }
         public Scope Scope { get; }
 
         public ArrayElementReference ArrayElementReference { get; private set; }

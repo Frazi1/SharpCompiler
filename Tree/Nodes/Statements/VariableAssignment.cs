@@ -10,7 +10,7 @@ namespace MathLang.Tree.Nodes.Statements
 {
     public class VariableAssignment : IStatement
     {
-        public INode Parent { get; }
+        public INode Parent { get; set; }
         public Scope Scope { get; }
         
         public ExtendedId VariableName { get; private set; }

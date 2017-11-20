@@ -8,7 +8,7 @@ namespace MathLang.Tree.Nodes.Expressions
 {
     public class Expression : IExpression
     {
-        public INode Parent { get; }
+        public INode Parent { get; set; }
         public Scope Scope { get;}
 
         public ExpressionType ExpressionType { get; set; }
@@ -41,6 +41,5 @@ namespace MathLang.Tree.Nodes.Expressions
                     ? Left.ReturnType 
                     : ReturnType.Unset;
         }
-
     }
 }

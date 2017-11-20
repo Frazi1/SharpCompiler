@@ -10,7 +10,7 @@ namespace MathLang.Tree.Nodes.Expressions
 {
     public class VariableReference : IExpression
     {
-        public INode Parent { get; }
+        public INode Parent { get; set; }
         public Scope Scope { get; }
 
         public ReturnType ReturnType

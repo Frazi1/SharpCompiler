@@ -1,6 +1,7 @@
 ﻿static class TestClass 
 {
-	//static int a = charVar;
-	//static char charVar = 'c';	
-	static char testBool = 1 < 2;
+	static int a = charVar;
+	static char charVar = 1;	
+	static int testBool = 1 < 2;
 }
+

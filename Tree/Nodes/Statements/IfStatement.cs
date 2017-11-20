@@ -11,7 +11,7 @@ namespace MathLang.Tree.Nodes.Statements
 {
     public class IfStatement : IStatement
     {
-        public INode Parent { get; }
+        public INode Parent { get; set; }
         public Scope Scope { get; }
 
         public IExpression ConditionExpression { get; private set; }
