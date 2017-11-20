@@ -6,15 +6,15 @@ using MathLang.Tree.Scopes;
 
 namespace MathLang.Tree.Nodes.Expressions
 {
-    public class Atom : IExpression, IStatement
+    public abstract class Atom : IExpression, IStatement
     {
         public INode Parent { get; }
         public Scope Scope { get; }
 
-        public ReturnType ReturnType { get; private set; }
+        public ReturnType ReturnType { get; protected set; }
         public string Value { get; set; }
 
-        public Atom(INode parent, Scope parentScope)
+        protected Atom(INode parent, Scope parentScope)
         {
             Parent = parent;
             Scope = parentScope;
@@ -25,15 +25,14 @@ namespace MathLang.Tree.Nodes.Expressions
             Value = node.Text;
 
 
-            switch (node.Type)
-            {                
-                case MathLangParser.TRUE: ReturnType = ReturnType.Bool; break;
-                case MathLangParser.FALSE: ReturnType = ReturnType.Bool; break;
-                case MathLangParser.CHAR: ReturnType = ReturnType.Char; break;
-                case MathLangParser.NUMBER: ReturnType = ReturnType.Int; break;
-                //If we have a variable then we must look up its type in the scope (which we don't have at the moment)
-                default: throw new ArgumentOutOfRangeException(nameof(node.Type));
-            }
+            //switch (node.Type)
+            //{                
+            //    case MathLangParser.CHAR: ReturnType = ReturnType.Char; break;
+            //    case MathLangParser.NUMBER: ReturnType = ReturnType.Int; break;
+                
+            //    //If we have a variable then we must look up its type in the scope (which we don't have at the moment)
+            //    default: throw new ArgumentOutOfRangeException(nameof(node.Type));
+            //}
         }
     }
 }
