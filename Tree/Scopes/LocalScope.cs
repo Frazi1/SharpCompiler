@@ -10,23 +10,23 @@ namespace MathLang.Tree.Scopes
             : base(parentScope)
         {
         }
-
-        public override Declaration FindVariable(string name)
+        
+        public override Declaration GlobalVariableSearch(string name)
         {
             var declaration = VariableDeclarations.FindByKey(name);
-            return declaration ?? ParentScope?.FindVariable(name);
+            return declaration ?? ParentScope?.GlobalVariableSearch(name);
         }
 
-        public override FunctionDeclaration FindFunction(string name)
+        public override FunctionDeclaration GlobalFunctionSearch(string name)
         {
             var functionDeclaration = FunctionDeclarations.FindByKey(name);
-            return functionDeclaration ?? ParentScope?.FindFunction(name);
+            return functionDeclaration ?? ParentScope?.GlobalFunctionSearch(name);
         }
 
-        public override ClassDeclaration FindClass(string name)
+        public override ClassDeclaration GlobalClassSearch(string name)
         {
             var classDeclaration = ClassDeclarations.FindByKey(name);
-            return classDeclaration ?? ParentScope?.FindClass(name);
+            return classDeclaration ?? ParentScope?.GlobalClassSearch(name);
         }
     }
 }

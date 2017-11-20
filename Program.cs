@@ -47,7 +47,7 @@ namespace MathLang
                 AstNodePrinter.Print(program);
                 
                 //AST
-                Tree.Nodes.Program astProgram = new Tree.Nodes.Program(null);
+                Tree.Nodes.Program astProgram = new Tree.Nodes.Program();
                 astProgram.Construct(program.CastTo<CommonTree>());
                 astProgram.Process();
                 int noop = 0;
@@ -56,7 +56,7 @@ namespace MathLang
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error: {0}", e);
+                Console.WriteLine("Error: {0}", e.Message);
             }
             Console.ReadLine();
         }

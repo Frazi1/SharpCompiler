@@ -15,9 +15,9 @@ namespace MathLang.Tree.Nodes
 
         public List<ClassDeclaration> ClassNodes { get; }
         
-        public Program(Scope parentScope)
+        public Program()
         {
-            Scope = new LocalScope(parentScope);
+            Scope = new GlobalScope();
             ClassNodes = new List<ClassDeclaration>();
         }
 

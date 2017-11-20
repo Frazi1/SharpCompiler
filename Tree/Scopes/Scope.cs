@@ -31,9 +31,13 @@ namespace MathLang.Tree.Scopes
         public bool ContainsFunction(string name) => FunctionDeclarations.Contains(name);
         public bool ContainsVariable(string name) => VariableDeclarations.Contains(name);
 
-        public abstract ClassDeclaration FindClass(string name);
-        public abstract FunctionDeclaration FindFunction(string name);
-        public abstract Declaration FindVariable(string name);
+        public ClassDeclaration LocalClassSearch(string name) => ClassDeclarations.FindByKey(name);
+        public FunctionDeclaration LocalFunctionSearch(string name) => FunctionDeclarations.FindByKey(name);
+        public Declaration LocalVariableSearch(string name) => VariableDeclarations.FindByKey(name);
+
+        public abstract ClassDeclaration GlobalClassSearch(string name);
+        public abstract FunctionDeclaration GlobalFunctionSearch(string name);
+        public abstract Declaration GlobalVariableSearch(string name);
 
         public override string ToString()
         {

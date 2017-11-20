@@ -71,6 +71,7 @@
     <Compile Include="Tree\Nodes\Declarations\VariableDeclaration.cs" />
     <Compile Include="Tree\Nodes\Statements\ReturnStatement.cs" />
     <Compile Include="Tree\Scopes\Exceptions\ScopeException.cs" />
+    <Compile Include="Tree\Scopes\GlobalScope.cs" />
     <Compile Include="Tree\Scopes\LocalScope.cs" />
     <Compile Include="Tree\Scopes\Scope.cs" />
     <Compile Include="Tree\Scopes\ScopeTable.cs" />

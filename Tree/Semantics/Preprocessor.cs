@@ -29,7 +29,7 @@ namespace MathLang.Tree.Semantics
                 .ForEach(declaration =>
                 {
                     if (scope.ContainsVariable(declaration.Name))
-                        throw new ScopeException($"Variable with name: {declaration.Name} already exists");
+                        throw new ScopeException($"Variable with name: \"{declaration.Name}\" already exists");
                     scope.AddVariable(declaration);
                     declaration.Process();
                 });
@@ -65,7 +65,7 @@ namespace MathLang.Tree.Semantics
                 variableDeclarationValue.Process();
                 if (variableDeclaration.ReturnType != variableDeclarationValue.ReturnType)
                     throw new ScopeException(
-                        $"Variable {variableDeclaration.Name} return type {variableDeclaration.ReturnType} is different from {variableDeclarationValue.ReturnType} ");
+                        $"Variable \"{variableDeclaration.Name}\" return type {variableDeclaration.ReturnType} is different from {variableDeclarationValue.ReturnType} ");
             }
         }
 
