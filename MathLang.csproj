@@ -83,6 +83,7 @@
     <Compile Include="Tree\Scopes\ScopeTable.cs" />
     <Compile Include="Tree\Semantics\Interfaces\IProcess.cs" />
     <Compile Include="Tree\Semantics\Preprocessor.cs" />
+    <Compile Include="Tree\Semantics\SemanticsHelper.cs" />
     <Compile Include="Tree\Semantics\SemanticsRunner.cs" />
     <Compile Include="Tree\TreeHelper.cs" />
     <Compile Include="Tree\Nodes\Statements\VariableAssignment.cs" />

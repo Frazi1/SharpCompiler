@@ -4,6 +4,7 @@ using MathLang.Tree.Nodes.Declarations;
 using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Expressions;
 using MathLang.Tree.Nodes.Interfaces;
+using MathLang.Tree.Nodes.Statements;
 using MathLang.Tree.Scopes.Exceptions;
 using Microsoft.Win32.SafeHandles;
 
@@ -18,8 +19,7 @@ namespace MathLang.Tree.Semantics
             var scope = program.Scope;
             program.ClassNodes.ForEach(classDeclaration =>
             {
-                if (scope.ContainsClass(classDeclaration.Name))
-                    throw new ScopeException($"Class with name: {classDeclaration.Name} already exists");
+                classDeclaration.CheckName(scope);
                 scope.AddClass(classDeclaration);
                 classDeclaration.PreProcess();
             });
@@ -30,20 +30,25 @@ namespace MathLang.Tree.Semantics
             var scope = classDeclaration.Scope;
 
             classDeclaration.FunctionDeclarationNodes
-                .ForEach(declaration =>
+                .ForEach(functionDeclaration =>
                 {
-                    if (scope.ContainsFunction(declaration.Name))
-                        throw new ScopeException($"Function with name: \"{declaration.Name}\" already exists");
-                    scope.AddFunction(declaration);
+                    functionDeclaration.CheckName(scope);
+                    scope.AddFunction(functionDeclaration);
+                    functionDeclaration.PreProcess();
                 });
 
             classDeclaration.VarDeclarationNodes
                 .ForEach(declaration =>
                 {
-                    if (scope.ContainsVariable(declaration.Name))
-                        throw new ScopeException($"Variable with name: \"{declaration.Name}\" already exists");
+                    declaration.CheckName(scope);
                     scope.AddVariable(declaration);
                 });
+        }
+
+        private static void PreProcess(this FunctionDeclaration functionDeclaration)
+        {
+            functionDeclaration.ParameterNodes
+                .ForEach(parameter => functionDeclaration.Scope.AddVariable(parameter));
         }
 
         #endregion
@@ -54,6 +59,8 @@ namespace MathLang.Tree.Semantics
         {
             program.ClassNodes.ForEach(Process);
         }
+
+        #region Declarations
 
         private static void Process(this ClassDeclaration classDeclaration)
         {
@@ -96,6 +103,16 @@ namespace MathLang.Tree.Semantics
                 targetReturnType: variableDeclaration.ReturnType,
                 value: variableDeclarationValueExpression);
         }
+
+        private static void Process(this FunctionDeclaration functionDeclaration)
+        {
+            var scope = functionDeclaration.Scope;
+            functionDeclaration.StatemenBlock.Statements
+                .ForEach(statement => statement.Process());
+        }
+
+        #endregion
+
 
         #region Expressions
 
@@ -181,11 +198,46 @@ namespace MathLang.Tree.Semantics
 
         #endregion
 
-        private static void Process(this FunctionDeclaration functionDeclaration)
+        #region Statements
+
+        private static void Process(this IStatement statement)
         {
-            //TODO: Implement
-            //throw new NotImplementedException();
+            switch (statement)
+            {
+                case VariableAssignment variableAssignment:
+                    variableAssignment.Process();
+                    break;
+                default: throw new NotImplementedException();
+            }
         }
+
+        private static void Process(this VariableAssignment variableAssignment)
+        {
+            var scope = variableAssignment;
+
+            variableAssignment.VariableName.Process();
+            var variableReturnType = variableAssignment.VariableName.ReturnType;
+            var assignmentValue = variableAssignment.AssignmentValue;
+
+            assignmentValue.Process();
+
+            if (assignmentValue.ReturnType != variableReturnType)
+            {
+                if (assignmentValue.ReturnType.IsCastableTo(variableReturnType))
+                {
+                    var castExpression = new CastExpression(parentNode: assignmentValue.Parent,
+                        parentScope: assignmentValue.Scope, 
+                        targetReturnType: variableReturnType,
+                        value: assignmentValue);
+                    assignmentValue.Parent = castExpression;
+                }
+                else
+                    throw new ScopeException(
+                        $"Return type {assignmentValue.ReturnType} does not match {variableReturnType}");
+            }
+        }
+
+        #endregion
 
         #endregion
     }
