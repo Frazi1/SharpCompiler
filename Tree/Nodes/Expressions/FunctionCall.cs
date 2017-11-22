@@ -14,7 +14,8 @@ namespace MathLang.Tree.Nodes.Expressions
         public Scope Scope { get; }
         
         public ExtendedId Name { get; private set; }
-        public ReturnType ReturnType { get; private set; }
+        public ReturnType ReturnType { get; set; }
+        public ReturnType CastToType { get; set; }
         public List<IExpression> FunctionCallParameters { get; } = new List<IExpression>();
 
         public FunctionCall(INode parent, Scope parentScope)

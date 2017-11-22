@@ -18,6 +18,8 @@ namespace MathLang.Tree.Nodes.Expressions
 
         public string GetFullPath => string.Join(".", IdList);
         public ReturnType ReturnType { get; set; }
+        public ReturnType CastToType { get; set; }
+
         public ExtendedId(INode parent, Scope parentScope)
         {
             Parent = parent;

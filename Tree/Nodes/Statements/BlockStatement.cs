@@ -8,19 +8,24 @@ using MathLang.Tree.Scopes;
 
 namespace MathLang.Tree.Nodes.Statements
 {
-    public class BlockStatement: IStatement
+    public class BlockStatement : IStatement
     {
         public INode Parent { get; set; }
         public Scope Scope { get; }
 
         public List<IStatement> Statements { get; } = new List<IStatement>();
-        
-        public BlockStatement(INode parent, Scope parentScope)
+
+        public BlockStatement(INode parent, Scope parentScope, bool introduceScope = true)
         {
             Parent = parent;
-            Scope = new LocalScope(parentScope);
+            if (introduceScope)
+                Scope = new LocalScope(parentScope);
+            else
+            {
+                Scope = parentScope;
+            }
         }
-        
+
         public void Construct(CommonTree syntaxBlock)
         {
             if (syntaxBlock.ChildCount == 0)
@@ -34,11 +39,11 @@ namespace MathLang.Tree.Nodes.Statements
                         statement.Construct(syntaxStatement);
                     });
                     Statements.AddRange(statements);
-                    
+
                     //Find all variable declarations and add them to scope
-//                    statements.FindAll(statement => statement is VariableDeclaration)
-//                        .Cast<VariableDeclaration>()
-//                        .ForEach(variable => Scope.AddVariable(variable));
+                    //                    statements.FindAll(statement => statement is VariableDeclaration)
+                    //                        .Cast<VariableDeclaration>()
+                    //                        .ForEach(variable => Scope.AddVariable(variable));
                 });
         }
     }

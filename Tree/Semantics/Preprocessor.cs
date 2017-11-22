@@ -48,7 +48,11 @@ namespace MathLang.Tree.Semantics
         private static void PreProcess(this FunctionDeclaration functionDeclaration)
         {
             functionDeclaration.ParameterNodes
-                .ForEach(parameter => functionDeclaration.Scope.AddVariable(parameter));
+                .ForEach(parameter =>
+                {
+                    parameter.CheckName(functionDeclaration.Scope);
+                    functionDeclaration.Scope.AddVariable(parameter);
+                });
         }
 
         #endregion
@@ -65,15 +69,15 @@ namespace MathLang.Tree.Semantics
         private static void Process(this ClassDeclaration classDeclaration)
         {
             classDeclaration.FunctionDeclarationNodes.ForEach(Process);
-            classDeclaration.VarDeclarationNodes.ForEach(Process);
+            classDeclaration.VarDeclarationNodes.ForEach(declaration => declaration.Process(false));
         }
 
-        private static void Process(this Declaration declaration)
+        private static void Process(this Declaration declaration, bool checkName)
         {
             switch (declaration)
             {
                 case VariableDeclaration variableDeclaration:
-                    variableDeclaration.Process();
+                    variableDeclaration.Process(checkName);
                     break;
                 case ArrayDeclaration arrayDeclaration:
                     arrayDeclaration.Process();
@@ -86,22 +90,22 @@ namespace MathLang.Tree.Semantics
             //            throw  new NotImplementedException();
         }
 
-        private static void Process(this VariableDeclaration variableDeclaration)
+        private static void Process(this VariableDeclaration variableDeclaration, bool checkName = true)
         {
             //Process assignment value
+            if (checkName)
+                variableDeclaration.CheckName(variableDeclaration.Scope);
             IExpression variableDeclarationValueExpression = variableDeclaration.Value;
             if (variableDeclarationValueExpression == null) return;
             variableDeclarationValueExpression.Process();
             if (variableDeclaration.ReturnType == variableDeclarationValueExpression.ReturnType) return;
-            if (!variableDeclarationValueExpression.ReturnType.IsCastableTo(variableDeclaration.ReturnType))
+            if (variableDeclarationValueExpression.ReturnType.IsCastableTo(variableDeclaration.ReturnType))
             {
+                variableDeclarationValueExpression.CastToType = variableDeclaration.ReturnType;
+            }
+            else
                 throw new ScopeException(
                     $"Variable \"{variableDeclaration.Name}\" return type {variableDeclaration.ReturnType} is different from {variableDeclarationValueExpression.ReturnType} ");
-            }
-            var castExpression = new CastExpression(parentNode: variableDeclarationValueExpression.Parent,
-                parentScope: variableDeclarationValueExpression.Scope,
-                targetReturnType: variableDeclaration.ReturnType,
-                value: variableDeclarationValueExpression);
         }
 
         private static void Process(this FunctionDeclaration functionDeclaration)
@@ -131,6 +135,9 @@ namespace MathLang.Tree.Semantics
                     break;
                 case Atom atom:
                     atom.Process();
+                    break;
+                case FunctionCall functionCall:
+                    functionCall.Process();
                     break;
                 default: throw new ArgumentOutOfRangeException(nameof(iexpression));
             }
@@ -164,36 +171,47 @@ namespace MathLang.Tree.Semantics
             {
                 if (expression.ReturnType == expression.Left.ReturnType) return;
                 if (expression.Left.ReturnType.IsCastableTo(expression.ReturnType))
-                {
-                    var castExpression = new CastExpression(parentNode: expression,
-                        parentScope: expression.Scope,
-                        targetReturnType: expression.ReturnType,
-                        value: expression.Left);
-                    expression.Left.Parent = castExpression;
-                }
+                    expression.Left.CastToType = expression.ReturnType;
                 else
                     throw new ExpressionException(
                         $"Return type {expression.Left.ReturnType} does not match {expression.ReturnType}");
             }
             else if (expression.Left.ReturnType != expression.Right.ReturnType)
-            {
                 if (expression.Right.ReturnType.IsCastableTo(expression.Left.ReturnType))
-                {
-                    var castExpression = new CastExpression(parentNode: expression,
-                        parentScope: expression.Scope,
-                        targetReturnType: expression.Left.ReturnType,
-                        value: expression.Right);
-                }
+                    expression.Right.CastToType = expression.Left.ReturnType;
                 else
                     throw new ExpressionException(
                         $"Can not compare {expression.Left.ReturnType} tot {expression.Right.ReturnType}");
-            }
         }
 
         private static void Process(this Atom atom)
         {
             //Nothing to do now
             //throw new InvalidOperationException("atom");
+        }
+
+        private static void Process(this FunctionCall functionCall)
+        {
+            //functionCall.Name.Process();
+            var functionDeclaration = functionCall.Scope.GlobalFunctionSearch(functionCall.Name.GetFullPath);
+            if (functionDeclaration == null)
+                throw new ScopeException($"Function with name {functionCall.Name.GetFullPath} does not exist");
+            if (functionDeclaration.ParameterNodes.Count != functionCall.FunctionCallParameters.Count)
+                throw new ScopeException("Function call signature is different from defined function with that name");
+            for (int i = 0; i < functionDeclaration.ParameterNodes.Count; i++)
+            {
+                var parameter = functionDeclaration.ParameterNodes[i];
+                var callParameter = functionCall.FunctionCallParameters[i];
+                callParameter.Process();
+
+                if (parameter.ReturnType == callParameter.ReturnType) continue;
+                if (callParameter.ReturnType.IsCastableTo(parameter.ReturnType))
+                    callParameter.CastToType = parameter.ReturnType;
+                else
+                    throw new ScopeException(
+                        $"Type {callParameter.ReturnType} can not be matched to type {parameter.ReturnType}");
+            }
+            functionCall.ReturnType = functionDeclaration.ReturnType;
         }
 
         #endregion
@@ -207,7 +225,11 @@ namespace MathLang.Tree.Semantics
                 case VariableAssignment variableAssignment:
                     variableAssignment.Process();
                     break;
-                default: throw new NotImplementedException();
+                case VariableDeclaration variableDeclaration:
+                    variableDeclaration.Process();
+                    break;
+                default:
+                    throw new NotImplementedException($"Statements process: {statement.GetType()}");
             }
         }
 
@@ -225,11 +247,7 @@ namespace MathLang.Tree.Semantics
             {
                 if (assignmentValue.ReturnType.IsCastableTo(variableReturnType))
                 {
-                    var castExpression = new CastExpression(parentNode: assignmentValue.Parent,
-                        parentScope: assignmentValue.Scope, 
-                        targetReturnType: variableReturnType,
-                        value: assignmentValue);
-                    assignmentValue.Parent = castExpression;
+                    assignmentValue.CastToType = variableReturnType;
                 }
                 else
                     throw new ScopeException(

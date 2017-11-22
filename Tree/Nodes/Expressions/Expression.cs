@@ -13,6 +13,7 @@ namespace MathLang.Tree.Nodes.Expressions
 
         public ExpressionType ExpressionType { get; set; }
         public ReturnType ReturnType { get; private set; }
+        public ReturnType CastToType { get; set; }
         public IExpression Left { get; set; }
         public IExpression Right { get; set; }
 

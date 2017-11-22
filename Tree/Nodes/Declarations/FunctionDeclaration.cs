@@ -47,8 +47,9 @@ namespace MathLang.Tree.Nodes.Declarations
 
             //Statements
             var syntaxStatementBlock = syntaxFunctionDeclaration.GetChild(3).CastTo<CommonTree>();
-            StatemenBlock = TreeHelper.GetStatements(this, Scope, syntaxStatementBlock)
-                .First().CastTo<BlockStatement>();
+            //StatemenBlock = TreeHelper.GetStatements(this, Scope, syntaxStatementBlock)
+            //    .First().CastTo<BlockStatement>();
+            StatemenBlock = new BlockStatement(this, Scope, false);
             StatemenBlock.Construct(syntaxStatementBlock);
         }
     }

@@ -12,6 +12,7 @@ namespace MathLang.Tree.Nodes.Expressions
         public Scope Scope { get; }
 
         public ReturnType ReturnType { get; protected set; }
+        public ReturnType CastToType { get; set; }
         public string Value { get; set; }
 
         protected Atom(INode parent, Scope parentScope)

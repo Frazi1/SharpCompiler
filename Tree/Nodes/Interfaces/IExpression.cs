@@ -5,5 +5,6 @@ namespace MathLang.Tree.Nodes.Interfaces
     public interface IExpression : INode
     {
         ReturnType ReturnType { get; }
+        ReturnType CastToType { get; set; }
     }
 }

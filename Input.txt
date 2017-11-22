@@ -3,7 +3,7 @@
 	static int a = charVar;
 	static char charVar = 1;	
 	static bool testBool = 1 < 2;
-	static int testSt = Valera2.a;
+	//static int testSt = Valera2.a;
 	//static int testSt2 = TestClass.testBool;
 }
 
@@ -11,9 +11,15 @@ static class Valera2
 {
 	static char a = 10;
 	
-	static void Func1()
+	static void Func1(int b, char c)
 	{
-		a = Valera2.a;
+		int a = 10;
+		bool btest = Func(c, 20);
+	}
+	
+	static bool Func(char c, int a)
+	{
+		
 	}
 }
 

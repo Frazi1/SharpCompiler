@@ -13,11 +13,13 @@ namespace MathLang.Tree.Nodes.Expressions
         public INode Parent { get; set; }
         public Scope Scope { get; }
 
+        public ReturnType CastToType { get; set; }
         public ReturnType ReturnType
         {
             get { return Name.ReturnType; }
             set { Name.ReturnType = value; }
         }
+
 
         public ExtendedId Name { get; private set; }
         public VariableDeclaration VariableDeclaration { get; set; }
