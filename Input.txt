@@ -1,25 +1,31 @@
-﻿static class TestClass 
-{
-	static int a = charVar;
-	static char charVar = 1;	
-	static bool testBool = 1 < 2;
-	//static int testSt = Valera2.a;
-	//static int testSt2 = TestClass.testBool;
-}
+﻿//static class TestClass 
+//{
+//	static int a = charVar;
+//	static char charVar = 1;	
+//	static bool testBool = 1 < 2;
+//	//static int testSt = Valera2.a;
+//	//static int testSt2 = TestClass.testBool;
+//}
 
 static class Valera2
 {
-	static char a = 10;
+//	static char a = 10;
 	
-	static void Func1(int b, char c)
+	//static void Func1(int b, char c)
+	//{
+	//	int a = 10;
+	//	bool btest = Func(c, 20);
+	//}
+	
+	static bool Func(bool test)
 	{
-		int a = 10;
-		bool btest = Func(c, 20);
+		bool a = testArrRet();
 	}
 	
-	static bool Func(char c, int a)
+	static int testArrRet()
 	{
-		
 	}
 }
+
+
 

@@ -7,6 +7,7 @@ using MathLang.Tree.Nodes.Interfaces;
 using MathLang.Tree.Nodes.Statements;
 using MathLang.Tree.Scopes.Exceptions;
 using Microsoft.Win32.SafeHandles;
+using MathLang.Extensions;
 
 namespace MathLang.Tree.Semantics
 {
@@ -72,25 +73,25 @@ namespace MathLang.Tree.Semantics
             classDeclaration.VarDeclarationNodes.ForEach(declaration => declaration.Process(false));
         }
 
-        private static void Process(this Declaration declaration, bool checkName)
-        {
-            switch (declaration)
-            {
-                case VariableDeclaration variableDeclaration:
-                    variableDeclaration.Process(checkName);
-                    break;
-                case ArrayDeclaration arrayDeclaration:
-                    arrayDeclaration.Process();
-                    break;
-            }
-        }
+        //private static void Process(this Declaration declaration, bool checkName)
+        //{
+        //    switch (declaration)
+        //    {
+        //        case VariableDeclaration variableDeclaration:
+        //            variableDeclaration.Process(checkName);
+        //            break;
+        //        case ArrayDeclaration arrayDeclaration:
+        //            arrayDeclaration.Process();
+        //            break;
+        //    }
+        //}
 
         private static void Process(this ArrayDeclaration arrayDeclaration)
         {
             //            throw  new NotImplementedException();
         }
 
-        private static void Process(this VariableDeclaration variableDeclaration, bool checkName = true)
+        private static void Process(this Declaration variableDeclaration, bool checkName = true)
         {
             //Process assignment value
             if (checkName)
@@ -138,6 +139,9 @@ namespace MathLang.Tree.Semantics
                     break;
                 case FunctionCall functionCall:
                     functionCall.Process();
+                    break;
+                case NewArray newArray:
+                    newArray.Process();
                     break;
                 default: throw new ArgumentOutOfRangeException(nameof(iexpression));
             }
@@ -214,6 +218,33 @@ namespace MathLang.Tree.Semantics
             functionCall.ReturnType = functionDeclaration.ReturnType;
         }
 
+        private static void Process(this NewArray newArray)
+        {
+            if (newArray.ArraySize != null && newArray.InitializationParameters.Count > 0)
+                throw new ScopeException("You can't specify array size and include initialization parameters");
+            if(newArray.ArraySize == null && newArray.InitializationParameters.Count == 0)
+                throw new ScopeException("You must specify array size");
+            if (newArray.ArraySize != null)
+            {
+                newArray.ArraySize.Process();
+                if(newArray.ArraySize.ReturnType != ReturnType.Int)
+                    throw new ScopeException($"Array size must be of {ReturnType.Int} type, but {newArray.ArraySize.ReturnType} is specified");
+            }
+            var arrayInnerType = newArray.ReturnType.CastTo<ArrayReturnType>()
+                .InnerType;
+            newArray.InitializationParameters.ForEach(expression =>
+            {
+                expression.Process();
+                if (expression.ReturnType != arrayInnerType)
+                {
+                    if (expression.ReturnType.IsCastableTo(arrayInnerType))
+                        expression.CastToType = arrayInnerType;
+                    else 
+                        throw new ScopeException($"Initialization parameter must be of type {arrayInnerType}, but received {expression.ReturnType}");
+                }
+            });
+        }
+        
         #endregion
 
         #region Statements
@@ -225,8 +256,8 @@ namespace MathLang.Tree.Semantics
                 case VariableAssignment variableAssignment:
                     variableAssignment.Process();
                     break;
-                case VariableDeclaration variableDeclaration:
-                    variableDeclaration.Process();
+                case Declaration declaration:
+                    declaration.Process();
                     break;
                 default:
                     throw new NotImplementedException($"Statements process: {statement.GetType()}");

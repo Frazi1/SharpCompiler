@@ -16,8 +16,13 @@ namespace MathLang.Tree.Nodes.Declarations
 
         public override void Construct(CommonTree syntaxArrayDeclaration)
         {
-            ReturnType arrayElementsSimpleType = TreeHelper.GetReturnType(syntaxArrayDeclaration.GetChild(0).Text);
-            ReturnType = ReturnType.ArrayOf(arrayElementsSimpleType);
+            string strType = string.Empty;
+            var syntaxReturnType = syntaxArrayDeclaration.GetChild(0).CastTo<CommonTree>();
+            syntaxReturnType.Children.ForEach(node => strType += node.Text);
+            //ReturnType arrayElementsSimpleType = TreeHelper.GetReturnType(syntaxReturnType.GetChild(0).Text);
+            //ReturnType = ReturnType.ArrayOf(arrayElementsSimpleType);
+
+            ReturnType = TreeHelper.GetReturnType(strType);
             Name = syntaxArrayDeclaration.GetChild(1).Text;
 
             if(syntaxArrayDeclaration.ChildCount < 3) return;

@@ -17,6 +17,8 @@ namespace MathLang.Tree
     {
         public static ReturnType GetReturnType(string type)
         {
+            if(type.Contains("[]"))
+                return ReturnType.ArrayOf(GetReturnType(type.Replace("[]", "")));
             switch (type)
             {
                 case "int": return ReturnType.Int;

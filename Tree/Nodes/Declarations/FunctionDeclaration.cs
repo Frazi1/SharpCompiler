@@ -29,7 +29,11 @@ namespace MathLang.Tree.Nodes.Declarations
         public void Construct(CommonTree syntaxFunctionDeclaration)
         {
             Name = syntaxFunctionDeclaration.GetChild(0).Text;
-            ReturnType = TreeHelper.GetReturnType(syntaxFunctionDeclaration.GetChild(1).GetChild(0).Text);
+            string strType = string.Empty;
+            var syntaxReturnType = syntaxFunctionDeclaration.GetChild(1).CastTo<CommonTree>();
+            syntaxReturnType.Children.ForEach(node => strType += node.Text);
+            //ReturnType = TreeHelper.GetReturnType(syntaxFunctionDeclaration.GetChild(1).GetChild(0).Text);
+            ReturnType = TreeHelper.GetReturnType(strType);
             //Parameters
             var syntaxParametersNode = syntaxFunctionDeclaration.GetChild(2).CastTo<CommonTree>();
             if (syntaxParametersNode.ChildCount > 0)
