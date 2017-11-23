@@ -4,13 +4,14 @@ using System.Globalization;
 using Antlr.Runtime;
 using Antlr.Runtime.Tree;
 using MathLang.Extensions;
+using MathLang.Tree.Semantics;
 
 
 namespace MathLang
 {
     public class Program
     {
-        // "культуронезависимый" формат для чисел (с разделителем точкой)
+        // "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ" пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ (пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ)
         public static readonly NumberFormatInfo NFI = new NumberFormatInfo();
 
 
@@ -35,8 +36,8 @@ namespace MathLang
             //garrrr
             try
             {
-                // в зависимости от наличия параметров командной строки разбираем
-                // либо файл с именем, переданным первым параметром, либо стандартный ввод
+                // пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+                // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
                 ICharStream input = args.Length == 1 ? (ICharStream)new ANTLRFileStream(args[0])
                                                      : (ICharStream)new ANTLRReaderStream(Console.In);
                 MathLangLexer lexer = new MathLangLexer(input);
@@ -44,8 +45,11 @@ namespace MathLang
                 MathLangParser parser = new MathLangParser(tokens);
                 ITree program = (ITree)parser.execute().Tree;
                 AstNodePrinter.Print(program);
-                Tree.Nodes.Program astProgram = new Tree.Nodes.Program(null);
+                
+                //AST
+                Tree.Nodes.Program astProgram = new Tree.Nodes.Program();
                 astProgram.Construct(program.CastTo<CommonTree>());
+                SemanticsRunner.Run(astProgram);
                 int noop = 0;
 
                 TreeConsolePrinter tp= new TreeConsolePrinter();
@@ -53,10 +57,11 @@ namespace MathLang
 
                 //Console.WriteLine();
                 //MathLangIntepreter.Execute(program);
+                
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error: {0}", e);
+                Console.WriteLine("Error: {0}", e.Message);
             }
             Console.ReadLine();
         }

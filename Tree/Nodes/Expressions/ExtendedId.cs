@@ -11,17 +11,19 @@ namespace MathLang.Tree.Nodes.Expressions
 {
     public class ExtendedId : IExpression, IStatement
     {
-        public INode Parent { get; }
+        protected List<string> IdList { get; } = new List<string>();
+
+        public INode Parent { get; set; }
         public Scope Scope { get; }
 
-        public List<string> IdList { get; } = new List<string>();
         public string GetFullPath => string.Join(".", IdList);
-        public ReturnType ReturnType { get; private set; }
+        public ReturnType ReturnType { get; set; }
+        public ReturnType CastToType { get; set; }
 
         public ExtendedId(INode parent, Scope parentScope)
         {
             Parent = parent;
-            Scope = new LocalScope(parentScope, false);
+            Scope = parentScope;
         }
 
         public void Construct(CommonTree syntaxExtendedId)

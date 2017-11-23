@@ -9,7 +9,7 @@ namespace MathLang.Tree.Nodes.Statements
 {
     public class WhileStatement : IStatement
     {
-        public INode Parent { get; }
+        public INode Parent { get; set; }
         public IExpression ConditionExpression { get; private set; }
         public IStatement BlockOrSingleStatement { get; private set; }
         public Scope Scope { get; }
@@ -17,7 +17,7 @@ namespace MathLang.Tree.Nodes.Statements
         public WhileStatement(INode parent, Scope parentScope)
         {
             Parent = parent;
-            this.Scope = new LocalScope(parentScope, false);
+            this.Scope = parentScope;
         }
 
         public void Construct(CommonTree syntaxWhile)

@@ -1,66 +1,32 @@
-﻿using MathLang.Tree.Nodes.Declarations;
+﻿using System;
+using MathLang.Tree.Nodes.Declarations;
 
 namespace MathLang.Tree.Scopes
 {
     public class LocalScope : Scope
     {
-        protected bool IntroduceScope { get; }
 
-        public LocalScope(Scope parentScope, bool introduceScope)
+        public LocalScope(Scope parentScope)
             : base(parentScope)
         {
-            IntroduceScope = introduceScope;
+        }
+        
+        public override Declaration GlobalVariableSearch(string name)
+        {
+            var declaration = VariableDeclarations.FindByKey(name);
+            return declaration ?? ParentScope?.GlobalVariableSearch(name);
         }
 
-        public override VariableDeclaration FindVariable(string name)
+        public override FunctionDeclaration GlobalFunctionSearch(string name)
         {
-            if (IntroduceScope)
-            {
-                var variableDeclaration = VariableDeclarations.Find(declaration => declaration.Name == name);
-                if (variableDeclaration != null)
-                {
-                    return variableDeclaration;
-                }
-            }
-            if (ParentScope != null)
-            {
-                return ParentScope.FindVariable(name);
-            }
-            return null;
+            var functionDeclaration = FunctionDeclarations.FindByKey(name);
+            return functionDeclaration ?? ParentScope?.GlobalFunctionSearch(name);
         }
 
-        public override FunctionDeclaration FindFunction(string name)
+        public override ClassDeclaration GlobalClassSearch(string name)
         {
-            if (IntroduceScope)
-            {
-                var functionDeclaration = FunctionDeclarations.Find(declaration => declaration.Name == name);
-                if (functionDeclaration != null)
-                {
-                    return functionDeclaration;
-                }
-            }
-            if (ParentScope != null)
-            {
-                return ParentScope.FindFunction(name);
-            }
-            return null;
-        }
-
-        public override ClassDeclaration FindClass(string name)
-        {
-            if (IntroduceScope)
-            {
-                var classDeclaration = ClassDeclarations.Find(declaration => declaration.Name == name);
-                if (classDeclaration != null)
-                {
-                    return classDeclaration;
-                }
-            }
-            if (ParentScope != null)
-            {
-                return ParentScope.FindClass(name);
-            }
-            return null;
+            var classDeclaration = ClassDeclarations.FindByKey(name);
+            return classDeclaration ?? ParentScope?.GlobalClassSearch(name);
         }
     }
 }

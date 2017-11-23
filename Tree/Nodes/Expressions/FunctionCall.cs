@@ -10,17 +10,18 @@ namespace MathLang.Tree.Nodes.Expressions
 {
     public class FunctionCall : IExpression, IStatement
     {
-        public INode Parent { get; }
+        public INode Parent { get; set; }
         public Scope Scope { get; }
         
         public ExtendedId Name { get; private set; }
-        public ReturnType ReturnType { get; private set; }
+        public ReturnType ReturnType { get; set; }
+        public ReturnType CastToType { get; set; }
         public List<IExpression> FunctionCallParameters { get; } = new List<IExpression>();
 
         public FunctionCall(INode parent, Scope parentScope)
         {
             Parent = parent;
-            Scope = new LocalScope(parentScope, false);
+            Scope = parentScope;
         }
 
         public void Construct(CommonTree syntaxFuncCallExpression)

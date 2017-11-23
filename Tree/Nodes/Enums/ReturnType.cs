@@ -19,7 +19,6 @@
             Name = name;
         }
 
-
         public static UnsetReturnType Unset => new UnsetReturnType();
         public static BoolReturnType Bool => new BoolReturnType();
         public static IntReturnType Int => new IntReturnType();
@@ -50,6 +49,16 @@
         {
             return Name;
         }
+
+        public static bool operator ==(ReturnType a, ReturnType b)
+        {
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(ReturnType a, ReturnType b)
+        {
+            return !(a == b);
+        }
     }
 
     public abstract class SimpleReturnType : ReturnType
@@ -62,16 +71,20 @@
 
     public abstract class ComplexReturnType : ReturnType
     {
-        protected ComplexReturnType(string name) : base(name)
+        public ReturnType InnerType { get; protected set; }
+
+        protected ComplexReturnType(string name)
+            : base(name)
         {
         }
     }
 
     public class ArrayReturnType : ComplexReturnType
-
     {
-        public ArrayReturnType(ReturnType returnType) : base("ArrayOf." + returnType)
+        public ArrayReturnType(ReturnType returnType)
+            : base("ArrayOf." + returnType)
         {
+            InnerType = returnType;
         }
     }
 
