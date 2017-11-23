@@ -29,6 +29,11 @@ namespace MathLang.Tree
             }
         }
 
+        public static string GetStringTypeFromSyntaxNode(CommonTree syntaxReturnType)
+        {
+            return string.Concat(syntaxReturnType.Children.Select(t => t.Text));
+        }
+
         public static ExpressionType GetExpressionType(int type)
         {
             switch (type)

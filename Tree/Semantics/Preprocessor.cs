@@ -95,7 +95,10 @@ namespace MathLang.Tree.Semantics
         {
             //Process assignment value
             if (checkName)
+            {
                 variableDeclaration.CheckName(variableDeclaration.Scope);
+                variableDeclaration.Scope.AddVariable(variableDeclaration);
+            }
             IExpression variableDeclarationValueExpression = variableDeclaration.Value;
             if (variableDeclarationValueExpression == null) return;
             variableDeclarationValueExpression.Process();
@@ -199,9 +202,9 @@ namespace MathLang.Tree.Semantics
             //functionCall.Name.Process();
             var functionDeclaration = functionCall.Scope.GlobalFunctionSearch(functionCall.Name.GetFullPath);
             if (functionDeclaration == null)
-                throw new ScopeException($"Function with name {functionCall.Name.GetFullPath} does not exist");
+                throw new ScopeException($"Function with name \"{functionCall.Name.GetFullPath}\" does not exist");
             if (functionDeclaration.ParameterNodes.Count != functionCall.FunctionCallParameters.Count)
-                throw new ScopeException("Function call signature is different from defined function with that name");
+                throw new ScopeException($"Function \"{functionCall.Name.GetFullPath}\" call signature is different from defined function with that name");
             for (int i = 0; i < functionDeclaration.ParameterNodes.Count; i++)
             {
                 var parameter = functionDeclaration.ParameterNodes[i];
@@ -258,6 +261,9 @@ namespace MathLang.Tree.Semantics
                     break;
                 case Declaration declaration:
                     declaration.Process();
+                    break;
+                case FunctionCall functionCall:
+                    functionCall.Process();
                     break;
                 default:
                     throw new NotImplementedException($"Statements process: {statement.GetType()}");

@@ -3,26 +3,28 @@
 //	static int a = charVar;
 //	static char charVar = 1;	
 //	static bool testBool = 1 < 2;
-//	//static int testSt = Valera2.a;
+//	static int testSt = Valera2.a;
 //	//static int testSt2 = TestClass.testBool;
 //}
 
 static class Valera2
 {
-//	static char a = 10;
-	
+	static char a = 10;
+	//
 	//static void Func1(int b, char c)
 	//{
 	//	int a = 10;
-	//	bool btest = Func(c, 20);
+	//	bool btest = Func(true);
 	//}
 	
 	static bool Func(bool test)
 	{
-		bool a = testArrRet();
+		int[] a = new int[] {1};
+		int arr = testArrRet(a);
+//		Look at array declaration and add RETURN_TYPE node there.
 	}
 	
-	static int testArrRet()
+	static int[] testArrRet(int[] a)
 	{
 	}
 }
