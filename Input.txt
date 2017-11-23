@@ -11,26 +11,33 @@ static class Cl
 	
 	static void TestFunc(bool param1, int param2)
 	{
-		b = 10;
-		g = b;
-		int a = Cl.array[3];
+		//b = 10;
+		//g = b;
+		//int a = Cl.array[3];
 		//array[5] = 10;
-	int b = 3;
-	b = 12222;
-	Test();
-	int a;
-	a = 3;
+	//int b = 3;
+	//b = 12222;
+	//Test();
+	//int a;
+	//a = 3;
 	if(a<3){
 		a= 4;
 	}
 	else if(true) {
 		int b = 200;
+
+		int u = 7;
+
+		//p=9 + g(8,t, new a[7]{7,9});
+
+		k();
+		d(t,u,5);
 	}
 	;;
 	while(d){while(ffff) while(y);}
 	while(1*6>9);
-	int a, b = 30, c, d = 10, ssss;
-	while(asshole) {;}
+	//int a, b = 30, c, d = 10, ssss;
+	while(ass) {;}
 		for(int a = 10; a < 5; a = a+1)
 			a= 2;
 			
@@ -44,7 +51,7 @@ static class Cl
 
 	static char[] nn, i = new char[8] ;
 
-	static void testfunc(int[] a, char t)
+	static int[] testfunc(int[] a, char t)
 	{
 		int a,  b = 3;
 		
@@ -82,4 +89,5 @@ static class Cl
 			}
 		}
 	}
+	
 }

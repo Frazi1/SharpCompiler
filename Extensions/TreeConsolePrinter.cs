@@ -42,7 +42,7 @@ namespace MathLang.Extensions
                     bool last = (k + 1 == treeProgram.ClassNodes[i].VarDeclarationNodes.Count) &&
                                 (treeProgram.ClassNodes[i].FunctionDeclarationNodes.Count == 0);
 
-                    PrintVarDeclaration(indent+ nextInd, 
+                    PrintStatement(indent+ nextInd, 
                         treeProgram.ClassNodes[i].VarDeclarationNodes[k],
                         last);
                 }
@@ -56,21 +56,21 @@ namespace MathLang.Extensions
             }
         }
 
-        protected void PrintVarDeclaration(string ind, Declaration declaration, bool isFinal)
-        {
+        //protected void PrintVarDeclaration(string ind, Declaration declaration, bool isFinal)
+        //{
 
-            Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                              $"{declaration.Name} " +
-                              $"({declaration.ReturnType})");
-            if (declaration.Value != null)
-            {
-                PrintExpresion(ind + (isFinal? indent : indentBar) , declaration.Value, true);
-            }
-        }
+        //    Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
+        //                      $"{declaration.Name} " +
+        //                      $"({declaration.ReturnType})");
+        //    if (declaration.Value != null)
+        //    {
+        //        PrintExpresion(ind + (isFinal? indent : indentBar) , declaration.Value, true);
+        //    }
+        //}
 
         protected void PrintFuncDeclaration(string ind, FunctionDeclaration funcDecl, bool isFinal)
         {
-            Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}{funcDecl.Name} returns" +
+            Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}func {funcDecl.Name} returns" +
                               $" {funcDecl.ReturnType}");
 
             //params
@@ -109,11 +109,12 @@ namespace MathLang.Extensions
         {
             if (statement is BlockStatement block)
             {
-                Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}block");
+                Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
+                                  $"{(block.Statements.Count>0? "block":"empty block")}");
 
                 for (int k = 0; k < block.Statements.Count; k++)
                 {
-                    PrintStatement($"{ind}{(isFinal ? indent : indentBar)}{indent}",
+                    PrintStatement($"{ind}{(isFinal ? indent : indentBar)}",
                         //$"{(k + 1 == funcDecl.StatemenBlock.Statements.Count ? indentEndBar : indentBranchBar)}" +
                         block.Statements[k], k + 1 == block.Statements.Count);
                 }
@@ -138,12 +139,68 @@ namespace MathLang.Extensions
                 PrintExpresion($"{ind}{(isFinal ? indent : indentBar)}", whileStat.ConditionExpression, 
                     whileStat.BlockOrSingleStatement==null);
 
-                if (whileStat.BlockOrSingleStatement == null)
+                if (whileStat.BlockOrSingleStatement != null)
                 {
                     PrintStatement($"{ind}{(isFinal ? indent : indentBar)}", whileStat.BlockOrSingleStatement,true);
                 }
 
                 return;
+            }
+
+            if (statement is ForStatement forStat)
+            {
+                Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}for");
+            }
+
+            if (statement is IfStatement ifStat)
+            {
+                Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}if");
+
+                PrintExpresion($"{ind}{(isFinal ? indent : indentBar)}", ifStat.ConditionExpression,
+                    ifStat.TrueCaseBlockStatement == null);
+
+                if (ifStat.TrueCaseBlockStatement != null)
+                {
+                    PrintStatement($"{ind}{(isFinal ? indent : indentBar)}", 
+                        ifStat.TrueCaseBlockStatement, ifStat.FasleCaseBlockStatement==null);
+                }
+                if (ifStat.FasleCaseBlockStatement!= null)
+                {
+                    PrintStatement($"{ind}{(isFinal ? indent : indentBar)}",
+                        ifStat.FasleCaseBlockStatement, true);
+                }
+                return;
+            }
+            if (statement is Declaration declaration)
+            {
+                Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
+                                  $"DECLARE {declaration.Name} " +
+                                  $"of type {declaration.ReturnType}");
+                if (declaration.Value != null)
+                {
+                    PrintExpresion(ind + (isFinal ? indent : indentBar), declaration.Value, true);
+                }
+                return;
+            }
+            if (statement is VariableAssignment varAss)
+            {
+                Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}ASSIGN {varAss.VariableName} = ");
+
+                PrintExpresion($"{ind}{(isFinal ? indent : indentBar)}", varAss.AssignmentValue,true);
+
+                return;
+            }
+            if (statement is ArrayElementAssignment arrAss)
+            {
+                Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}ASSIGN");
+
+                PrintExpresion($"{ind}{(isFinal ? indent : indentBar)}",
+                            arrAss.ArrayElementReference, false);
+                return;
+            }
+            if (statement is FunctionCall fCall)
+            {
+                PrintExpresion($"{ind}", fCall, isFinal);
             }
         }
 
@@ -189,7 +246,7 @@ namespace MathLang.Extensions
             if (expression is NewArray newArr)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"{newArr.ReturnType}");
+                                  $"new {newArr.ReturnType}");
 
                 if (newArr.ArraySize != null)
                 {
@@ -221,7 +278,7 @@ namespace MathLang.Extensions
             if (expression is FunctionCall fc)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"{fc.Name} ({fc.ReturnType})");
+                                  $"CALL {fc.Name} that returns {fc.ReturnType}");
 
                 if (fc.FunctionCallParameters.Count > 0)
                 {
