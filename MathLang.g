@@ -136,7 +136,7 @@ add: mul ( (ADD | SUB)^ mul )*;
 mul: group ( (MUL | DIV)^ group)*;
 compare: add ( ( GREQ | LSEQ | NEQ | EQ | GR | LS)^ add )?  ;
 term: add;
-group: (SUB^)? OPEN_BRACE! term CLOSE_BRACE! | number;
+group: (SUB^)? (OPEN_BRACE! term CLOSE_BRACE! | number);
 
 assignment: assignmentbody ';'!;
 assignmentbody: (extended_id ASSIGN expression -> ^(VARASSIGNMENT extended_id expression)) | 
