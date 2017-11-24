@@ -141,7 +141,7 @@ add: mul ( (ADD | SUB)^ mul )*;
 mul: group ( (MUL | DIV)^ group)*;
 compare: add ( ( GREQ | LSEQ | NEQ | EQ | GR | LS)^ add )?  ;
 term: add;
-group: (SUB^)? OPEN_BRACE! term CLOSE_BRACE! | number;
+group: (SUB^)? (OPEN_BRACE! term CLOSE_BRACE! | number);
 
 assignment: assignmentbody ';'!;
 assignmentbody: (extended_id ASSIGN expression -> ^(VARASSIGNMENT extended_id expression)) | 
@@ -161,7 +161,7 @@ ifstatement: IF^ OPEN_BRACE! boolexpression CLOSE_BRACE! block_or_statement (ELS
 whilestatement: WHILE^ OPEN_BRACE! boolexpression CLOSE_BRACE! block_or_statement  ;
 forstatement: FOR^ OPEN_BRACE! longdeclarationbody? ';'! boolexpression? ';'! assignmentbody? CLOSE_BRACE! block_or_statement
 		-> ^(FOR ^(FOR_INITIALIZATION longdeclarationbody) ^(FOR_CONDITION boolexpression) ^(FOR_ITERATION assignmentbody) block_or_statement);
-returnstatement: RETURN^ expression ';'! ;
+returnstatement: RETURN^ expression? ';'! ;
 dowhilestatement: DO^ (block | statement) WHILE! OPEN_BRACE! boolexpression CLOSE_BRACE! ';'! ;
 emptystatement: ';'! ;
 
