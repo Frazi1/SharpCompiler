@@ -64,7 +64,7 @@ namespace MathLang.Extensions
         //                      $"({declaration.ReturnType})");
         //    if (declaration.Value != null)
         //    {
-        //        PrintExpresion(ind + (isFinal? indent : indentBar) , declaration.Value, true);
+        //        PrintExpression(ind + (isFinal? indent : indentBar) , declaration.Value, true);
         //    }
         //}
 
@@ -127,7 +127,7 @@ namespace MathLang.Extensions
 
                 if (ret.ReturnExpression != null)
                 {
-                    PrintExpresion($"{ind}{(isFinal ? indent : indentBar)}", ret.ReturnExpression, true);
+                    PrintExpression($"{ind}{(isFinal ? indent : indentBar)}", ret.ReturnExpression, true);
                 }
                 return;
             }
@@ -136,7 +136,7 @@ namespace MathLang.Extensions
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}while");
 
-                PrintExpresion($"{ind}{(isFinal ? indent : indentBar)}", whileStat.ConditionExpression, 
+                PrintExpression($"{ind}{(isFinal ? indent : indentBar)}", whileStat.ConditionExpression, 
                     whileStat.BlockOrSingleStatement==null);
 
                 if (whileStat.BlockOrSingleStatement != null)
@@ -150,13 +150,24 @@ namespace MathLang.Extensions
             if (statement is ForStatement forStat)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}for");
+                //initialization condition iteration
+                Console.WriteLine($"{ind}{(isFinal ? indent : indentBar)}{indentBranchBar}initialization");
+                PrintStatement($"{ind}{(isFinal ? indent : indentBar)}{indentBar}",forStat.InitializationStatement, true);
+
+                Console.WriteLine($"{ind}{(isFinal ? indent : indentBar)}{indentBranchBar}condition");
+                PrintExpression($"{ind}{(isFinal ? indent : indentBar)}{indentBar}", forStat.ConditionExpression, true);
+
+                Console.WriteLine($"{ind}{(isFinal ? indent : indentBar)}{indentBranchBar}iteration");
+                PrintStatement($"{ind}{(isFinal ? indent : indentBar)}{indentBar}", forStat.IterationStatement, true);
+
+                PrintStatement($"{ind}{(isFinal ? indent : indentBar)}", forStat.BlockOrSingleStatement, true);
             }
 
             if (statement is IfStatement ifStat)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}if");
 
-                PrintExpresion($"{ind}{(isFinal ? indent : indentBar)}", ifStat.ConditionExpression,
+                PrintExpression($"{ind}{(isFinal ? indent : indentBar)}", ifStat.ConditionExpression,
                     ifStat.TrueCaseBlockStatement == null);
 
                 if (ifStat.TrueCaseBlockStatement != null)
@@ -178,7 +189,7 @@ namespace MathLang.Extensions
                                   $"of type {declaration.ReturnType}");
                 if (declaration.Value != null)
                 {
-                    PrintExpresion(ind + (isFinal ? indent : indentBar), declaration.Value, true);
+                    PrintExpression(ind + (isFinal ? indent : indentBar), declaration.Value, true);
                 }
                 return;
             }
@@ -186,7 +197,7 @@ namespace MathLang.Extensions
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}ASSIGN {varAss.VariableName} = ");
 
-                PrintExpresion($"{ind}{(isFinal ? indent : indentBar)}", varAss.AssignmentValue,true);
+                PrintExpression($"{ind}{(isFinal ? indent : indentBar)}", varAss.AssignmentValue,true);
 
                 return;
             }
@@ -194,17 +205,19 @@ namespace MathLang.Extensions
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}ASSIGN");
 
-                PrintExpresion($"{ind}{(isFinal ? indent : indentBar)}",
+                PrintExpression($"{ind}{(isFinal ? indent : indentBar)}",
                             arrAss.ArrayElementReference, false);
+                PrintExpression($"{ind}{(isFinal ? indent : indentBar)}",
+                    arrAss.AssignmentExpression, true);
                 return;
             }
             if (statement is FunctionCall fCall)
             {
-                PrintExpresion($"{ind}", fCall, isFinal);
+                PrintExpression($"{ind}", fCall, isFinal);
             }
         }
 
-        protected void PrintExpresion(string ind, IExpression expression, bool isFinal)
+        protected void PrintExpression(string ind, IExpression expression, bool isFinal)
         {
             //Console.WriteLine($"{ind}");
 
@@ -214,11 +227,11 @@ namespace MathLang.Extensions
                                   $"{ParseExpressionType(ex.ExpressionType)}");
 
                                 
-                PrintExpresion($"{ind}{(isFinal? indent : indentBar)}", ex.Left, ex.Right == null);
+                PrintExpression($"{ind}{(isFinal? indent : indentBar)}", ex.Left, ex.Right == null);
 
                 if (ex.Right != null)
                 {
-                    PrintExpresion($"{ind}{(isFinal ? indent : indentBar)}", ex.Right, true);
+                    PrintExpression($"{ind}{(isFinal ? indent : indentBar)}", ex.Right, true);
                 }
                 return;
             }
@@ -233,7 +246,7 @@ namespace MathLang.Extensions
             if (expression is ExtendedId exId)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"{exId.GetFullPath} {(exId.ReturnType == null? "": exId.ReturnType.ToString())}");
+                                  $"{exId.GetFullPath} ({exId.ReturnType/* == ReturnType.Unset? "": exId.ReturnType.ToString()*/})");
                 return;
             }
 
@@ -254,7 +267,7 @@ namespace MathLang.Extensions
                                       $"{(newArr.InitializationParameters.Count == 0 ? indentEndBar : indentBranchBar)}" +
                                       $"size");
 
-                    PrintExpresion($"{ind}{(isFinal ? indent : indentBar)}" +
+                    PrintExpression($"{ind}{(isFinal ? indent : indentBar)}" +
                                    $"{(newArr.InitializationParameters.Count == 0 ? indent : indentBar)}",
                         newArr.ArraySize, true);
                 }
@@ -267,7 +280,7 @@ namespace MathLang.Extensions
 
                     for (int p =0; p < newArr.InitializationParameters.Count; p++)
                     {
-                        PrintExpresion($"{ind}{(isFinal ? indent : indentBar)}" +
+                        PrintExpression($"{ind}{(isFinal ? indent : indentBar)}" +
                                        $"{indent}",
                             newArr.InitializationParameters[p], p+1 == newArr.InitializationParameters.Count);
                     }
@@ -282,13 +295,13 @@ namespace MathLang.Extensions
 
                 if (fc.FunctionCallParameters.Count > 0)
                 {
-                    Console.WriteLine($"{ind}{(isFinal ? indent : indentBranchBar)}" +
+                    Console.WriteLine($"{ind}{(isFinal ? indent : indentBar)}" +
                                       $"{indentEndBar}" +
                                       $"params");
 
                     for (int p = 0; p < fc.FunctionCallParameters.Count; p++)
                     {
-                        PrintExpresion($"{ind}{(isFinal ? indent : indentBar)}" +
+                        PrintExpression($"{ind}{(isFinal ? indent : indentBar)}" +
                                        $"{indent}",
                             fc.FunctionCallParameters[p], p + 1 == fc.FunctionCallParameters.Count);
                     }
@@ -300,7 +313,7 @@ namespace MathLang.Extensions
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
                                   $"{arrEl.Name} ({arrEl.ReturnType}) index:");
 
-                PrintExpresion($"{ind}{(isFinal ? indent : indentBar)}", arrEl.ArrayIndex, true);
+                PrintExpression($"{ind}{(isFinal ? indent : indentBar)}", arrEl.ArrayIndex, true);
             }
 
         }

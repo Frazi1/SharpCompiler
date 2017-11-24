@@ -52,7 +52,7 @@
 
         public static bool operator ==(ReturnType a, ReturnType b)
         {
-            return a.Equals(b);
+            return Equals(a, b);
         }
 
         public static bool operator !=(ReturnType a, ReturnType b)
