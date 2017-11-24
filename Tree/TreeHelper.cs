@@ -85,16 +85,18 @@ namespace MathLang.Tree
 
         private static bool IsBoolExpression(int type)
         {
-            return type == LS
-                   || type == LSEQ
-                   || type == GR
-                   || type == GREQ
-                   || type == EQ
-                   || type == NEQ
-                   || type == NOT
-                   || type == AND
-                   || type == OR
-                   || type == FALSE
+            return //type 
+                   //        == LS
+                   //|| type == LSEQ
+                   //|| type == GR
+                   //|| type == GREQ
+                   //|| type == EQ
+                   //|| type == NEQ
+                   //|| type == NOT
+                   //|| type == AND
+                   //|| type == OR
+                   //|| 
+                   type == FALSE
                    || type == TRUE;
         }
 

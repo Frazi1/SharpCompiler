@@ -4,6 +4,7 @@ using System.Globalization;
 using Antlr.Runtime;
 using Antlr.Runtime.Tree;
 using MathLang.Extensions;
+using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Semantics;
 
 
@@ -44,6 +45,10 @@ namespace MathLang
                 CommonTokenStream tokens = new CommonTokenStream(lexer);
                 MathLangParser parser = new MathLangParser(tokens);
                 ITree program = (ITree)parser.execute().Tree;
+
+                ReturnType random = ReturnType.Unset;
+                Console.WriteLine(random == null);
+
                 AstNodePrinter.Print(program);
                 
                 //AST
@@ -51,13 +56,17 @@ namespace MathLang
                 astProgram.Construct(program.CastTo<CommonTree>());
                 SemanticsRunner.Run(astProgram);
                 int noop = 0;
+
+                TreeConsolePrinter tp= new TreeConsolePrinter();
+                tp.Print(astProgram);
+
                 //Console.WriteLine();
                 //MathLangIntepreter.Execute(program);
                 
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error: {0}", e);
+                Console.WriteLine("Error: {0}", e.Message);
             }
             Console.ReadLine();
         }
