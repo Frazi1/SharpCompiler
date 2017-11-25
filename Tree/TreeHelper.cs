@@ -17,7 +17,7 @@ namespace MathLang.Tree
     {
         public static ReturnType GetReturnType(string type)
         {
-            if(type.Contains("[]"))
+            if (type.Contains("[]"))
                 return ReturnType.ArrayOf(GetReturnType(type.Replace("[]", "")));
             switch (type)
             {
@@ -31,7 +31,7 @@ namespace MathLang.Tree
 
         public static string GetStringTypeFromSyntaxNode(CommonTree syntaxReturnType)
         {
-            return string.Concat(syntaxReturnType.Children.Select(t => t.Text));
+            return String.Concat(syntaxReturnType.Children.Select(t => t.Text));
         }
 
         public static ExpressionType GetExpressionType(int type)
@@ -86,18 +86,18 @@ namespace MathLang.Tree
         private static bool IsBoolExpression(int type)
         {
             return //type 
-                   //        == LS
-                   //|| type == LSEQ
-                   //|| type == GR
-                   //|| type == GREQ
-                   //|| type == EQ
-                   //|| type == NEQ
-                   //|| type == NOT
-                   //|| type == AND
-                   //|| type == OR
-                   //|| 
-                   type == FALSE
-                   || type == TRUE;
+                //        == LS
+                //|| type == LSEQ
+                //|| type == GR
+                //|| type == GREQ
+                //|| type == EQ
+                //|| type == NEQ
+                //|| type == NOT
+                //|| type == AND
+                //|| type == OR
+                //|| 
+                type == FALSE
+                || type == TRUE;
         }
 
         //public static bool IsAtomNode(int type)
@@ -143,6 +143,41 @@ namespace MathLang.Tree
                 case CHAR: return new CharExpression(parentNode, parentScope).AsListOf<IStatement>();
                 default: throw new ArgumentOutOfRangeException(nameof(syntaxStatement.Type));
             }
+        }
+
+        public static bool IsMathematicalComparison(ExpressionType et)
+        {
+            if (et == ExpressionType.EqualOrGreater
+                || et == ExpressionType.EqualOrLess
+                || et == ExpressionType.Greater
+                || et == ExpressionType.Less
+                || et == ExpressionType.Equal
+                || et == ExpressionType.NotEqual
+            )
+                return true;
+            return false;
+        }
+
+        public static bool IsBooleanComparison(ExpressionType et)
+        {
+            if (et == ExpressionType.And
+                || et == ExpressionType.Or
+                || et == ExpressionType.Not)
+                return true;
+            return false;
+        }
+
+        public static bool IsComparisonExpression(ExpressionType et)
+        {
+            return et == ExpressionType.And
+                   || et == ExpressionType.Or
+                   || et == ExpressionType.Equal
+                   || et == ExpressionType.EqualOrGreater
+                   || et == ExpressionType.EqualOrLess
+                   || et == ExpressionType.NotEqual
+                   || et == ExpressionType.Greater
+                   || et == ExpressionType.Less
+                   || et == ExpressionType.Not;
         }
     }
 }

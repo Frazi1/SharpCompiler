@@ -49,7 +49,7 @@
     <Compile Include="Tree\Nodes\Expressions\ArrayElementReference.cs" />
     <Compile Include="Tree\Nodes\Expressions\BoolExpression.cs" />
     <Compile Include="Tree\Nodes\Expressions\CastExpression\CastExpression.cs" />
-    <Compile Include="Tree\Nodes\Expressions\CastExpression\CastsTable.cs" />
+    <Compile Include="Tree\Semantics\Tables\CastsTable.cs" />
     <Compile Include="Tree\Nodes\Expressions\CharExpression.cs" />
     <Compile Include="Tree\Nodes\Expressions\ExtendedId.cs" />
     <Compile Include="Tree\Nodes\Expressions\IntExpression.cs" />
@@ -85,6 +85,7 @@
     <Compile Include="Tree\Semantics\Preprocessor.cs" />
     <Compile Include="Tree\Semantics\SemanticsHelper.cs" />
     <Compile Include="Tree\Semantics\SemanticsRunner.cs" />
+    <Compile Include="Tree\Semantics\Tables\MathematicalComparisonTable.cs" />
     <Compile Include="Tree\TreeHelper.cs" />
     <Compile Include="Tree\Nodes\Statements\VariableAssignment.cs" />
     <Compile Include="Tree\Nodes\Statements\WhileStatement.cs" />

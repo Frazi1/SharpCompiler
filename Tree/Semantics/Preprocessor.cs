@@ -174,6 +174,12 @@ namespace MathLang.Tree.Semantics
         {
             expression.Left.Process();
             expression.Right?.Process();
+
+            var expressionType = expression.ExpressionType;
+
+            if (TreeHelper.IsComparisonExpression(expressionType))
+                expression.ReturnType = ReturnType.Bool;
+
             if (expression.Right == null)
             {
                 if (expression.ReturnType == expression.Left.ReturnType) return;
@@ -183,13 +189,48 @@ namespace MathLang.Tree.Semantics
                     throw new ExpressionException(
                         $"Return type {expression.Left.ReturnType} does not match {expression.ReturnType}");
             }
-            else if (expression.Left.ReturnType != expression.Right.ReturnType)
-                if (expression.Right.ReturnType.IsCastableTo(expression.Left.ReturnType))
-                    expression.Right.CastToType = expression.Left.ReturnType;
-                else
-                    throw new ExpressionException(
-                        $"Can not compare {expression.Left.ReturnType} tot {expression.Right.ReturnType}");
+
+            else if (TreeHelper.IsComparisonExpression(expressionType))
+            {
+                expression.ReturnType = ReturnType.Bool;
+
+                if (TreeHelper.IsMathematicalComparison(expressionType))
+                {
+                    if (expression.Left.GetResultReturnType() != expression.Right.GetResultReturnType())
+                    {
+                        if (expression.Right.GetResultReturnType()
+                            .IsCastableTo(expression.Left.GetResultReturnType()))
+                        {
+                            expression.Right.CastToType = expression.Left.GetResultReturnType();
+                        }
+                        else
+                            throw new ExpressionException(
+                                $"Can not compare {expression.Left.GetResultReturnType()} to {expression.Right.GetResultReturnType()} ");
+                        if (!expression.Left
+                            .GetResultReturnType()
+                            .IsMathematicallyComparisonable())
+                            throw new ExpressionException(
+                                $"Can not apply operation {expression.ExpressionType} to types {expression.Left.GetResultReturnType()}");
+                    }
+                }
+                if (TreeHelper.IsBooleanComparison(expressionType))
+                {
+                    if (expression.Left.GetResultReturnType() != ReturnType.Bool)
+                        throw new ExpressionException($"Left operand must be of type {ReturnType.Bool}");
+                    if (expression.Right.GetResultReturnType() != ReturnType.Bool)
+                        throw new ExpressionException($"Right operand must be of type {ReturnType.Bool}");
+                }
+            }
+
+
+            //else if (expression.Left.ReturnType != expression.Right.ReturnType)
+            //    if (expression.Right.ReturnType.IsCastableTo(expression.Left.ReturnType))
+            //        expression.Right.CastToType = expression.Left.ReturnType;
+            //    else
+            //        throw new ExpressionException(
+            //            $"Can not compare {expression.Left.ReturnType} to type {expression.Right.ReturnType}");
         }
+
 
         private static void Process(this Atom atom)
         {
@@ -204,7 +245,8 @@ namespace MathLang.Tree.Semantics
             if (functionDeclaration == null)
                 throw new ScopeException($"Function with name \"{functionCall.Name.GetFullPath}\" does not exist");
             if (functionDeclaration.ParameterNodes.Count != functionCall.FunctionCallParameters.Count)
-                throw new ScopeException($"Function \"{functionCall.Name.GetFullPath}\" call signature is different from defined function with that name");
+                throw new ScopeException(
+                    $"Function \"{functionCall.Name.GetFullPath}\" call signature is different from defined function with that name");
             for (int i = 0; i < functionDeclaration.ParameterNodes.Count; i++)
             {
                 var parameter = functionDeclaration.ParameterNodes[i];
@@ -225,13 +267,14 @@ namespace MathLang.Tree.Semantics
         {
             if (newArray.ArraySize != null && newArray.InitializationParameters.Count > 0)
                 throw new ScopeException("You can't specify array size and include initialization parameters");
-            if(newArray.ArraySize == null && newArray.InitializationParameters.Count == 0)
+            if (newArray.ArraySize == null && newArray.InitializationParameters.Count == 0)
                 throw new ScopeException("You must specify array size");
             if (newArray.ArraySize != null)
             {
                 newArray.ArraySize.Process();
-                if(newArray.ArraySize.ReturnType != ReturnType.Int)
-                    throw new ScopeException($"Array size must be of {ReturnType.Int} type, but {newArray.ArraySize.ReturnType} is specified");
+                if (newArray.ArraySize.ReturnType != ReturnType.Int)
+                    throw new ScopeException(
+                        $"Array size must be of {ReturnType.Int} type, but {newArray.ArraySize.ReturnType} is specified");
             }
             var arrayInnerType = newArray.ReturnType.CastTo<ArrayReturnType>()
                 .InnerType;
@@ -242,12 +285,13 @@ namespace MathLang.Tree.Semantics
                 {
                     if (expression.ReturnType.IsCastableTo(arrayInnerType))
                         expression.CastToType = arrayInnerType;
-                    else 
-                        throw new ScopeException($"Initialization parameter must be of type {arrayInnerType}, but received {expression.ReturnType}");
+                    else
+                        throw new ScopeException(
+                            $"Initialization parameter must be of type {arrayInnerType}, but received {expression.ReturnType}");
                 }
             });
         }
-        
+
         #endregion
 
         #region Statements
