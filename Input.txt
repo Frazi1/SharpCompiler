@@ -5,6 +5,7 @@
 	//static bool testBool = new int[1];
 	static bool t = true;
 	static int testSt = Valera2.a;
+	static char c = 1;
 }
 
 static class Valera2
@@ -19,8 +20,8 @@ static class Valera2
 	
 	static bool Func(bool test)
 	{
-		char[] a = new char[] {1};
-		int[] arr = testArrRet(a);
+		char[] sda = new char[] {1};
+		int[] arr = testArrRet(sda);
 //		Look at array declaration and add RETURN_TYPE node there.
 	}
 	
