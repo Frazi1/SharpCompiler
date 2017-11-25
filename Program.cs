@@ -51,6 +51,7 @@ namespace MathLang
 
                 AstNodePrinter.Print(program);
                 
+                
                 //AST
                 Tree.Nodes.Program astProgram = new Tree.Nodes.Program();
                 astProgram.Construct(program.CastTo<CommonTree>());

@@ -33,6 +33,10 @@ namespace MathLang.Tree.Nodes.Expressions
             ReturnType = ReturnType.Unset;
         }
 
+        public override string ToString()
+        {
+            return GetFullPath;
+        }
     }
 
 }

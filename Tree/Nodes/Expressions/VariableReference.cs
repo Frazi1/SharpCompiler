@@ -37,5 +37,6 @@ namespace MathLang.Tree.Nodes.Expressions
             Name.Construct(syntaxExtendedId);
         }
 
+        
     }
 }
