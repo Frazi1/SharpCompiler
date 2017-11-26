@@ -179,5 +179,6 @@ namespace MathLang.Tree
                    || et == ExpressionType.Less
                    || et == ExpressionType.Not;
         }
+        //public static bool 
     }
 }

@@ -16,7 +16,7 @@ namespace MathLang.Tree.Nodes.Expressions
             AddCastablePair(ReturnType.Char, ReturnType.Int);
         }
 
-        public static void AddCastablePair(ReturnType first, ReturnType second)
+        private static void AddCastablePair(ReturnType first, ReturnType second)
         {
             CastsList.Add(new Tuple<ReturnType, ReturnType>(first, second));
             CastsList.Add(new Tuple<ReturnType, ReturnType>(second, first));

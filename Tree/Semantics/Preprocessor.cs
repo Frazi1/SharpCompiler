@@ -202,8 +202,13 @@ namespace MathLang.Tree.Semantics
 
             var expressionType = expression.ExpressionType;
 
+
+
             if (TreeHelper.IsComparisonExpression(expressionType))
                 expression.ReturnType = ReturnType.Bool;
+
+            //HERE
+
 
             if (expression.Right == null)
             {
@@ -247,13 +252,18 @@ namespace MathLang.Tree.Semantics
                 }
             }
 
+            else if (expression.Left.ReturnType != expression.Right.ReturnType)
+                if (expression.Right.ReturnType.IsCastableTo(expression.Left.ReturnType))
+                {
+                    expression.ReturnType = expression.Left.ReturnType;
+                    expression.Right.CastToType = expression.Left.ReturnType;
 
-            //else if (expression.Left.ReturnType != expression.Right.ReturnType)
-            //    if (expression.Right.ReturnType.IsCastableTo(expression.Left.ReturnType))
-            //        expression.Right.CastToType = expression.Left.ReturnType;
-            //    else
-            //        throw new ExpressionException(
-            //            $"Can not compare {expression.Left.ReturnType} to type {expression.Right.ReturnType}");
+                }
+                else
+                    throw new ExpressionException(
+                        $"Can not cast {expression.Left.ReturnType} to type {expression.Right.ReturnType}");
+            else
+                expression.ReturnType = expression.Left.ReturnType;
         }
 
 
@@ -337,6 +347,9 @@ namespace MathLang.Tree.Semantics
                 case ReturnStatement returnStatement:
                     returnStatement.Process();
                     break;
+                case WhileStatement whileStatement:
+                    whileStatement.Process();
+                    break;
                 default:
                     throw new NotImplementedException($"Statements process: {statement.GetType()}");
             }
@@ -367,6 +380,32 @@ namespace MathLang.Tree.Semantics
         private static void Process(this ReturnStatement returnStatement)
         {
             returnStatement.ReturnExpression.Process();
+            var retType = returnStatement.ReturnExpression.ReturnType;
+
+            INode func = returnStatement.Parent;
+            
+            while (!(func is FunctionDeclaration))
+            {
+                func = func.Parent;
+            }
+
+            if ((func as FunctionDeclaration).ReturnType != retType)
+            {
+                throw new ExpressionException($"Return type of func {(func as FunctionDeclaration).Name} " +
+                                              $"({(func as FunctionDeclaration).ReturnType}) does not match {retType}");
+            }
+        }
+
+        private static void Process(this WhileStatement whileStatement)
+        {
+
+            whileStatement.ConditionExpression.Process();
+
+            if(whileStatement.ConditionExpression.ReturnType != ReturnType.Bool)
+            {
+                throw new ExpressionException($"conditional expression in while must be of type bool, not " +
+                                              $"{whileStatement.ConditionExpression.ReturnType}");
+            }
         }
 
         #endregion

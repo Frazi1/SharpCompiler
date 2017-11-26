@@ -38,6 +38,17 @@ static class MyClass
     static void Test()
     {
         int a = 10;
+        //bool 
+
+        while (true)
+        {
+            if (false)
+            {
+                return a;
+            }
+        }
+
+        return 7 + 1;
     }
 }
 
