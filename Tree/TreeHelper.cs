@@ -15,9 +15,10 @@ namespace MathLang.Tree
 {
     public static class TreeHelper
     {
-
         public static ReturnType GetReturnType(string type)
         {
+            if(type.Contains("[]"))
+                return ReturnType.ArrayOf(GetReturnType(type.Replace("[]", "")));
             switch (type)
             {
                 case "int": return ReturnType.Int;
@@ -55,10 +56,13 @@ namespace MathLang.Tree
 
         public static IExpression GetExpression(INode parent, Scope parentScope, CommonTree syntaxExpression)
         {
-            if (IsAtomNode(syntaxExpression.Type))
-            {
-                return new Atom(parent, parentScope);
-            }
+            var type = syntaxExpression.Type;
+            if (IsBoolExpression(type))
+                return new BoolExpression(parent, parentScope);
+            //if (IsAtomNode(syntaxExpression.Type))
+            //{
+            //    return new Atom(parent, parentScope);
+            //}
             switch (syntaxExpression.Type)
             {
                 case FUNC_CALL: return new FunctionCall(parent, parentScope);
@@ -68,27 +72,50 @@ namespace MathLang.Tree
                 case ARRAY_INITIALIZER: return new NewArray(parent, parentScope);
                 case ARRAYELEMENT: return new ArrayElementReference(parent, parentScope);
                 case EXTENDED_ID: return new ExtendedId(parent, parentScope);
+                case CHAR: return new CharExpression(parent, parentScope);
+                case NUMBER: return new IntExpression(parent, parentScope);
             }
             return new Expression(parent, parentScope);
         }
 
-        public static bool IsAtomNode(int type)
+        private static bool IsBoolExpression(int type)
         {
-            return new[] { TRUE, FALSE, NUMBER, CHAR/*, ID*/ }
-                .Contains(type);
+            return //type 
+                   //        == LS
+                   //|| type == LSEQ
+                   //|| type == GR
+                   //|| type == GREQ
+                   //|| type == EQ
+                   //|| type == NEQ
+                   //|| type == NOT
+                   //|| type == AND
+                   //|| type == OR
+                   //|| 
+                   type == FALSE
+                   || type == TRUE;
         }
 
-        
+        //public static bool IsAtomNode(int type)
+        //{
+        //    return new[] {TRUE, FALSE, NUMBER, CHAR /*, ID*/}
+        //        .Contains(type);
+        //}
+
+
         //We need a list here because we get a list of variable declarations from MULT_DECL syntax node
         //so everything will be a list of 1 element (in most cases)
         public static List<IStatement> GetStatements(INode parentNode, Scope parentScope, CommonTree syntaxStatement)
         {
             //Fucking switch does not allow usage of "if" so...
-            if (IsAtomNode(syntaxStatement.Type))
-            {
-                return new Atom(parentNode, parentScope).AsListOf<IStatement>();
-            }
-            
+            //if (IsAtomNode(syntaxStatement.Type))
+            //{
+            //    return new Atom(parentNode, parentScope).AsListOf<IStatement>();
+            //}
+
+            var type = syntaxStatement.Type;
+            if (IsBoolExpression(type))
+                return new BoolExpression(parentNode, parentScope).AsListOf<IStatement>();
+
             switch (syntaxStatement.Type)
             {
                 case IF: return new IfStatement(parentNode, parentScope).AsListOf<IStatement>();
@@ -103,9 +130,12 @@ namespace MathLang.Tree
                 case BLOCK: return new BlockStatement(parentNode, parentScope).AsListOf<IStatement>();
                 case ARRAYDECLARATION: return new ArrayDeclaration(parentNode, parentScope).AsListOf<IStatement>();
                 case ARRAY_INITIALIZER: return new NewArray(parentNode, parentScope).AsListOf<IStatement>();
-                case ARRAYELEMENTASSIGNMENT: return new ArrayElementAssignment(parentNode, parentScope).AsListOf<IStatement>();
+                case ARRAYELEMENTASSIGNMENT:
+                    return new ArrayElementAssignment(parentNode, parentScope).AsListOf<IStatement>();
                 case ARRAYELEMENT: return new ArrayElementReference(parentNode, parentScope).AsListOf<IStatement>();
                 case EXTENDED_ID: return new ExtendedId(parentNode, parentScope).AsListOf<IStatement>();
+                case NUMBER: return new IntExpression(parentNode, parentScope).AsListOf<IStatement>();
+                case CHAR: return new CharExpression(parentNode, parentScope).AsListOf<IStatement>();
                 default: throw new ArgumentOutOfRangeException(nameof(syntaxStatement.Type));
             }
         }

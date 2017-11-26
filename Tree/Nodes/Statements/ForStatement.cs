@@ -8,7 +8,7 @@ namespace MathLang.Tree.Nodes.Statements
 {
     public class ForStatement : IStatement
     {
-        public INode Parent { get; }
+        public INode Parent { get; set; }
         public Scope Scope { get; }
 
         public IStatement InitializationStatement{ get; private set; }
@@ -19,7 +19,7 @@ namespace MathLang.Tree.Nodes.Statements
         public ForStatement(INode parent, Scope parentScope)
         {
             Parent = parent;
-            Scope = new LocalScope(parentScope, true);
+            Scope = new LocalScope(parentScope);
         }
         public void Construct(CommonTree syntaxFor)
         {

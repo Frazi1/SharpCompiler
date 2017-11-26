@@ -10,7 +10,7 @@ namespace MathLang.Tree.Nodes.Statements
 {
     public class ReturnStatement : IStatement
     {
-        public INode Parent { get; }
+        public INode Parent { get; set; }
         public Scope Scope { get; }
 
         public IExpression ReturnExpression { get; private set; }
@@ -18,7 +18,7 @@ namespace MathLang.Tree.Nodes.Statements
         public ReturnStatement(INode parent, Scope parentScope)
         {
             Parent = parent;
-            Scope = new LocalScope(parentScope, false);
+            Scope = parentScope;
         }
         
         public void Construct(CommonTree syntaxReturnStatement)

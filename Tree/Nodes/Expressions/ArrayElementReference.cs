@@ -10,18 +10,19 @@ namespace MathLang.Tree.Nodes.Expressions
 {
     public class ArrayElementReference: IExpression
     {
-        public INode Parent { get; }
+        public INode Parent { get; set; }
         public Scope Scope { get; }
 
         public ExtendedId Name { get; private set; }
         public IExpression ArrayIndex { get; private set; }
         public ReturnType ReturnType => Name.ReturnType;
+        public ReturnType CastToType { get; set; }
         public ArrayDeclaration ArrayDeclaration { get; private set; }
 
         public ArrayElementReference(INode parent, Scope parentScope)
         {
             Parent = parent;
-            Scope = new LocalScope(parentScope, false);
+            Scope = parentScope;
         }
 
 

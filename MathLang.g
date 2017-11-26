@@ -83,8 +83,8 @@ statement: ( declaration
 	 ) ;
 
 type: TYPE ;
-array_type: TYPE ARRAY_DECLARATION_MARK!;
-any_type: type | array_type | VOID;
+array_type: t+=TYPE t+=ARRAY_DECLARATION_MARK ;
+any_type: array_type | type | VOID;
 number :  NUMBER
 		| extended_id
 		| funccallbody
@@ -119,17 +119,17 @@ d[object type]: declarationbody_d[type] | longdeclarationbody_d[type] ;
 d_array[object type]: declarationbody_array_d[type] | longdeclarationbody_array_d[type];
 
 declarationbody_d[object type]: (ID -> ^(VARDECLARATION {$type} ID) );				
-declarationbody_array_d[object type]: ( ID -> ^(ARRAYDECLARATION {$type} ID));
+declarationbody_array_d[object type]: ( ID -> ^(ARRAYDECLARATION ^(RETURN_TYPE {$type}) ID));
 
 longdeclarationbody_d[object type]: (ID ASSIGN expression  -> ^(VARDECLARATION {$type} ID expression));
-longdeclarationbody_array_d[object type]: (ID ASSIGN newexpression -> ^(ARRAYDECLARATION {$type} ID newexpression));
+longdeclarationbody_array_d[object type]: (ID ASSIGN expression -> ^(ARRAYDECLARATION ^(RETURN_TYPE {$type}) ID expression));
 
 
 declarationbody: (type ID -> ^(VARDECLARATION type ID) )
 				| (array_type ID -> ^(ARRAYDECLARATION array_type ID))
 				;
 longdeclarationbody: ( type ID ASSIGN expression  -> ^(VARDECLARATION type ID expression))
-					| (array_type ID ASSIGN newexpression -> ^(ARRAYDECLARATION array_type ID newexpression))
+					| (array_type ID ASSIGN expression -> ^(ARRAYDECLARATION array_type ID expression))
 					;
 
 add: mul ( (ADD | SUB)^ mul )*;
@@ -160,7 +160,8 @@ returnstatement: RETURN^ expression? ';'! ;
 dowhilestatement: DO^ (block | statement) WHILE! OPEN_BRACE! boolexpression CLOSE_BRACE! ';'! ;
 emptystatement: ';'! ;
 
-funcdeclaration: MODIFIER any_type ID^ ( OPEN_BRACE! paramsdeclaration CLOSE_BRACE! ) block -> ^(FUNCDECLARATION ID ^(RETURN_TYPE any_type) OPEN_BRACE! paramsdeclaration CLOSE_BRACE! block);
+funcdeclaration: MODIFIER any_type ID^ ( OPEN_BRACE! paramsdeclaration CLOSE_BRACE! ) block 
+		-> ^(FUNCDECLARATION ID ^(RETURN_TYPE any_type) OPEN_BRACE! paramsdeclaration CLOSE_BRACE! block);
 paramsdeclaration: ( declarationbody ( ','! declarationbody)* )?  -> ^(PARAMETERS ( declarationbody)* );
 
 funccallbody: extended_id^ OPEN_BRACE expressioncommalist? CLOSE_BRACE -> ^(FUNC_CALL extended_id ^(PARAMETERS expressioncommalist)?);

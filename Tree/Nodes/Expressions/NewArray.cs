@@ -11,17 +11,18 @@ namespace MathLang.Tree.Nodes.Expressions
 {
     public class NewArray : IExpression, IStatement
     {
-        public INode Parent { get; }
+        public INode Parent { get; set; }
         public Scope Scope { get; }
 
         public ReturnType ReturnType { get; private set; }
+        public ReturnType CastToType { get; set; }
         public IExpression ArraySize { get; private set; }
         public List<IExpression> InitializationParameters { get; } = new List<IExpression>();
 
         public NewArray(INode parent, Scope parentScope)
         {
             Parent = parent;
-            Scope = new LocalScope(parentScope, false);
+            Scope = parentScope;
         }
 
         public void Construct(CommonTree syntaxArrayInitializer)
