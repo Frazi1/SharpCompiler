@@ -171,6 +171,9 @@ namespace MathLang.Tree.Semantics
                 case NewArray newArray:
                     newArray.Process();
                     break;
+                case ArrayElementReference arrayElementReference:
+                    arrayElementReference.Process();
+                    break;
                 default: throw new ArgumentOutOfRangeException(nameof(iexpression));
             }
         }
@@ -201,7 +204,6 @@ namespace MathLang.Tree.Semantics
             expression.Right?.Process();
 
             var expressionType = expression.ExpressionType;
-
 
 
             if (TreeHelper.IsComparisonExpression(expressionType))
@@ -257,7 +259,6 @@ namespace MathLang.Tree.Semantics
                 {
                     expression.ReturnType = expression.Left.ReturnType;
                     expression.Right.CastToType = expression.Left.ReturnType;
-
                 }
                 else
                     throw new ExpressionException(
@@ -265,7 +266,6 @@ namespace MathLang.Tree.Semantics
             else
                 expression.ReturnType = expression.Left.ReturnType;
         }
-
 
         private static void Process(this Atom atom)
         {
@@ -325,6 +325,24 @@ namespace MathLang.Tree.Semantics
                             $"Initialization parameter must be of type {arrayInnerType}, but received {expression.ReturnType}");
                 }
             });
+        }
+
+        private static void Process(this ArrayElementReference arrayElementReference)
+        {
+            arrayElementReference.Name.Process();
+            if (arrayElementReference.Name.ReturnType is ArrayReturnType arrayReturnType)
+                arrayElementReference.ReturnType = arrayReturnType.InnerType;
+            else
+                throw new ExpressionException(
+                    $"Variable \"{arrayElementReference.Name}\" is of type {arrayElementReference.Name.ReturnType} but expected array");
+
+            arrayElementReference.ArrayIndex.Process();
+            if (arrayElementReference.ArrayIndex.GetResultReturnType() != ReturnType.Int)
+                throw new ExpressionException(
+                    $"Index of array element reference \"{arrayElementReference.Name}\" must be of type {ReturnType.Int}, but received {arrayElementReference.ArrayIndex.ReturnType}");
+            arrayElementReference.ArrayDeclaration = arrayElementReference.Scope
+                .GlobalVariableSearch(arrayElementReference.Name.GetFullPath)
+                .CastTo<ArrayDeclaration>();
         }
 
         #endregion
@@ -394,7 +412,8 @@ namespace MathLang.Tree.Semantics
             arrayElementAssignment.ArrayElementReference.Process();
             arrayElementAssignment.AssignmentExpression.Process();
 
-            var arrItemType = arrayElementAssignment.ArrayElementReference.ReturnType.CastTo<ArrayReturnType>().InnerType;
+            var arrItemType = arrayElementAssignment.ArrayElementReference.ReturnType.CastTo<ArrayReturnType>()
+                .InnerType;
 
             if (arrItemType != arrayElementAssignment.AssignmentExpression.ReturnType)
             {
@@ -418,7 +437,7 @@ namespace MathLang.Tree.Semantics
             var retType = returnStatement.ReturnExpression.ReturnType;
 
             INode node = returnStatement.Parent;
-            
+
             while (!(node is FunctionDeclaration))
             {
                 node = node.Parent;
@@ -437,16 +456,14 @@ namespace MathLang.Tree.Semantics
                     throw new ExpressionException($"Return type of func {(node as FunctionDeclaration).Name} " +
                                                   $"({(node as FunctionDeclaration).ReturnType}) does not match {retType}");
                 }
-                
             }
         }
 
         private static void Process(this WhileStatement whileStatement)
         {
-
             whileStatement.ConditionExpression.Process();
 
-            if(whileStatement.ConditionExpression.ReturnType != ReturnType.Bool)
+            if (whileStatement.ConditionExpression.ReturnType != ReturnType.Bool)
             {
                 throw new ExpressionException($"conditional expression in while must be of type bool, not " +
                                               $"{whileStatement.ConditionExpression.ReturnType}");
@@ -475,7 +492,7 @@ namespace MathLang.Tree.Semantics
         {
             forStatement.InitializationStatement.Process();
             forStatement.ConditionExpression.Process();
-            
+
             if (forStatement.ConditionExpression.ReturnType != ReturnType.Bool)
             {
                 throw new ExpressionException($"conditional expression in if must be of type bool, not " +
@@ -483,13 +500,13 @@ namespace MathLang.Tree.Semantics
             }
 
             forStatement.IterationStatement.Process();
-            
+
             forStatement.BlockOrSingleStatement.Process();
         }
 
         private static void Process(this BlockStatement blockStatement)
         {
-            blockStatement.Statements.ForEach(st=>st.Process());
+            blockStatement.Statements.ForEach(st => st.Process());
         }
 
         #endregion
@@ -540,6 +557,16 @@ namespace MathLang.Tree.Semantics
                         {
                             if (whileStatement.BlockOrSingleStatement is BlockStatement block)
                                 SetBlockVarsIndexes(block, ref varIndex);
+                            break;
+                        }
+                        case ForStatement forStatement:
+                        {
+                            if (forStatement.InitializationStatement is BlockStatement initializationBlock)
+                                SetBlockVarsIndexes(initializationBlock, ref varIndex);
+                            if (forStatement.IterationStatement is BlockStatement iterationBlock)
+                                SetBlockVarsIndexes(iterationBlock, ref varIndex);
+                            if (forStatement.BlockOrSingleStatement is BlockStatement statementsBlock)
+                                SetBlockVarsIndexes(statementsBlock, ref varIndex);
                             break;
                         }
                     }

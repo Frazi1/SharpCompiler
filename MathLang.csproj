@@ -50,6 +50,7 @@
     <Compile Include="Tree\Nodes\Expressions\ArrayElementReference.cs" />
     <Compile Include="Tree\Nodes\Expressions\BoolExpression.cs" />
     <Compile Include="Tree\Nodes\Expressions\CastExpression\CastExpression.cs" />
+    <Compile Include="Tree\Nodes\Expressions\VoidExpression.cs" />
     <Compile Include="Tree\Semantics\Tables\CastsTable.cs" />
     <Compile Include="Tree\Nodes\Expressions\CharExpression.cs" />
     <Compile Include="Tree\Nodes\Expressions\ExtendedId.cs" />

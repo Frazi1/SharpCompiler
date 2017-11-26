@@ -19,7 +19,7 @@ namespace MathLang.Tree.Nodes.Expressions
         private static void AddCastablePair(ReturnType first, ReturnType second)
         {
             CastsList.Add(new Tuple<ReturnType, ReturnType>(first, second));
-            CastsList.Add(new Tuple<ReturnType, ReturnType>(second, first));
+            //CastsList.Add(new Tuple<ReturnType, ReturnType>(second, first));
         }
 
         public static bool IsCastableTo(this ReturnType sourceReturnType, ReturnType targeReturnType)

@@ -11,8 +11,8 @@ namespace MathLang.Tree.Nodes.Statements
         public INode Parent { get; set; }
         public Scope Scope { get; }
 
-        public IStatement InitializationStatement{ get; private set; }
-        public IStatement IterationStatement { get; private set; } 
+        public IStatement InitializationStatement { get; private set; }
+        public IStatement IterationStatement { get; private set; }
         public IExpression ConditionExpression { get; private set; }
         public IStatement BlockOrSingleStatement { get; private set; }
 
@@ -21,6 +21,7 @@ namespace MathLang.Tree.Nodes.Statements
             Parent = parent;
             Scope = new LocalScope(parentScope);
         }
+
         public void Construct(CommonTree syntaxFor)
         {
             //Initialization
@@ -56,7 +57,7 @@ namespace MathLang.Tree.Nodes.Statements
                 syntaxForIteration.Children.Cast<CommonTree>()
                     .ForEach(syntaxVarAssignment =>
                     {
-                        IterationStatement =  TreeHelper.GetStatements(this, Scope, syntaxVarAssignment).First();
+                        IterationStatement = TreeHelper.GetStatements(this, Scope, syntaxVarAssignment).First();
                         //if(iterationExpression is Varial)
                         IterationStatement.Construct(syntaxVarAssignment);
                     });
@@ -67,15 +68,8 @@ namespace MathLang.Tree.Nodes.Statements
             if (syntaxFor.ChildCount > 3)
             {
                 var syntaxForBlock = syntaxFor.GetChild(3).CastTo<CommonTree>();
-                if (syntaxForBlock.ChildCount > 0)
-                {
-                    syntaxForBlock.Children.Cast<CommonTree>()
-                        .ForEach(syntaxBlock =>
-                        {
-                            BlockOrSingleStatement = TreeHelper.GetStatements(this, Scope, syntaxBlock).First();
-                            BlockOrSingleStatement.Construct(syntaxBlock);
-                        });
-                }
+                BlockOrSingleStatement = TreeHelper.GetStatements(this, Scope, syntaxForBlock).First();
+                BlockOrSingleStatement.Construct(syntaxForBlock);
             }
         }
     }
