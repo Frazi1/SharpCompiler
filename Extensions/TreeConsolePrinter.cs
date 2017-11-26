@@ -186,7 +186,8 @@ namespace MathLang.Extensions
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
                                   $"DECLARE {declaration.Name} " +
-                                  $"of type {declaration.ReturnType}");
+                                  $"of type {declaration.ReturnType}" +
+                                  $"{(declaration.Index == null? "": $"with funcIndex {declaration.Index}")}");
                 if (declaration.Value != null)
                 {
                     PrintExpression(ind + (isFinal ? indent : indentBar), declaration.Value, true);
