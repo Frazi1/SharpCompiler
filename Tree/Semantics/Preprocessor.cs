@@ -559,6 +559,16 @@ namespace MathLang.Tree.Semantics
                                 SetBlockVarsIndexes(block, ref varIndex);
                             break;
                         }
+                        case ForStatement forStatement:
+                        {
+                            if (forStatement.InitializationStatement is BlockStatement initializationBlock)
+                                SetBlockVarsIndexes(initializationBlock, ref varIndex);
+                            if (forStatement.IterationStatement is BlockStatement iterationBlock)
+                                SetBlockVarsIndexes(iterationBlock, ref varIndex);
+                            if (forStatement.BlockOrSingleStatement is BlockStatement statementsBlock)
+                                SetBlockVarsIndexes(statementsBlock, ref varIndex);
+                            break;
+                        }
                     }
             }
         }
