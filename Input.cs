@@ -35,9 +35,12 @@
 static class MyClass
 {
     static int a;
-    static void Test()
+    static void Test(int a, char c, bool b)
     {
-        int a = 10;
+        //int a = 10;
+        int f = 12;
+        int f1 = 123;
+        char dsa = 'c';
     }
 }
 

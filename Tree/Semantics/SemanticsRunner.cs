@@ -6,6 +6,7 @@
         {
             program.PreProcess();
             program.Process();
+            program.SetVariableIndexes();
         }
     }
 }
