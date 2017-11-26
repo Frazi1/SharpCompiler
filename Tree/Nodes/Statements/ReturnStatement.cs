@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Antlr.Runtime.Tree;
 using MathLang.Extensions;
 using MathLang.Tree.Nodes;
+using MathLang.Tree.Nodes.Expressions;
 using MathLang.Tree.Nodes.Interfaces;
 using MathLang.Tree.Scopes;
 
@@ -29,7 +30,8 @@ namespace MathLang.Tree.Nodes.Statements
                 ReturnExpression = TreeHelper.GetExpression(this, Scope, syntaxReturnExpression);
                 ReturnExpression.Construct(syntaxReturnExpression);
             }
-
+            else
+                ReturnExpression = new VoidExpression(this, Scope);
         }
     }
 }
