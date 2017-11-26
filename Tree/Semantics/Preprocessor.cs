@@ -411,5 +411,57 @@ namespace MathLang.Tree.Semantics
         #endregion
 
         #endregion
+
+        #region After Process
+
+        public static void SetVariableIndexes(this Nodes.Program program)
+        {
+            program.ClassNodes.ForEach(classDeclaration =>
+            {
+                classDeclaration.FunctionDeclarationNodes.ForEach(functionDeclaration =>
+                {
+                    SetFunctionArgsIndexes(functionDeclaration);
+                    int varIndex = 0;
+                    SetBlockVarsIndexes(functionDeclaration.StatemenBlock, ref varIndex);
+                });
+            });
+
+            void SetFunctionArgsIndexes(FunctionDeclaration functionDeclaration)
+            {
+                int index = 0;
+                foreach (var parameter in functionDeclaration.ParameterNodes)
+                    parameter.Index = index++;
+                SetBlockVarsIndexes(functionDeclaration.StatemenBlock, ref index);
+            }
+
+            void SetBlockVarsIndexes(BlockStatement blockStatement, ref int varIndex)
+            {
+                foreach (var statement in blockStatement.Statements)
+                    switch (statement)
+                    {
+                        case Declaration declaration:
+                        {
+                            declaration.Index = varIndex++;
+                            break;
+                        }
+                        case IfStatement ifStatement:
+                        {
+                            if (ifStatement.TrueCaseBlockStatement is BlockStatement trueBlock)
+                                SetBlockVarsIndexes(trueBlock, ref varIndex);
+                            if (ifStatement.FasleCaseBlockStatement is BlockStatement falseBlock)
+                                SetBlockVarsIndexes(falseBlock, ref varIndex);
+                            break;
+                        }
+                        case WhileStatement whileStatement:
+                        {
+                            if (whileStatement.BlockOrSingleStatement is BlockStatement block)
+                                SetBlockVarsIndexes(block, ref varIndex);
+                            break;
+                        }
+                    }
+            }
+        }
+
+        #endregion
     }
 }
