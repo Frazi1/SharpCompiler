@@ -338,6 +338,9 @@ namespace MathLang.Tree.Semantics
                 case VariableAssignment variableAssignment:
                     variableAssignment.Process();
                     break;
+                case ArrayElementAssignment arrayElementAssignment:
+                    arrayElementAssignment.Process();
+                    break;
                 case Declaration declaration:
                     declaration.Process();
                     break;
@@ -349,6 +352,12 @@ namespace MathLang.Tree.Semantics
                     break;
                 case WhileStatement whileStatement:
                     whileStatement.Process();
+                    break;
+                case IfStatement ifStatement:
+                    ifStatement.Process();
+                    break;
+                case ForStatement forStatement:
+                    forStatement.Process();
                     break;
                 case BlockStatement blockStatement:
                     blockStatement.Process();
@@ -378,6 +387,29 @@ namespace MathLang.Tree.Semantics
                     throw new ScopeException(
                         $"Return type {assignmentValue.ReturnType} does not match {variableReturnType}");
             }
+        }
+
+        private static void Process(this ArrayElementAssignment arrayElementAssignment)
+        {
+            arrayElementAssignment.ArrayElementReference.Process();
+            arrayElementAssignment.AssignmentExpression.Process();
+
+            var arrItemType = arrayElementAssignment.ArrayElementReference.ReturnType.CastTo<ArrayReturnType>().InnerType;
+
+            if (arrItemType != arrayElementAssignment.AssignmentExpression.ReturnType)
+            {
+                if (arrayElementAssignment.AssignmentExpression.ReturnType.IsCastableTo(arrItemType))
+                {
+                    arrayElementAssignment.AssignmentExpression.CastToType = arrItemType;
+                }
+
+                throw new ExpressionException($"Cannot assign to the element of array " +
+                                              $"{arrayElementAssignment.ArrayElementReference.Name} " +
+                                              $"({arrayElementAssignment.ArrayElementReference.ReturnType}) " +
+                                              $"expression of type {arrayElementAssignment.AssignmentExpression.ReturnType}");
+            }
+
+            //blockStatement.Statements.ForEach(st => st.Process());
         }
 
         private static void Process(this ReturnStatement returnStatement)
@@ -423,9 +455,40 @@ namespace MathLang.Tree.Semantics
             whileStatement.BlockOrSingleStatement.Process();
         }
 
+        private static void Process(this IfStatement ifStatement)
+        {
+            ifStatement.ConditionExpression.Process();
+            if (ifStatement.ConditionExpression.ReturnType != ReturnType.Bool)
+            {
+                throw new ExpressionException($"conditional expression in if must be of type bool, not " +
+                                              $"{ifStatement.ConditionExpression.ReturnType}");
+            }
+            ifStatement.TrueCaseBlockStatement.Process();
+
+            if (ifStatement.FasleCaseBlockStatement != null)
+            {
+                ifStatement.FasleCaseBlockStatement.Process();
+            }
+        }
+
+        private static void Process(this ForStatement forStatement)
+        {
+            forStatement.InitializationStatement.Process();
+            forStatement.ConditionExpression.Process();
+            
+            if (forStatement.ConditionExpression.ReturnType != ReturnType.Bool)
+            {
+                throw new ExpressionException($"conditional expression in if must be of type bool, not " +
+                                              $"{forStatement.ConditionExpression.ReturnType}");
+            }
+
+            forStatement.IterationStatement.Process();
+            
+            forStatement.BlockOrSingleStatement.Process();
+        }
+
         private static void Process(this BlockStatement blockStatement)
         {
-
             blockStatement.Statements.ForEach(st=>st.Process());
         }
 

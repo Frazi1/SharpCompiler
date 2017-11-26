@@ -133,8 +133,8 @@ declarationbody:
 			| array_type ID -> ^(ARRAYDECLARATION ^(RETURN_TYPE array_type) ID)
 		 ;
 
-longdeclarationbody: ( type ID ASSIGN expression  -> ^(VARDECLARATION type ID expression))
-					| (array_type ID ASSIGN expression -> ^(ARRAYDECLARATION array_type ID expression))
+longdeclarationbody: ( type ID ASSIGN expression  -> ^(VARDECLARATION ^(RETURN_TYPE type) ID expression))
+					| (array_type ID ASSIGN expression -> ^(ARRAYDECLARATION ^(RETURN_TYPE array_type) ID expression))
 					;
 
 add: mul ( (ADD | SUB)^ mul )*;
