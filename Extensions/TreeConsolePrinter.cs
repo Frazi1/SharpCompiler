@@ -84,7 +84,8 @@ namespace MathLang.Extensions
                     Console.WriteLine($"{ind}{(isFinal ? indent : indentBar)}" +
                                       $"{(funcDecl.StatemenBlock.Statements.Count == 0 ? indent : indentBar)}" +
                                       $"{(k+1 == funcDecl.ParameterNodes.Count? indentEndBar: indentBranchBar)}" +
-                                      $"{funcDecl.ParameterNodes[k].Name} ({funcDecl.ParameterNodes[k].ReturnType})");
+                                      $"{funcDecl.ParameterNodes[k].Name} ({funcDecl.ParameterNodes[k].ReturnType})"+
+                                      $"{(funcDecl.ParameterNodes[k].Index == null ? "" : $" with funcIndex {funcDecl.ParameterNodes[k].Index}")}");
                 }
             }
 
@@ -187,7 +188,7 @@ namespace MathLang.Extensions
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
                                   $"DECLARE {declaration.Name} " +
                                   $"of type {declaration.ReturnType}" +
-                                  $"{(declaration.Index == null? "": $"with funcIndex {declaration.Index}")}");
+                                  $"{(declaration.Index == null? "": $" with funcIndex {declaration.Index}")}");
                 if (declaration.Value != null)
                 {
                     PrintExpression(ind + (isFinal ? indent : indentBar), declaration.Value, true);

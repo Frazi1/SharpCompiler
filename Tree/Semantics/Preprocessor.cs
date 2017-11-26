@@ -350,6 +350,9 @@ namespace MathLang.Tree.Semantics
                 case WhileStatement whileStatement:
                     whileStatement.Process();
                     break;
+                case BlockStatement blockStatement:
+                    blockStatement.Process();
+                    break;
                 default:
                     throw new NotImplementedException($"Statements process: {statement.GetType()}");
             }
@@ -382,17 +385,27 @@ namespace MathLang.Tree.Semantics
             returnStatement.ReturnExpression.Process();
             var retType = returnStatement.ReturnExpression.ReturnType;
 
-            INode func = returnStatement.Parent;
+            INode node = returnStatement.Parent;
             
-            while (!(func is FunctionDeclaration))
+            while (!(node is FunctionDeclaration))
             {
-                func = func.Parent;
+                node = node.Parent;
             }
 
-            if ((func as FunctionDeclaration).ReturnType != retType)
+            var funcDecl = node as FunctionDeclaration;
+
+            if (funcDecl.ReturnType != retType)
             {
-                throw new ExpressionException($"Return type of func {(func as FunctionDeclaration).Name} " +
-                                              $"({(func as FunctionDeclaration).ReturnType}) does not match {retType}");
+                if (retType.IsCastableTo(funcDecl.ReturnType))
+                {
+                    returnStatement.ReturnExpression.CastToType = funcDecl.ReturnType;
+                }
+                else
+                {
+                    throw new ExpressionException($"Return type of func {(node as FunctionDeclaration).Name} " +
+                                                  $"({(node as FunctionDeclaration).ReturnType}) does not match {retType}");
+                }
+                
             }
         }
 
@@ -406,6 +419,14 @@ namespace MathLang.Tree.Semantics
                 throw new ExpressionException($"conditional expression in while must be of type bool, not " +
                                               $"{whileStatement.ConditionExpression.ReturnType}");
             }
+
+            whileStatement.BlockOrSingleStatement.Process();
+        }
+
+        private static void Process(this BlockStatement blockStatement)
+        {
+
+            blockStatement.Statements.ForEach(st=>st.Process());
         }
 
         #endregion
