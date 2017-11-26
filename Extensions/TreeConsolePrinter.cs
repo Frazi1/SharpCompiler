@@ -226,7 +226,8 @@ namespace MathLang.Extensions
             if (expression is Expression ex)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"{ParseExpressionType(ex.ExpressionType)}");
+                                  $"{ParseExpressionType(ex.ExpressionType)}" +
+                                  $"{(ex.CastToType == null ? "" : $" [cast to {ex.CastToType}]")}");
 
                                 
                 PrintExpression($"{ind}{(isFinal? indent : indentBar)}", ex.Left, ex.Right == null);
@@ -241,21 +242,24 @@ namespace MathLang.Extensions
             if (expression is Atom atom)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"{atom.Value} ({atom.ReturnType.ToString()})");
+                                  $"{atom.Value} ({atom.ReturnType.ToString()})" +
+                                  $"{(atom.CastToType == null ? "" : $" [cast to {atom.CastToType}]")}");
                 return;
             }
 
             if (expression is ExtendedId exId)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"{exId.GetFullPath} ({exId.ReturnType/* == ReturnType.Unset? "": exId.ReturnType.ToString()*/})");
+                                  $"{exId.GetFullPath} ({exId.ReturnType})" +
+                                  $"{(exId.CastToType == null ? "" : $" [cast to {exId.CastToType}]")}");
                 return;
             }
 
             if (expression is VariableReference varRef)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"{varRef.Name.ToString()}");
+                                  $"{varRef.Name.ToString()}"+
+                                  $"{(varRef.CastToType == null ? "" : $" [cast to {varRef.CastToType}]")}");
             }
 
             if (expression is NewArray newArr)
@@ -293,7 +297,8 @@ namespace MathLang.Extensions
             if (expression is FunctionCall fc)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"CALL {fc.Name} that returns {fc.ReturnType}");
+                                  $"CALL {fc.Name} that returns {fc.ReturnType}" +
+                                  $"{(fc.CastToType == null ? "" : $" [cast to {fc.CastToType}]")}");
 
                 if (fc.FunctionCallParameters.Count > 0)
                 {
@@ -313,7 +318,9 @@ namespace MathLang.Extensions
             if (expression is ArrayElementReference arrEl)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"{arrEl.Name} ({arrEl.ReturnType}) index:");
+                                  $"element ({arrEl.ReturnType}) " +
+                                  $"{(arrEl.CastToType == null ? "" : $" [cast to {arrEl.CastToType}]")}" +
+                                  $" of array {arrEl.Name} with index:");
 
                 PrintExpression($"{ind}{(isFinal ? indent : indentBar)}", arrEl.ArrayIndex, true);
             }
