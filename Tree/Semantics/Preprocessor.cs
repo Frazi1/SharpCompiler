@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using MathLang.Tree.Nodes.Declarations;
 using MathLang.Tree.Nodes.Enums;
@@ -8,6 +10,7 @@ using MathLang.Tree.Nodes.Statements;
 using MathLang.Tree.Scopes.Exceptions;
 using Microsoft.Win32.SafeHandles;
 using MathLang.Extensions;
+using MathLang.Tree.Scopes;
 
 namespace MathLang.Tree.Semantics
 {
@@ -91,12 +94,16 @@ namespace MathLang.Tree.Semantics
             //            throw  new NotImplementedException();
         }
 
-        private static void Process(this Declaration variableDeclaration, bool checkName = true)
+        private static void Process(this Declaration variableDeclaration, bool checkName = true, int? upTpLevel = null)
         {
             //Process assignment value
             if (checkName)
             {
-                variableDeclaration.CheckName(variableDeclaration.Scope);
+                //variableDeclaration.CheckName(variableDeclaration.Scope);
+                if (variableDeclaration.Scope.GlobalVariableSearch(
+                        variableDeclaration.Name, Scope.FunctionLevel)
+                    != null)
+                    throw new ScopeException($"Variable with name: \"{variableDeclaration.Name}\" already exists");
                 variableDeclaration.Scope.AddVariable(variableDeclaration);
             }
             IExpression variableDeclarationValueExpression = variableDeclaration.Value;
@@ -117,6 +124,24 @@ namespace MathLang.Tree.Semantics
             var scope = functionDeclaration.Scope;
             functionDeclaration.StatemenBlock.Statements
                 .ForEach(statement => statement.Process());
+
+            if (functionDeclaration.ReturnType != ReturnType.Void)
+            {
+                var returnStatements =
+                    functionDeclaration.StatemenBlock.Statements
+                        .FindAll(statement => statement is ReturnStatement)
+                        .Cast<ReturnStatement>()
+                        .ToList();
+                returnStatements.ForEach(statement =>
+                {
+                    //statement.Process();
+                    if (statement.ReturnExpression.GetResultReturnType() != functionDeclaration.ReturnType)
+                    {
+                        throw new ExpressionException(
+                            $"Function {functionDeclaration.Name} must return {functionDeclaration.ReturnType} but returns {statement.ReturnExpression.GetResultReturnType()}");
+                    }
+                });
+            }
         }
 
         #endregion
@@ -309,6 +334,9 @@ namespace MathLang.Tree.Semantics
                 case FunctionCall functionCall:
                     functionCall.Process();
                     break;
+                case ReturnStatement returnStatement:
+                    returnStatement.Process();
+                    break;
                 default:
                     throw new NotImplementedException($"Statements process: {statement.GetType()}");
             }
@@ -334,6 +362,11 @@ namespace MathLang.Tree.Semantics
                     throw new ScopeException(
                         $"Return type {assignmentValue.ReturnType} does not match {variableReturnType}");
             }
+        }
+
+        private static void Process(this ReturnStatement returnStatement)
+        {
+            returnStatement.ReturnExpression.Process();
         }
 
         #endregion

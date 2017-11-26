@@ -92,7 +92,7 @@
     <Compile Include="Tree\Nodes\Statements\WhileStatement.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Input.txt" />
+    <None Include="Input.cs" />
   </ItemGroup>
   <ItemGroup>
     <AntlrGrammarFile Include="MathLang.g" />

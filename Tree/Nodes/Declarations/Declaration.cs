@@ -18,6 +18,8 @@ namespace MathLang.Tree.Nodes.Declarations
         public string Name { get; protected set; }
         public ReturnType ReturnType { get; protected set; }
 
+        public int? Index { get; set; }
+        
         public IExpression Value {
             get { return _value; }
             set {
