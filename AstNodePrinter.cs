@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Text;
 
 using Antlr.Runtime.Tree;
@@ -8,61 +9,77 @@ using AstNode = Antlr.Runtime.Tree.ITree;
 
 namespace MathLang
 {
-  public class AstNodePrinter
-  {
-    public const byte ConnectCharDosCode    = 0xB3,
-                      MiddleNodeCharDosCode = 0xC3,
-                      LastNodeCharDosCode   = 0xC0;
+    public class AstNodePrinter
+    {
+        public const byte ConnectCharDosCode = 0xB3,
+                          MiddleNodeCharDosCode = 0xC3,
+                          LastNodeCharDosCode = 0xC0;
 
-    public static readonly char ConnectChar    = '|',
-                                MiddleNodeChar = '*',
-                                LastNodeChar   = '-';
-
-
-    static AstNodePrinter() {
-      Encoding dosEncoding = null;
-      try {
-        dosEncoding = Encoding.GetEncoding("cp866");
-      }
-      catch { }
-      if (dosEncoding != null) {
-        ConnectChar = dosEncoding.GetChars(new byte[] { ConnectCharDosCode })[0];
-        MiddleNodeChar = dosEncoding.GetChars(new byte[] { MiddleNodeCharDosCode })[0];
-        LastNodeChar = dosEncoding.GetChars(new byte[] { LastNodeCharDosCode })[0];
-      }
-    }
+        public static readonly char ConnectChar = '|',
+                                    MiddleNodeChar = '*',
+                                    LastNodeChar = '-';
 
 
-    private static string getStringSubTree(AstNode node, string indent, bool root) {
-      if (node == null)
-        return "";
-
-      string result = indent;
-      if (!root)
-        if(node.ChildIndex < node.Parent.ChildCount - 1) {
-          result += MiddleNodeChar + " ";
-          indent += ConnectChar + " ";
+        static AstNodePrinter()
+        {
+            Encoding dosEncoding = null;
+            try
+            {
+                dosEncoding = Encoding.GetEncoding("cp866");
+            }
+            catch { }
+            if (dosEncoding != null)
+            {
+                ConnectChar = dosEncoding.GetChars(new byte[] { ConnectCharDosCode })[0];
+                MiddleNodeChar = dosEncoding.GetChars(new byte[] { MiddleNodeCharDosCode })[0];
+                LastNodeChar = dosEncoding.GetChars(new byte[] { LastNodeCharDosCode })[0];
+            }
         }
-        else {
-          result += LastNodeChar + " ";
-          indent += "  ";
+
+
+        private static string getStringSubTree(AstNode node, string indent, bool root)
+        {
+            if (node == null)
+                return "";
+
+            string result = indent;
+            if (!root)
+                if (node.ChildIndex < node.Parent.ChildCount - 1)
+                {
+                    result += MiddleNodeChar + " ";
+                    indent += ConnectChar + " ";
+                }
+                else
+                {
+                    result += LastNodeChar + " ";
+                    indent += "  ";
+                }
+            result += node + "\n";
+            for (int i = 0; i < node.ChildCount; i++)
+                result += getStringSubTree(node.GetChild(i), indent, false);
+
+            return result;
         }
-      result += node + "\n";
-      for(int i = 0; i < node.ChildCount; i++)
-        result += getStringSubTree(node.GetChild(i), indent, false);
 
-      return result;
+
+        public static string astNodeToAdvancedDosStringTree(AstNode node)
+        {
+            return getStringSubTree(node, "", true);
+        }
+
+
+        public static void Print(AstNode node)
+        {
+            string tree = astNodeToAdvancedDosStringTree(node);
+            Console.WriteLine(tree);
+        }
+
+        public static void PrintToFile(AstNode node)
+        {
+            StreamWriter s = new StreamWriter("result.txt");
+            s.Write(astNodeToAdvancedDosStringTree(node));
+            s.Flush();
+            s.Close();
+        }
     }
-
-
-    public static string astNodeToAdvancedDosStringTree(AstNode node) {
-      return getStringSubTree(node, "", true);
-    }
-
-
-    public static void Print(AstNode node) {
-      string tree = astNodeToAdvancedDosStringTree(node);
-      Console.WriteLine(tree);
-    }
-  }
 }

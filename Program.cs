@@ -4,15 +4,13 @@ using System.Globalization;
 using Antlr.Runtime;
 using Antlr.Runtime.Tree;
 using MathLang.Extensions;
-using MathLang.Tree.Nodes.Enums;
-using MathLang.Tree.Semantics;
 
 
 namespace MathLang
 {
     public class Program
     {
-        // "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ" пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ (пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ)
+        // "культуронезависимый" формат для чисел (с разделителем точкой)
         public static readonly NumberFormatInfo NFI = new NumberFormatInfo();
 
 
@@ -37,37 +35,34 @@ namespace MathLang
             //garrrr
             try
             {
-                // пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
-                // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+                // в зависимости от наличия параметров командной строки разбираем
+                // либо файл с именем, переданным первым параметром, либо стандартный ввод
                 ICharStream input = args.Length == 1 ? (ICharStream)new ANTLRFileStream(args[0])
                                                      : (ICharStream)new ANTLRReaderStream(Console.In);
                 MathLangLexer lexer = new MathLangLexer(input);
                 CommonTokenStream tokens = new CommonTokenStream(lexer);
                 MathLangParser parser = new MathLangParser(tokens);
                 ITree program = (ITree)parser.execute().Tree;
-
-                ReturnType random = ReturnType.Unset;
-                Console.WriteLine(random == null);
-
                 AstNodePrinter.Print(program);
-                
-                
-                //AST
-                Tree.Nodes.Program astProgram = new Tree.Nodes.Program();
-                astProgram.Construct(program.CastTo<CommonTree>());
-                SemanticsRunner.Run(astProgram);
-                int noop = 0;
+                AstNodePrinter.PrintToFile(program);
 
-                TreeConsolePrinter tp= new TreeConsolePrinter();
-                tp.Print(astProgram);
-
+                if (!ErrorService.Instance.HasErrors)
+                {
+                    Tree.Nodes.Program astProgram = new Tree.Nodes.Program(null);
+                    astProgram.Construct(program.CastTo<CommonTree>());
+                    int noop = 0;
+                }
+                else
+                {
+                    ErrorService.Instance.PrintErrorsToConsole();
+                }
+                
                 //Console.WriteLine();
                 //MathLangIntepreter.Execute(program);
-                
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error: {0}", e.Message);
+                Console.WriteLine("Error: {0}", e);
             }
             Console.ReadLine();
         }
