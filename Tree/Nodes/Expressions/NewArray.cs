@@ -14,7 +14,7 @@ namespace MathLang.Tree.Nodes.Expressions
         public INode Parent { get; set; }
         public Scope Scope { get; }
 
-        public ReturnType ReturnType { get; private set; }
+        public ReturnType ReturnType { get; set; }
         public ReturnType CastToType { get; set; }
         public IExpression ArraySize { get; private set; }
         public List<IExpression> InitializationParameters { get; } = new List<IExpression>();

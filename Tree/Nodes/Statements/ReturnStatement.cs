@@ -14,7 +14,7 @@ namespace MathLang.Tree.Nodes.Statements
         public INode Parent { get; set; }
         public Scope Scope { get; }
 
-        public IExpression ReturnExpression { get; private set; }
+        public IExpression ReturnExpression { get; set; }
 
         public ReturnStatement(INode parent, Scope parentScope)
         {

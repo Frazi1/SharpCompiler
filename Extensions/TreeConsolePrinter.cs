@@ -26,32 +26,34 @@ namespace MathLang.Extensions
         public void Print(Tree.Nodes.Program treeProgram)
         {
             Console.WriteLine("program");
+
+            List<ClassDeclaration> printableClassNodes = treeProgram.ClassNodes.Where(c => c.IsPrintable).ToList();            
             
-            for (int i = 0; i < treeProgram.ClassNodes.Count; i++)
+            for (int i = 0; i < printableClassNodes.Count; i++)
             {
-                string ind = ((i + 1) == treeProgram.ClassNodes.Count) ? 
+                string ind = ((i + 1) == printableClassNodes.Count) ? 
                     indentEndBar : indentBranchBar;
-                string nextInd = (i + 1 == treeProgram.ClassNodes.Count) ?
+                string nextInd = (i + 1 == printableClassNodes.Count) ?
                     indent : indentBar;
 
                 Console.WriteLine($"{indent}" +
-                                  $"{ind}class {treeProgram.ClassNodes[i].Name}");
+                                  $"{ind}class {printableClassNodes[i].Name}");
 
-                for (int k = 0; k < treeProgram.ClassNodes[i].VarDeclarationNodes.Count; k++)
+                for (int k = 0; k < printableClassNodes[i].VarDeclarationNodes.Count; k++)
                 {
-                    bool last = (k + 1 == treeProgram.ClassNodes[i].VarDeclarationNodes.Count) &&
-                                (treeProgram.ClassNodes[i].FunctionDeclarationNodes.Count == 0);
+                    bool last = (k + 1 == printableClassNodes[i].VarDeclarationNodes.Count) &&
+                                (printableClassNodes[i].FunctionDeclarationNodes.Count == 0);
 
                     PrintStatement(indent+ nextInd, 
-                        treeProgram.ClassNodes[i].VarDeclarationNodes[k],
+                        printableClassNodes[i].VarDeclarationNodes[k],
                         last);
                 }
 
-                for (int b = 0; b < treeProgram.ClassNodes[i].FunctionDeclarationNodes.Count; b++)
+                for (int b = 0; b < printableClassNodes[i].FunctionDeclarationNodes.Count; b++)
                 {
                     PrintFuncDeclaration(indent+ nextInd, 
-                        treeProgram.ClassNodes[i].FunctionDeclarationNodes[b],
-                        b+1 == treeProgram.ClassNodes[i].FunctionDeclarationNodes.Count);
+                        printableClassNodes[i].FunctionDeclarationNodes[b],
+                        b+1 == printableClassNodes[i].FunctionDeclarationNodes.Count);
                 }
             }
         }

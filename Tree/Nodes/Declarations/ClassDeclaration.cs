@@ -15,11 +15,13 @@ namespace MathLang.Tree.Nodes.Declarations
         public string Name { get; set; }
         public List<Declaration> VarDeclarationNodes { get; } = new List<Declaration>();
         public List<FunctionDeclaration> FunctionDeclarationNodes { get; } = new List<FunctionDeclaration>();
-
-        public ClassDeclaration(INode parent, Scope parentScope)
+        public bool IsPrintable { get; }
+        
+        public ClassDeclaration(INode parent, Scope parentScope, bool isPrintable = true)
         {
             Parent = parent;
             Scope = new LocalScope(parentScope);
+            IsPrintable = isPrintable;
         }
 
         public void Construct(CommonTree syntaxClass)

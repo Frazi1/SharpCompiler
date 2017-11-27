@@ -132,6 +132,8 @@ namespace MathLang.Tree.Semantics
                         .FindAll(statement => statement is ReturnStatement)
                         .Cast<ReturnStatement>()
                         .ToList();
+                if(returnStatements.Count == 0)
+                    throw new ExpressionException($"Function {functionDeclaration.Name} missing a return statement");
                 returnStatements.ForEach(statement =>
                 {
                     //statement.Process();
