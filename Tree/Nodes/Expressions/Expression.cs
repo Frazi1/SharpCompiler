@@ -8,17 +8,19 @@ namespace MathLang.Tree.Nodes.Expressions
 {
     public class Expression : IExpression
     {
-        public INode Parent { get; }
+        public INode Parent { get; set; }
         public Scope Scope { get;}
 
         public ExpressionType ExpressionType { get; set; }
+        public ReturnType ReturnType { get; private set; }
+        public ReturnType CastToType { get; set; }
         public IExpression Left { get; set; }
         public IExpression Right { get; set; }
 
         public Expression(INode parent, Scope parentScope)
         {
             Parent = parent;
-            Scope = new LocalScope(parentScope, false);
+            Scope = parentScope;
         }
 
         public void Construct(CommonTree syntaxExpressionNode)
@@ -33,6 +35,12 @@ namespace MathLang.Tree.Nodes.Expressions
                 Right = TreeHelper.GetExpression(this, Scope, syntaxRight);
                 Right.Construct(syntaxRight);
             }
+
+            if (Right == null) ReturnType = Left.ReturnType;
+            else
+                ReturnType = Left.ReturnType.Equals(Right.ReturnType) 
+                    ? Left.ReturnType 
+                    : ReturnType.Unset;
         }
     }
 }

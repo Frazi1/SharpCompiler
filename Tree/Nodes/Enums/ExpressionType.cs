@@ -18,6 +18,7 @@
         And,
         FunctionCall,
         VariableDeclaration,
-        VariableReference
+        VariableReference,
+        ArrayElementReference
     }
 }

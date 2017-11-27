@@ -45,6 +45,7 @@ tokens {
   FOR_CONDITION;
   FOR_ITERATION;
   ARRAY_SIZE;
+  EXTENDED_ID;
 }
 
 
@@ -99,8 +100,8 @@ statement: ( declaration
 	 ) ;
 
 type: TYPE ;
-array_type: TYPE ARRAY_DECLARATION_MARK!;
-any_type: type | array_type | VOID;
+array_type: t+=TYPE t+=ARRAY_DECLARATION_MARK ;
+any_type: array_type | type | VOID;
 number :  NUMBER
 		| extended_id
 		| funccallbody
@@ -118,7 +119,7 @@ expression:
 		
 		
 ;
-extended_id: ID (DOT! ID)? -> ^(ID ID?);
+extended_id: ID (DOT! ID)? -> ^(EXTENDED_ID ID ID?);
 
 arrayelement:  extended_id OPEN_SQUARE_BRACE mathexpression CLOSE_SQUARE_BRACE -> ^(ARRAYELEMENT extended_id mathexpression) ;
 static_declaration:  MODIFIER declaration -> ^(STATIC_DECLARATION declaration);
@@ -135,24 +136,24 @@ d[object type]: declarationbody_d[type] | longdeclarationbody_d[type] ;
 d_array[object type]: declarationbody_array_d[type] | longdeclarationbody_array_d[type];
 
 declarationbody_d[object type]: (ID -> ^(VARDECLARATION {$type} ID) );				
-declarationbody_array_d[object type]: ( ID -> ^(ARRAYDECLARATION {$type} ID));
+declarationbody_array_d[object type]: ( ID -> ^(ARRAYDECLARATION ^(RETURN_TYPE {$type}) ID));
 
 longdeclarationbody_d[object type]: (ID ASSIGN expression  -> ^(VARDECLARATION {$type} ID expression));
-longdeclarationbody_array_d[object type]: (ID ASSIGN newexpression -> ^(ARRAYDECLARATION {$type} ID newexpression));
+longdeclarationbody_array_d[object type]: (ID ASSIGN expression -> ^(ARRAYDECLARATION ^(RETURN_TYPE {$type}) ID expression));
 
 
 declarationbody: (type ID -> ^(VARDECLARATION type ID) )
 				| (array_type ID -> ^(ARRAYDECLARATION array_type ID))
 				;
 longdeclarationbody: ( type ID ASSIGN expression  -> ^(VARDECLARATION type ID expression))
-					| (array_type ID ASSIGN newexpression -> ^(ARRAYDECLARATION array_type ID newexpression))
+					| (array_type ID ASSIGN expression -> ^(ARRAYDECLARATION array_type ID expression))
 					;
 
 add: mul ( (ADD | SUB)^ mul )*;
 mul: group ( (MUL | DIV)^ group)*;
 compare: add ( ( GREQ | LSEQ | NEQ | EQ | GR | LS)^ add )?  ;
 term: add;
-group: (SUB^)? OPEN_BRACE! term CLOSE_BRACE! | number;
+group: (SUB^)? (OPEN_BRACE! term CLOSE_BRACE! | number);
 
 assignment: assignmentbody ';'!;
 assignmentbody: (extended_id ASSIGN expression -> ^(VARASSIGNMENT extended_id expression)) | 
@@ -172,11 +173,12 @@ ifstatement: IF^ OPEN_BRACE! boolexpression CLOSE_BRACE! block_or_statement (ELS
 whilestatement: WHILE^ OPEN_BRACE! boolexpression CLOSE_BRACE! block_or_statement  ;
 forstatement: FOR^ OPEN_BRACE! longdeclarationbody? ';'! boolexpression? ';'! assignmentbody? CLOSE_BRACE! block_or_statement
 		-> ^(FOR ^(FOR_INITIALIZATION longdeclarationbody) ^(FOR_CONDITION boolexpression) ^(FOR_ITERATION assignmentbody) block_or_statement);
-returnstatement: RETURN^ expression ';'! ;
+returnstatement: RETURN^ expression? ';'! ;
 dowhilestatement: DO^ (block | statement) WHILE! OPEN_BRACE! boolexpression CLOSE_BRACE! ';'! ;
 emptystatement: ';'! ;
 
-funcdeclaration: MODIFIER any_type ID^ ( OPEN_BRACE! paramsdeclaration CLOSE_BRACE! ) block -> ^(FUNCDECLARATION ID ^(RETURN_TYPE any_type) OPEN_BRACE! paramsdeclaration CLOSE_BRACE! block);
+funcdeclaration: MODIFIER any_type ID^ ( OPEN_BRACE! paramsdeclaration CLOSE_BRACE! ) block 
+		-> ^(FUNCDECLARATION ID ^(RETURN_TYPE any_type) OPEN_BRACE! paramsdeclaration CLOSE_BRACE! block);
 paramsdeclaration: ( declarationbody ( ','! declarationbody)* )?  -> ^(PARAMETERS ( declarationbody)* );
 
 funccallbody: extended_id^ OPEN_BRACE expressioncommalist? CLOSE_BRACE -> ^(FUNC_CALL extended_id ^(PARAMETERS expressioncommalist)?);
@@ -184,12 +186,12 @@ funccall: funccallbody ';'!;
 expressioncommalist: expression ( ','! expression)*;
 
 /*ARRAY HERE*/
-object_initializer:  '{' expressioncommalist? '}' -> ^(PARAMETERS expressioncommalist?) ;
+object_initializer:  '{' expressioncommalist '}' -> expressioncommalist ;
 newexpression: KNEW! initializer;
 initializer: (simple_var_initializer | array_initializer);
 simple_var_initializer: type OPEN_BRACE CLOSE_BRACE -> ^(NEWVAR type);
-array_initializer: type ((OPEN_SQUARE_BRACE mathexpression CLOSE_SQUARE_BRACE) | ARRAY_DECLARATION_MARK) object_initializer 
-		-> ^(ARRAY_INITIALIZER type ^(ARRAY_SIZE mathexpression?) object_initializer);
+array_initializer: type ((OPEN_SQUARE_BRACE mathexpression CLOSE_SQUARE_BRACE) | ARRAY_DECLARATION_MARK) object_initializer?
+		-> ^(ARRAY_INITIALIZER type ^(ARRAY_SIZE mathexpression?) ^(PARAMETERS object_initializer?));
 
 block: '{'! statementlist '}'!;
 

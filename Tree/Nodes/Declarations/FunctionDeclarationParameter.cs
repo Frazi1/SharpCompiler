@@ -6,7 +6,7 @@ namespace MathLang.Tree.Nodes.Declarations
 {
     public class FunctionDeclarationParameter : VariableDeclaration
     {
-        //public INode Parent { get; }
+        //public INode Parent { get; set; }
 
         //public string Name { get; private set; }
         //public ReturnType ReturnType { get; private set; }

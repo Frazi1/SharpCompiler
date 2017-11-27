@@ -7,11 +7,11 @@ using MathLang.Tree.Scopes;
 
 namespace MathLang.Tree.Nodes.Declarations
 {
-    public abstract class Declaration: IStatement, IExpression
+    public abstract class Declaration: IStatement
     {
         private IExpression _value;
 
-        public INode Parent { get; }
+        public INode Parent { get; set; }
         public Scope Scope { get; }
         public bool IsConstructed { get; private set; }
 
@@ -32,7 +32,7 @@ namespace MathLang.Tree.Nodes.Declarations
         protected Declaration(INode parent, Scope parentScope)
         {
             Parent = parent;
-            Scope = new LocalScope(parentScope, false);
+            Scope = parentScope;
         }
 
         public virtual void Construct(CommonTree syntaxVariableDeclaration)
