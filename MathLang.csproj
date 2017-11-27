@@ -36,6 +36,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.ValueTuple.4.4.0\lib\portable-net40+sl4+win8+wp8\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -51,6 +54,8 @@
     <Compile Include="Tree\Nodes\Expressions\BoolExpression.cs" />
     <Compile Include="Tree\Nodes\Expressions\CastExpression\CastExpression.cs" />
     <Compile Include="Tree\Nodes\Expressions\VoidExpression.cs" />
+    <Compile Include="Tree\Semantics\Library\Builder.cs" />
+    <Compile Include="Tree\Semantics\Library\ConsoleBuilder.cs" />
     <Compile Include="Tree\Semantics\Tables\CastsTable.cs" />
     <Compile Include="Tree\Nodes\Expressions\CharExpression.cs" />
     <Compile Include="Tree\Nodes\Expressions\ExtendedId.cs" />
@@ -94,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Input.cs" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <AntlrGrammarFile Include="MathLang.g" />

@@ -15,8 +15,8 @@ namespace MathLang.Tree.Nodes.Declarations
         public Scope Scope { get; }
         public bool IsConstructed { get; private set; }
 
-        public string Name { get; protected set; }
-        public ReturnType ReturnType { get; protected set; }
+        public string Name { get; set; }
+        public ReturnType ReturnType { get; set; }
 
         public int? Index { get; set; }
         
