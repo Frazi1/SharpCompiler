@@ -1,56 +1,16 @@
-﻿//static class TestClass 
-//{
-//	static int a = 1;
-//	//static char charVar = (char) a;	
-//	//static bool testBool = new int[1];
-//	static bool t = true;
-//	//static int testSt = Valera2.a;
-//	//static char c = 1;
-//}
-
-//static class Valera2
-//{
-//	static int a = 10;
-	
-//	static void Func1(int b, char c)
-//	{
-//		int a = 10;
-//		bool btest = Func(true);
-//	}
-	
-//	static bool Func(bool test)
-//	{
-//		char[] sda = new char[] {'d'};
-//		int[] arr = testArrRet(sda);
-////		Look at array declaration and add RETURN_TYPE node there.
-//	    return false;
-//	}
-	
-//	static int[] testArrRet(char[] a)
-//	{
-//		return 1;
-//	}
-//}
-
-static class MyClass
+﻿static class ValeraTest
 {
-    static int a;
-    static void Test()
+    //static char Tom = 't';
+    //static int Cat = 8 + Tom;
+
+    //static int GoodCat(int alla)
+    //{
+    //    alla = Tom;
+    //    return Tom;
+    //}
+
+    static char BadCat()
     {
-        int a = 10;
-        //bool 
-
-        while (true)
-        {
-            if (false)
-            {
-                return a;
-            }
-        }
-
-        return 7 + 1;
+        return -7;
     }
 }
-
-
-

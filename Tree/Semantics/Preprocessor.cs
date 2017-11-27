@@ -216,12 +216,13 @@ namespace MathLang.Tree.Semantics
 
             if (expression.Right == null)
             {
-                if (expression.ReturnType == expression.Left.ReturnType) return;
-                if (expression.Left.ReturnType.IsCastableTo(expression.ReturnType))
-                    expression.Left.CastToType = expression.ReturnType;
-                else
-                    throw new ExpressionException(
-                        $"Return type {expression.Left.ReturnType} does not match {expression.ReturnType}");
+                expression.ReturnType = expression.Left.ReturnType;
+                //if (expression.ReturnType == expression.Left.ReturnType) return;
+                //if (expression.Left.ReturnType.IsCastableTo(expression.ReturnType))
+                //    expression.Left.CastToType = expression.ReturnType;
+                //else
+                //    throw new ExpressionException(
+                //        $"Return type {expression.Left.ReturnType} does not match {expression.ReturnType}");
             }
 
             else if (TreeHelper.IsComparisonExpression(expressionType))

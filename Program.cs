@@ -45,13 +45,9 @@ namespace MathLang
                 CommonTokenStream tokens = new CommonTokenStream(lexer);
                 MathLangParser parser = new MathLangParser(tokens);
                 ITree program = (ITree)parser.execute().Tree;
-
-                ReturnType random = ReturnType.Unset;
-                Console.WriteLine(random == null);
-
                 AstNodePrinter.Print(program);
-                
-                
+
+
                 //AST
                 Tree.Nodes.Program astProgram = new Tree.Nodes.Program();
                 astProgram.Construct(program.CastTo<CommonTree>());
