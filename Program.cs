@@ -45,13 +45,14 @@ namespace MathLang
                 CommonTokenStream tokens = new CommonTokenStream(lexer);
                 MathLangParser parser = new MathLangParser(tokens);
                 ITree program = (ITree)parser.execute().Tree;
-                AstNodePrinter.Print(program);
+                //AstNodePrinter.Print(program);
 
 
                 //AST
                 Tree.Nodes.Program astProgram = new Tree.Nodes.Program();
                 astProgram.Construct(program.CastTo<CommonTree>());
                 SemanticsRunner.Run(astProgram);
+
                 int noop = 0;
                 TreeConsolePrinter tp = new TreeConsolePrinter();
                 tp.Print(astProgram);
@@ -60,6 +61,10 @@ namespace MathLang
                 //MathLangIntepreter.Execute(program);
                 
             }
+
+
+
+
             catch (Exception e)
             {
                 Console.WriteLine("Error: {0}", e.Message);

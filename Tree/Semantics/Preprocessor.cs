@@ -184,6 +184,7 @@ namespace MathLang.Tree.Semantics
         {
             var scope = extendedId.Scope;
             var declaration = scope.GlobalVariableSearch(extendedId.GetFullPath);
+            extendedId.Declaration = declaration;
             extendedId.ReturnType = declaration != null
                 ? declaration.ReturnType
                 : throw new ScopeException($"Variable with name \"{extendedId.GetFullPath}\" does not exist.");
@@ -415,8 +416,10 @@ namespace MathLang.Tree.Semantics
             arrayElementAssignment.ArrayElementReference.Process();
             arrayElementAssignment.AssignmentExpression.Process();
 
-            var arrItemType = arrayElementAssignment.ArrayElementReference.ReturnType.CastTo<ArrayReturnType>()
-                .InnerType;
+            var arrItemType = arrayElementAssignment.ArrayElementReference.ReturnType
+                //.CastTo<ArrayReturnType>()
+                //.InnerType
+                ;
 
             if (arrItemType != arrayElementAssignment.AssignmentExpression.ReturnType)
             {
@@ -425,10 +428,14 @@ namespace MathLang.Tree.Semantics
                     arrayElementAssignment.AssignmentExpression.CastToType = arrItemType;
                 }
 
-                throw new ExpressionException($"Cannot assign to the element of array " +
-                                              $"{arrayElementAssignment.ArrayElementReference.Name} " +
-                                              $"({arrayElementAssignment.ArrayElementReference.ReturnType}) " +
-                                              $"expression of type {arrayElementAssignment.AssignmentExpression.ReturnType}");
+                else
+                {
+                    throw new ExpressionException($"Cannot assign to the element of array " +
+                                                  $"{arrayElementAssignment.ArrayElementReference.Name} " +
+                                                  $"({arrayElementAssignment.ArrayElementReference.ReturnType}) " +
+                                                  $"expression of type {arrayElementAssignment.AssignmentExpression.ReturnType}");
+                }
+                
             }
 
             //blockStatement.Statements.ForEach(st => st.Process());

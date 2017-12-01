@@ -87,7 +87,7 @@ namespace MathLang.Extensions
                                       $"{(funcDecl.StatemenBlock.Statements.Count == 0 ? indent : indentBar)}" +
                                       $"{(k+1 == funcDecl.ParameterNodes.Count? indentEndBar: indentBranchBar)}" +
                                       $"{funcDecl.ParameterNodes[k].Name} ({funcDecl.ParameterNodes[k].ReturnType})"+
-                                      $"{(funcDecl.ParameterNodes[k].Index == null ? "" : $" with funcIndex {funcDecl.ParameterNodes[k].Index}")}");
+                                      $"{(funcDecl.ParameterNodes[k].Index == null ? "" : $" with funcParam {funcDecl.ParameterNodes[k].Index}")}");
                 }
             }
 
@@ -251,8 +251,11 @@ namespace MathLang.Extensions
 
             if (expression is ExtendedId exId)
             {
+                string s = exId.Declaration is FunctionDeclarationParameter ? "funcParam" : "funcIndex";
+                
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"{exId.GetFullPath} ({exId.ReturnType})" +
+                                  $"{exId.GetFullPath} ({exId.ReturnType}) " +
+                                  $"{(exId.Declaration == null? "": $" with {s} {exId.Declaration.Index}")}"+
                                   $"{(exId.CastToType == null ? "" : $" [cast to {exId.CastToType}]")}");
                 return;
             }
