@@ -59,6 +59,7 @@
         {
             return !(a == b);
         }
+
     }
 
     public abstract class SimpleReturnType : ReturnType

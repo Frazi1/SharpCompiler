@@ -14,9 +14,9 @@ namespace MathLang.Tree.Nodes.Declarations
         public INode Parent { get; set; }
         public Scope Scope { get; }
 
-        public string Name { get; private set; }
-        public ReturnType ReturnType { get; private set; }
-        public BlockStatement StatemenBlock { get; private set; }
+        public string Name { get; set; }
+        public ReturnType ReturnType { get; set; }
+        public BlockStatement StatemenBlock { get; set; }
 
         public List<FunctionDeclarationParameter> ParameterNodes { get; } = new List<FunctionDeclarationParameter>();
 

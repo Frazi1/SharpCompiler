@@ -26,32 +26,34 @@ namespace MathLang.Extensions
         public void Print(Tree.Nodes.Program treeProgram)
         {
             Console.WriteLine("program");
+
+            List<ClassDeclaration> printableClassNodes = treeProgram.ClassNodes.Where(c => c.IsPrintable).ToList();            
             
-            for (int i = 0; i < treeProgram.ClassNodes.Count; i++)
+            for (int i = 0; i < printableClassNodes.Count; i++)
             {
-                string ind = ((i + 1) == treeProgram.ClassNodes.Count) ? 
+                string ind = ((i + 1) == printableClassNodes.Count) ? 
                     indentEndBar : indentBranchBar;
-                string nextInd = (i + 1 == treeProgram.ClassNodes.Count) ?
+                string nextInd = (i + 1 == printableClassNodes.Count) ?
                     indent : indentBar;
 
                 Console.WriteLine($"{indent}" +
-                                  $"{ind}class {treeProgram.ClassNodes[i].Name}");
+                                  $"{ind}class {printableClassNodes[i].Name}");
 
-                for (int k = 0; k < treeProgram.ClassNodes[i].VarDeclarationNodes.Count; k++)
+                for (int k = 0; k < printableClassNodes[i].VarDeclarationNodes.Count; k++)
                 {
-                    bool last = (k + 1 == treeProgram.ClassNodes[i].VarDeclarationNodes.Count) &&
-                                (treeProgram.ClassNodes[i].FunctionDeclarationNodes.Count == 0);
+                    bool last = (k + 1 == printableClassNodes[i].VarDeclarationNodes.Count) &&
+                                (printableClassNodes[i].FunctionDeclarationNodes.Count == 0);
 
                     PrintStatement(indent+ nextInd, 
-                        treeProgram.ClassNodes[i].VarDeclarationNodes[k],
+                        printableClassNodes[i].VarDeclarationNodes[k],
                         last);
                 }
 
-                for (int b = 0; b < treeProgram.ClassNodes[i].FunctionDeclarationNodes.Count; b++)
+                for (int b = 0; b < printableClassNodes[i].FunctionDeclarationNodes.Count; b++)
                 {
                     PrintFuncDeclaration(indent+ nextInd, 
-                        treeProgram.ClassNodes[i].FunctionDeclarationNodes[b],
-                        b+1 == treeProgram.ClassNodes[i].FunctionDeclarationNodes.Count);
+                        printableClassNodes[i].FunctionDeclarationNodes[b],
+                        b+1 == printableClassNodes[i].FunctionDeclarationNodes.Count);
                 }
             }
         }
@@ -84,7 +86,8 @@ namespace MathLang.Extensions
                     Console.WriteLine($"{ind}{(isFinal ? indent : indentBar)}" +
                                       $"{(funcDecl.StatemenBlock.Statements.Count == 0 ? indent : indentBar)}" +
                                       $"{(k+1 == funcDecl.ParameterNodes.Count? indentEndBar: indentBranchBar)}" +
-                                      $"{funcDecl.ParameterNodes[k].Name} ({funcDecl.ParameterNodes[k].ReturnType})");
+                                      $"{funcDecl.ParameterNodes[k].Name} ({funcDecl.ParameterNodes[k].ReturnType})"+
+                                      $"{(funcDecl.ParameterNodes[k].Index == null ? "" : $" with funcParam {funcDecl.ParameterNodes[k].Index}")}");
                 }
             }
 
@@ -186,7 +189,8 @@ namespace MathLang.Extensions
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
                                   $"DECLARE {declaration.Name} " +
-                                  $"of type {declaration.ReturnType}");
+                                  $"of type {declaration.ReturnType}" +
+                                  $"{(declaration.Index == null? "": $" with funcIndex {declaration.Index}")}");
                 if (declaration.Value != null)
                 {
                     PrintExpression(ind + (isFinal ? indent : indentBar), declaration.Value, true);
@@ -224,7 +228,8 @@ namespace MathLang.Extensions
             if (expression is Expression ex)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"{ParseExpressionType(ex.ExpressionType)}");
+                                  $"{ParseExpressionType(ex.ExpressionType)}" +
+                                  $"{(ex.CastToType == null ? "" : $" [cast to {ex.CastToType}]")}");
 
                                 
                 PrintExpression($"{ind}{(isFinal? indent : indentBar)}", ex.Left, ex.Right == null);
@@ -239,21 +244,27 @@ namespace MathLang.Extensions
             if (expression is Atom atom)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"{atom.Value} ({atom.ReturnType.ToString()})");
+                                  $"{atom.Value} ({atom.ReturnType.ToString()})" +
+                                  $"{(atom.CastToType == null ? "" : $" [cast to {atom.CastToType}]")}");
                 return;
             }
 
             if (expression is ExtendedId exId)
             {
+                string s = exId.Declaration is FunctionDeclarationParameter ? "funcParam" : "funcIndex";
+                
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"{exId.GetFullPath} ({exId.ReturnType/* == ReturnType.Unset? "": exId.ReturnType.ToString()*/})");
+                                  $"{exId.GetFullPath} ({exId.ReturnType}) " +
+                                  $"{(exId.Declaration == null? "": $" with {s} {exId.Declaration.Index}")}"+
+                                  $"{(exId.CastToType == null ? "" : $" [cast to {exId.CastToType}]")}");
                 return;
             }
 
             if (expression is VariableReference varRef)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"{varRef.Name.ToString()}");
+                                  $"{varRef.Name.ToString()}"+
+                                  $"{(varRef.CastToType == null ? "" : $" [cast to {varRef.CastToType}]")}");
             }
 
             if (expression is NewArray newArr)
@@ -291,7 +302,8 @@ namespace MathLang.Extensions
             if (expression is FunctionCall fc)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"CALL {fc.Name} that returns {fc.ReturnType}");
+                                  $"CALL {fc.Name} that returns {fc.ReturnType}" +
+                                  $"{(fc.CastToType == null ? "" : $" [cast to {fc.CastToType}]")}");
 
                 if (fc.FunctionCallParameters.Count > 0)
                 {
@@ -311,7 +323,9 @@ namespace MathLang.Extensions
             if (expression is ArrayElementReference arrEl)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"{arrEl.Name} ({arrEl.ReturnType}) index:");
+                                  $"element ({arrEl.ReturnType}) " +
+                                  $"{(arrEl.CastToType == null ? "" : $" [cast to {arrEl.CastToType}]")}" +
+                                  $" of array {arrEl.Name} with index:");
 
                 PrintExpression($"{ind}{(isFinal ? indent : indentBar)}", arrEl.ArrayIndex, true);
             }

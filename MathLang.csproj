@@ -36,6 +36,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.ValueTuple.4.4.0\lib\portable-net40+sl4+win8+wp8\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -51,7 +54,10 @@
     <Compile Include="Tree\Nodes\Expressions\ArrayElementReference.cs" />
     <Compile Include="Tree\Nodes\Expressions\BoolExpression.cs" />
     <Compile Include="Tree\Nodes\Expressions\CastExpression\CastExpression.cs" />
-    <Compile Include="Tree\Nodes\Expressions\CastExpression\CastsTable.cs" />
+    <Compile Include="Tree\Nodes\Expressions\VoidExpression.cs" />
+    <Compile Include="Tree\Semantics\Library\Builder.cs" />
+    <Compile Include="Tree\Semantics\Library\ConsoleBuilder.cs" />
+    <Compile Include="Tree\Semantics\Tables\CastsTable.cs" />
     <Compile Include="Tree\Nodes\Expressions\CharExpression.cs" />
     <Compile Include="Tree\Nodes\Expressions\ExtendedId.cs" />
     <Compile Include="Tree\Nodes\Expressions\IntExpression.cs" />
@@ -87,12 +93,14 @@
     <Compile Include="Tree\Semantics\Preprocessor.cs" />
     <Compile Include="Tree\Semantics\SemanticsHelper.cs" />
     <Compile Include="Tree\Semantics\SemanticsRunner.cs" />
+    <Compile Include="Tree\Semantics\Tables\MathematicalComparisonTable.cs" />
     <Compile Include="Tree\TreeHelper.cs" />
     <Compile Include="Tree\Nodes\Statements\VariableAssignment.cs" />
     <Compile Include="Tree\Nodes\Statements\WhileStatement.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Input.txt" />
+    <None Include="Input.cs" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <AntlrGrammarFile Include="MathLang.g" />

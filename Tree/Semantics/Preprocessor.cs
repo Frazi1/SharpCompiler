@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using MathLang.Tree.Nodes.Declarations;
 using MathLang.Tree.Nodes.Enums;
@@ -8,6 +10,7 @@ using MathLang.Tree.Nodes.Statements;
 using MathLang.Tree.Scopes.Exceptions;
 using Microsoft.Win32.SafeHandles;
 using MathLang.Extensions;
+using MathLang.Tree.Scopes;
 
 namespace MathLang.Tree.Semantics
 {
@@ -91,11 +94,18 @@ namespace MathLang.Tree.Semantics
             //            throw  new NotImplementedException();
         }
 
-        private static void Process(this Declaration variableDeclaration, bool checkName = true)
+        private static void Process(this Declaration variableDeclaration, bool checkName = true, int? upTpLevel = null)
         {
             //Process assignment value
             if (checkName)
-                variableDeclaration.CheckName(variableDeclaration.Scope);
+            {
+                //variableDeclaration.CheckName(variableDeclaration.Scope);
+                if (variableDeclaration.Scope.GlobalVariableSearch(
+                        variableDeclaration.Name, Scope.FunctionLevel)
+                    != null)
+                    throw new ScopeException($"Variable with name: \"{variableDeclaration.Name}\" already exists");
+                variableDeclaration.Scope.AddVariable(variableDeclaration);
+            }
             IExpression variableDeclarationValueExpression = variableDeclaration.Value;
             if (variableDeclarationValueExpression == null) return;
             variableDeclarationValueExpression.Process();
@@ -114,6 +124,26 @@ namespace MathLang.Tree.Semantics
             var scope = functionDeclaration.Scope;
             functionDeclaration.StatemenBlock.Statements
                 .ForEach(statement => statement.Process());
+
+            if (functionDeclaration.ReturnType != ReturnType.Void)
+            {
+                var returnStatements =
+                    functionDeclaration.StatemenBlock.Statements
+                        .FindAll(statement => statement is ReturnStatement)
+                        .Cast<ReturnStatement>()
+                        .ToList();
+                if(returnStatements.Count == 0)
+                    throw new ExpressionException($"Function {functionDeclaration.Name} missing a return statement");
+                returnStatements.ForEach(statement =>
+                {
+                    //statement.Process();
+                    if (statement.ReturnExpression.GetResultReturnType() != functionDeclaration.ReturnType)
+                    {
+                        throw new ExpressionException(
+                            $"Function {functionDeclaration.Name} must return {functionDeclaration.ReturnType} but returns {statement.ReturnExpression.GetResultReturnType()}");
+                    }
+                });
+            }
         }
 
         #endregion
@@ -143,6 +173,9 @@ namespace MathLang.Tree.Semantics
                 case NewArray newArray:
                     newArray.Process();
                     break;
+                case ArrayElementReference arrayElementReference:
+                    arrayElementReference.Process();
+                    break;
                 default: throw new ArgumentOutOfRangeException(nameof(iexpression));
             }
         }
@@ -151,6 +184,7 @@ namespace MathLang.Tree.Semantics
         {
             var scope = extendedId.Scope;
             var declaration = scope.GlobalVariableSearch(extendedId.GetFullPath);
+            extendedId.Declaration = declaration;
             extendedId.ReturnType = declaration != null
                 ? declaration.ReturnType
                 : throw new ScopeException($"Variable with name \"{extendedId.GetFullPath}\" does not exist.");
@@ -171,21 +205,70 @@ namespace MathLang.Tree.Semantics
         {
             expression.Left.Process();
             expression.Right?.Process();
+
+            var expressionType = expression.ExpressionType;
+
+
+            if (TreeHelper.IsComparisonExpression(expressionType))
+                expression.ReturnType = ReturnType.Bool;
+
+            //HERE
+
+
             if (expression.Right == null)
             {
-                if (expression.ReturnType == expression.Left.ReturnType) return;
-                if (expression.Left.ReturnType.IsCastableTo(expression.ReturnType))
-                    expression.Left.CastToType = expression.ReturnType;
-                else
-                    throw new ExpressionException(
-                        $"Return type {expression.Left.ReturnType} does not match {expression.ReturnType}");
+                expression.ReturnType = expression.Left.ReturnType;
+                //if (expression.ReturnType == expression.Left.ReturnType) return;
+                //if (expression.Left.ReturnType.IsCastableTo(expression.ReturnType))
+                //    expression.Left.CastToType = expression.ReturnType;
+                //else
+                //    throw new ExpressionException(
+                //        $"Return type {expression.Left.ReturnType} does not match {expression.ReturnType}");
             }
+
+            else if (TreeHelper.IsComparisonExpression(expressionType))
+            {
+                expression.ReturnType = ReturnType.Bool;
+
+                if (TreeHelper.IsMathematicalComparison(expressionType))
+                {
+                    if (expression.Left.GetResultReturnType() != expression.Right.GetResultReturnType())
+                    {
+                        if (expression.Right.GetResultReturnType()
+                            .IsCastableTo(expression.Left.GetResultReturnType()))
+                        {
+                            expression.Right.CastToType = expression.Left.GetResultReturnType();
+                        }
+                        else
+                            throw new ExpressionException(
+                                $"Can not compare {expression.Left.GetResultReturnType()} to {expression.Right.GetResultReturnType()} ");
+                        if (!expression.Left
+                            .GetResultReturnType()
+                            .IsMathematicallyComparisonable())
+                            throw new ExpressionException(
+                                $"Can not apply operation {expression.ExpressionType} to types {expression.Left.GetResultReturnType()}");
+                    }
+                }
+                if (TreeHelper.IsBooleanComparison(expressionType))
+                {
+                    if (expression.Left.GetResultReturnType() != ReturnType.Bool)
+                        throw new ExpressionException($"Left operand must be of type {ReturnType.Bool}");
+                    if (expression.Right.GetResultReturnType() != ReturnType.Bool)
+                        throw new ExpressionException($"Right operand must be of type {ReturnType.Bool}");
+                }
+            }
+
             else if (expression.Left.ReturnType != expression.Right.ReturnType)
                 if (expression.Right.ReturnType.IsCastableTo(expression.Left.ReturnType))
+                {
+                    expression.ReturnType = expression.Left.ReturnType;
                     expression.Right.CastToType = expression.Left.ReturnType;
+                }
                 else
                     throw new ExpressionException(
-                        $"Can not compare {expression.Left.ReturnType} tot {expression.Right.ReturnType}");
+                        $"Can not cast {expression.Left.ReturnType} to type {expression.Right.ReturnType}");
+            else
+                expression.ReturnType = expression.Left.ReturnType;
         }
 
         private static void Process(this Atom atom)
@@ -199,9 +282,10 @@ namespace MathLang.Tree.Semantics
             //functionCall.Name.Process();
             var functionDeclaration = functionCall.Scope.GlobalFunctionSearch(functionCall.Name.GetFullPath);
             if (functionDeclaration == null)
-                throw new ScopeException($"Function with name {functionCall.Name.GetFullPath} does not exist");
+                throw new ScopeException($"Function with name \"{functionCall.Name.GetFullPath}\" does not exist");
             if (functionDeclaration.ParameterNodes.Count != functionCall.FunctionCallParameters.Count)
-                throw new ScopeException("Function call signature is different from defined function with that name");
+                throw new ScopeException(
+                    $"Function \"{functionCall.Name.GetFullPath}\" call signature is different from defined function with that name");
             for (int i = 0; i < functionDeclaration.ParameterNodes.Count; i++)
             {
                 var parameter = functionDeclaration.ParameterNodes[i];
@@ -222,13 +306,14 @@ namespace MathLang.Tree.Semantics
         {
             if (newArray.ArraySize != null && newArray.InitializationParameters.Count > 0)
                 throw new ScopeException("You can't specify array size and include initialization parameters");
-            if(newArray.ArraySize == null && newArray.InitializationParameters.Count == 0)
+            if (newArray.ArraySize == null && newArray.InitializationParameters.Count == 0)
                 throw new ScopeException("You must specify array size");
             if (newArray.ArraySize != null)
             {
                 newArray.ArraySize.Process();
-                if(newArray.ArraySize.ReturnType != ReturnType.Int)
-                    throw new ScopeException($"Array size must be of {ReturnType.Int} type, but {newArray.ArraySize.ReturnType} is specified");
+                if (newArray.ArraySize.ReturnType != ReturnType.Int)
+                    throw new ScopeException(
+                        $"Array size must be of {ReturnType.Int} type, but {newArray.ArraySize.ReturnType} is specified");
             }
             var arrayInnerType = newArray.ReturnType.CastTo<ArrayReturnType>()
                 .InnerType;
@@ -239,12 +324,31 @@ namespace MathLang.Tree.Semantics
                 {
                     if (expression.ReturnType.IsCastableTo(arrayInnerType))
                         expression.CastToType = arrayInnerType;
-                    else 
-                        throw new ScopeException($"Initialization parameter must be of type {arrayInnerType}, but received {expression.ReturnType}");
+                    else
+                        throw new ScopeException(
+                            $"Initialization parameter must be of type {arrayInnerType}, but received {expression.ReturnType}");
                 }
             });
         }
-        
+
+        private static void Process(this ArrayElementReference arrayElementReference)
+        {
+            arrayElementReference.Name.Process();
+            if (arrayElementReference.Name.ReturnType is ArrayReturnType arrayReturnType)
+                arrayElementReference.ReturnType = arrayReturnType.InnerType;
+            else
+                throw new ExpressionException(
+                    $"Variable \"{arrayElementReference.Name}\" is of type {arrayElementReference.Name.ReturnType} but expected array");
+
+            arrayElementReference.ArrayIndex.Process();
+            if (arrayElementReference.ArrayIndex.GetResultReturnType() != ReturnType.Int)
+                throw new ExpressionException(
+                    $"Index of array element reference \"{arrayElementReference.Name}\" must be of type {ReturnType.Int}, but received {arrayElementReference.ArrayIndex.ReturnType}");
+            arrayElementReference.ArrayDeclaration = arrayElementReference.Scope
+                .GlobalVariableSearch(arrayElementReference.Name.GetFullPath)
+                .CastTo<ArrayDeclaration>();
+        }
+
         #endregion
 
         #region Statements
@@ -256,8 +360,29 @@ namespace MathLang.Tree.Semantics
                 case VariableAssignment variableAssignment:
                     variableAssignment.Process();
                     break;
+                case ArrayElementAssignment arrayElementAssignment:
+                    arrayElementAssignment.Process();
+                    break;
                 case Declaration declaration:
                     declaration.Process();
+                    break;
+                case FunctionCall functionCall:
+                    functionCall.Process();
+                    break;
+                case ReturnStatement returnStatement:
+                    returnStatement.Process();
+                    break;
+                case WhileStatement whileStatement:
+                    whileStatement.Process();
+                    break;
+                case IfStatement ifStatement:
+                    ifStatement.Process();
+                    break;
+                case ForStatement forStatement:
+                    forStatement.Process();
+                    break;
+                case BlockStatement blockStatement:
+                    blockStatement.Process();
                     break;
                 default:
                     throw new NotImplementedException($"Statements process: {statement.GetType()}");
@@ -286,7 +411,177 @@ namespace MathLang.Tree.Semantics
             }
         }
 
+        private static void Process(this ArrayElementAssignment arrayElementAssignment)
+        {
+            arrayElementAssignment.ArrayElementReference.Process();
+            arrayElementAssignment.AssignmentExpression.Process();
+
+            var arrItemType = arrayElementAssignment.ArrayElementReference.ReturnType
+                //.CastTo<ArrayReturnType>()
+                //.InnerType
+                ;
+
+            if (arrItemType != arrayElementAssignment.AssignmentExpression.ReturnType)
+            {
+                if (arrayElementAssignment.AssignmentExpression.ReturnType.IsCastableTo(arrItemType))
+                {
+                    arrayElementAssignment.AssignmentExpression.CastToType = arrItemType;
+                }
+
+                else
+                {
+                    throw new ExpressionException($"Cannot assign to the element of array " +
+                                                  $"{arrayElementAssignment.ArrayElementReference.Name} " +
+                                                  $"({arrayElementAssignment.ArrayElementReference.ReturnType}) " +
+                                                  $"expression of type {arrayElementAssignment.AssignmentExpression.ReturnType}");
+                }
+                
+            }
+
+            //blockStatement.Statements.ForEach(st => st.Process());
+        }
+
+        private static void Process(this ReturnStatement returnStatement)
+        {
+            returnStatement.ReturnExpression.Process();
+            var retType = returnStatement.ReturnExpression.ReturnType;
+
+            INode node = returnStatement.Parent;
+
+            while (!(node is FunctionDeclaration))
+            {
+                node = node.Parent;
+            }
+
+            var funcDecl = node as FunctionDeclaration;
+
+            if (funcDecl.ReturnType != retType)
+            {
+                if (retType.IsCastableTo(funcDecl.ReturnType))
+                {
+                    returnStatement.ReturnExpression.CastToType = funcDecl.ReturnType;
+                }
+                else
+                {
+                    throw new ExpressionException($"Return type of func {(node as FunctionDeclaration).Name} " +
+                                                  $"({(node as FunctionDeclaration).ReturnType}) does not match {retType}");
+                }
+            }
+        }
+
+        private static void Process(this WhileStatement whileStatement)
+        {
+            whileStatement.ConditionExpression.Process();
+
+            if (whileStatement.ConditionExpression.ReturnType != ReturnType.Bool)
+            {
+                throw new ExpressionException($"conditional expression in while must be of type bool, not " +
+                                              $"{whileStatement.ConditionExpression.ReturnType}");
+            }
+
+            whileStatement.BlockOrSingleStatement.Process();
+        }
+
+        private static void Process(this IfStatement ifStatement)
+        {
+            ifStatement.ConditionExpression.Process();
+            if (ifStatement.ConditionExpression.ReturnType != ReturnType.Bool)
+            {
+                throw new ExpressionException($"conditional expression in if must be of type bool, not " +
+                                              $"{ifStatement.ConditionExpression.ReturnType}");
+            }
+            ifStatement.TrueCaseBlockStatement.Process();
+
+            if (ifStatement.FasleCaseBlockStatement != null)
+            {
+                ifStatement.FasleCaseBlockStatement.Process();
+            }
+        }
+
+        private static void Process(this ForStatement forStatement)
+        {
+            forStatement.InitializationStatement.Process();
+            forStatement.ConditionExpression.Process();
+
+            if (forStatement.ConditionExpression.ReturnType != ReturnType.Bool)
+            {
+                throw new ExpressionException($"conditional expression in if must be of type bool, not " +
+                                              $"{forStatement.ConditionExpression.ReturnType}");
+            }
+
+            forStatement.IterationStatement.Process();
+
+            forStatement.BlockOrSingleStatement.Process();
+        }
+
+        private static void Process(this BlockStatement blockStatement)
+        {
+            blockStatement.Statements.ForEach(st => st.Process());
+        }
+
         #endregion
+
+        #endregion
+
+        #region After Process
+
+        public static void SetVariableIndexes(this Nodes.Program program)
+        {
+            program.ClassNodes.ForEach(classDeclaration =>
+            {
+                classDeclaration.FunctionDeclarationNodes.ForEach(functionDeclaration =>
+                {
+                    SetFunctionArgsIndexes(functionDeclaration);
+                    int varIndex = 0;
+                    SetBlockVarsIndexes(functionDeclaration.StatemenBlock, ref varIndex);
+                });
+            });
+
+            void SetFunctionArgsIndexes(FunctionDeclaration functionDeclaration)
+            {
+                int index = 0;
+                foreach (var parameter in functionDeclaration.ParameterNodes)
+                    parameter.Index = index++;
+                SetBlockVarsIndexes(functionDeclaration.StatemenBlock, ref index);
+            }
+
+            void SetBlockVarsIndexes(BlockStatement blockStatement, ref int varIndex)
+            {
+                foreach (var statement in blockStatement.Statements)
+                    switch (statement)
+                    {
+                        case Declaration declaration:
+                        {
+                            declaration.Index = varIndex++;
+                            break;
+                        }
+                        case IfStatement ifStatement:
+                        {
+                            if (ifStatement.TrueCaseBlockStatement is BlockStatement trueBlock)
+                                SetBlockVarsIndexes(trueBlock, ref varIndex);
+                            if (ifStatement.FasleCaseBlockStatement is BlockStatement falseBlock)
+                                SetBlockVarsIndexes(falseBlock, ref varIndex);
+                            break;
+                        }
+                        case WhileStatement whileStatement:
+                        {
+                            if (whileStatement.BlockOrSingleStatement is BlockStatement block)
+                                SetBlockVarsIndexes(block, ref varIndex);
+                            break;
+                        }
+                        case ForStatement forStatement:
+                        {
+                            if (forStatement.InitializationStatement is BlockStatement initializationBlock)
+                                SetBlockVarsIndexes(initializationBlock, ref varIndex);
+                            if (forStatement.IterationStatement is BlockStatement iterationBlock)
+                                SetBlockVarsIndexes(iterationBlock, ref varIndex);
+                            if (forStatement.BlockOrSingleStatement is BlockStatement statementsBlock)
+                                SetBlockVarsIndexes(statementsBlock, ref varIndex);
+                            break;
+                        }
+                    }
+            }
+        }
 
         #endregion
     }

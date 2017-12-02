@@ -19,7 +19,8 @@ namespace MathLang.Tree.Nodes.Declarations
         public override void Construct(CommonTree syntaxVariableDeclaration)
         {
             if (IsConstructed) throw new InvalidOperationException("Variable already constructed-");
-            ReturnType = TreeHelper.GetReturnType(syntaxVariableDeclaration.GetChild(0).Text);
+            var syntaxReturnType = syntaxVariableDeclaration.GetChild(0).CastTo<CommonTree>();
+            ReturnType = TreeHelper.GetReturnType(TreeHelper.GetStringTypeFromSyntaxNode(syntaxReturnType));
             Name = syntaxVariableDeclaration.GetChild(1).Text;
             //Check if we have a value assigned to the variable
             if (syntaxVariableDeclaration.ChildCount > 2)

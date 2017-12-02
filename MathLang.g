@@ -135,18 +135,23 @@ d_array_list[object type]: d_array[type] (','! d_array[type])* ;
 d[object type]: declarationbody_d[type] | longdeclarationbody_d[type] ;
 d_array[object type]: declarationbody_array_d[type] | longdeclarationbody_array_d[type];
 
-declarationbody_d[object type]: (ID -> ^(VARDECLARATION {$type} ID) );				
+declarationbody_d[object type]: (ID -> ^(VARDECLARATION ^(RETURN_TYPE {$type}) ID) );				
 declarationbody_array_d[object type]: ( ID -> ^(ARRAYDECLARATION ^(RETURN_TYPE {$type}) ID));
 
-longdeclarationbody_d[object type]: (ID ASSIGN expression  -> ^(VARDECLARATION {$type} ID expression));
+longdeclarationbody_d[object type]: (ID ASSIGN expression  -> ^(VARDECLARATION ^(RETURN_TYPE {$type}) ID expression));
 longdeclarationbody_array_d[object type]: (ID ASSIGN expression -> ^(ARRAYDECLARATION ^(RETURN_TYPE {$type}) ID expression));
 
 
-declarationbody: (type ID -> ^(VARDECLARATION type ID) )
-				| (array_type ID -> ^(ARRAYDECLARATION array_type ID))
-				;
-longdeclarationbody: ( type ID ASSIGN expression  -> ^(VARDECLARATION type ID expression))
-					| (array_type ID ASSIGN expression -> ^(ARRAYDECLARATION array_type ID expression))
+//declarationbody: (type ID -> ^(VARDECLARATION type ID) )
+//				| (array_type ID -> ^(ARRAYDECLARATION array_type) ID)
+//				;
+declarationbody: 
+					type ID -> ^(VARDECLARATION ^(RETURN_TYPE type) ID )
+			| array_type ID -> ^(ARRAYDECLARATION ^(RETURN_TYPE array_type) ID)
+		 ;
+
+longdeclarationbody: ( type ID ASSIGN expression  -> ^(VARDECLARATION ^(RETURN_TYPE type) ID expression))
+					| (array_type ID ASSIGN expression -> ^(ARRAYDECLARATION ^(RETURN_TYPE array_type) ID expression))
 					;
 
 add: mul ( (ADD | SUB)^ mul )*;
@@ -207,7 +212,6 @@ console_read_body: CONSOLE_WORD '.'! ('ReadLine' | 'Read') OPEN_BRACE CLOSE_BRAC
  * Lexer Rules
  */
 KNEW: 'new';
-CONSOLE_WORD: 'Console';
 ARRAY_DECLARATION_MARK: OPEN_SQUARE_BRACE CLOSE_SQUARE_BRACE;
 OPEN_SQUARE_BRACE:'[';
 CLOSE_SQUARE_BRACE:']';

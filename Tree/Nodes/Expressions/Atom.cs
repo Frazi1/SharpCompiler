@@ -11,7 +11,7 @@ namespace MathLang.Tree.Nodes.Expressions
         public INode Parent { get; set; }
         public Scope Scope { get; }
 
-        public ReturnType ReturnType { get; protected set; }
+        public ReturnType ReturnType { get; set; }
         public ReturnType CastToType { get; set; }
         public string Value { get; set; }
 
