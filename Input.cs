@@ -1,7 +1,7 @@
 ﻿
 static class ValeraTest
 {
-    static char Tom = 't;
+    static char Tom = 't';
     static int Cat = 8 + Tom;
 
     //static int GoodCat(int alla)

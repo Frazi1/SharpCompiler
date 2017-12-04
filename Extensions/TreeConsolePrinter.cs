@@ -255,7 +255,7 @@ namespace MathLang.Extensions
                 
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
                                   $"{exId.GetFullPath} ({exId.ReturnType}) " +
-                                  $"{(exId.Declaration == null? "": $" with {s} {exId.Declaration.Index}")}"+
+                                  $"{((exId.Declaration?.Index == null ) ? "": $" with {s} {exId.Declaration.Index}")}"+
                                   $"{(exId.CastToType == null ? "" : $" [cast to {exId.CastToType}]")}");
                 return;
             }
