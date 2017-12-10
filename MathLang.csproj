@@ -46,9 +46,6 @@
     <Compile Include="ErrorService.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Extensions\TreeConsolePrinter.cs" />
-    <Compile Include="IntepreterException.cs" />
-    <Compile Include="MathAstNode.cs" />
-    <Compile Include="MathLangIntepreter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Tree\Nodes\Declarations\Declaration.cs" />
     <Compile Include="Tree\Nodes\Expressions\ArrayElementReference.cs" />
@@ -121,7 +118,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>@(AntlrGrammarFile)</DependentUpon>
     </Compile>
-    <Compile Include="ParserBaseException.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(AntlrTokensFile)">
