@@ -322,10 +322,14 @@ namespace MathLang.Extensions
 
             if (expression is ArrayElementReference arrEl)
             {
+                string s = arrEl.Name.Declaration is FunctionDeclarationParameter ? "funcParam" : "funcIndex";
+
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
                                   $"element ({arrEl.ReturnType}) " +
                                   $"{(arrEl.CastToType == null ? "" : $" [cast to {arrEl.CastToType}]")}" +
-                                  $" of array {arrEl.Name} with index:");
+                                  $" of array {arrEl.Name} " +
+                                  $"{(arrEl.Name.Declaration.Index == null? "": $"with {s} {arrEl.Name.Declaration.Index}")}" +
+                                  $" with array index :");
 
                 PrintExpression($"{ind}{(isFinal ? indent : indentBar)}", arrEl.ArrayIndex, true);
             }
