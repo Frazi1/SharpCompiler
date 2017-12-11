@@ -36,8 +36,9 @@ namespace MathLang.Extensions
                 string nextInd = (i + 1 == printableClassNodes.Count) ?
                     indent : indentBar;
 
+                var staticModifier = printableClassNodes[i].IsStatic ? "static" : "";
                 Console.WriteLine($"{indent}" +
-                                  $"{ind}class {printableClassNodes[i].Name}");
+                                  $"{ind}{staticModifier} class {printableClassNodes[i].Name}");
 
                 for (int k = 0; k < printableClassNodes[i].VarDeclarationNodes.Count; k++)
                 {

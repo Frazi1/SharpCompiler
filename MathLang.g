@@ -46,6 +46,7 @@ tokens {
   FOR_ITERATION;
   ARRAY_SIZE;
   EXTENDED_ID;
+  MODIFIERS_NODE;
 }
 
 
@@ -77,7 +78,7 @@ public execute:
 	class_list EOF!  -> ^(PROGRAM class_list) 
 ;
 
-class_declaration: MODIFIER? CLASS_WORD ID class_block -> ^(CLASS_WORD ID class_block) ;
+class_declaration: MODIFIER? CLASS_WORD ID class_block -> ^(CLASS_WORD ID ^(MODIFIERS_NODE MODIFIER?) class_block) ;
 
 class_block: '{'! static_func_or_var_declaration* '}'! -> ^(CLASSBLOCK static_func_or_var_declaration * );
 

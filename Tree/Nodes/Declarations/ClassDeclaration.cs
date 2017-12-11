@@ -28,7 +28,13 @@ namespace MathLang.Tree.Nodes.Declarations
         public void Construct(CommonTree syntaxClass)
         {
             Name = syntaxClass.Children[0].Text;
-            var classblock = syntaxClass.GetChild(1).CastTo<CommonTree>();
+            var syntaxModifier = syntaxClass.GetChild(1).CastTo<CommonTree>();
+            if (syntaxModifier.ChildCount > 0)
+            {
+                if (syntaxModifier.Children.Contains(child => child.Type == MathLangParser.MODIFIER))
+                    IsStatic = true;
+            }
+            var classblock = syntaxClass.GetChild(2).CastTo<CommonTree>();
             if(classblock.ChildCount == 0) return;
             classblock.Children
                 .Cast<CommonTree>()
