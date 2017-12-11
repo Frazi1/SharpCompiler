@@ -43,9 +43,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AstNodePrinter.cs" />
+    <Compile Include="CodeGeneration\Jasmin\JasminTokens.cs" />
+    <Compile Include="CodeGeneration\Jasmin\ReferenceConstants.cs" />
+    <Compile Include="CodeGeneration\Jasmin\JasminCodeGenerator.cs" />
     <Compile Include="ErrorService.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Extensions\TreeConsolePrinter.cs" />
+    <Compile Include="Helpers\FilePrinter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Tree\Nodes\Declarations\Declaration.cs" />
     <Compile Include="Tree\Nodes\Expressions\ArrayElementReference.cs" />

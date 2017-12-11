@@ -3,6 +3,7 @@ using System.Globalization;
 
 using Antlr.Runtime;
 using Antlr.Runtime.Tree;
+using MathLang.CodeGeneration.Jasmin;
 using MathLang.Extensions;
 using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Semantics;
@@ -42,6 +43,10 @@ namespace MathLang
 
                 TreeConsolePrinter tp = new TreeConsolePrinter();
                 tp.Print(astProgram);   
+                
+                JasminCodeGenerator generator = new JasminCodeGenerator();
+                generator.GenerateCode(astProgram);
+                Helpers.FilePrinter.WriteTextToFile(generator.CodeListing, "output.j");
             }
             catch (Exception e)
             {
