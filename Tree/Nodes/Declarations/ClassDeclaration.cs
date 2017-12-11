@@ -16,6 +16,7 @@ namespace MathLang.Tree.Nodes.Declarations
         public List<Declaration> VarDeclarationNodes { get; } = new List<Declaration>();
         public List<FunctionDeclaration> FunctionDeclarationNodes { get; } = new List<FunctionDeclaration>();
         public bool IsPrintable { get; }
+        public bool IsStatic { get; set; }
         
         public ClassDeclaration(INode parent, Scope parentScope, bool isPrintable = true)
         {

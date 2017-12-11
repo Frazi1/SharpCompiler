@@ -20,13 +20,23 @@ namespace MathLang.Tree.Semantics
 
         public static void PreProcess(this Nodes.Program program)
         {
+            
             var scope = program.Scope;
+            FunctionDeclaration mainFunction = null;
             program.ClassNodes.ForEach(classDeclaration =>
             {
                 classDeclaration.CheckName(scope);
                 scope.AddClass(classDeclaration);
                 classDeclaration.PreProcess();
+                
+                FunctionDeclaration func = classDeclaration.Scope.LocalFunctionSearch("Main");
+                if(func != null && mainFunction != null)
+                    throw new ScopeException("Only 1 Main function can be present");
+                mainFunction = func ?? mainFunction;
             });
+            if(mainFunction == null)
+                throw new ScopeException("Program must contain a Main function which is an entry point");
+            
         }
 
         private static void PreProcess(this ClassDeclaration classDeclaration)
