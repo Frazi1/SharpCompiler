@@ -36,5 +36,10 @@ namespace MathLang.Extensions
         {
             return item.AsList(otherItems).Cast<TResult>().ToList();
         }
+
+        public static bool Contains<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate)
+        {
+            return enumerable.FirstOrDefault(predicate) != null;
+        }
     }
 }
