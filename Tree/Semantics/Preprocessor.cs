@@ -16,6 +16,9 @@ namespace MathLang.Tree.Semantics
 {
     public static class Preprocessor
     {
+        private const string MainClassName = "Main";
+        private const string MainFuncName = "Main";
+        
         #region PreProcss
 
         public static void PreProcess(this Nodes.Program program)
@@ -29,20 +32,26 @@ namespace MathLang.Tree.Semantics
                 scope.AddClass(classDeclaration);
                 classDeclaration.PreProcess();
                 
-                FunctionDeclaration func = classDeclaration.Scope.LocalFunctionSearch("Main");
-                if(func != null && mainFunction != null)
-                    throw new ScopeException("Only 1 Main function can be present");
-                mainFunction = func ?? mainFunction;
+                //FunctionDeclaration func = classDeclaration.Scope.LocalFunctionSearch(MainClassName);
+                //if(func != null && classDeclaration.IsStatic)
+                //    throw new ScopeException("Main function must be declared inside of a non static class");
+                //if(func != null && mainFunction != null)
+                //    throw new ScopeException("Only 1 Main function can be present");
+                //mainFunction = func ?? mainFunction;
             });
-            if(mainFunction == null)
-                throw new ScopeException("Program must contain a Main function which is an entry point");
+            //if(mainFunction == null)
+            //    throw new ScopeException("Program must contain a Main function which is an entry point");
             
         }
 
         private static void PreProcess(this ClassDeclaration classDeclaration)
         {
             var scope = classDeclaration.Scope;
-
+            if (classDeclaration.Name != MainClassName)
+            {
+                if(!classDeclaration.IsStatic)
+                    throw new ScopeException($"Only static classes are supported at the moment ({classDeclaration.Name})");
+            }
             classDeclaration.FunctionDeclarationNodes
                 .ForEach(functionDeclaration =>
                 {
@@ -69,6 +78,16 @@ namespace MathLang.Tree.Semantics
                 });
         }
 
+        private static void CheckMainClass(this Nodes.Program program)
+        {
+            var mainClass = program.Scope.LocalClassSearch(MainClassName);
+            if(mainClass == null)
+                throw new ScopeException("Program must contain a non-static class\"Main\"");
+            var mainFunc = mainClass.Scope.LocalFunctionSearch(MainFuncName);
+            if(mainFunc == null)
+                throw new ScopeException("Program must contain a \"Main\" function inside of Main class");
+        }
+        
         #endregion
 
         #region Process
