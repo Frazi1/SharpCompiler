@@ -9,10 +9,6 @@ class Main
 
 static class ValeraTest
 {
-    static void Main()
-    {
-        
-    }
     static char Tom = 't';
     static int Cat = 8 + Tom;
 

@@ -4,7 +4,7 @@
     {
         public static void Run(Nodes.Program program)
         {
-            AddLibraryClasses(program);
+            //AddLibraryClasses(program);
             program.PreProcess();
             program.Process();
             program.SetVariableIndexes();

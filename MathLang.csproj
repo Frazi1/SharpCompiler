@@ -43,8 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AstNodePrinter.cs" />
-    <Compile Include="CodeGeneration\Jasmin\JasminTokens.cs" />
-    <Compile Include="CodeGeneration\Jasmin\ReferenceConstants.cs" />
     <Compile Include="CodeGeneration\Jasmin\JasminCodeGenerator.cs" />
     <Compile Include="ErrorService.cs" />
     <Compile Include="Extensions\Extensions.cs" />
@@ -129,6 +127,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>@(AntlrGrammarFile)</DependentUpon>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="JasminSharp\JasminSharp.csproj">
+      <Project>{bebd05a2-6382-41a3-8108-b11960ed60b0}</Project>
+      <Name>JasminSharp</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <JavaHome>C:\Program_Files\Java\jdk7</JavaHome>

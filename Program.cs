@@ -1,8 +1,9 @@
 using System;
 using System.Globalization;
-
+using System.Runtime.CompilerServices;
 using Antlr.Runtime;
 using Antlr.Runtime.Tree;
+using JasminSharp.Helpers;
 using MathLang.CodeGeneration.Jasmin;
 using MathLang.Extensions;
 using MathLang.Tree.Nodes.Enums;
@@ -42,11 +43,14 @@ namespace MathLang
                 SemanticsRunner.Run(astProgram);
 
                 TreeConsolePrinter tp = new TreeConsolePrinter();
-                tp.Print(astProgram);   
-                
+                tp.Print(astProgram);
+
+
+
                 JasminCodeGenerator generator = new JasminCodeGenerator();
                 generator.GenerateCode(astProgram);
                 Helpers.FilePrinter.WriteTextToFile(generator.CodeListing, "output.j");
+                Console.WriteLine(generator.CodeListing);
             }
             catch (Exception e)
             {
