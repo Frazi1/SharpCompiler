@@ -52,6 +52,8 @@
     <Compile Include="Modules\IJasminModule.cs" />
     <Compile Include="Constanst\JasminReferenceConstants.cs" />
     <Compile Include="Constanst\JasminDirectivesConstants.cs" />
+    <Compile Include="Modules\JasminFunctionModule.cs" />
+    <Compile Include="Modules\JasminFunctionParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

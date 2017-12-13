@@ -23,10 +23,12 @@ namespace MathLang.CodeGeneration.Jasmin
 
         private void GenerateClassCode(ClassDeclaration classDeclaration)
         {
-            JasminClassModule jasminClass = new JasminClassModule(classDeclaration.Name);
+            JasminClassModule jasminClass = new JasminClassModule(classDeclaration.Name)
+                .WithModifiers(JasminModifier.Public);
             if(classDeclaration.IsStatic)
-                jasminClass.AddModifiers(JasminModifier.Final);
-            jasminClass.AddModifiers(JasminModifier.Public);
+                jasminClass.WithModifiers(JasminModifier.Final);
+           
+            classDeclaration.FunctionDeclarationNodes.ForEach(function => jasminClass.WithFunction(BuildJasminFunction(function)));
             jasminClass.GenerateListing().ForEach(PushLine);
             //PushLine($"{Class} {Public} "
             //         + $"{(classDeclaration.IsStatic ? Final + " " : string.Empty)}"
@@ -36,12 +38,13 @@ namespace MathLang.CodeGeneration.Jasmin
             
         }
 
-        //private void GenerateFunctionCode(FunctionDeclaration functionDeclaration)
-        //{
-        //    PushLine($"{Method} {Static} {functionDeclaration.Name}(");
-        //    //GenerateStatementBlockCode(functionDeclaration.StatemenBlock);
-        //    PushLine($"{EndMethod}");
-        //}
+        public JasminFunctionModule BuildJasminFunction(FunctionDeclaration function)
+        {
+            JasminFunctionModule jasminFunction = new JasminFunctionModule(function.Name)
+                .WithModifiers(JasminModifier.Public, JasminModifier.Static);
+
+            return jasminFunction;
+        }
 
         private void GenerateStatementBlockCode(BlockStatement functionDeclarationStatemenBlock)
         {
