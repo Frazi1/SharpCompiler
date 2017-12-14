@@ -11,7 +11,6 @@ namespace MathLang.CodeGeneration.JasminJava
         private readonly List<JasminFunctionParameter> _functionParameters = new List<JasminFunctionParameter>();
         private readonly List<JasminModifier> _modifiers = new List<JasminModifier>();
         private readonly List<IJasminInstruction> _instructions = new List<IJasminInstruction>();
-
         
         public string Name { get; private set; }
         public string ReturnType { get; private set; }
