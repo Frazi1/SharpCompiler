@@ -10,7 +10,7 @@ namespace MathLang.CodeGeneration.JasminJava
         private readonly List<string> _codeListing = new List<string>();
         private readonly List<JasminFunctionParameter> _functionParameters = new List<JasminFunctionParameter>();
         private readonly List<JasminModifier> _modifiers = new List<JasminModifier>();
-
+        private readonly List<IJasminInstruction> _instructions = new List<IJasminInstruction>();
         public string Name { get; set; }
 
         
@@ -46,6 +46,7 @@ namespace MathLang.CodeGeneration.JasminJava
         {
             string functionDeclaration = $" {JasminDirective.Method.GetTextValue()} {ModifiersListing} {FunctionSignature} ";
             _codeListing.Add(functionDeclaration);
+            
             _codeListing.Add(JasminDirective.EndMethod.GetTextValue());
             return _codeListing;
         }
