@@ -41,5 +41,10 @@ namespace MathLang.Extensions
         {
             return enumerable.FirstOrDefault(predicate) != null;
         }
+
+        public static string ToCamelCase(this string str)
+        {
+            return str[0].ToString().ToLower() +  (str.Length > 1 ? str.Substring(1) : string.Empty);
+        }
     }
 }

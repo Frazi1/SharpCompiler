@@ -10,13 +10,16 @@ namespace MathLang.CodeGeneration.JasminJava
         private readonly List<string> _codeListing = new List<string>();
         private readonly List<JasminFunctionParameter> _functionParameters = new List<JasminFunctionParameter>();
         private readonly List<JasminModifier> _modifiers = new List<JasminModifier>();
-
-        public string Name { get; set; }
+        private readonly List<IJasminInstruction> _instructions = new List<IJasminInstruction>();
 
         
-        public JasminFunctionModule(string name)
+        public string Name { get; private set; }
+        public string ReturnType { get; private set; }
+        
+        public JasminFunctionModule WithName(string name)
         {
             Name = name;
+            return this;
         }
 
         public JasminFunctionModule WithParameter(JasminFunctionParameter jasminFunctionParameter)
@@ -25,10 +28,11 @@ namespace MathLang.CodeGeneration.JasminJava
             return this;
         }
 
-        //public JasminFunctionModule WithParameter(JasminType jasminType, string name)
-        //{
-        //    return WithParameter(new JasminFunctionParameter(jasminType, name));
-        //}
+        public JasminFunctionModule WithReturnType(string returnType)
+        {
+            ReturnType = returnType;
+            return this;
+        }
 
         public JasminFunctionModule WithModifiers(params JasminModifier[] modifiers)
         {
@@ -46,6 +50,7 @@ namespace MathLang.CodeGeneration.JasminJava
         {
             string functionDeclaration = $" {JasminDirective.Method.GetTextValue()} {ModifiersListing} {FunctionSignature} ";
             _codeListing.Add(functionDeclaration);
+            
             _codeListing.Add(JasminDirective.EndMethod.GetTextValue());
             return _codeListing;
         }
@@ -61,7 +66,7 @@ namespace MathLang.CodeGeneration.JasminJava
                 {
                     functionParameter.GenerateListing().ForEach(s => parameters += s);
                 });
-                return $"{Name}({parameters})V";
+                return $"{Name}({parameters}){ReturnType}";
             }
         }
     }

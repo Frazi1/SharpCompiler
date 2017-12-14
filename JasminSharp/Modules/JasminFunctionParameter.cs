@@ -21,7 +21,7 @@ namespace MathLang.CodeGeneration.JasminJava
         }
        
 
-        public JasminFunctionParameter WithJasminType(string jasminType)
+        public JasminFunctionParameter WithType(string jasminType)
         {
             JasminType = jasminType;
             return this;
