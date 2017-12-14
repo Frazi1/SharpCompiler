@@ -41,17 +41,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constanst\JasminDirective.cs" />
     <Compile Include="Constanst\JasminModifier.cs" />
-    <Compile Include="Constanst\JasminModifiersConstants.cs" />
-    <Compile Include="Constanst\JasminType.cs" />
+    <Compile Include="Constanst\JasminReferenceConstants.cs" />
     <Compile Include="Helpers\Extensions.cs" />
+    <Compile Include="Helpers\Mapper\IMapper.cs" />
+    <Compile Include="Helpers\Mapper\IMapperConfiguration.cs" />
+    <Compile Include="Helpers\Mapper\SimpleMapperConfiguration.cs" />
+    <Compile Include="Helpers\Mapper\SimpleMapper.cs" />
     <Compile Include="Helpers\TextValue.cs" />
+    <Compile Include="Jasmin.cs" />
     <Compile Include="JasminException.cs" />
     <Compile Include="Modules\JasminClassModule.cs" />
     <Compile Include="Modules\IJasminModule.cs" />
-    <Compile Include="Constanst\JasminReferenceConstants.cs" />
-    <Compile Include="Constanst\JasminDirectivesConstants.cs" />
+    <Compile Include="Constanst\JasminDirectives.cs" />
     <Compile Include="Modules\JasminFunctionModule.cs" />
     <Compile Include="Modules\JasminFunctionParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

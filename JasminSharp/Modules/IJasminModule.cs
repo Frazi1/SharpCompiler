@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MathLang.CodeGeneration.Jasmin
+namespace MathLang.CodeGeneration.JasminJava
 {
     public interface IJasminModule
     {

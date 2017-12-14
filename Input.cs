@@ -25,7 +25,7 @@ static class ValeraTest
     //}
 
     ////array check
-    static void Method(int[] funArr)
+    static void Method(int funArr, char test2)
     {
         int[] arr = new int[4];
         arr[(6 - 5)] = Cat;
@@ -35,13 +35,13 @@ static class ValeraTest
         //arr['8'] = Cat;
     }
 
-    static int Leaf(int p)
+    static int Leaf(int[] p)
     {
         ////call not existing func
         //lalala(p);
 
         //leaf returns void
-        int test = Leaf(p + 4);
+        int test = Leaf(new int[3]);
         //char =  Console.ReadChar();
 
         ////call func with wrong arguments

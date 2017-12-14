@@ -3,7 +3,7 @@ using System.Linq;
 using JasminSharp;
 using JasminSharp.Helpers;
 
-namespace MathLang.CodeGeneration.Jasmin
+namespace MathLang.CodeGeneration.JasminJava
 {
     public class JasminFunctionModule : IJasminModule
     {
@@ -25,10 +25,10 @@ namespace MathLang.CodeGeneration.Jasmin
             return this;
         }
 
-        public JasminFunctionModule WithParameter(JasminType jasminType, string name)
-        {
-            return WithParameter(new JasminFunctionParameter(jasminType, name));
-        }
+        //public JasminFunctionModule WithParameter(JasminType jasminType, string name)
+        //{
+        //    return WithParameter(new JasminFunctionParameter(jasminType, name));
+        //}
 
         public JasminFunctionModule WithModifiers(params JasminModifier[] modifiers)
         {
@@ -52,6 +52,17 @@ namespace MathLang.CodeGeneration.Jasmin
 
         private string ModifiersListing => string.Join(" ", _modifiers.Select(modifier => modifier.GetTextValue()));
 
-        private string FunctionSignature => $"{Name}()";
+        private string FunctionSignature
+        {
+            get
+            {
+                string parameters = "";
+                _functionParameters.ForEach(functionParameter =>
+                {
+                    functionParameter.GenerateListing().ForEach(s => parameters += s);
+                });
+                return $"{Name}({parameters})V";
+            }
+        }
     }
 }

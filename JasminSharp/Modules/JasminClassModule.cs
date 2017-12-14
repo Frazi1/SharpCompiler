@@ -4,7 +4,7 @@ using System.Linq;
 using JasminSharp;
 using JasminSharp.Helpers;
 
-namespace MathLang.CodeGeneration.Jasmin
+namespace MathLang.CodeGeneration.JasminJava
 {
     public sealed class JasminClassModule : IJasminModule
     {
@@ -13,9 +13,9 @@ namespace MathLang.CodeGeneration.Jasmin
         private readonly List<JasminFunctionModule> _functions = new List<JasminFunctionModule>();
         
         public string Name { get; private set; }
-        public JasminType InheritsFrom { get; private set; }
+        public string InheritsFrom { get; private set; }
 
-        public JasminClassModule(string name, JasminType inheritsFrom = JasminType.Object)
+        public JasminClassModule(string name, string inheritsFrom = JasminReferenceConstants.JavaObject)
         {
             Name = name;
             InheritsFrom = inheritsFrom;
@@ -34,7 +34,7 @@ namespace MathLang.CodeGeneration.Jasmin
             return this;
         }
 
-        public JasminClassModule WithInheritanceFrom(JasminType jasminType)
+        public JasminClassModule WithInheritanceFrom(string jasminType)
         {
             InheritsFrom = jasminType;
             return this;
@@ -53,7 +53,7 @@ namespace MathLang.CodeGeneration.Jasmin
             string classSignature = $"{JasminDirective.Class.GetTextValue()} {GetModifiersString()} {Name}";
             _codeListing.Add(classSignature);
 
-            string inheritanceDeclaration = $"{JasminDirective.Super.GetTextValue()} {InheritsFrom.GetTextValue()}";
+            string inheritanceDeclaration = $"{JasminDirective.Super.GetTextValue()} {InheritsFrom}";
             _codeListing.Add(inheritanceDeclaration);
 
             _functions.ForEach(function =>

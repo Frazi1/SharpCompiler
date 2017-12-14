@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using Antlr.Runtime;
 using Antlr.Runtime.Tree;
 using JasminSharp.Helpers;
-using MathLang.CodeGeneration.Jasmin;
+using MathLang.CodeGeneration.JasminJava;
 using MathLang.Extensions;
 using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Semantics;
