@@ -20,7 +20,7 @@ namespace InstuctionsCodeGenerator
             List<string> result = new List<string>();
             foreach (string varCommand in list)
             {
-                result.AddRange(GenerateVarCommandClass(varCommand));
+                result.AddRange(GenerateVarCommandClassV2(varCommand));
             }
             File.WriteAllLines("varCommands.txt", result);
         }
@@ -30,6 +30,14 @@ namespace InstuctionsCodeGenerator
             var splitted = varCommand.Split(' ');
             string name = splitted[0];
             return GeneratePublicInstructionClass(name);
+
+        }
+
+        private static IEnumerable<string> GenerateVarCommandClassV2(string varCommand)
+        {
+            var splitted = varCommand.Split(' ');
+            string name = splitted[0];
+            return GeneratePublicIndexedInstructionClass(name);
 
         }
 
@@ -44,6 +52,26 @@ namespace InstuctionsCodeGenerator
             result.Add("{");
             result.Add("VarIndex = varIndex;");
             result.Add("}");
+            result.Add("}");
+            return result;
+        }
+        private static IEnumerable<string> GeneratePublicIndexedInstructionClass(string name)
+        {
+            string stringClass = name + "Instruction";
+            List<string> result = new List<string>();
+            result.Add($"public sealed class {stringClass} : IndexedInstruction");
+            result.Add("{");
+            result.Add($"public {stringClass} WithName(string name)");
+            result.Add("{");
+            result.Add($"Name = name;");
+            result.Add("return this;");
+            result.Add("}");
+            result.Add($"public {stringClass} WithIndex(int index)");
+            result.Add("{");
+            result.Add("VarIndex = index;");
+            result.Add("return this;");
+            result.Add("}");
+
             result.Add("}");
             return result;
         }

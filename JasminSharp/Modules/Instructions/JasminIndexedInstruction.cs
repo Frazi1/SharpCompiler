@@ -1,122 +1,166 @@
 ﻿using MathLang.CodeGeneration.JasminJava;
 
-public sealed class retInstruction : IJasminInstruction
+public sealed class retInstruction : IndexedInstruction
 {
-    public string Name { get; } = "ret";
-    public int VarIndex { get; }
-
-    public retInstruction(int varIndex)
+    public retInstruction WithName(string name)
     {
-        VarIndex = varIndex;
+        Name = name;
+        return this;
+    }
+
+    public retInstruction WithIndex(int index)
+    {
+        VarIndex = index;
+        return this;
     }
 }
 
-public sealed class aloadInstruction : IJasminInstruction
+public sealed class aloadInstruction : IndexedInstruction
 {
-    public string Name { get; } = "aload";
-    public int VarIndex { get; }
-
-    public aloadInstruction(int varIndex)
+    public aloadInstruction WithName(string name)
     {
-        VarIndex = varIndex;
+        Name = name;
+        return this;
+    }
+
+    public aloadInstruction WithIndex(int index)
+    {
+        VarIndex = index;
+        return this;
     }
 }
 
-public sealed class astoreInstruction : IJasminInstruction
+public sealed class astoreInstruction : IndexedInstruction
 {
-    public string Name { get; } = "astore";
-    public int VarIndex { get; }
-
-    public astoreInstruction(int varIndex)
+    public astoreInstruction WithName(string name)
     {
-        VarIndex = varIndex;
+        Name = name;
+        return this;
+    }
+
+    public astoreInstruction WithIndex(int index)
+    {
+        VarIndex = index;
+        return this;
     }
 }
 
-public sealed class dloadInstruction : IJasminInstruction
+public sealed class dloadInstruction : IndexedInstruction
 {
-    public string Name { get; } = "dload";
-    public int VarIndex { get; }
-
-    public dloadInstruction(int varIndex)
+    public dloadInstruction WithName(string name)
     {
-        VarIndex = varIndex;
+        Name = name;
+        return this;
+    }
+
+    public dloadInstruction WithIndex(int index)
+    {
+        VarIndex = index;
+        return this;
     }
 }
 
-public sealed class dstoreInstruction : IJasminInstruction
+public sealed class dstoreInstruction : IndexedInstruction
 {
-    public string Name { get; } = "dstore";
-    public int VarIndex { get; }
-
-    public dstoreInstruction(int varIndex)
+    public dstoreInstruction WithName(string name)
     {
-        VarIndex = varIndex;
+        Name = name;
+        return this;
+    }
+
+    public dstoreInstruction WithIndex(int index)
+    {
+        VarIndex = index;
+        return this;
     }
 }
 
-public sealed class floadInstruction : IJasminInstruction
+public sealed class floadInstruction : IndexedInstruction
 {
-    public string Name { get; } = "fload";
-    public int VarIndex { get; }
-
-    public floadInstruction(int varIndex)
+    public floadInstruction WithName(string name)
     {
-        VarIndex = varIndex;
+        Name = name;
+        return this;
+    }
+
+    public floadInstruction WithIndex(int index)
+    {
+        VarIndex = index;
+        return this;
     }
 }
 
-public sealed class fstoreInstruction : IJasminInstruction
+public sealed class fstoreInstruction : IndexedInstruction
 {
-    public string Name { get; } = "fstore";
-    public int VarIndex { get; }
-
-    public fstoreInstruction(int varIndex)
+    public fstoreInstruction WithName(string name)
     {
-        VarIndex = varIndex;
+        Name = name;
+        return this;
+    }
+
+    public fstoreInstruction WithIndex(int index)
+    {
+        VarIndex = index;
+        return this;
     }
 }
 
-public sealed class iloadInstruction : IJasminInstruction
+public sealed class iloadInstruction : IndexedInstruction
 {
-    public string Name { get; } = "iload";
-    public int VarIndex { get; }
-
-    public iloadInstruction(int varIndex)
+    public iloadInstruction WithName(string name)
     {
-        VarIndex = varIndex;
+        Name = name;
+        return this;
+    }
+
+    public iloadInstruction WithIndex(int index)
+    {
+        VarIndex = index;
+        return this;
     }
 }
 
-public sealed class istoreInstruction : IJasminInstruction
+public sealed class istoreInstruction : IndexedInstruction
 {
-    public string Name { get; } = "istore";
-    public int VarIndex { get; }
-
-    public istoreInstruction(int varIndex)
+    public istoreInstruction WithName(string name)
     {
-        VarIndex = varIndex;
+        Name = name;
+        return this;
+    }
+
+    public istoreInstruction WithIndex(int index)
+    {
+        VarIndex = index;
+        return this;
     }
 }
 
-public sealed class lloadInstruction : IJasminInstruction
+public sealed class lloadInstruction : IndexedInstruction
 {
-    public string Name { get; } = "lload";
-    public int VarIndex { get; }
-
-    public lloadInstruction(int varIndex)
+    public lloadInstruction WithName(string name)
     {
-        VarIndex = varIndex;
+        Name = name;
+        return this;
+    }
+
+    public lloadInstruction WithIndex(int index)
+    {
+        VarIndex = index;
+        return this;
     }
 }
 
-public sealed class lstoreInstruction : IJasminInstruction
+public sealed class lstoreInstruction : IndexedInstruction
 {
-    public string Name { get; } = "lstore";
-    public int VarIndex { get; }
-
-    public lstoreInstruction(int varIndex)
+    public lstoreInstruction WithName(string name)
     {
-        VarIndex = varIndex;
+        Name = name;
+        return this;
+    }
+
+    public lstoreInstruction WithIndex(int index)
+    {
+        VarIndex = index;
+        return this;
     }
 }

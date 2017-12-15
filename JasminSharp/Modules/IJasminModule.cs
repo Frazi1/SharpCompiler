@@ -2,9 +2,7 @@
 
 namespace MathLang.CodeGeneration.JasminJava
 {
-    public interface IJasminModule
+    public interface IJasminModule : IModule
     {
-        string Name { get; }
-        IEnumerable<string> GenerateListing();
     }
 }

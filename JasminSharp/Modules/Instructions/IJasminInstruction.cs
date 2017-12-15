@@ -1,7 +1,6 @@
 ﻿namespace MathLang.CodeGeneration.JasminJava
 {
-    public interface IJasminInstruction
+    public interface IJasminInstruction : IInstruction
     {
-        string Name { get; }
     }
 }

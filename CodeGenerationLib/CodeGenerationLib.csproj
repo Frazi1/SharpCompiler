@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{BEBD05A2-6382-41A3-8108-B11960ED60B0}</ProjectGuid>
+    <ProjectGuid>{732A2647-F33E-41AA-A76A-A07C05B98E12}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>JasminSharp</RootNamespace>
-    <AssemblyName>JasminSharp</AssemblyName>
+    <RootNamespace>CodeGenerationLib</RootNamespace>
+    <AssemblyName>CodeGenerationLib</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -41,30 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constanst\JasminModifier.cs" />
-    <Compile Include="Constanst\JasminReferenceConstants.cs" />
-    <Compile Include="Helpers\Extensions.cs" />
-    <Compile Include="Helpers\Mapper\IMapper.cs" />
-    <Compile Include="Helpers\Mapper\IMapperConfiguration.cs" />
-    <Compile Include="Helpers\Mapper\SimpleMapperConfiguration.cs" />
-    <Compile Include="Helpers\Mapper\SimpleMapper.cs" />
-    <Compile Include="Helpers\TextValue.cs" />
-    <Compile Include="Jasmin.cs" />
-    <Compile Include="JasminException.cs" />
-    <Compile Include="Modules\Instructions\IJasminInstruction.cs" />
-    <Compile Include="Modules\Instructions\JasminIndexedInstruction.cs" />
-    <Compile Include="Modules\JasminClassModule.cs" />
-    <Compile Include="Modules\IJasminModule.cs" />
-    <Compile Include="Constanst\JasminDirectives.cs" />
-    <Compile Include="Modules\JasminFunctionModule.cs" />
-    <Compile Include="Modules\JasminFunctionParameter.cs" />
+    <Compile Include="Instructions\IIndexedInstruction.cs" />
+    <Compile Include="Instructions\IInstruction.cs" />
+    <Compile Include="Instructions\IndexedInstruction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CodeGenerationLib\CodeGenerationLib.csproj">
-      <Project>{732a2647-f33e-41aa-a76a-a07c05b98e12}</Project>
-      <Name>CodeGenerationLib</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
