@@ -7,7 +7,6 @@ namespace MathLang.CodeGeneration.JasminJava
         public string Name { get; protected set; }
         public int VarIndex { get; protected set; }
 
-
         public IEnumerable<string> GenerateListing()
         {
             var listing = new List<string> {$"{Name} {VarIndex}"};

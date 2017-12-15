@@ -11,10 +11,11 @@ namespace InstuctionsCodeGenerator
     {
         static void Main(string[] args)
         {
-            First();
+            IndexedInstructions();
+            BranchInstructions();
         }
 
-        static void First()
+        static void IndexedInstructions()
         {
             var list = File.ReadAllLines(@"..\..\VariablesCommands.txt");
             List<string> result = new List<string>();
@@ -23,6 +24,16 @@ namespace InstuctionsCodeGenerator
                 result.AddRange(GenerateVarCommandClassV2(varCommand));
             }
             File.WriteAllLines("varCommands.txt", result);
+        }
+        static void BranchInstructions()
+        {
+            var list = File.ReadAllLines(@"..\..\branchCommands.txt");
+            List<string> result = new List<string>();
+            foreach (string branchCommand in list)
+            {
+                result.AddRange(GenerateBranchInstructionClass(branchCommand.Split(' ')[0]));
+            }
+            File.WriteAllLines("branchCommands.txt", result);
         }
 
         private static IEnumerable<string> GenerateVarCommandClass(string varCommand)
@@ -69,6 +80,27 @@ namespace InstuctionsCodeGenerator
             result.Add($"public {stringClass} WithIndex(int index)");
             result.Add("{");
             result.Add("VarIndex = index;");
+            result.Add("return this;");
+            result.Add("}");
+
+            result.Add("}");
+            return result;
+        }
+
+        private static IEnumerable<string> GenerateBranchInstructionClass(string name)
+        {
+            string stringClass = name + "Instruction";
+            List<string> result = new List<string>();
+            result.Add($"public sealed class {stringClass} : LabelInstruction");
+            result.Add("{");
+            result.Add($"public {stringClass} WithName(string name)");
+            result.Add("{");
+            result.Add($"Name = name;");
+            result.Add("return this;");
+            result.Add("}");
+            result.Add($"public {stringClass} WithLabel(string label)");
+            result.Add("{");
+            result.Add("Argument = label;");
             result.Add("return this;");
             result.Add("}");
 
