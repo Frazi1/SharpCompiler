@@ -13,7 +13,20 @@ namespace InstuctionsCodeGenerator
         {
             IndexedInstructions();
             BranchInstructions();
+            NoArgInstructions();
         }
+
+        private static void NoArgInstructions()
+        {
+            var list = File.ReadAllText(@"..\..\NoArgCommands.txt").Split(' ');
+            List<string> result = new List<string>();
+            foreach (string noArgCommand in list)
+            {
+                result.AddRange(GenerateNoArgInstructionClass(noArgCommand));
+            }
+            File.WriteAllLines("NoArgCommands.txt", result);
+        }
+
 
         static void IndexedInstructions()
         {
@@ -93,10 +106,9 @@ namespace InstuctionsCodeGenerator
             List<string> result = new List<string>();
             result.Add($"public sealed class {stringClass} : LabelInstruction");
             result.Add("{");
-            result.Add($"public {stringClass} WithName(string name)");
+            result.Add($"public {stringClass}()");
             result.Add("{");
-            result.Add($"Name = name;");
-            result.Add("return this;");
+            result.Add($"Name = \"{name}\";");
             result.Add("}");
             result.Add($"public {stringClass} WithLabel(string label)");
             result.Add("{");
@@ -106,6 +118,20 @@ namespace InstuctionsCodeGenerator
 
             result.Add("}");
             return result;
+        }
+
+        private static IEnumerable<string> GenerateNoArgInstructionClass(string name)
+        {
+            string stringClass = name + "Instruction";
+            List<string> result = new List<string>();
+            result.Add($"public sealed class {stringClass} : NoArgumentInstruction");
+            result.Add("{");
+            result.Add($"public {stringClass}()");
+            result.Add("{");
+            result.Add($"Name = \"{name}\";");
+            result.Add("}");
+            result.Add("}");
+            return result; 
         }
     }
 }

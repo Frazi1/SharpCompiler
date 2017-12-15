@@ -55,6 +55,7 @@
     <Compile Include="Modules\Instructions\JasminIndexedInstruction.cs" />
     <Compile Include="Modules\Instructions\JasminIntArgumentInstruction.cs" />
     <Compile Include="Modules\Instructions\JasminLabelInstruction.cs" />
+    <Compile Include="Modules\Instructions\JasminNoArgumentInstruction.cs" />
     <Compile Include="Modules\Instructions\JasminTwoIntArgumentInstruction.cs" />
     <Compile Include="Modules\JasminClassModule.cs" />
     <Compile Include="Modules\IJasminModule.cs" />

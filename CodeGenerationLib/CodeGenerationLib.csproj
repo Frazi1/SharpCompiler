@@ -48,6 +48,7 @@
     <Compile Include="Instructions\IndexedInstruction.cs" />
     <Compile Include="Instructions\IntArgumentInstruction.cs" />
     <Compile Include="Instructions\LabelInstruction.cs" />
+    <Compile Include="Instructions\NoArgumentInstruction.cs" />
     <Compile Include="Instructions\TwoIntArgumentInstruction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
