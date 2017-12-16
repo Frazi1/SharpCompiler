@@ -1,2 +1,3 @@
 @echo off
-javac java_code.java > java_build_log.txt 2>&1
+javac JavaTestBuild.java > java_build_log.txt 2>&1
+javap -v *.class

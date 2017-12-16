@@ -5,13 +5,19 @@ class Main
     {
         
     }
+
+    static void TestMethod()
+    {
+        int a = 10;
+    }
 }
 
-static class ValeraTest
-{
-    static char Tom = 't';
-    static int Cat = 8 + Tom;
+//static class ValeraTest
+//{
+    //static char Tom = 't';
+    //static int Cat = 8 + Tom;
 
+    
     //static int GoodCat(int alla)
     //{
     //    alla = Tom;
@@ -25,29 +31,29 @@ static class ValeraTest
     //}
 
     ////array check
-    static void Method(int funArr, char test2)
-    {
-        int[] arr = new int[4];
-        arr[(6 - 5)] = Cat;
-        arr[Cat] = 'r';
+    //static void Method(int funArr, char test2)
+    //{
+    //    int[] arr = new int[4];
+    //    arr[(6 - 5)] = Cat;
+    //    arr[Cat] = 'r';
 
-        //char, not int
-        //arr['8'] = Cat;
-    }
+    //    //char, not int
+    //    //arr['8'] = Cat;
+    //}
 
-    static int Leaf(int[] p)
-    {
-        ////call not existing func
-        //lalala(p);
+    //static int Leaf(int[] p)
+    //{
+    //    ////call not existing func
+    //    //lalala(p);
 
-        //leaf returns void
-        int test = Leaf(new int[3]);
-        //char =  Console.ReadChar();
+    //    //leaf returns void
+    //    int test = Leaf(new int[3]);
+    //    //char =  Console.ReadChar();
 
-        ////call func with wrong arguments
-        //Leaf('u');
-        return 1;
-    }
+    //    ////call func with wrong arguments
+    //    //Leaf('u');
+    //    return 1;
+    //}
 
     //static int ReadTest( int kkk, char ppp)
     //{
@@ -58,4 +64,4 @@ static class ValeraTest
         
     //    return Console.ReadChar();
     //}
-}
+//}

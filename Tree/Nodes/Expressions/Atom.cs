@@ -13,7 +13,7 @@ namespace MathLang.Tree.Nodes.Expressions
 
         public ReturnType ReturnType { get; set; }
         public ReturnType CastToType { get; set; }
-        public string Value { get; set; }
+        public virtual string Value { get; set; }
 
         protected Atom(INode parent, Scope parentScope)
         {

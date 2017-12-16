@@ -10,7 +10,8 @@ namespace MathLang.Tree.Nodes.Declarations
     public class VariableDeclaration : Declaration
     {
         //This may be useful for semantics
-
+        public bool IsStatic => Index == null;
+        
         public VariableDeclaration(INode parent, Scope parentScope)
             : base(parent, parentScope)
         {

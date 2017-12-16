@@ -2,10 +2,9 @@
 {
     public class bipushInstruction : IntArgumentInstruction
     {
-        public bipushInstruction WithName(string name)
+        public bipushInstruction()
         {
-            Name = name;
-            return this;
+            Name = "bipush";
         }
 
         public bipushInstruction WithArgument(int argument)
@@ -17,12 +16,10 @@
 
     public class sipushInstruction : IntArgumentInstruction
     {
-        public sipushInstruction WithName(string name)
+        public sipushInstruction()
         {
-            Name = name;
-            return this;
+            Name = "sipush";
         }
-
         public sipushInstruction WithArgument(int argument)
         {
             IntArgument = argument;

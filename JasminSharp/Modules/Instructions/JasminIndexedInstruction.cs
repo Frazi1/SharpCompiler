@@ -2,162 +2,130 @@
 
 public sealed class retInstruction : IndexedInstruction
 {
-    public retInstruction WithName(string name)
+    public retInstruction()
     {
-        Name = name;
-        return this;
+        Name = "ret";
     }
-
     public retInstruction WithIndex(int index)
     {
         VarIndex = index;
         return this;
     }
 }
-
 public sealed class aloadInstruction : IndexedInstruction
 {
-    public aloadInstruction WithName(string name)
+    public aloadInstruction()
     {
-        Name = name;
-        return this;
+        Name = "aload";
     }
-
     public aloadInstruction WithIndex(int index)
     {
         VarIndex = index;
         return this;
     }
 }
-
 public sealed class astoreInstruction : IndexedInstruction
 {
-    public astoreInstruction WithName(string name)
+    public astoreInstruction()
     {
-        Name = name;
-        return this;
+        Name = "astore";
     }
-
     public astoreInstruction WithIndex(int index)
     {
         VarIndex = index;
         return this;
     }
 }
-
 public sealed class dloadInstruction : IndexedInstruction
 {
-    public dloadInstruction WithName(string name)
+    public dloadInstruction()
     {
-        Name = name;
-        return this;
+        Name = "dload";
     }
-
     public dloadInstruction WithIndex(int index)
     {
         VarIndex = index;
         return this;
     }
 }
-
 public sealed class dstoreInstruction : IndexedInstruction
 {
-    public dstoreInstruction WithName(string name)
+    public dstoreInstruction()
     {
-        Name = name;
-        return this;
+        Name = "dstore";
     }
-
     public dstoreInstruction WithIndex(int index)
     {
         VarIndex = index;
         return this;
     }
 }
-
 public sealed class floadInstruction : IndexedInstruction
 {
-    public floadInstruction WithName(string name)
+    public floadInstruction()
     {
-        Name = name;
-        return this;
+        Name = "fload";
     }
-
     public floadInstruction WithIndex(int index)
     {
         VarIndex = index;
         return this;
     }
 }
-
 public sealed class fstoreInstruction : IndexedInstruction
 {
-    public fstoreInstruction WithName(string name)
+    public fstoreInstruction()
     {
-        Name = name;
-        return this;
+        Name = "fstore";
     }
-
     public fstoreInstruction WithIndex(int index)
     {
         VarIndex = index;
         return this;
     }
 }
-
 public sealed class iloadInstruction : IndexedInstruction
 {
-    public iloadInstruction WithName(string name)
+    public iloadInstruction()
     {
-        Name = name;
-        return this;
+        Name = "iload";
     }
-
     public iloadInstruction WithIndex(int index)
     {
         VarIndex = index;
         return this;
     }
 }
-
 public sealed class istoreInstruction : IndexedInstruction
 {
-    public istoreInstruction WithName(string name)
+    public istoreInstruction()
     {
-        Name = name;
-        return this;
+        Name = "istore";
     }
-
     public istoreInstruction WithIndex(int index)
     {
         VarIndex = index;
         return this;
     }
 }
-
 public sealed class lloadInstruction : IndexedInstruction
 {
-    public lloadInstruction WithName(string name)
+    public lloadInstruction()
     {
-        Name = name;
-        return this;
+        Name = "lload";
     }
-
     public lloadInstruction WithIndex(int index)
     {
         VarIndex = index;
         return this;
     }
 }
-
 public sealed class lstoreInstruction : IndexedInstruction
 {
-    public lstoreInstruction WithName(string name)
+    public lstoreInstruction()
     {
-        Name = name;
-        return this;
+        Name = "lstore";
     }
-
     public lstoreInstruction WithIndex(int index)
     {
         VarIndex = index;

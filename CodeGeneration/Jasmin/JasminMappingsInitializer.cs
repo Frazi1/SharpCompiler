@@ -8,12 +8,24 @@ namespace MathLang.CodeGeneration.JasminJava
     {
         public static void Initilalize()
         {
-            IMapper mapper = Jasmin.Mapper;
-            mapper.CreateMap(ReturnType.Int, JasminReferenceConstants.JavaInteger);
-            mapper.CreateMap(ReturnType.ArrayOf(ReturnType.Int),  $"{JasminReferenceConstants.ArrayMark}{mapper.Map<IntReturnType,string>()}");
-            mapper.CreateMap(ReturnType.Void, JasminReferenceConstants.JavaVoid);
-            mapper.CreateMap(ReturnType.Bool, JasminReferenceConstants.JavaBoolean);
-            mapper.CreateMap(ReturnType.Char, JasminReferenceConstants.JavaChar);
+            InitTypeMappings();
+            InitInstructionsMapping();
+        }
+
+        private static void InitInstructionsMapping()
+        {
+            IMapper m = Jasmin.InstructionMapper;
+        }
+
+        private static void InitTypeMappings()
+        {
+            IMapper typeMapper = Jasmin.TypeMapper;
+            typeMapper.CreateMap(ReturnType.Int, JasminReferenceConstants.JavaInteger);
+            typeMapper.CreateMap(ReturnType.ArrayOf(ReturnType.Int),
+                $"{JasminReferenceConstants.ArrayMark}{typeMapper.Map<IntReturnType, string>()}");
+            typeMapper.CreateMap(ReturnType.Void, JasminReferenceConstants.JavaVoid);
+            typeMapper.CreateMap(ReturnType.Bool, JasminReferenceConstants.JavaBoolean);
+            typeMapper.CreateMap(ReturnType.Char, JasminReferenceConstants.JavaChar);
         }
     }
 }

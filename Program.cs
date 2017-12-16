@@ -51,12 +51,24 @@ namespace MathLang
                 generator.GenerateCode(astProgram);
                 Helpers.FilePrinter.WriteTextToFile(generator.CodeListing, "output.j");
                 Console.WriteLine(generator.CodeListing);
+                RunJasminBuildScript();
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error: {0}", e.Message);
             }
             Console.ReadLine();
+        }
+
+        private static void RunJasminBuildScript()
+        {
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+            startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            startInfo.FileName = "jasmin_build.bat";
+            //startInfo.Arguments = "/C copy /b Image1.jpg + Archive.rar Image2.jpg";
+            process.StartInfo = startInfo;
+            process.Start();
         }
     }
 }

@@ -9,8 +9,9 @@ namespace MathLang.CodeGeneration.JasminJava
         public const string JavaVoid = "V";
         public const string JavaBoolean = "java/lang/Boolean";
         public const string JavaChar = "java/lang/Character";
-        
+
         public const char ArrayMark = '[';
 
+        public static string IntegerValueOf(string parameterType) => $"{JavaInteger}/valueOf(I){parameterType}";
     }
 }

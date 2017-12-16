@@ -1,8 +1,10 @@
 .class public Main
 .super java/lang/Object
- .method public static Main()V
+ .method public static main()V
 .end method
- .method public static Method(Ljava/lang/Integer;Ljava/lang/Character;)V
-.end method
- .method public static Leaf([Ljava/lang/Integer;)java/lang/Integer
+ .method public static myMethod()V
+    bipush 98
+    invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
+    astore 0
+    return
 .end method

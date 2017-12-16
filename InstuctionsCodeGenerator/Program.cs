@@ -85,10 +85,9 @@ namespace InstuctionsCodeGenerator
             List<string> result = new List<string>();
             result.Add($"public sealed class {stringClass} : IndexedInstruction");
             result.Add("{");
-            result.Add($"public {stringClass} WithName(string name)");
+            result.Add($"public {stringClass}()");
             result.Add("{");
-            result.Add($"Name = name;");
-            result.Add("return this;");
+            result.Add($"Name = \"{name}\";");
             result.Add("}");
             result.Add($"public {stringClass} WithIndex(int index)");
             result.Add("{");

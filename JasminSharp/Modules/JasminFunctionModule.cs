@@ -10,11 +10,11 @@ namespace MathLang.CodeGeneration.JasminJava
         private readonly List<string> _codeListing = new List<string>();
         private readonly List<JasminFunctionParameter> _functionParameters = new List<JasminFunctionParameter>();
         private readonly List<JasminModifier> _modifiers = new List<JasminModifier>();
-        private readonly List<IJasminInstruction> _instructions = new List<IJasminInstruction>();
-        
+        private readonly List<IInstruction> _instructions = new List<IInstruction>();
+
         public string Name { get; private set; }
         public string ReturnType { get; private set; }
-        
+
         public JasminFunctionModule WithName(string name)
         {
             Name = name;
@@ -41,15 +41,28 @@ namespace MathLang.CodeGeneration.JasminJava
                     throw new JasminException($"Modifier {modifier} already assigned to module {ToString()} ");
                 _modifiers.Add(modifier);
             });
-
             return this;
         }
 
+        public JasminFunctionModule WithInstructions(params IInstruction[] instructions)
+        {
+            _instructions.AddRange(instructions);
+            return this;
+        }
+
+        public JasminFunctionModule WithInstructions(IEnumerable<IInstruction> instructions)
+        {
+            _instructions.AddRange(instructions);
+            return this;
+        }
+
+
         public IEnumerable<string> GenerateListing()
         {
-            string functionDeclaration = $" {JasminDirective.Method.GetTextValue()} {ModifiersListing} {FunctionSignature} ";
+            string functionDeclaration =
+                $" {JasminDirective.Method.GetTextValue()} {ModifiersListing} {FunctionSignature} ";
             _codeListing.Add(functionDeclaration);
-            
+            _instructions.ForEach(instruction => _codeListing.AddRange(instruction.GenerateListing()));
             _codeListing.Add(JasminDirective.EndMethod.GetTextValue());
             return _codeListing;
         }
