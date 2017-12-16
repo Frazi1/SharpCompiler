@@ -25,8 +25,8 @@ namespace MathLang.CodeGeneration.JasminJava
                 //    break;
                 //case Atom atom:
                 //    break;
-                //case Expression expression:
-                //    break;
+                case Expression expression:
+                    return GetExpressionInstructions(expression);
                 //case ExtendedId extendedId:
                 //    break;
                 //case FunctionCall functionCall:
@@ -44,6 +44,56 @@ namespace MathLang.CodeGeneration.JasminJava
             List<IInstruction> instructions = new List<IInstruction>();
             instructions.Add(BipushInstruction.WithArgument(intExpression.Value));
             instructions.AddRange(JasminLibraryFunctionsHelper.GetIntegerValueOf(JasminReferenceConstants.JavaInteger));
+            return instructions;
+        }
+
+        private static IEnumerable<IInstruction> GetExpressionInstructions(Expression expression)
+        {
+            List<IInstruction> instructions = new List<IInstruction>();
+            instructions.AddRange(expression.Left.GetInstructions());
+            if(expression.Right!=null) 
+                instructions.AddRange(expression.Right.GetInstructions());
+            switch (expression.ExpressionType)
+            {
+                case Tree.Nodes.Enums.ExpressionType.Add:
+                    instructions.Add(IaddInstruction);
+                    break;
+                case Tree.Nodes.Enums.ExpressionType.Sub:
+                    instructions.Add(IsubInstruction);
+                    break;
+                case Tree.Nodes.Enums.ExpressionType.Mul:
+                    instructions.Add(ImulInstruction);
+                    break;
+                case Tree.Nodes.Enums.ExpressionType.Div:
+                    instructions.Add(IdivInstruction);
+                    break;
+                case Tree.Nodes.Enums.ExpressionType.Equal:
+                    break;
+                case Tree.Nodes.Enums.ExpressionType.Greater:
+                    break;
+                case Tree.Nodes.Enums.ExpressionType.EqualOrGreater:
+                    break;
+                case Tree.Nodes.Enums.ExpressionType.Less:
+                    break;
+                case Tree.Nodes.Enums.ExpressionType.EqualOrLess:
+                    break;
+                case Tree.Nodes.Enums.ExpressionType.NotEqual:
+                    break;
+                case Tree.Nodes.Enums.ExpressionType.Not:
+                    break;
+                case Tree.Nodes.Enums.ExpressionType.Or:
+                    break;
+                case Tree.Nodes.Enums.ExpressionType.And:
+                    break;
+                case Tree.Nodes.Enums.ExpressionType.FunctionCall:
+                    break;
+                case Tree.Nodes.Enums.ExpressionType.VariableDeclaration:
+                    break;
+                case Tree.Nodes.Enums.ExpressionType.VariableReference:
+                    break;
+                case Tree.Nodes.Enums.ExpressionType.ArrayElementReference:
+                    break;
+            }
             return instructions;
         }
     }

@@ -9,11 +9,22 @@ namespace InstuctionsCodeGenerator
 {
     class Program
     {
+        private static readonly List<string> InstuctionsList = new List<string>();
         static void Main(string[] args)
         {
             IndexedInstructions();
             BranchInstructions();
             NoArgInstructions();
+            GenerateInstructionsGetters();
+        }
+
+        private static void GenerateInstructionsGetters()
+        {
+            File.WriteAllLines("Getters.txt", InstuctionsList.Select(className =>
+            {
+                string upperClassName = className[0].ToString().ToUpper() + className.Substring(1);
+                return $"public static {className} {upperClassName}=> new {className}();";
+            }));
         }
 
         private static void NoArgInstructions()
@@ -82,6 +93,7 @@ namespace InstuctionsCodeGenerator
         private static IEnumerable<string> GeneratePublicIndexedInstructionClass(string name)
         {
             string stringClass = name + "Instruction";
+            InstuctionsList.Add(stringClass);
             List<string> result = new List<string>();
             result.Add($"public sealed class {stringClass} : IndexedInstruction");
             result.Add("{");
@@ -102,6 +114,7 @@ namespace InstuctionsCodeGenerator
         private static IEnumerable<string> GenerateBranchInstructionClass(string name)
         {
             string stringClass = name + "Instruction";
+            InstuctionsList.Add(stringClass);
             List<string> result = new List<string>();
             result.Add($"public sealed class {stringClass} : LabelInstruction");
             result.Add("{");
@@ -122,6 +135,7 @@ namespace InstuctionsCodeGenerator
         private static IEnumerable<string> GenerateNoArgInstructionClass(string name)
         {
             string stringClass = name + "Instruction";
+            InstuctionsList.Add(stringClass);
             List<string> result = new List<string>();
             result.Add($"public sealed class {stringClass} : NoArgumentInstruction");
             result.Add("{");

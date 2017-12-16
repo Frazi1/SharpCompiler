@@ -8,7 +8,7 @@ class Main
 
     static void TestMethod()
     {
-        int a = 10;
+        int a = 10 / 23;
     }
 }
 

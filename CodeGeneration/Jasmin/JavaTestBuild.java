@@ -3,6 +3,6 @@ class JavaTestBuild {
         
     }
     public static void test(Integer input){
-        Integer a;
+        Integer a = 13 + input;
     }
 }
