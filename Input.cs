@@ -10,6 +10,8 @@ class Main
     {
         int a = 10 / 23;
     }
+
+    public static extern int TestExtern(int a, int[] c);
 }
 
 //static class ValeraTest

@@ -20,7 +20,7 @@ namespace MathLang.CodeGeneration.JasminJava
         private static void InitTypeMappings()
         {
             IMapper typeMapper = Jasmin.TypeMapper;
-            typeMapper.CreateMap(ReturnType.Int, JasminReferenceConstants.JavaIntegerClass);
+            typeMapper.CreateMap(ReturnType.Int, JasminReferenceConstants.JavaInteger);
             typeMapper.CreateMap(ReturnType.ArrayOf(ReturnType.Int),
                 $"{JasminReferenceConstants.ArrayMark}{typeMapper.Map<IntReturnType, string>()}");
             typeMapper.CreateMap(ReturnType.Void, JasminReferenceConstants.JavaVoid);

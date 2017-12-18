@@ -46,7 +46,8 @@ tokens {
   FOR_ITERATION;
   ARRAY_SIZE;
   EXTENDED_ID;
-  MODIFIERS_NODE;
+  FUNCTION_MODIFIERS;
+  FUNCTION_BODY;
 }
 
 
@@ -183,9 +184,10 @@ returnstatement: RETURN^ expression? ';'! ;
 dowhilestatement: DO^ (block | statement) WHILE! OPEN_BRACE! boolexpression CLOSE_BRACE! ';'! ;
 emptystatement: ';'! ;
 
-funcdeclaration: MODIFIER any_type ID^ ( OPEN_BRACE! paramsdeclaration CLOSE_BRACE! ) block 
-		-> ^(FUNCDECLARATION ID ^(RETURN_TYPE any_type) OPEN_BRACE! paramsdeclaration CLOSE_BRACE! block);
+funcdeclaration: function_modifiers any_type ID^ ( OPEN_BRACE! paramsdeclaration CLOSE_BRACE! ) (block | ';') 
+		-> ^(FUNCDECLARATION ID function_modifiers ^(RETURN_TYPE any_type) paramsdeclaration ^(FUNCTION_BODY block?));
 paramsdeclaration: ( declarationbody ( ','! declarationbody)* )?  -> ^(PARAMETERS ( declarationbody)* );
+function_modifiers: MODIFIER* -> ^(FUNCTION_MODIFIERS MODIFIER*);
 
 funccallbody: extended_id^ OPEN_BRACE expressioncommalist? CLOSE_BRACE -> ^(FUNC_CALL extended_id ^(PARAMETERS expressioncommalist)?);
 funccall: funccallbody ';'!;
@@ -244,7 +246,7 @@ WS:
   }
 ;
 DOT: '.';
-MODIFIER: 'static';
+MODIFIER: 'static' | 'public' | 'extern';
 //CHAR:  '\''('a'..'z')'\'' ;
 CHAR:  '\'' . '\'' ;
 ID:		( 'a'..'z' | 'A'..'Z' | '_' )

@@ -30,7 +30,7 @@ namespace MathLang
                 MathLangParser parser = new MathLangParser(tokens);
                 ITree program = (ITree)parser.execute().Tree;
 
-                //AstNodePrinter.Print(program);
+                AstNodePrinter.Print(program);
 
                 if (ErrorService.Instance.HasErrors)
                 {
@@ -38,20 +38,20 @@ namespace MathLang
                     return;
                 }
                 //AST
-                Tree.Nodes.Program astProgram = new Tree.Nodes.Program();
-                astProgram.Construct(program.CastTo<CommonTree>());
-                SemanticsRunner.Run(astProgram);
+                //Tree.Nodes.Program astProgram = new Tree.Nodes.Program();
+                //astProgram.Construct(program.CastTo<CommonTree>());
+                //SemanticsRunner.Run(astProgram);
 
-                TreeConsolePrinter tp = new TreeConsolePrinter();
-                tp.Print(astProgram);
+                //TreeConsolePrinter tp = new TreeConsolePrinter();
+                //tp.Print(astProgram);
 
 
 
-                JasminCodeGenerator generator = new JasminCodeGenerator();
-                generator.GenerateCode(astProgram);
-                Helpers.FilePrinter.WriteTextToFile(generator.CodeListing, "output.j");
-                Console.WriteLine(generator.CodeListing);
-                RunJasminBuildScript();
+                //JasminCodeGenerator generator = new JasminCodeGenerator();
+                //generator.GenerateCode(astProgram);
+                //Helpers.FilePrinter.WriteTextToFile(generator.CodeListing, "output.j");
+                //Console.WriteLine(generator.CodeListing);
+                //RunJasminBuildScript();
             }
             catch (Exception e)
             {
