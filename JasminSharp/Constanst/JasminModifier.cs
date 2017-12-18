@@ -18,6 +18,5 @@ namespace MathLang.CodeGeneration.JasminJava
         internal const string Final = "final";
         internal const string Abstarct = "public";
         internal const string Static = "static";
-
     }
 }

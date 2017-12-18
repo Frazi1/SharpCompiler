@@ -50,10 +50,10 @@ namespace MathLang.CodeGeneration.JasminJava
 
         public IEnumerable<string> GenerateListing()
         {
-            string classSignature = $"{JasminDirective.Class.GetTextValue()} {ModifiersString} {Name}";
+            string classSignature = $"{JasminDirectives.Class} {ModifiersString} {Name}";
             _codeListing.Add(classSignature);
 
-            string inheritanceDeclaration = $"{JasminDirective.Super.GetTextValue()} {InheritsFrom}";
+            string inheritanceDeclaration = $"{JasminDirectives.Super} {InheritsFrom}";
             _codeListing.Add(inheritanceDeclaration);
 
             _functions.ForEach(function =>

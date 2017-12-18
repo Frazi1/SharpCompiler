@@ -60,10 +60,12 @@ namespace MathLang.CodeGeneration.JasminJava
         public IEnumerable<string> GenerateListing()
         {
             string functionDeclaration =
-                $" {JasminDirective.Method.GetTextValue()} {ModifiersListing} {FunctionSignature} ";
+                $" {JasminDirectives.Method} {ModifiersListing} {FunctionSignature} ";
             _codeListing.Add(functionDeclaration);
+            _codeListing.Add(JasminDirectives.LimitLocalsTo(128));
+            _codeListing.Add(JasminDirectives.LimitStackTo(128));
             _instructions.ForEach(instruction => _codeListing.AddRange(instruction.GenerateListing()));
-            _codeListing.Add(JasminDirective.EndMethod.GetTextValue());
+            _codeListing.Add(JasminDirectives.EndMethod);
             return _codeListing;
         }
 
@@ -81,5 +83,6 @@ namespace MathLang.CodeGeneration.JasminJava
                 return $"{Name}({parameters}){ReturnType}";
             }
         }
+        
     }
 }
