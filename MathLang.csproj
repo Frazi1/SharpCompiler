@@ -53,11 +53,15 @@
     <Compile Include="Extensions\TreeConsolePrinter.cs" />
     <Compile Include="Helpers\FilePrinter.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Tree\Nodes\AttributeUsage.cs" />
+    <Compile Include="Tree\Nodes\Declarations\Attribute.cs" />
     <Compile Include="Tree\Nodes\Declarations\Declaration.cs" />
     <Compile Include="Tree\Nodes\Expressions\ArrayElementReference.cs" />
     <Compile Include="Tree\Nodes\Expressions\BoolExpression.cs" />
     <Compile Include="Tree\Nodes\Expressions\CastExpression\CastExpression.cs" />
+    <Compile Include="Tree\Nodes\Expressions\StringExpression.cs" />
     <Compile Include="Tree\Nodes\Expressions\VoidExpression.cs" />
+    <Compile Include="Tree\Nodes\Modifiers.cs" />
     <Compile Include="Tree\Semantics\Library\Builder.cs" />
     <Compile Include="Tree\Semantics\Library\ConsoleBuilder.cs" />
     <Compile Include="Tree\Semantics\Tables\CastsTable.cs" />

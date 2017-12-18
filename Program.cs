@@ -19,8 +19,8 @@ namespace MathLang
         
         public static void Main(string[] args)
         {
-            try
-            {
+            //try
+            //{
                 // � ����������� �� ������� ���������� ��������� ������ ���������
                 // ���� ���� � ������, ���������� ������ ����������, ���� ����������� ����
                 ICharStream input = args.Length == 1 ? (ICharStream)new ANTLRFileStream(args[0])
@@ -38,12 +38,12 @@ namespace MathLang
                     return;
                 }
                 //AST
-                //Tree.Nodes.Program astProgram = new Tree.Nodes.Program();
-                //astProgram.Construct(program.CastTo<CommonTree>());
-                //SemanticsRunner.Run(astProgram);
+                Tree.Nodes.Program astProgram = new Tree.Nodes.Program();
+                astProgram.Construct(program.CastTo<CommonTree>());
+                SemanticsRunner.Run(astProgram);
 
-                //TreeConsolePrinter tp = new TreeConsolePrinter();
-                //tp.Print(astProgram);
+                TreeConsolePrinter tp = new TreeConsolePrinter();
+                tp.Print(astProgram);
 
 
 
@@ -52,11 +52,11 @@ namespace MathLang
                 //Helpers.FilePrinter.WriteTextToFile(generator.CodeListing, "output.j");
                 //Console.WriteLine(generator.CodeListing);
                 //RunJasminBuildScript();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error: {0}", e.Message);
-            }
+            //}
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine("Error: {0}", e);
+            //}
             Console.ReadLine();
         }
 

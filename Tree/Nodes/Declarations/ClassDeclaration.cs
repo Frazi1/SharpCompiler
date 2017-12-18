@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Antlr.Runtime.Tree;
 using MathLang.Extensions;
@@ -15,8 +16,10 @@ namespace MathLang.Tree.Nodes.Declarations
         public string Name { get; set; }
         public List<Declaration> VarDeclarationNodes { get; } = new List<Declaration>();
         public List<FunctionDeclaration> FunctionDeclarationNodes { get; } = new List<FunctionDeclaration>();
+        public List<Modifier> ModifiersList { get; } = new List<Modifier>();
         public bool IsPrintable { get; }
-        public bool IsStatic { get; set; }
+        public bool IsStatic { get; internal set; }
+        public bool IsExtern { get; internal set; }
         
         public ClassDeclaration(INode parent, Scope parentScope, bool isPrintable = true)
         {
@@ -28,11 +31,15 @@ namespace MathLang.Tree.Nodes.Declarations
         public void Construct(CommonTree syntaxClass)
         {
             Name = syntaxClass.Children[0].Text;
-            var syntaxModifier = syntaxClass.GetChild(1).CastTo<CommonTree>();
-            if (syntaxModifier.ChildCount > 0)
+            var syntaxModifiers = syntaxClass.GetChild(1).CastTo<CommonTree>();
+            if (syntaxModifiers.ChildCount > 0)
             {
-                if (syntaxModifier.Children.Contains(child => child.Type == MathLangParser.MODIFIER))
-                    IsStatic = true;
+                syntaxModifiers.Children.ForEach(mod =>
+                {
+                    if(mod.Text == Modifiers.Extern) ModifiersList.Add(Modifier.Extern);
+                    else if(mod.Text == Modifiers.Static) ModifiersList.Add(Modifier.Static);
+                    throw new Exception($"Modifier {mod.Text} is not defined");
+                });
             }
             var classblock = syntaxClass.GetChild(2).CastTo<CommonTree>();
             if(classblock.ChildCount == 0) return;

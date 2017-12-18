@@ -56,7 +56,7 @@ namespace MathLang.CodeGeneration.JasminJava
             function.ParameterNodes.ForEach(functionParameter => 
                 jasminFunction.WithParameter(BuildJasminFunctionParameter(functionParameter)));
             
-            function.StatemenBlock.Statements.ForEach(statement =>
+            function.StatementBlock.Statements.ForEach(statement =>
             {
                 jasminFunction.WithInstructions(statement.GetInstructions());
             });

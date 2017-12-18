@@ -25,6 +25,7 @@ namespace MathLang.Tree
                 case "bool": return ReturnType.Bool;
                 case "char": return ReturnType.Char;
                 case "void": return ReturnType.Void;
+                case "string": return ReturnType.String;
                 default: throw new ArgumentException(nameof(type));
             }
         }
@@ -79,6 +80,7 @@ namespace MathLang.Tree
                 case EXTENDED_ID: return new ExtendedId(parent, parentScope);
                 case CHAR: return new CharExpression(parent, parentScope);
                 case NUMBER: return new IntExpression(parent, parentScope);
+                case STRING: return new StringExpression(parent, parentScope);
             }
             return new Expression(parent, parentScope);
         }

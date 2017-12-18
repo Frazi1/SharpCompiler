@@ -46,9 +46,10 @@ tokens {
   FOR_ITERATION;
   ARRAY_SIZE;
   EXTENDED_ID;
-  FUNCTION_MODIFIERS;
+  MODIFIERS;
   FUNCTION_BODY;
   ATTRIBUTES;
+  ATTRIBUTE_USAGE;
 }
 
 
@@ -79,8 +80,9 @@ tokens {
 public execute:
 	class_list EOF!  -> ^(PROGRAM class_list) 
 ;
+modifiers: MODIFIER* -> ^(MODIFIERS MODIFIER*);
 
-class_declaration: MODIFIER? CLASS_WORD ID class_block -> ^(CLASS_WORD ID ^(MODIFIERS_NODE MODIFIER?) class_block) ;
+class_declaration: modifiers CLASS_WORD ID class_block -> ^(CLASS_WORD ID modifiers class_block) ;
 
 class_block: '{'! static_func_or_var_declaration* '}'! -> ^(CLASSBLOCK static_func_or_var_declaration * );
 
@@ -183,10 +185,9 @@ returnstatement: RETURN^ expression? ';'! ;
 dowhilestatement: DO^ (block | statement) WHILE! OPEN_BRACE! boolexpression CLOSE_BRACE! ';'! ;
 emptystatement: ';'! ;
 
-funcdeclaration: attribute_usage* function_modifiers any_type ID^ ( OPEN_BRACE! paramsdeclaration CLOSE_BRACE! ) (block | ';') 
-		-> ^(FUNCDECLARATION ID function_modifiers ^(ATTRIBUTES attribute_usage*) ^(RETURN_TYPE any_type) paramsdeclaration ^(FUNCTION_BODY block?));
+funcdeclaration: attribute_usage* modifiers any_type ID^ ( OPEN_BRACE! paramsdeclaration CLOSE_BRACE! ) (block | ';') 
+		-> ^(FUNCDECLARATION ID modifiers ^(ATTRIBUTES attribute_usage*) ^(RETURN_TYPE any_type) paramsdeclaration ^(FUNCTION_BODY block?));
 paramsdeclaration: ( declarationbody ( ','! declarationbody)* )?  -> ^(PARAMETERS ( declarationbody)* );
-function_modifiers: MODIFIER* -> ^(FUNCTION_MODIFIERS MODIFIER*);
 
 funccallbody: extended_id^ OPEN_BRACE expressioncommalist? CLOSE_BRACE -> ^(FUNC_CALL extended_id ^(PARAMETERS expressioncommalist)?);
 funccall: funccallbody ';'!;
@@ -204,8 +205,8 @@ block: '{'! statementlist '}'!;
 
 statementlist: statement* -> ^(BLOCK statement*) ;
 
-attribute_usage: OPEN_SQUARE_BRACE ID OPEN_BRACE expressioncommalist? CLOSE_BRACE CLOSE_SQUARE_BRACE 
-	-> ^(ATTRIBUTE_USAGE ID ^(PARAMETERS expressioncommalist)?) ;
+attribute_usage: OPEN_SQUARE_BRACE extended_id OPEN_BRACE expressioncommalist? CLOSE_BRACE CLOSE_SQUARE_BRACE 
+	-> ^(ATTRIBUTE_USAGE extended_id ^(PARAMETERS expressioncommalist)?) ;
 
 
 /*

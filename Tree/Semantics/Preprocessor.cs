@@ -10,6 +10,7 @@ using MathLang.Tree.Nodes.Statements;
 using MathLang.Tree.Scopes.Exceptions;
 using Microsoft.Win32.SafeHandles;
 using MathLang.Extensions;
+using MathLang.Tree.Nodes;
 using MathLang.Tree.Scopes;
 
 namespace MathLang.Tree.Semantics
@@ -47,6 +48,18 @@ namespace MathLang.Tree.Semantics
         private static void PreProcess(this ClassDeclaration classDeclaration)
         {
             var scope = classDeclaration.Scope;
+
+            var duplicatedModifiers = classDeclaration.ModifiersList
+                .GetDuplicatedItems().ToList();
+            if (duplicatedModifiers.Any())
+                throw new ScopeException($"Modifier {duplicatedModifiers.First()} was specified more than once");
+
+            classDeclaration.ModifiersList.ForEach(modifier =>
+            {
+                if (modifier == Modifier.Extern) classDeclaration.IsStatic = true;
+                if (modifier == Modifier.Extern) classDeclaration.IsExtern = true;
+            });
+
             if (classDeclaration.Name != MainClassName)
             {
                 if(!classDeclaration.IsStatic)
@@ -151,13 +164,13 @@ namespace MathLang.Tree.Semantics
         private static void Process(this FunctionDeclaration functionDeclaration)
         {
             var scope = functionDeclaration.Scope;
-            functionDeclaration.StatemenBlock.Statements
+            functionDeclaration.StatementBlock.Statements
                 .ForEach(statement => statement.Process());
 
             if (functionDeclaration.ReturnType != ReturnType.Void)
             {
                 var returnStatements =
-                    functionDeclaration.StatemenBlock.Statements
+                    functionDeclaration.StatementBlock.Statements
                         .FindAll(statement => statement is ReturnStatement)
                         .Cast<ReturnStatement>()
                         .ToList();
@@ -562,7 +575,7 @@ namespace MathLang.Tree.Semantics
                 {
                     SetFunctionArgsIndexes(functionDeclaration);
                     int varIndex = 0;
-                    SetBlockVarsIndexes(functionDeclaration.StatemenBlock, ref varIndex);
+                    SetBlockVarsIndexes(functionDeclaration.StatementBlock, ref varIndex);
                 });
             });
 
@@ -571,7 +584,7 @@ namespace MathLang.Tree.Semantics
                 int index = 0;
                 foreach (var parameter in functionDeclaration.ParameterNodes)
                     parameter.Index = index++;
-                SetBlockVarsIndexes(functionDeclaration.StatemenBlock, ref index);
+                SetBlockVarsIndexes(functionDeclaration.StatementBlock, ref index);
             }
 
             void SetBlockVarsIndexes(BlockStatement blockStatement, ref int varIndex)

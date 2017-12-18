@@ -1,19 +1,20 @@
 ﻿
 class Main
 {
+    [JavaRef("log")]
+    static extern int TestExtern(int a, int[] c);
     static void Main()
     {
         
     }
 
-    static void TestMethod()
-    {
-        int a = 10 / 23;
-        string b = "123";
-    }
+    //static void TestMethod()
+    //{
+    //    int a = 10 / 23;
+    //    //string b = "123";
+    //}
 
-   [JavaRef("log")]  
-   public static extern int TestExtern(int a, int[] c);
+    
 }
 
 //static class ValeraTest
