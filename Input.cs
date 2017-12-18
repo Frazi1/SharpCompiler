@@ -11,8 +11,7 @@ class Main
         int a = 10 / 23;
     }
 
-   [JavaRef()]
-   
+   [JavaRef("log")]  
    public static extern int TestExtern(int a, int[] c);
 }
 

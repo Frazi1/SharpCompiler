@@ -110,7 +110,7 @@ number :  NUMBER
 		| funccallbody
 		| CHAR
 		| arrayelement
-		
+		| STRING
 		;
 mathexpression: term ;
 
@@ -119,8 +119,6 @@ expression:
 		| funccallbody
 		| boolexpression
 		| mathexpression
-		
-		
 ;
 extended_id: ID (DOT! ID)? -> ^(EXTENDED_ID ID ID?);
 
@@ -219,7 +217,11 @@ OPEN_SQUARE_BRACE:'[';
 CLOSE_SQUARE_BRACE:']';
 OPEN_BRACE: '(';
 CLOSE_BRACE: ')';
-TYPE: 'int' | 'bool' | 'char';
+TYPE: 'int' 
+	| 'bool'
+	| 'char'
+//	| 'string'
+		;
 VOID: 'void';
 NUMBER: ('0'..'9')+ ;
 ADD:    '+'     ;
@@ -247,10 +249,11 @@ WS:
 DOT: '.';
 MODIFIER: 'static' | 'public' | 'extern';
 //CHAR:  '\''('a'..'z')'\'' ;
-CHAR:  '\'' . '\'' ;
 ID:		( 'a'..'z' | 'A'..'Z' | '_' )
         ( 'a'..'z' | 'A'..'Z' | '_' | '0'..'9' )*
 ;
+STRING: '"' .*'"';
+CHAR:  '\'' . '\'' ;
 
 
 SL_COMMENT:
@@ -263,5 +266,3 @@ ML_COMMENT:
     $channel=Hidden;
   }
 ;
-
-
