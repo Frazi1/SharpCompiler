@@ -46,11 +46,11 @@ namespace MathLang.CodeGeneration.JasminJava
             return this;
         }
 
-        public IEnumerable<JasminModifier> GetModifiers => _modifiers.ToList();
+        public IEnumerable<JasminModifier> Modifiers => _modifiers.ToList();
 
         public IEnumerable<string> GenerateListing()
         {
-            string classSignature = $"{JasminDirective.Class.GetTextValue()} {GetModifiersString()} {Name}";
+            string classSignature = $"{JasminDirective.Class.GetTextValue()} {ModifiersString} {Name}";
             _codeListing.Add(classSignature);
 
             string inheritanceDeclaration = $"{JasminDirective.Super.GetTextValue()} {InheritsFrom}";
@@ -66,9 +66,6 @@ namespace MathLang.CodeGeneration.JasminJava
 
         #endregion
 
-        private string GetModifiersString()
-        {
-            return string.Join(" ", _modifiers.Select(modifier => modifier.GetTextValue()));
-        }
+        private string ModifiersString => string.Join(" ", _modifiers.Select(modifier => modifier.GetTextValue()));
     }
 }

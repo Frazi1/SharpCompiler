@@ -20,11 +20,11 @@ namespace MathLang.CodeGeneration.JasminJava
         private static void InitTypeMappings()
         {
             IMapper typeMapper = Jasmin.TypeMapper;
-            typeMapper.CreateMap(ReturnType.Int, JasminReferenceConstants.JavaInteger);
+            typeMapper.CreateMap(ReturnType.Int, JasminReferenceConstants.JavaIntegerClass);
             typeMapper.CreateMap(ReturnType.ArrayOf(ReturnType.Int),
                 $"{JasminReferenceConstants.ArrayMark}{typeMapper.Map<IntReturnType, string>()}");
             typeMapper.CreateMap(ReturnType.Void, JasminReferenceConstants.JavaVoid);
-            typeMapper.CreateMap(ReturnType.Bool, JasminReferenceConstants.JavaBoolean);
+            typeMapper.CreateMap(ReturnType.Bool, JasminReferenceConstants.JavaBooleanClass);
             typeMapper.CreateMap(ReturnType.Char, JasminReferenceConstants.JavaChar);
         }
     }

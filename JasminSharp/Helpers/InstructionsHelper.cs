@@ -185,5 +185,7 @@
         public static saloadInstruction SaloadInstruction => new saloadInstruction();
         public static sastoreInstruction SastoreInstruction => new sastoreInstruction();
         public static swapInstruction SwapInstruction => new swapInstruction();
+        public static ldcInstruction LdcInstruction => new ldcInstruction();
+        public static ldc_wInstruction Ldc_wInstruction => new ldc_wInstruction();
     }
 }

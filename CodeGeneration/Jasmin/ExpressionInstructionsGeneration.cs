@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using MathLang.CodeGeneration.JasminJava.Library;
+using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Expressions;
 using MathLang.Tree.Nodes.Interfaces;
 using static MathLang.CodeGeneration.JasminJava.InstructionsHelper;
@@ -42,8 +43,8 @@ namespace MathLang.CodeGeneration.JasminJava
         private static IEnumerable<IInstruction> GetIntExpressionInstructions(IntExpression intExpression)
         {
             List<IInstruction> instructions = new List<IInstruction>();
-            instructions.Add(BipushInstruction.WithArgument(intExpression.Value));
-            instructions.AddRange(JasminLibraryFunctionsHelper.GetIntegerValueOf(JasminReferenceConstants.JavaInteger));
+            instructions.Add(LdcInstruction.WithValue(intExpression.Value.ToString()));
+            //instructions.AddRange(JasminLibraryFunctionsHelper.GetIntegerValueOf(JasminReferenceConstants.JavaIntegerClass));
             return instructions;
         }
 
@@ -51,21 +52,21 @@ namespace MathLang.CodeGeneration.JasminJava
         {
             List<IInstruction> instructions = new List<IInstruction>();
             instructions.AddRange(expression.Left.GetInstructions());
-            if(expression.Right!=null) 
+            if (expression.Right != null)
                 instructions.AddRange(expression.Right.GetInstructions());
             switch (expression.ExpressionType)
             {
                 case Tree.Nodes.Enums.ExpressionType.Add:
-                    instructions.Add(IaddInstruction);
+                    instructions.Add(GetAddInstruction(expression.Left.ReturnType));
                     break;
                 case Tree.Nodes.Enums.ExpressionType.Sub:
-                    instructions.Add(IsubInstruction);
+                    instructions.Add(GetSubInstruction(expression.Left.ReturnType));
                     break;
                 case Tree.Nodes.Enums.ExpressionType.Mul:
-                    instructions.Add(ImulInstruction);
+                    instructions.Add(GetMulInstruction(expression.Left.ReturnType));
                     break;
                 case Tree.Nodes.Enums.ExpressionType.Div:
-                    instructions.Add(IdivInstruction);
+                    instructions.Add(GetDivInstruction(expression.Left.ReturnType));
                     break;
                 case Tree.Nodes.Enums.ExpressionType.Equal:
                     break;
@@ -95,6 +96,46 @@ namespace MathLang.CodeGeneration.JasminJava
                     break;
             }
             return instructions;
+        }
+
+        private static IInstruction GetSubInstruction(ReturnType returnType)
+        {
+            switch (returnType)
+            {
+                case IntReturnType intReturnType:
+                    return IsubInstruction;
+                default: throw new NotImplementedException($"GetSubInstuction: {nameof(returnType)}");
+            }
+        }
+
+        private static IInstruction GetMulInstruction(ReturnType returnType)
+        {
+            switch (returnType)
+            {
+                case IntReturnType intReturnType:
+                    return ImulInstruction;
+                default: throw new NotImplementedException($"GetMulInstuction: {nameof(returnType)}");
+            }
+        }
+
+        private static IInstruction GetDivInstruction(ReturnType returnType)
+        {
+            switch (returnType)
+            {
+                case IntReturnType intReturnType:
+                    return IdivInstruction;
+                default: throw new NotImplementedException($"GetDivInstuction: {nameof(returnType)}");
+            }
+        }
+
+        private static IInstruction GetAddInstruction(ReturnType returnType)
+        {
+            switch (returnType)
+            {
+                case IntReturnType intReturnType:
+                    return IaddInstruction;
+                default: throw new NotImplementedException($"GetAddInstuction: {nameof(returnType)}");
+            }
         }
     }
 }

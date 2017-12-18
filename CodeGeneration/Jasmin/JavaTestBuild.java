@@ -2,7 +2,8 @@ class JavaTestBuild {
     public static void main(){
         
     }
-    public static void test(Integer input){
-        Integer a = 13 + input;
+    public static int test(int a){
+        int b = 13;
+        return a+b;
     }
 }

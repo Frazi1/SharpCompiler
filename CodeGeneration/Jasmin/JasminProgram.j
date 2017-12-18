@@ -1,10 +1,11 @@
 .class public Main
-.super java/lang/Object
+.super Ljava/lang/Object;
  .method public static main()V
 .end method
- .method public static myMethod()V
-    bipush 98
-    invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
-    astore 0
-    return
+ .method public static myMethod(II)Ljava/lang/Object;
+    iload 0
+    iload 1
+    iadd
+   ; invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
+    ireturn
 .end method

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using JasminSharp;
 using MathLang.Tree.Nodes.Declarations;
+using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Expressions;
 using MathLang.Tree.Nodes.Interfaces;
 using MathLang.Tree.Nodes.Statements;
@@ -15,7 +16,6 @@ namespace MathLang.CodeGeneration.JasminJava
         {
             switch (statement)
             {
-
                 //case FunctionDeclarationParameter functionDeclarationParameter:
                 //    break;
                 case VariableDeclaration variableDeclaration:
@@ -52,15 +52,18 @@ namespace MathLang.CodeGeneration.JasminJava
                     return variableAssignment.GetVariableAssignmentInstructions();
                 //case WhileStatement whileStatement:
                 //    break;
-                default:throw  new NotImplementedException($"Statement generation of {statement}");
+                default: throw new NotImplementedException($"Statement generation of {statement}");
             }
         }
+
         private static IEnumerable<IInstruction> GetVariableAssignmentInstructions(
             this VariableAssignment variableAssignment)
         {
             List<IInstruction> instructions = new List<IInstruction>();
             instructions.AddRange(variableAssignment.AssignmentValue.GetInstructions());
-            instructions.Add(AstoreInstruction.WithIndex(variableAssignment.VariableName.Declaration.Index.Value));
+            instructions.Add(GetStoreInstruction(
+                variableAssignment.VariableName.Declaration.ReturnType,
+                variableAssignment.VariableName.Declaration.Index.Value));
             return instructions;
         }
 
@@ -72,11 +75,30 @@ namespace MathLang.CodeGeneration.JasminJava
             else
             {
                 instructions.AddRange(variableDeclaration.Value.GetInstructions());
-                instructions.Add(AstoreInstruction.WithIndex(variableDeclaration.Index.Value));
+                IIndexedInstruction storeInstruction = null;
+                instructions.Add(GetStoreInstruction(variableDeclaration.ReturnType, variableDeclaration.Index.Value));
             }
             return instructions;
         }
 
-
+        private static IIndexedInstruction GetStoreInstruction(ReturnType returnType, int index)
+        {
+            switch (returnType)
+            {
+                case BoolReturnType boolReturnType:
+                    throw new NotImplementedException(nameof(ReturnType) + "store instruction generation");
+                    break;
+                case CharReturnType charReturnType:
+                    throw new NotImplementedException(nameof(ReturnType) + "store instruction generation");
+                    break;
+                case ArrayReturnType arrayReturnType:
+                    throw new NotImplementedException(nameof(ReturnType) + "store instruction generation");
+                    break;
+                case IntReturnType intReturnType:
+                    return IstoreInstruction.WithIndex(index);
+                default:
+                    throw new NotImplementedException(nameof(ReturnType) + "store instruction generation");
+            }
+        }
     }
 }
