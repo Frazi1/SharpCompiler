@@ -48,6 +48,7 @@ tokens {
   EXTENDED_ID;
   FUNCTION_MODIFIERS;
   FUNCTION_BODY;
+  ATTRIBUTES;
 }
 
 
@@ -184,8 +185,8 @@ returnstatement: RETURN^ expression? ';'! ;
 dowhilestatement: DO^ (block | statement) WHILE! OPEN_BRACE! boolexpression CLOSE_BRACE! ';'! ;
 emptystatement: ';'! ;
 
-funcdeclaration: function_modifiers any_type ID^ ( OPEN_BRACE! paramsdeclaration CLOSE_BRACE! ) (block | ';') 
-		-> ^(FUNCDECLARATION ID function_modifiers ^(RETURN_TYPE any_type) paramsdeclaration ^(FUNCTION_BODY block?));
+funcdeclaration: attribute_usage* function_modifiers any_type ID^ ( OPEN_BRACE! paramsdeclaration CLOSE_BRACE! ) (block | ';') 
+		-> ^(FUNCDECLARATION ID function_modifiers ^(ATTRIBUTES attribute_usage*) ^(RETURN_TYPE any_type) paramsdeclaration ^(FUNCTION_BODY block?));
 paramsdeclaration: ( declarationbody ( ','! declarationbody)* )?  -> ^(PARAMETERS ( declarationbody)* );
 function_modifiers: MODIFIER* -> ^(FUNCTION_MODIFIERS MODIFIER*);
 
@@ -205,11 +206,9 @@ block: '{'! statementlist '}'!;
 
 statementlist: statement* -> ^(BLOCK statement*) ;
 
-/*console_write_statement: CONSOLE_WORD '.'! ('WriteLine' | 'Write') OPEN_BRACE! expression CLOSE_BRACE! ';'! -> ^(PRINT expression)  ;
-console_read_statement: console_read_body ';'! ;
+attribute_usage: OPEN_SQUARE_BRACE ID OPEN_BRACE expressioncommalist? CLOSE_BRACE CLOSE_SQUARE_BRACE 
+	-> ^(ATTRIBUTE_USAGE ID ^(PARAMETERS expressioncommalist)?) ;
 
-console_read_body: CONSOLE_WORD '.'! ('ReadLine' | 'Read') OPEN_BRACE CLOSE_BRACE -> INPUT  ;
-*/
 
 /*
  * Lexer Rules

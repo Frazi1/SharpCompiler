@@ -11,7 +11,9 @@ class Main
         int a = 10 / 23;
     }
 
-    public static extern int TestExtern(int a, int[] c);
+   [JavaRef()]
+   
+   public static extern int TestExtern(int a, int[] c);
 }
 
 //static class ValeraTest
