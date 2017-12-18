@@ -220,8 +220,9 @@ CLOSE_BRACE: ')';
 TYPE: 'int' 
 	| 'bool'
 	| 'char'
-//	| 'string'
-		;
+	| 'string'
+;
+
 VOID: 'void';
 NUMBER: ('0'..'9')+ ;
 ADD:    '+'     ;

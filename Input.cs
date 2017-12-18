@@ -9,6 +9,7 @@ class Main
     static void TestMethod()
     {
         int a = 10 / 23;
+        string b = "123";
     }
 
    [JavaRef("log")]  
