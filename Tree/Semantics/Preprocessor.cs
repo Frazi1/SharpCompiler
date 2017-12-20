@@ -251,14 +251,24 @@ namespace MathLang.Tree.Semantics
             }
         }
 
-        private static void Process(this ExtendedId extendedId)
+        private static void Process(this ExtendedId extendedId, bool isVariable = true)
         {
             var scope = extendedId.Scope;
-            var declaration = scope.GlobalVariableSearch(extendedId.GetFullPath);
-            extendedId.Declaration = declaration;
-            extendedId.ReturnType = declaration != null
-                ? declaration.ReturnType
-                : throw new ScopeException($"Variable with name \"{extendedId.GetFullPath}\" does not exist.");
+            if (isVariable)
+            {
+                var declaration = scope.GlobalVariableSearch(extendedId.GetFullPath);
+                extendedId.Declaration = declaration;
+                extendedId.ReturnType = declaration != null
+                    ? declaration.ReturnType
+                    : throw new ScopeException($"Variable with name \"{extendedId.GetFullPath}\" does not exist.");
+            }
+            else
+            {
+                FunctionDeclaration declaration = scope.GlobalFunctionSearch(extendedId.GetFullPath);
+                extendedId.ReturnType = declaration != null
+                    ? declaration.ReturnType
+                    : throw new ScopeException($"Variable with name \"{extendedId.GetFullPath}\" does not exist.");
+            }
         }
 
         private static void Process(this VariableReference variableReference)
