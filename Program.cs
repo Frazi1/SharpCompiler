@@ -55,7 +55,7 @@ namespace MathLang
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error: {0}", e.Message);
+                Console.WriteLine("Error: {0}", e);
             }
             Console.ReadLine();
         }

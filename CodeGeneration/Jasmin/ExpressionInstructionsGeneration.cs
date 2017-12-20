@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using MathLang.CodeGeneration.JasminJava.Library;
 using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Expressions;
 using MathLang.Tree.Nodes.Interfaces;

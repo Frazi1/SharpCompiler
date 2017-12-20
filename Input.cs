@@ -1,12 +1,15 @@
-﻿
+﻿static class Library
+{
+    [JavaRef("printString")]
+    static extern void PrintString(string s);
+}
+
 class Main
 {
-    //[JavaRef(213)]
-    static extern int TestExtern(int a, int[] c);
-    //static void Main()
-    //{
-
-    //}
+    static void Main()
+    {
+        Library.PrintString("MY SUPER STRING");
+    }
 
     //static void TestMethod()
     //{

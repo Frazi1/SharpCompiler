@@ -40,7 +40,7 @@ namespace MathLang.Tree.Nodes.Declarations
                 {
                     if(mod.Text == Modifiers.Extern) ModifiersList.Add(Modifier.Extern);
                     else if(mod.Text == Modifiers.Static) ModifiersList.Add(Modifier.Static);
-                    throw new Exception($"Modifier {mod.Text} is not defined");
+                    else throw new Exception($"Modifier {mod.Text} is not defined");
                 });
             }
             var classblock = syntaxClass.GetChild(2).CastTo<CommonTree>();

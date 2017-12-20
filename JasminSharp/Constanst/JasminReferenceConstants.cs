@@ -12,9 +12,10 @@ namespace MathLang.CodeGeneration.JasminJava
         public const string JavaByte = "B";
         public const string JavaBooleanClass = "Ljava/lang/Boolean;";
         public const string JavaChar = "Ljava/lang/Character;";
+        public const string JavaString = "Ljava/lang/String;";
 
         public const char ArrayMark = '[';
 
-        public static string IntegerValueOf(string parameterType) => $"{JavaIntegerClass}/valueOf(I){parameterType}";
+        //public static string IntegerValueOf(string parameterType) => $"{JavaIntegerClass}/valueOf(I){parameterType}";
     }
 }

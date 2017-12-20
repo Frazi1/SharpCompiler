@@ -54,7 +54,7 @@ namespace MathLang.Tree.Semantics
 
             classDeclaration.ModifiersList.ForEach(modifier =>
             {
-                if (modifier == Modifier.Extern) classDeclaration.IsStatic = true;
+                if (modifier == Modifier.Static) classDeclaration.IsStatic = true;
                 if (modifier == Modifier.Extern) classDeclaration.IsExtern = true;
             });
 
