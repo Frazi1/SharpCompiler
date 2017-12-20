@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using MathLang.Tree.Nodes.Declarations;
 using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Expressions;
 using MathLang.Tree.Nodes.Interfaces;
 using MathLang.Tree.Nodes.Statements;
 using MathLang.Tree.Scopes.Exceptions;
-using Microsoft.Win32.SafeHandles;
 using MathLang.Extensions;
 using MathLang.Tree.Nodes;
 using MathLang.Tree.Scopes;
+using Attribute = MathLang.Tree.Nodes.Declarations.Attribute;
 
 namespace MathLang.Tree.Semantics
 {
@@ -39,6 +38,7 @@ namespace MathLang.Tree.Semantics
                 //    throw new ScopeException("Only 1 Main function can be present");
                 //mainFunction = func ?? mainFunction;
             });
+            CheckMainClass(program);
             //if(mainFunction == null)
             //    throw new ScopeException("Program must contain a Main function which is an entry point");
         }
@@ -60,7 +60,7 @@ namespace MathLang.Tree.Semantics
 
             if (classDeclaration.Name != MainClassName)
             {
-                if (!classDeclaration.IsStatic)
+                if (!classDeclaration.IsStatic && !classDeclaration.IsAttribute)
                     throw new ScopeException(
                         $"Only static classes are supported at the moment ({classDeclaration.Name})");
             }
@@ -186,31 +186,35 @@ namespace MathLang.Tree.Semantics
                     throw new ScopeException(
                         $"Extern function {functionDeclaration.Name} can not have a declaration body");
                 }
-                return;
             }
-            var scope = functionDeclaration.Scope;
-            functionDeclaration.StatementBlock.Statements
-                .ForEach(statement => statement.Process());
-
-            if (functionDeclaration.ReturnType != ReturnType.Void)
+            else
             {
-                var returnStatements =
-                    functionDeclaration.StatementBlock.Statements
-                        .FindAll(statement => statement is ReturnStatement)
-                        .Cast<ReturnStatement>()
-                        .ToList();
-                if (returnStatements.Count == 0)
-                    throw new ExpressionException($"Function {functionDeclaration.Name} missing a return statement");
-                returnStatements.ForEach(statement =>
+                var scope = functionDeclaration.Scope;
+                functionDeclaration.StatementBlock.Statements
+                    .ForEach(statement => statement.Process());
+
+                if (functionDeclaration.ReturnType != ReturnType.Void)
                 {
-                    //statement.Process();
-                    if (statement.ReturnExpression.GetResultReturnType() != functionDeclaration.ReturnType)
-                    {
+                    var returnStatements =
+                        functionDeclaration.StatementBlock.Statements
+                            .FindAll(statement => statement is ReturnStatement)
+                            .Cast<ReturnStatement>()
+                            .ToList();
+                    if (returnStatements.Count == 0)
                         throw new ExpressionException(
-                            $"Function {functionDeclaration.Name} must return {functionDeclaration.ReturnType} but returns {statement.ReturnExpression.GetResultReturnType()}");
-                    }
-                });
+                            $"Function {functionDeclaration.Name} missing a return statement");
+                    returnStatements.ForEach(statement =>
+                    {
+                        //statement.Process();
+                        if (statement.ReturnExpression.GetResultReturnType() != functionDeclaration.ReturnType)
+                        {
+                            throw new ExpressionException(
+                                $"Function {functionDeclaration.Name} must return {functionDeclaration.ReturnType} but returns {statement.ReturnExpression.GetResultReturnType()}");
+                        }
+                    });
+                }
             }
+            functionDeclaration.AttributeUsages.ForEach(ProcessAttributeUsage);
         }
 
         #endregion
@@ -350,13 +354,21 @@ namespace MathLang.Tree.Semantics
             var functionDeclaration = functionCall.Scope.GlobalFunctionSearch(functionCall.Name.GetFullPath);
             if (functionDeclaration == null)
                 throw new ScopeException($"Function with name \"{functionCall.Name.GetFullPath}\" does not exist");
-            if (functionDeclaration.ParameterNodes.Count != functionCall.FunctionCallParameters.Count)
+            
+            CheckCallParameters(functionCall,functionCall.FunctionCallParameters, functionDeclaration.ParameterNodes);
+            functionCall.ReturnType = functionDeclaration.ReturnType;
+        }
+
+        private static void CheckCallParameters(INode invoker, IList<IExpression> callParameters,
+            IList<FunctionDeclarationParameter> declarationParameters)
+        {
+            if (declarationParameters.Count != callParameters.Count)
                 throw new ScopeException(
-                    $"Function \"{functionCall.Name.GetFullPath}\" call signature is different from defined function with that name");
-            for (int i = 0; i < functionDeclaration.ParameterNodes.Count; i++)
+                    $"Function \"{invoker}\" call signature is different from defined function with that name");
+            for (int i = 0; i < declarationParameters.Count; i++)
             {
-                var parameter = functionDeclaration.ParameterNodes[i];
-                var callParameter = functionCall.FunctionCallParameters[i];
+                var parameter = declarationParameters[i];
+                var callParameter = callParameters[i];
                 callParameter.Process();
 
                 if (parameter.ReturnType == callParameter.ReturnType) continue;
@@ -364,9 +376,8 @@ namespace MathLang.Tree.Semantics
                     callParameter.CastToType = parameter.ReturnType;
                 else
                     throw new ScopeException(
-                        $"Type {callParameter.ReturnType} can not be matched to type {parameter.ReturnType}");
+                        $"Type {callParameter.ReturnType} can not be matched to type {parameter.ReturnType} in {invoker}");
             }
-            functionCall.ReturnType = functionDeclaration.ReturnType;
         }
 
         private static void Process(this NewArray newArray)
@@ -586,6 +597,17 @@ namespace MathLang.Tree.Semantics
         }
 
         #endregion
+
+        private static void ProcessAttributeUsage(this AttributeUsage attributeUsage)
+        {
+            ClassDeclaration classDeclaration = attributeUsage.Scope.GlobalClassSearch(attributeUsage.Name.GetFullPath);
+            if (classDeclaration == null)
+                throw new ScopeException($"Attribute {attributeUsage.Name.GetFullPath} was not found");
+            if (!classDeclaration.IsAttribute)
+                throw new ScopeException($"Class {attributeUsage.Name.GetFullPath} is not an attribute");
+            Attribute attributeClass = classDeclaration.CastTo<Attribute>();
+            CheckCallParameters(attributeUsage,attributeUsage.FunctionCallParameters, attributeClass.ParameterNodes);
+        }
 
         #endregion
 

@@ -1,12 +1,12 @@
 ﻿
 class Main
 {
-    [JavaRef("log")]
+    //[JavaRef(213)]
     static extern int TestExtern(int a, int[] c);
-    static void Main()
-    {
-        
-    }
+    //static void Main()
+    //{
+
+    //}
 
     //static void TestMethod()
     //{
@@ -14,7 +14,7 @@ class Main
     //    //string b = "123";
     //}
 
-    
+
 }
 
 //static class ValeraTest

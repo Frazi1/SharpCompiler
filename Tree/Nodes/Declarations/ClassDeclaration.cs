@@ -19,8 +19,10 @@ namespace MathLang.Tree.Nodes.Declarations
         public List<Modifier> ModifiersList { get; } = new List<Modifier>();
         public bool IsPrintable { get; }
         public bool IsStatic { get; internal set; }
+        //TODO: remove
         public bool IsExtern { get; internal set; }
-        
+        public virtual bool IsAttribute => false;
+
         public ClassDeclaration(INode parent, Scope parentScope, bool isPrintable = true)
         {
             Parent = parent;

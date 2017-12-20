@@ -54,7 +54,8 @@ namespace MathLang.Tree.Nodes.Declarations
                 syntaxAttributeUsages.Children.Cast<CommonTree>().ForEach(syntaxAttributeUsage =>
                 {
                    AttributeUsage attributeUsage = new AttributeUsage(this, Scope);
-                    attributeUsage.Construct(syntaxAttributeUsage);
+                   attributeUsage.Construct(syntaxAttributeUsage);
+                   AttributeUsages.Add(attributeUsage);
                 });
             }
             //ReturnType

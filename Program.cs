@@ -19,8 +19,8 @@ namespace MathLang
         
         public static void Main(string[] args)
         {
-            //try
-            //{
+            try
+            {
                 // � ����������� �� ������� ���������� ��������� ������ ���������
                 // ���� ���� � ������, ���������� ������ ����������, ���� ����������� ����
                 ICharStream input = args.Length == 1 ? (ICharStream)new ANTLRFileStream(args[0])
@@ -47,16 +47,16 @@ namespace MathLang
 
 
 
-            //JasminCodeGenerator generator = new JasminCodeGenerator();
-            //generator.GenerateCode(astProgram);
-            //Helpers.FilePrinter.WriteTextToFile(generator.CodeListing, "output.j");
-            //Console.WriteLine(generator.CodeListing);
-            //RunJasminBuildScript();
-            //}
-            //catch (Exception e)
-            //{
-            //    Console.WriteLine("Error: {0}", e);
-            //}
+                //JasminCodeGenerator generator = new JasminCodeGenerator();
+                //generator.GenerateCode(astProgram);
+                //Helpers.FilePrinter.WriteTextToFile(generator.CodeListing, "output.j");
+                //Console.WriteLine(generator.CodeListing);
+                //RunJasminBuildScript();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: {0}", e.Message);
+            }
             Console.ReadLine();
         }
 
