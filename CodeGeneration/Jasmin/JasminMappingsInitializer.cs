@@ -26,6 +26,7 @@ namespace MathLang.CodeGeneration.JasminJava
             typeMapper.CreateMap(ReturnType.Void, JasminReferenceConstants.JavaVoid);
             typeMapper.CreateMap(ReturnType.Bool, JasminReferenceConstants.JavaBooleanClass);
             typeMapper.CreateMap(ReturnType.Char, JasminReferenceConstants.JavaChar);
+            typeMapper.CreateMap(ReturnType.String, JasminReferenceConstants.JavaString);
         }
     }
 }

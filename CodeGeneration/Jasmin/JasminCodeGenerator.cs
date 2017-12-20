@@ -10,12 +10,11 @@ namespace MathLang.CodeGeneration.JasminJava
 {
     public class JasminCodeGenerator
     {
-
         public JasminCodeGenerator()
         {
             JasminMappingsInitializer.Initilalize();
         }
-        
+
         public string CodeListing { get; private set; } = "";
 
 
@@ -37,7 +36,11 @@ namespace MathLang.CodeGeneration.JasminJava
                 jasminClass.WithModifiers(JasminModifier.Final);
 
             classDeclaration.FunctionDeclarationNodes.ForEach(function =>
-                jasminClass.WithFunction(BuildJasminFunction(function)));
+            {
+                if (!function.IsExternal)
+                    jasminClass.WithFunction(BuildJasminFunction(function));
+            });
+
             jasminClass.GenerateListing().ForEach(PushLine);
             //PushLine($"{Class} {Public} "
             //         + $"{(classDeclaration.IsStatic ? Final + " " : string.Empty)}"
@@ -53,9 +56,9 @@ namespace MathLang.CodeGeneration.JasminJava
                 .WithModifiers(JasminModifier.Public, JasminModifier.Static)
                 .WithReturnType(TypeMapper.Map<string>(function.ReturnType));
 
-            function.ParameterNodes.ForEach(functionParameter => 
+            function.ParameterNodes.ForEach(functionParameter =>
                 jasminFunction.WithParameter(BuildJasminFunctionParameter(functionParameter)));
-            
+
             function.StatementBlock.Statements.ForEach(statement =>
             {
                 jasminFunction.WithInstructions(statement.GetInstructions());

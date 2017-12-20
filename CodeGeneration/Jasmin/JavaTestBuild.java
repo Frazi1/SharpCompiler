@@ -1,9 +1,8 @@
 class JavaTestBuild {
     public static void main(){
-        
+        test();
     }
-    public static int test(int a){
-        int b = 13;
-        return a+b;
+    public static int test(){
+        return 101;
     }
 }
