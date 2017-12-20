@@ -47,11 +47,11 @@ namespace MathLang
 
 
 
-                //JasminCodeGenerator generator = new JasminCodeGenerator();
-                //generator.GenerateCode(astProgram);
-                //Helpers.FilePrinter.WriteTextToFile(generator.CodeListing, "output.j");
-                //Console.WriteLine(generator.CodeListing);
-                //RunJasminBuildScript();
+            //JasminCodeGenerator generator = new JasminCodeGenerator();
+            //generator.GenerateCode(astProgram);
+            //Helpers.FilePrinter.WriteTextToFile(generator.CodeListing, "output.j");
+            //Console.WriteLine(generator.CodeListing);
+            //RunJasminBuildScript();
             //}
             //catch (Exception e)
             //{

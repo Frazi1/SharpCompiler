@@ -80,12 +80,12 @@ namespace MathLang.Extensions
             if (funcDecl.ParameterNodes.Count > 0)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indent : indentBar)}" +
-                                  $"{(funcDecl.StatementBlock.Statements.Count==0? indentEndBar:indentBranchBar)}paremeters");
+                                  $"{(funcDecl.StatementBlock?.Statements.Count==0? indentEndBar:indentBranchBar)}paremeters");
 
                 for (int k = 0; k < funcDecl.ParameterNodes.Count; k++)
                 {
                     Console.WriteLine($"{ind}{(isFinal ? indent : indentBar)}" +
-                                      $"{(funcDecl.StatementBlock.Statements.Count == 0 ? indent : indentBar)}" +
+                                      $"{(funcDecl.StatementBlock?.Statements.Count == 0 ? indent : indentBar)}" +
                                       $"{(k+1 == funcDecl.ParameterNodes.Count? indentEndBar: indentBranchBar)}" +
                                       $"{funcDecl.ParameterNodes[k].Name} ({funcDecl.ParameterNodes[k].ReturnType})"+
                                       $"{(funcDecl.ParameterNodes[k].Index == null ? "" : $" with funcParam {funcDecl.ParameterNodes[k].Index}")}");
@@ -93,7 +93,7 @@ namespace MathLang.Extensions
             }
 
             //block
-            if (funcDecl.StatementBlock.Statements.Count > 0)
+            if (funcDecl.StatementBlock?.Statements.Count > 0)
             {
                 PrintStatement($"{ind}{(isFinal ? indent : indentBar)}", funcDecl.StatementBlock, true);
 

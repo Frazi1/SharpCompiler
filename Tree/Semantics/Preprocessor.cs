@@ -19,12 +19,11 @@ namespace MathLang.Tree.Semantics
     {
         private const string MainClassName = "Main";
         private const string MainFuncName = "Main";
-        
+
         #region PreProcss
 
         public static void PreProcess(this Nodes.Program program)
         {
-            
             var scope = program.Scope;
             FunctionDeclaration mainFunction = null;
             program.ClassNodes.ForEach(classDeclaration =>
@@ -32,7 +31,7 @@ namespace MathLang.Tree.Semantics
                 classDeclaration.CheckName(scope);
                 scope.AddClass(classDeclaration);
                 classDeclaration.PreProcess();
-                
+
                 //FunctionDeclaration func = classDeclaration.Scope.LocalFunctionSearch(MainClassName);
                 //if(func != null && classDeclaration.IsStatic)
                 //    throw new ScopeException("Main function must be declared inside of a non static class");
@@ -42,7 +41,6 @@ namespace MathLang.Tree.Semantics
             });
             //if(mainFunction == null)
             //    throw new ScopeException("Program must contain a Main function which is an entry point");
-            
         }
 
         private static void PreProcess(this ClassDeclaration classDeclaration)
@@ -62,8 +60,9 @@ namespace MathLang.Tree.Semantics
 
             if (classDeclaration.Name != MainClassName)
             {
-                if(!classDeclaration.IsStatic)
-                    throw new ScopeException($"Only static classes are supported at the moment ({classDeclaration.Name})");
+                if (!classDeclaration.IsStatic)
+                    throw new ScopeException(
+                        $"Only static classes are supported at the moment ({classDeclaration.Name})");
             }
             classDeclaration.FunctionDeclarationNodes
                 .ForEach(functionDeclaration =>
@@ -94,13 +93,13 @@ namespace MathLang.Tree.Semantics
         private static void CheckMainClass(this Nodes.Program program)
         {
             var mainClass = program.Scope.LocalClassSearch(MainClassName);
-            if(mainClass == null)
+            if (mainClass == null)
                 throw new ScopeException("Program must contain a non-static class\"Main\"");
             var mainFunc = mainClass.Scope.LocalFunctionSearch(MainFuncName);
-            if(mainFunc == null)
+            if (mainFunc == null)
                 throw new ScopeException("Program must contain a \"Main\" function inside of Main class");
         }
-        
+
         #endregion
 
         #region Process
@@ -163,6 +162,32 @@ namespace MathLang.Tree.Semantics
 
         private static void Process(this FunctionDeclaration functionDeclaration)
         {
+            functionDeclaration.ModifiersList.ForEach(modifier =>
+            {
+                switch (modifier)
+                {
+                    case Modifier.Static:
+                        if (functionDeclaration.IsStatic)
+                            throw new ScopeException($"Modifier {modifier} is used more than one time");
+                        functionDeclaration.IsStatic = true;
+                        break;
+                    case Modifier.Extern:
+                        if (functionDeclaration.IsExternal)
+                            throw new ScopeException($"Modifier {modifier} is used more than one time");
+                        functionDeclaration.IsExternal = true;
+                        break;
+                }
+            });
+
+            if (functionDeclaration.IsExternal)
+            {
+                if (functionDeclaration.StatementBlock != null)
+                {
+                    throw new ScopeException(
+                        $"Extern function {functionDeclaration.Name} can not have a declaration body");
+                }
+                return;
+            }
             var scope = functionDeclaration.Scope;
             functionDeclaration.StatementBlock.Statements
                 .ForEach(statement => statement.Process());
@@ -174,7 +199,7 @@ namespace MathLang.Tree.Semantics
                         .FindAll(statement => statement is ReturnStatement)
                         .Cast<ReturnStatement>()
                         .ToList();
-                if(returnStatements.Count == 0)
+                if (returnStatements.Count == 0)
                     throw new ExpressionException($"Function {functionDeclaration.Name} missing a return statement");
                 returnStatements.ForEach(statement =>
                 {
@@ -477,7 +502,6 @@ namespace MathLang.Tree.Semantics
                                                   $"({arrayElementAssignment.ArrayElementReference.ReturnType}) " +
                                                   $"expression of type {arrayElementAssignment.AssignmentExpression.ReturnType}");
                 }
-                
             }
 
             //blockStatement.Statements.ForEach(st => st.Process());
@@ -575,7 +599,8 @@ namespace MathLang.Tree.Semantics
                 {
                     SetFunctionArgsIndexes(functionDeclaration);
                     int varIndex = 0;
-                    SetBlockVarsIndexes(functionDeclaration.StatementBlock, ref varIndex);
+                    if (functionDeclaration.StatementBlock != null)
+                        SetBlockVarsIndexes(functionDeclaration.StatementBlock, ref varIndex);
                 });
             });
 
@@ -584,7 +609,7 @@ namespace MathLang.Tree.Semantics
                 int index = 0;
                 foreach (var parameter in functionDeclaration.ParameterNodes)
                     parameter.Index = index++;
-                SetBlockVarsIndexes(functionDeclaration.StatementBlock, ref index);
+                //SetBlockVarsIndexes(functionDeclaration.StatementBlock, ref index);
             }
 
             void SetBlockVarsIndexes(BlockStatement blockStatement, ref int varIndex)
