@@ -30,6 +30,8 @@ namespace MathLang.CodeGeneration.JasminJava
 
         private void GenerateClassCode(ClassDeclaration classDeclaration)
         {
+            if(classDeclaration.IsExtern || !classDeclaration.CodeGeneration) return;
+
             JasminClassModule jasminClass = new JasminClassModule(classDeclaration.Name)
                 .WithModifiers(JasminModifier.Public);
             if (classDeclaration.IsStatic)

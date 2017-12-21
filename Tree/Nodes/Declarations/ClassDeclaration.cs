@@ -19,15 +19,16 @@ namespace MathLang.Tree.Nodes.Declarations
         public List<Modifier> ModifiersList { get; } = new List<Modifier>();
         public bool IsPrintable { get; }
         public bool IsStatic { get; internal set; }
-        //TODO: remove
         public bool IsExtern { get; internal set; }
+        public bool CodeGeneration { get; }
         public virtual bool IsAttribute => false;
 
-        public ClassDeclaration(INode parent, Scope parentScope, bool isPrintable = true)
+        public ClassDeclaration(INode parent, Scope parentScope, bool isPrintable = true, bool codeGeneration = true)
         {
             Parent = parent;
             Scope = new LocalScope(parentScope);
             IsPrintable = isPrintable;
+            CodeGeneration = codeGeneration;
         }
 
         public void Construct(CommonTree syntaxClass)

@@ -10,7 +10,6 @@ using MathLang.Tree.Scopes.Exceptions;
 using MathLang.Extensions;
 using MathLang.Tree.Nodes;
 using MathLang.Tree.Scopes;
-using Attribute = MathLang.Tree.Nodes.Declarations.Attribute;
 
 namespace MathLang.Tree.Semantics
 {
@@ -615,8 +614,8 @@ namespace MathLang.Tree.Semantics
                 throw new ScopeException($"Attribute {attributeUsage.Name.GetFullPath} was not found");
             if (!classDeclaration.IsAttribute)
                 throw new ScopeException($"Class {attributeUsage.Name.GetFullPath} is not an attribute");
-            Attribute attributeClass = classDeclaration.CastTo<Attribute>();
-            CheckCallParameters(attributeUsage,attributeUsage.FunctionCallParameters, attributeClass.ParameterNodes);
+            AttributeDeclaration attributeDeclarationClass = classDeclaration.CastTo<AttributeDeclaration>();
+            CheckCallParameters(attributeUsage,attributeUsage.FunctionCallParameters, attributeDeclarationClass.ParameterNodes);
         }
 
         #endregion

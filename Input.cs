@@ -1,4 +1,4 @@
-﻿static class Library
+﻿static extern class Library
 {
     [JavaRef("printString")]
     static extern void PrintString(string s);
@@ -16,8 +16,6 @@ class Main
     //    int a = 10 / 23;
     //    //string b = "123";
     //}
-
-
 }
 
 //static class ValeraTest

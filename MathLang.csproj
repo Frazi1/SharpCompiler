@@ -55,7 +55,7 @@
     <Compile Include="Helpers\FilePrinter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Tree\Nodes\AttributeUsage.cs" />
-    <Compile Include="Tree\Nodes\Declarations\Attribute.cs" />
+    <Compile Include="Tree\Nodes\Declarations\AttributeDeclaration.cs" />
     <Compile Include="Tree\Nodes\Declarations\Declaration.cs" />
     <Compile Include="Tree\Nodes\Expressions\ArrayElementReference.cs" />
     <Compile Include="Tree\Nodes\Expressions\BoolExpression.cs" />

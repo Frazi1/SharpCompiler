@@ -12,9 +12,9 @@ namespace MathLang.Tree.Semantics
             _program = program;
         }
 
-        public Attribute Build()
+        public AttributeDeclaration Build()
         {
-            var attr = new Attribute(_program, _program.Scope, false);
+            var attr = new AttributeDeclaration(_program, _program.Scope);
             attr.ParameterNodes.Add(
                 new FunctionDeclarationParameter(attr, attr.Scope)
                 {
