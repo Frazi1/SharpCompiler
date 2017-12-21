@@ -2,6 +2,9 @@
 {
     [JavaRef("Library/printString")]
     static extern void PrintString(string s);
+    
+    [JavaRef("Library/printInt")]
+    static extern void PrintInt(int i);
 }
 
 class Main
@@ -9,8 +12,10 @@ class Main
     static void Main(string[] args)
     {
         string mySuperString = "MY SUPER STRING";
+        int a = 13;
         Library.PrintString(mySuperString);
         Library.PrintString("1");
+        Library.PrintInt(2*2+a);
     }
 
     //static void TestMethod()

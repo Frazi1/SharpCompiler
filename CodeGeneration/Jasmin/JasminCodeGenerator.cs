@@ -4,6 +4,7 @@ using MathLang.CodeGeneration.Helpers;
 using MathLang.CodeGeneration.Helpers.Converters;
 using MathLang.Extensions;
 using MathLang.Tree.Nodes.Declarations;
+using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Statements;
 using static JasminSharp.Jasmin;
 
@@ -66,6 +67,8 @@ namespace MathLang.CodeGeneration.JasminJava
             {
                 jasminFunction.WithInstructions(statement.GetInstructions());
             });
+            if (function.ReturnType == ReturnType.Void)
+                jasminFunction.WithInstructions(InstructionsHelper.ReturnInstruction);
             return jasminFunction;
         }
 
