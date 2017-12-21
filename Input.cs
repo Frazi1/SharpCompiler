@@ -9,6 +9,8 @@ class Main
     static void Main()
     {
         Library.PrintString("MY SUPER STRING");
+        Library.PrintString("1");
+        char c = '1';
     }
 
     //static void TestMethod()

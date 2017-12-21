@@ -1,4 +1,5 @@
-﻿using Antlr.Runtime.Tree;
+﻿using System.Linq;
+using Antlr.Runtime.Tree;
 using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Interfaces;
 using MathLang.Tree.Scopes;
@@ -15,7 +16,8 @@ namespace MathLang.Tree.Nodes.Expressions
         public override void Construct(CommonTree node)
         {
             ReturnType = ReturnType.String;
-            base.Construct(node);
+            Value = node.Text.Substring(1, node.Text.Length - 2);
+            //base.Construct(node);
         }
     }
 }
