@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using MathLang.CodeGeneration.Helpers;
+using MathLang.CodeGeneration.Helpers.Converters;
 using MathLang.Extensions;
 using MathLang.Tree.Nodes.Declarations;
 using MathLang.Tree.Nodes.Statements;
@@ -12,7 +13,7 @@ namespace MathLang.CodeGeneration.JasminJava
     {
         public JasminCodeGenerator()
         {
-            JasminMappingsInitializer.Initilalize();
+            //JasminMappingsInitializer.Initilalize();
         }
 
         public string CodeListing { get; private set; } = "";
@@ -56,7 +57,7 @@ namespace MathLang.CodeGeneration.JasminJava
             JasminFunctionModule jasminFunction = new JasminFunctionModule()
                 .WithName(function.Name.ToCamelCase())
                 .WithModifiers(JasminModifier.Public, JasminModifier.Static)
-                .WithReturnType(TypeMapper.Map<string>(function.ReturnType));
+                .WithReturnType(ReturnTypeToStringConverter.Convert(function.ReturnType));
 
             function.ParameterNodes.ForEach(functionParameter =>
                 jasminFunction.WithParameter(BuildJasminFunctionParameter(functionParameter)));
@@ -73,7 +74,7 @@ namespace MathLang.CodeGeneration.JasminJava
             JasminFunctionParameter jasminFunctionParameter =
                 new JasminFunctionParameter()
                     .WithName(functionParameter.Name)
-                    .WithType(TypeMapper.Map<string>(functionParameter.ReturnType));
+                    .WithType(ReturnTypeToStringConverter.Convert(functionParameter.ReturnType));
             return jasminFunctionParameter;
         }
 

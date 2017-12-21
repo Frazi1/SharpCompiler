@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AstNodePrinter.cs" />
+    <Compile Include="CodeGeneration\Helpers\Converters\ReturnTypeToStringConverter.cs" />
     <Compile Include="CodeGeneration\Helpers\JasminTypeMapper.cs" />
     <Compile Include="CodeGeneration\Jasmin\CombinedInstuctionsGeneration.cs" />
     <Compile Include="CodeGeneration\Jasmin\ExpressionInstructionsGeneration.cs" />
