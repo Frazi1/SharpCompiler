@@ -29,7 +29,7 @@ namespace MathLang.CodeGeneration.JasminJava
 
         public IEnumerable<string> GenerateListing()
         {
-            var parameter = $"{/*AddLSymbolForParameter*/(JasminType)};";
+            var parameter = $"{/*AddLSymbolForParameter*/(JasminType)}";
             _codeListing.Add(parameter);
             return _codeListing;
         }
