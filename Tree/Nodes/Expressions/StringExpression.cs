@@ -16,8 +16,7 @@ namespace MathLang.Tree.Nodes.Expressions
         public override void Construct(CommonTree node)
         {
             ReturnType = ReturnType.String;
-            Value = node.Text.Substring(1, node.Text.Length - 2);
-            //base.Construct(node);
+            base.Construct(node);
         }
     }
 }

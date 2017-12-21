@@ -8,10 +8,14 @@ namespace MathLang.Extensions
     public static class Extensions
     {
         public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
-            where T : class
         {
             foreach (T item in enumerable)
                 action(item);
+        }
+
+        public static void ReverseForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
+        {
+            enumerable.Reverse().ForEach(action);
         }
 
         public static TResult CastTo<TResult>(this object input)
@@ -63,6 +67,11 @@ namespace MathLang.Extensions
         public static bool HasDuplicates<T>(this IEnumerable<T> enumerable)
         {
             return enumerable.GetDuplicatedItems().Any();
+        }
+
+        public static string RemoveFirstAndLastCharacters(this string str)
+        {
+            return str.Substring(1, str.Length - 2);
         }
     }
 }

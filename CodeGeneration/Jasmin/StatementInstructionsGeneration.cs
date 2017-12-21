@@ -81,7 +81,7 @@ namespace MathLang.CodeGeneration.JasminJava
             return instructions;
         }
 
-        private static IIndexedInstruction GetStoreInstruction(ReturnType returnType, int index)
+        public static IIndexedInstruction GetStoreInstruction(ReturnType returnType, int index)
         {
             switch (returnType)
             {
@@ -96,6 +96,30 @@ namespace MathLang.CodeGeneration.JasminJava
                     break;
                 case IntReturnType intReturnType:
                     return IstoreInstruction.WithIndex(index);
+                case StringReturnType stringReturnType:
+                    return AstoreInstruction.WithIndex(index);
+                default:
+                    throw new NotImplementedException(nameof(ReturnType) + "store instruction generation");
+            }
+        }
+
+        public static IIndexedInstruction GetLoadInstruction(ReturnType returnType, int index)
+        {
+            switch (returnType)
+            {
+                case BoolReturnType boolReturnType:
+                    throw new NotImplementedException(nameof(ReturnType) + "store instruction generation");
+                    break;
+                case CharReturnType charReturnType:
+                    throw new NotImplementedException(nameof(ReturnType) + "store instruction generation");
+                    break;
+                case ArrayReturnType arrayReturnType:
+                    throw new NotImplementedException(nameof(ReturnType) + "store instruction generation");
+                    break;
+                case IntReturnType intReturnType:
+                    return IloadInstruction.WithIndex(index);
+                case StringReturnType stringReturnType:
+                    return AloadInstruction.WithIndex(index);
                 default:
                     throw new NotImplementedException(nameof(ReturnType) + "store instruction generation");
             }

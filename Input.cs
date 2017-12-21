@@ -1,16 +1,16 @@
 ﻿static extern class Library
 {
-    [JavaRef("printString")]
+    [JavaRef("Library/printString")]
     static extern void PrintString(string s);
 }
 
 class Main
 {
-    static void Main()
+    static void Main(string[] args)
     {
-        Library.PrintString("MY SUPER STRING");
+        string mySuperString = "MY SUPER STRING";
+        Library.PrintString(mySuperString);
         Library.PrintString("1");
-        char c = '1';
     }
 
     //static void TestMethod()

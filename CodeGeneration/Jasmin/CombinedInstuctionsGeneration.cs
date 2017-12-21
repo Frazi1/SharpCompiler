@@ -12,13 +12,24 @@ namespace MathLang.CodeGeneration.JasminJava
         public static IEnumerable<IInstruction> GetFunctionCallInstructions(this FunctionCall functionCall)
         {
             List<IInstruction> instructions = new List<IInstruction>();
+            
+            //Add parameters to stack
+            functionCall.FunctionCallParameters.ReverseForEach(expression =>
+            {
+                instructions.AddRange(expression.GetInstructions());
+            });
+            
             var scope = functionCall.Scope;
             FunctionDeclaration functionDeclaration = scope.GlobalFunctionSearch(functionCall.Name.GetFullPath);
             var javaRefAtrribute =
                 functionDeclaration.AttributeUsages.Find(usage => usage.Name.GetFullPath == "JavaRef");
             if (javaRefAtrribute != null)
             {
-                string externName = javaRefAtrribute.FunctionCallParameters.First().CastTo<StringExpression>().Value;
+                string externName = javaRefAtrribute.FunctionCallParameters
+                    .First()
+                    .CastTo<StringExpression>()
+                    .Value
+                    .RemoveFirstAndLastCharacters();
                 invokestaticInstruction invokestaticInstruction = InstructionsHelper.InvokestaticInstruction
                     .WithMethodFullName(externName)
                     .WithReturnType(Jasmin.TypeMapper.Map<string>(functionDeclaration.ReturnType));

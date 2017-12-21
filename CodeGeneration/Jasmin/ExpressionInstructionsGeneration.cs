@@ -33,13 +33,37 @@ namespace MathLang.CodeGeneration.JasminJava
                 //    break;
                 //case NewArray newArray:
                 //    break;
-                //case VariableReference variableReference:
-                //    break;
-                default: throw new InvalidOperationException($"EXpressin instruction generation {iexpression}");
+                //Variable reference
+                case ExtendedId extendedId:
+                    return extendedId.GetVariableReferenceInstructions();
+                
+                case VariableReference variableReference:
+                    throw new InvalidOperationException($"EXpressin instruction generation {iexpression}");
+                    break;
+                case StringExpression stringExpression:
+                    return GetStringExpressionInstruction(stringExpression);
+                default:
+                    throw new InvalidOperationException($"EXpressin instruction generation {iexpression} ({iexpression.GetType()})");
             }
         }
 
-        private static IEnumerable<IInstruction> GetIntExpressionInstructions(IntExpression intExpression)
+        private static IEnumerable<IInstruction> GetVariableReferenceInstructions(this ExtendedId extendedId)
+        {
+            List<IInstruction> instructions = new List<IInstruction>();
+            instructions.Add(StatementInstructionsGeneration.GetLoadInstruction(extendedId.Declaration.ReturnType,
+                extendedId.Declaration.Index.Value));
+            return instructions;
+        }
+        
+        private static IEnumerable<IInstruction> GetStringExpressionInstruction(this StringExpression stringExpression)
+        {
+            List<IInstruction> instructions = new List<IInstruction>();
+            instructions.Add(LdcInstruction.WithValue(stringExpression.Value));
+            return instructions;
+        }
+
+
+        private static IEnumerable<IInstruction> GetIntExpressionInstructions(this IntExpression intExpression)
         {
             List<IInstruction> instructions = new List<IInstruction>();
             instructions.Add(LdcInstruction.WithValue(intExpression.Value.ToString()));
@@ -47,7 +71,7 @@ namespace MathLang.CodeGeneration.JasminJava
             return instructions;
         }
 
-        private static IEnumerable<IInstruction> GetExpressionInstructions(Expression expression)
+        private static IEnumerable<IInstruction> GetExpressionInstructions(this Expression expression)
         {
             List<IInstruction> instructions = new List<IInstruction>();
             instructions.AddRange(expression.Left.GetInstructions());
