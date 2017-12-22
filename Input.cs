@@ -14,12 +14,13 @@ class Main
         //int a = 13;
         //Library.PrintString("1");
         //Library.PrintInt(2*2+a);
-        Main.TestMult(10,15);
+        Library.PrintInt( Main.TestMult(3,3) - Main.TestMult(2,3));
     }
 
-    static void TestMult(int a, int b)
+    static int TestMult(int a, int b)
     {
-        Library.PrintInt(a * b);
+        //Library.PrintInt(a * b);
+        return a * b;
         //string mySuperString = "MY SUPER STRING";
         //Library.PrintString(mySuperString);
     }

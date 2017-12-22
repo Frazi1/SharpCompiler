@@ -46,14 +46,26 @@ namespace MathLang.CodeGeneration.JasminJava
                 //    break;
                 //case IfStatement ifStatement:
                 //    break;
-                //case ReturnStatement returnStatement:
-                //    break;
+                case ReturnStatement returnStatement:
+                    return returnStatement.GetReturnStatementInstruction();
+                    break;
                 case VariableAssignment variableAssignment:
                     return variableAssignment.GetVariableAssignmentInstructions();
                 //case WhileStatement whileStatement:
                 //    break;
                 default: throw new NotImplementedException($"Statement generation of {statement}");
             }
+        }
+
+        private static IEnumerable<IInstruction> GetReturnStatementInstruction(
+            this ReturnStatement returnStatement)
+        {
+            List<IInstruction> instructions = new List<IInstruction>();
+            instructions.AddRange(returnStatement.ReturnExpression.GetInstructions());
+            if(returnStatement.ReturnExpression.ReturnType == ReturnType.Int)
+                instructions.Add(IreturnInstruction);
+            else throw new NotImplementedException($"{nameof(returnStatement.ReturnExpression)} GetReturnStatementInstructions");
+            return instructions;
         }
 
         private static IEnumerable<IInstruction> GetVariableAssignmentInstructions(

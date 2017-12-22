@@ -29,8 +29,8 @@ namespace MathLang.CodeGeneration.JasminJava
                     return GetExpressionInstructions(expression);
                 //case ExtendedId extendedId:
                 //    break;
-                //case FunctionCall functionCall:
-                //    break;
+                case FunctionCall functionCall:
+                    return functionCall.GetFunctionCallInstructions();
                 //case NewArray newArray:
                 //    break;
                 //Variable reference
