@@ -19,7 +19,7 @@ namespace MathLang.CodeGeneration.Helpers.Converters
                 case IntReturnType intReturnType:
                     return JasminReferenceConstants.JavaInteger;
                 case StringReturnType stringReturnType:
-                    return JasminReferenceConstants.JavaString;
+                    return JasminReferenceConstants.JavaStringClass;
                 case VoidReturnType voidReturnType:
                     return JasminReferenceConstants.JavaVoid;
                 default:

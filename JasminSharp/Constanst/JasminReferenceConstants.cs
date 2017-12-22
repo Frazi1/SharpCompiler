@@ -4,15 +4,17 @@ namespace MathLang.CodeGeneration.JasminJava
 {
     public static class JasminReferenceConstants
     {
-        public const string JavaObject = "Ljava/lang/Object;";
+        public const string JavaObjectClass = "Ljava/lang/Object;";
         public const string JavaIntegerClass = "jLava/lang/Integer;";
         public const string JavaVoid = "V";
         public const string JavaInteger = "I";
         public const string JavaBool = "Z";
         public const string JavaByte = "B";
+        public const string JavaChar = "C";
+        
         public const string JavaBooleanClass = "Ljava/lang/Boolean;";
-        public const string JavaChar = "Ljava/lang/Character;";
-        public const string JavaString = "Ljava/lang/String;";
+        public const string JavaCharacterClass = "Ljava/lang/Character;";
+        public const string JavaStringClass = "Ljava/lang/String;";
 
         public const char ArrayMark = '[';
 

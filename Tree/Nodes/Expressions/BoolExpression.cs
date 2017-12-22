@@ -7,6 +7,7 @@ namespace MathLang.Tree.Nodes.Expressions
 {
     public class BoolExpression : Atom
     {
+        public new bool Value { get; private set; } 
         public BoolExpression(INode parent, Scope parentScope)
             : base(parent, parentScope)
         {
@@ -15,7 +16,8 @@ namespace MathLang.Tree.Nodes.Expressions
         public override void Construct(CommonTree syntaxBoolExpression)
         {
             ReturnType = ReturnType.Bool;
-            base.Construct(syntaxBoolExpression);
+            Value = syntaxBoolExpression.Text == "true";
+            //base.Construct(syntaxBoolExpression);
         }
     }
 }

@@ -5,6 +5,12 @@
     
     [JavaRef("Library/printInt")]
     static extern void PrintInt(int i);
+
+    [JavaRef("Library/printBool")]
+    static extern void PrintBool(bool b);
+
+    [JavaRef("Library/printChar")]
+    static extern void PrintChar(char c);
 }
 
 class Main
@@ -14,15 +20,13 @@ class Main
         //int a = 13;
         //Library.PrintString("1");
         //Library.PrintInt(2*2+a);
-        Library.PrintInt( TestMult(3,3) - TestMult(2,3));
+        char a = TestChar();
+        Library.PrintChar(a);
     }
 
-    static int TestMult(int a, int b)
+    static char TestChar()
     {
-        //Library.PrintInt(a * b);
-        return a * b;
-        //string mySuperString = "MY SUPER STRING";
-        //Library.PrintString(mySuperString);
+        return 'k';
     }
 }
 

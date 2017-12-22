@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
+using MathLang.Extensions;
 using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Expressions;
 using MathLang.Tree.Nodes.Interfaces;
@@ -15,10 +17,10 @@ namespace MathLang.CodeGeneration.JasminJava
             {
                 //case ArrayElementReference arrayElementReference:
                 //    break;
-                //case BoolExpression boolExpression:
-                //    break;
-                //case CharExpression charExpression:
-                //    break;
+                case BoolExpression boolExpression:
+                    return GetBoolExpressionInstructions(boolExpression);
+                case CharExpression charExpression:
+                    return GetCharExpressionInstructions(charExpression);
                 case IntExpression intExpression:
                     return GetIntExpressionInstructions(intExpression);
                 //case VoidExpression voidExpression:
@@ -45,6 +47,17 @@ namespace MathLang.CodeGeneration.JasminJava
                 default:
                     throw new InvalidOperationException($"EXpressin instruction generation {iexpression} ({iexpression.GetType()})");
             }
+        }
+
+        private static IEnumerable<IInstruction> GetCharExpressionInstructions(this CharExpression charExpression)
+        {
+            return LdcInstruction.WithValue(charExpression.Value.ToString()).AsList();
+        }
+
+        private static IEnumerable<IInstruction> GetBoolExpressionInstructions(this BoolExpression boolExpression)
+        {
+            if (boolExpression.Value) return Iconst_1Instruction.AsList();
+            return Iconst_0Instruction.AsList();
         }
 
         private static IEnumerable<IInstruction> GetVariableReferenceInstructions(this ExtendedId extendedId)
