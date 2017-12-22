@@ -11,19 +11,24 @@ class Main
 {
     static void Main(string[] args)
     {
-        string mySuperString = "MY SUPER STRING";
-        int a = 13;
-        Library.PrintString(mySuperString);
-        Library.PrintString("1");
-        Library.PrintInt(2*2+a);
+        //int a = 13;
+        //Library.PrintString("1");
+        //Library.PrintInt(2*2+a);
+        Main.TestMult(10,15);
     }
 
-    //static void TestMethod()
-    //{
-    //    int a = 10 / 23;
-    //    //string b = "123";
-    //}
+    static void TestMult(int a, int b)
+    {
+        Library.PrintInt(a * b);
+        //string mySuperString = "MY SUPER STRING";
+        //Library.PrintString(mySuperString);
+    }
 }
+
+//static class Test
+//{
+    
+//}
 
 //static class ValeraTest
 //{
