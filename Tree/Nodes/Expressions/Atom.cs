@@ -6,7 +6,7 @@ using MathLang.Tree.Scopes;
 
 namespace MathLang.Tree.Nodes.Expressions
 {
-    public abstract class Atom : IExpression, IStatement
+    public abstract class Atom : IExpression
     {
         public INode Parent { get; set; }
         public Scope Scope { get; }
