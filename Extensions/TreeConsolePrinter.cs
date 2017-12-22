@@ -255,7 +255,7 @@ namespace MathLang.Extensions
                 string s = exId.Declaration is FunctionDeclarationParameter ? "funcParam" : "funcIndex";
                 
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"{exId.GetFullPath} ({exId.ReturnType}) " +
+                                  $"{exId.Name} ({exId.ReturnType}) " +
                                   $"{((exId.Declaration?.Index == null ) ? "": $" with {s} {exId.Declaration.Index}")}"+
                                   $"{(exId.CastToType == null ? "" : $" [cast to {exId.CastToType}]")}");
                 return;
@@ -303,7 +303,7 @@ namespace MathLang.Extensions
             if (expression is FunctionCall fc)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"CALL {fc.Name} that returns {fc.ReturnType}" +
+                                  $"CALL {fc.ExtendedId} that returns {fc.ReturnType}" +
                                   $"{(fc.CastToType == null ? "" : $" [cast to {fc.CastToType}]")}");
 
                 if (fc.FunctionCallParameters.Count > 0)

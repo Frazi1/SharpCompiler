@@ -81,6 +81,7 @@ namespace MathLang.Tree.Semantics
 
         private static void PreProcess(this FunctionDeclaration functionDeclaration)
         {
+            
             functionDeclaration.ParameterNodes
                 .ForEach(parameter =>
                 {
@@ -255,18 +256,18 @@ namespace MathLang.Tree.Semantics
             var scope = extendedId.Scope;
             if (isVariable)
             {
-                var declaration = scope.GlobalVariableSearch(extendedId.GetFullPath);
+                var declaration = scope.GlobalVariableSearch(extendedId.Name);
                 extendedId.Declaration = declaration;
                 extendedId.ReturnType = declaration != null
                     ? declaration.ReturnType
-                    : throw new ScopeException($"Variable with name \"{extendedId.GetFullPath}\" does not exist.");
+                    : throw new ScopeException($"Variable with name \"{extendedId.Name}\" does not exist.");
             }
             else
             {
-                FunctionDeclaration declaration = scope.GlobalFunctionSearch(extendedId.GetFullPath);
+                FunctionDeclaration declaration = scope.GlobalFunctionSearch(extendedId.Name);
                 extendedId.ReturnType = declaration != null
                     ? declaration.ReturnType
-                    : throw new ScopeException($"Variable with name \"{extendedId.GetFullPath}\" does not exist.");
+                    : throw new ScopeException($"Variable with name \"{extendedId.Name}\" does not exist.");
             }
         }
 
@@ -274,7 +275,7 @@ namespace MathLang.Tree.Semantics
         {
             throw new NotImplementedException("var ref");
             var scope = variableReference.Scope;
-            var name = variableReference.Name.GetFullPath;
+            var name = variableReference.Name.Name;
             var globalVariableSearchResult = scope.GlobalVariableSearch(name);
             if (globalVariableSearchResult == null)
                 throw new ScopeException($"Variable with name \"{name}\" does not exist.");
@@ -360,9 +361,9 @@ namespace MathLang.Tree.Semantics
         private static void Process(this FunctionCall functionCall)
         {
             //functionCall.Name.Process();
-            var functionDeclaration = functionCall.Scope.GlobalFunctionSearch(functionCall.Name.GetFullPath);
+            var functionDeclaration = functionCall.Scope.GlobalFunctionSearch(functionCall.ExtendedId.Name);
             if (functionDeclaration == null)
-                throw new ScopeException($"Function with name \"{functionCall.Name.GetFullPath}\" does not exist");
+                throw new ScopeException($"Function with name \"{functionCall.ExtendedId.Name}\" does not exist");
             
             CheckCallParameters(functionCall,functionCall.FunctionCallParameters, functionDeclaration.ParameterNodes);
             functionCall.ReturnType = functionDeclaration.ReturnType;
@@ -432,7 +433,7 @@ namespace MathLang.Tree.Semantics
                 throw new ExpressionException(
                     $"Index of array element reference \"{arrayElementReference.Name}\" must be of type {ReturnType.Int}, but received {arrayElementReference.ArrayIndex.ReturnType}");
             arrayElementReference.ArrayDeclaration = arrayElementReference.Scope
-                .GlobalVariableSearch(arrayElementReference.Name.GetFullPath)
+                .GlobalVariableSearch(arrayElementReference.Name.Name)
                 .CastTo<ArrayDeclaration>();
         }
 
@@ -609,11 +610,11 @@ namespace MathLang.Tree.Semantics
 
         private static void ProcessAttributeUsage(this AttributeUsage attributeUsage)
         {
-            ClassDeclaration classDeclaration = attributeUsage.Scope.GlobalClassSearch(attributeUsage.Name.GetFullPath);
+            ClassDeclaration classDeclaration = attributeUsage.Scope.GlobalClassSearch(attributeUsage.Name.Name);
             if (classDeclaration == null)
-                throw new ScopeException($"Attribute {attributeUsage.Name.GetFullPath} was not found");
+                throw new ScopeException($"Attribute {attributeUsage.Name.Name} was not found");
             if (!classDeclaration.IsAttribute)
-                throw new ScopeException($"Class {attributeUsage.Name.GetFullPath} is not an attribute");
+                throw new ScopeException($"Class {attributeUsage.Name.Name} is not an attribute");
             AttributeDeclaration attributeDeclarationClass = classDeclaration.CastTo<AttributeDeclaration>();
             CheckCallParameters(attributeUsage,attributeUsage.FunctionCallParameters, attributeDeclarationClass.ParameterNodes);
         }

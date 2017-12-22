@@ -14,7 +14,7 @@ class Main
         //int a = 13;
         //Library.PrintString("1");
         //Library.PrintInt(2*2+a);
-        Library.PrintInt( Main.TestMult(3,3) - Main.TestMult(2,3));
+        Library.PrintInt( TestMult(3,3) - TestMult(2,3));
     }
 
     static int TestMult(int a, int b)

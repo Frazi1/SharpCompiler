@@ -36,7 +36,5 @@ namespace MathLang.Tree.Nodes.Expressions
             Name = TreeHelper.GetExpression(this, Scope, syntaxExtendedId).CastTo<ExtendedId>();
             Name.Construct(syntaxExtendedId);
         }
-
-        
     }
 }

@@ -21,9 +21,9 @@ namespace MathLang.CodeGeneration.JasminJava
             });
 
             var scope = functionCall.Scope;
-            FunctionDeclaration functionDeclaration = scope.GlobalFunctionSearch(functionCall.Name.GetFullPath);
+            FunctionDeclaration functionDeclaration = scope.GlobalFunctionSearch(functionCall.ExtendedId.Name);
             var javaRefAtrribute =
-                functionDeclaration.AttributeUsages.Find(usage => usage.Name.GetFullPath == "JavaRef");
+                functionDeclaration.AttributeUsages.Find(usage => usage.Name.Name == "JavaRef");
             if (javaRefAtrribute != null)
             {
                 string externName = javaRefAtrribute.FunctionCallParameters
@@ -42,14 +42,14 @@ namespace MathLang.CodeGeneration.JasminJava
             }
             else
             {
-                var splittedName = functionCall.Name.GetFullPath.Split('.');
-                string correctedName;
-                if (splittedName.Length == 1)
-                    correctedName = splittedName[0].ToCamelCase();
-                else
-                    correctedName = $"{splittedName[0]}/{splittedName[1].ToCamelCase()}";
+                //var splittedName = functionCall.FunctionDeclaration.FullName.Split('.');
+                //string correctedName;
+                //if (splittedName.Length == 1)
+                //    correctedName = splittedName[0].ToCamelCase();
+                //else
+                //    correctedName = $"{splittedName[0]}/{splittedName[1].ToCamelCase()}";
                 invokestaticInstruction invokestaticInstruction = InstructionsHelper.InvokestaticInstruction
-                    .WithMethodFullName(correctedName)
+                    .WithMethodFullName(/*correctedName*/functionCall.FunctionDeclaration.FullName)
                     .WithReturnType(ReturnTypeToStringConverter.Convert(functionCall.ReturnType));
                 functionDeclaration
                     .ParameterNodes

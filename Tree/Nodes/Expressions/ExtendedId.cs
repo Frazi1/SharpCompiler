@@ -17,7 +17,7 @@ namespace MathLang.Tree.Nodes.Expressions
         public INode Parent { get; set; }
         public Scope Scope { get; }
 
-        public string GetFullPath => string.Join(".", IdList);
+        public string Name => string.Join(".", IdList);
         public ReturnType ReturnType { get; set; }
         public ReturnType CastToType { get; set; }
         public Declaration Declaration { get; set; }
@@ -37,7 +37,7 @@ namespace MathLang.Tree.Nodes.Expressions
 
         public override string ToString()
         {
-            return GetFullPath;
+            return Name;
         }
     }
 
