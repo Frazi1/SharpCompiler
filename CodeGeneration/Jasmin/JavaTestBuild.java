@@ -4,7 +4,7 @@ class JavaTestBuild {
     }
 
     public static boolean test(boolean a, boolean b) {
-        return a && b ;
+        return a || b;
     }
     
 }
