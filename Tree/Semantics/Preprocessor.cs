@@ -145,7 +145,6 @@ namespace MathLang.Tree.Semantics
                         variableDeclaration.Name, Scope.FunctionLevel)
                     != null)
                     throw new ScopeException($"Variable with name: \"{variableDeclaration.Name}\" already exists");
-                variableDeclaration.Scope.AddVariable(variableDeclaration);
             }
             IExpression variableDeclarationValueExpression = variableDeclaration.Value;
             if (variableDeclarationValueExpression == null) return;
@@ -156,8 +155,14 @@ namespace MathLang.Tree.Semantics
                 variableDeclarationValueExpression.CastToType = variableDeclaration.ReturnType;
             }
             else
+            {
                 throw new ScopeException(
                     $"Variable \"{variableDeclaration.Name}\" return type {variableDeclaration.ReturnType} is different from {variableDeclarationValueExpression.ReturnType} ");
+            }
+            if (checkName)
+            {
+                variableDeclaration.Scope.AddVariable(variableDeclaration);
+            }
         }
 
         private static void Process(this FunctionDeclaration functionDeclaration)
