@@ -23,7 +23,7 @@ class Main
         //Library.PrintChar(a);
         //Library.PrintInt(IntTest() + IntTest());
         //Library.PrintBool(TestChar());
-        Library.PrintBool(boolT(1 < 2, true));
+        Library.PrintBool(!(!boolT(1 < 2, true)));
     }
 
     static bool boolT(bool a, bool b)

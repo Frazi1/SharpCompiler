@@ -70,5 +70,22 @@ namespace MathLang.CodeGeneration.JasminJava
             instructions.Add(Instructions.InsertLabelInstruction.WithLabel(labelEnd));
             return instructions;
         }
+
+        public static IEnumerable<IInstruction> BuildLogicalNot(IEnumerable<IInstruction> operandInstructions)
+        {
+            int currentCount = _count++;
+            List<IInstruction> instructions = new List<IInstruction>();
+            string labelEnd = $"NotCodeGeneration_{currentCount}_end";
+            string labelFalse = $"NotCodeGeneration_{currentCount}_false";
+
+            instructions.AddRange(operandInstructions);
+            instructions.Add(IfneInstruction.WithLabel(labelFalse));
+            instructions.Add(Iconst_1Instruction);
+            instructions.Add(GotoInstruction.WithLabel(labelEnd));
+            instructions.Add(Instructions.InsertLabelInstruction.WithLabel(labelFalse));
+            instructions.Add(Iconst_0Instruction);
+            instructions.Add(Instructions.InsertLabelInstruction.WithLabel(labelEnd));
+            return instructions;
+        }
     }
 }

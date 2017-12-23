@@ -145,8 +145,8 @@ namespace MathLang.CodeGeneration.JasminJava
                     instructions.AddRange(InstructionsBuilder.BuildCompareInstrution(expression.Left.GetInstructions(),
                         expression.Right.GetInstructions(), If_icmpneInstruction));
                     break;
-                //case Tree.Nodes.Enums.ExpressionType.Not:
-                //    break;
+                case Tree.Nodes.Enums.ExpressionType.Not:
+                    return InstructionsBuilder.BuildLogicalNot(expression.Left.GetInstructions());
                 case Tree.Nodes.Enums.ExpressionType.Or:
                     return InstructionsBuilder.BuildLogicalOr(expression.Left.GetInstructions(),
                         expression.Right.GetInstructions());
