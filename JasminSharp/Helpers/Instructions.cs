@@ -1,6 +1,6 @@
 ﻿namespace MathLang.CodeGeneration.JasminJava
 {
-    public static class InstructionsHelper
+    public static class Instructions
     {
         public static bipushInstruction BipushInstruction => new bipushInstruction(); 
         public static invokestaticInstruction InvokestaticInstruction => new invokestaticInstruction();
@@ -187,5 +187,6 @@
         public static swapInstruction SwapInstruction => new swapInstruction();
         public static ldcInstruction LdcInstruction => new ldcInstruction();
         public static ldc_wInstruction Ldc_wInstruction => new ldc_wInstruction();
+        public static InsertLabelInstruction InsertLabelInstruction => new InsertLabelInstruction();
     }
 }

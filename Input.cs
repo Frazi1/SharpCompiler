@@ -20,13 +20,24 @@ class Main
         //int a = 13;
         //Library.PrintString("1");
         //Library.PrintInt(2*2+a);
-        char a = TestChar();
-        Library.PrintChar(a);
+        //Library.PrintChar(a);
+        Library.PrintInt(IntTest() + IntTest());
     }
 
-    static char TestChar()
+    static int IntTest()
     {
-        return 'k';
+        return 1;
+    }
+    
+    static bool TestChar()
+    {
+        bool t1 = 10 != 15;
+        bool t2 = 1 == 2;
+        bool t3 = 1 <= 2;
+        bool t4 = 1 >= 2;
+        bool t5 = 1 > 2;
+        
+        return 1 < 2;
     }
 }
 

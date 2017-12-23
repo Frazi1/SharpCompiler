@@ -1,10 +1,10 @@
 class JavaTestBuild {
     public static void main(){
+        //test(1,2);
     }
-    public static char getBool(){
-        return 'f';
-    }
-    // public static void test2(int a, int b){
 
-    // }
+    public static boolean test(int a, int b) {
+        return a < b;
+    }
+    
 }

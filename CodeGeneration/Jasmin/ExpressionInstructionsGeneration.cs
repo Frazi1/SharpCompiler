@@ -5,7 +5,7 @@ using MathLang.Extensions;
 using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Expressions;
 using MathLang.Tree.Nodes.Interfaces;
-using static MathLang.CodeGeneration.JasminJava.InstructionsHelper;
+using static MathLang.CodeGeneration.JasminJava.Instructions;
 
 namespace MathLang.CodeGeneration.JasminJava
 {
@@ -105,31 +105,38 @@ namespace MathLang.CodeGeneration.JasminJava
                     instructions.Add(GetDivInstruction(expression.Left.ReturnType));
                     break;
                 case Tree.Nodes.Enums.ExpressionType.Equal:
+                    instructions.AddRange(InstuctionsBuilder.BuildCompareInstrution(If_icmpeqInstruction));
                     break;
                 case Tree.Nodes.Enums.ExpressionType.Greater:
+                    instructions.AddRange(InstuctionsBuilder.BuildCompareInstrution(If_icmpgtInstruction));
                     break;
                 case Tree.Nodes.Enums.ExpressionType.EqualOrGreater:
+                    instructions.AddRange(InstuctionsBuilder.BuildCompareInstrution(If_icmpgeInstruction));
                     break;
                 case Tree.Nodes.Enums.ExpressionType.Less:
+                    instructions.AddRange(InstuctionsBuilder.BuildCompareInstrution(If_icmpltInstruction));
                     break;
                 case Tree.Nodes.Enums.ExpressionType.EqualOrLess:
+                    instructions.AddRange(InstuctionsBuilder.BuildCompareInstrution(If_icmpleInstruction));
                     break;
                 case Tree.Nodes.Enums.ExpressionType.NotEqual:
+                    instructions.AddRange(InstuctionsBuilder.BuildCompareInstrution(If_icmpneInstruction));
                     break;
-                case Tree.Nodes.Enums.ExpressionType.Not:
-                    break;
-                case Tree.Nodes.Enums.ExpressionType.Or:
-                    break;
-                case Tree.Nodes.Enums.ExpressionType.And:
-                    break;
-                case Tree.Nodes.Enums.ExpressionType.FunctionCall:
-                    break;
-                case Tree.Nodes.Enums.ExpressionType.VariableDeclaration:
-                    break;
-                case Tree.Nodes.Enums.ExpressionType.VariableReference:
-                    break;
-                case Tree.Nodes.Enums.ExpressionType.ArrayElementReference:
-                    break;
+                //case Tree.Nodes.Enums.ExpressionType.Not:
+                //    break;
+                //case Tree.Nodes.Enums.ExpressionType.Or:
+                //    break;
+                //case Tree.Nodes.Enums.ExpressionType.And:
+                //    break;
+                //case Tree.Nodes.Enums.ExpressionType.FunctionCall:
+                //    break;
+                //case Tree.Nodes.Enums.ExpressionType.VariableDeclaration:
+                //    break;
+                //case Tree.Nodes.Enums.ExpressionType.VariableReference:
+                //    break;
+                //case Tree.Nodes.Enums.ExpressionType.ArrayElementReference:
+                //    break;
+                default: throw new NotImplementedException($"Expression code generation: {expression}");
             }
             return instructions;
         }

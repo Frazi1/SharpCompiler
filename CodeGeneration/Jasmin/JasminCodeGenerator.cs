@@ -68,7 +68,7 @@ namespace MathLang.CodeGeneration.JasminJava
                 jasminFunction.WithInstructions(statement.GetInstructions());
             });
             if (function.ReturnType == ReturnType.Void)
-                jasminFunction.WithInstructions(InstructionsHelper.ReturnInstruction);
+                jasminFunction.WithInstructions(Instructions.ReturnInstruction);
             return jasminFunction;
         }
 

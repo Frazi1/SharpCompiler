@@ -31,7 +31,7 @@ namespace MathLang.CodeGeneration.JasminJava
                     .CastTo<StringExpression>()
                     .Value
                     .RemoveFirstAndLastCharacters();
-                invokestaticInstruction invokestaticInstruction = InstructionsHelper.InvokestaticInstruction
+                invokestaticInstruction invokestaticInstruction = Instructions.InvokestaticInstruction
                     .WithMethodFullName(externName)
                     .WithReturnType(ReturnTypeToStringConverter.Convert(functionDeclaration.ReturnType));
                 functionDeclaration
@@ -48,7 +48,7 @@ namespace MathLang.CodeGeneration.JasminJava
                 //    correctedName = splittedName[0].ToCamelCase();
                 //else
                 //    correctedName = $"{splittedName[0]}/{splittedName[1].ToCamelCase()}";
-                invokestaticInstruction invokestaticInstruction = InstructionsHelper.InvokestaticInstruction
+                invokestaticInstruction invokestaticInstruction = Instructions.InvokestaticInstruction
                     .WithMethodFullName(/*correctedName*/functionCall.FunctionDeclaration.FullName)
                     .WithReturnType(ReturnTypeToStringConverter.Convert(functionCall.ReturnType));
                 functionDeclaration
