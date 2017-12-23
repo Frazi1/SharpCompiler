@@ -19,8 +19,6 @@ static class ValeraTest
     ////array check
     static void Method()
     {
-        bool kkkk = 1 < 2;
-
         int[] arr = new int[4];
         arr[(6 - 5)] = Cat;
         arr[Cat] = 'r';
