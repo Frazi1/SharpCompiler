@@ -3,6 +3,7 @@ using System.Globalization;
 
 using Antlr.Runtime;
 using Antlr.Runtime.Tree;
+using MathLang.CodeGeneration;
 using MathLang.Extensions;
 using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Semantics;
@@ -41,7 +42,9 @@ namespace MathLang
                 SemanticsRunner.Run(astProgram);
 
                 TreeConsolePrinter tp = new TreeConsolePrinter();
-                tp.Print(astProgram);   
+                tp.Print(astProgram); 
+                
+                CodeGenerator cg = new CodeGenerator("ass", "mod", astProgram);
             }
             catch (Exception e)
             {

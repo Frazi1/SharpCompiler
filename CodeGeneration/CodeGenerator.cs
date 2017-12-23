@@ -25,13 +25,13 @@ namespace MathLang.CodeGeneration
         public CodeGenerator (string assName, string moduleName, Tree.Nodes.Program programNode)
         {
             // create a dynamic assembly and module 
-            AssemblyName assemblyName = new AssemblyName();
+            assemblyName = new AssemblyName();
             assemblyName.Name = assName;
 
-            AssemblyBuilder assemblyBuilder = Thread.GetDomain()
+            assemblyBuilder = Thread.GetDomain()
                 .DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndSave);
 
-            ModuleBuilder module = assemblyBuilder.DefineDynamicModule(moduleName+".exe");
+            module = assemblyBuilder.DefineDynamicModule(moduleName+".exe");
 
             GenerateProgram(programNode);
 
@@ -50,6 +50,7 @@ namespace MathLang.CodeGeneration
 
         public  void GenerateClass(ClassDeclaration classNode, ModuleBuilder module)
         {
+            
             // create public static class
             TypeBuilder typeBuilder = module.DefineType(classNode.Name, TypeAttributes.Public |
                 TypeAttributes.Class | TypeAttributes.Sealed | TypeAttributes.Abstract);
@@ -90,7 +91,7 @@ namespace MathLang.CodeGeneration
                 // set the entry point for the application
                 assemblyBuilder.SetEntryPoint(methodbuilder, PEFileKinds.ConsoleApplication);
             }
-
+            
             GenerateFuncStatementBlock(functionDeclarationNode.StatemenBlock, methodbuilder);
         }
 
@@ -102,7 +103,7 @@ namespace MathLang.CodeGeneration
             {
                 GenerateStatement(statement, ilGenerator);
             }
-            ilGenerator.EmitWriteLine("Hello world");
+            //ilGenerator.EmitWriteLine("Hello world");
 
             ilGenerator.Emit(OpCodes.Ret);
         }
@@ -143,32 +144,7 @@ namespace MathLang.CodeGeneration
             }
         }
 
-        private void GenerateExpression(IExpression iexpression, ILGenerator ilGenerator)
-        {
-            switch (iexpression)
-            {
-                case ExtendedId extendedId:
-                    GenerateExtendedId(extendedId, ilGenerator);
-                    break;
-                //case Expression expression:
-                //    expression.Generate();
-                //    break;
-                //case Atom atom:
-                //    atom.Generate();
-                //    break;
-                //case FunctionCall functionCall:
-                //    functionCall.Generate();
-                //    break;
-                //case NewArray newArray:
-                //    newArray.Generate();
-                //    break;
-                //case ArrayElementReference arrayElementReference:
-                //    arrayElementReference.Generate();
-                //    break;
-                default: throw new ArgumentOutOfRangeException(nameof(iexpression));
-            }
-        }
-
+        #region statements
         public void GenerateFuncCall(FunctionCall funcCallNode, ILGenerator ilGenerator)
         {
             var ids = funcCallNode.Name.GetFullPath.Split('.');
@@ -189,7 +165,36 @@ namespace MathLang.CodeGeneration
                 //call WriteLine
                 ilGenerator.EmitCall(OpCodes.Call, writeLineMI, null);
             }
+        } 
+        #endregion
+
+        private void GenerateExpression(IExpression iexpression, ILGenerator ilGenerator)
+        {
+            switch (iexpression)
+            {
+                case ExtendedId extendedId:
+                    GenerateExtendedId(extendedId, ilGenerator);
+                    break;
+                //case Expression expression:
+                //    expression.Generate();
+                //    break;
+                case Atom atom:
+                    GenerateAtom(atom, ilGenerator);
+                    break;
+                //case FunctionCall functionCall:
+                //    functionCall.Generate();
+                //    break;
+                //case NewArray newArray:
+                //    newArray.Generate();
+                //    break;
+                //case ArrayElementReference arrayElementReference:
+                //    arrayElementReference.Generate();
+                //    break;
+                default: throw new ArgumentOutOfRangeException(nameof(iexpression));
+            }
         }
+
+       
 
         private void GenerateExtendedId(ExtendedId extendedIdNode, ILGenerator ilGenerator)
         {
@@ -203,8 +208,9 @@ namespace MathLang.CodeGeneration
                 {
                     if (extendedIdNode.Declaration is FunctionDeclarationParameter fdParam)
                     {
+                        
                         //wrong, very wrong
-                        ilGenerator.Emit(OpCodes.Ldarg, 6);
+                        ilGenerator.Emit(OpCodes.Ldarg, (int)extendedIdNode.Declaration.Index);
                     }
                 }
                 //this class static field
@@ -212,6 +218,21 @@ namespace MathLang.CodeGeneration
                 {
                 }
             }
+        }
+
+        private void GenerateAtom(Atom atomNode, ILGenerator ilGenerator)
+        {
+            //constant we put onto stack
+            string value = atomNode.Value.Replace("\'", "").Replace("true", "1").Replace("false", "0");
+
+            int num;
+            if (Int32.TryParse(value, out num))
+            {
+                ilGenerator.Emit(OpCodes.Ldc_I4, num);
+            }
+
+
+
         }
     }
 }
