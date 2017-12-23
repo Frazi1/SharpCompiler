@@ -54,7 +54,7 @@
     <Compile Include="Jasmin.cs" />
     <Compile Include="JasminException.cs" />
     <Compile Include="Helpers\Instructions.cs" />
-    <Compile Include="Modules\Instructions\InstuctionsBuilder.cs" />
+    <Compile Include="Modules\Instructions\InstructionsBuilder.cs" />
     <Compile Include="Modules\Instructions\JasminConstantArgumentInstructions.cs" />
     <Compile Include="Modules\Instructions\JasminIndexedInstruction.cs" />
     <Compile Include="Modules\Instructions\JasminIntArgumentInstruction.cs" />

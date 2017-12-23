@@ -28,7 +28,7 @@ class Main
 
     static bool boolT(bool a, bool b)
     {
-        return a && b;
+        return b || a;
     }
     
     static int IntTest()
