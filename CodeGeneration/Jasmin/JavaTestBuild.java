@@ -3,8 +3,8 @@ class JavaTestBuild {
         //test(1,2);
     }
 
-    public static boolean test(int a, int b) {
-        return a < b;
+    public static boolean test(boolean a, boolean b) {
+        return a && b ;
     }
     
 }

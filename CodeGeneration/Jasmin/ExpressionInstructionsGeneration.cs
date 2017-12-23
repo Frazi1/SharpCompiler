@@ -38,14 +38,15 @@ namespace MathLang.CodeGeneration.JasminJava
                 //Variable reference
                 case ExtendedId extendedId:
                     return extendedId.GetVariableReferenceInstructions();
-                
+
                 case VariableReference variableReference:
                     throw new InvalidOperationException($"EXpressin instruction generation {iexpression}");
                     break;
                 case StringExpression stringExpression:
                     return GetStringExpressionInstruction(stringExpression);
                 default:
-                    throw new InvalidOperationException($"EXpressin instruction generation {iexpression} ({iexpression.GetType()})");
+                    throw new InvalidOperationException(
+                        $"EXpressin instruction generation {iexpression} ({iexpression.GetType()})");
             }
         }
 
@@ -67,7 +68,7 @@ namespace MathLang.CodeGeneration.JasminJava
                 extendedId.Declaration.Index.Value));
             return instructions;
         }
-        
+
         private static IEnumerable<IInstruction> GetStringExpressionInstruction(this StringExpression stringExpression)
         {
             List<IInstruction> instructions = new List<IInstruction>();
@@ -87,40 +88,62 @@ namespace MathLang.CodeGeneration.JasminJava
         private static IEnumerable<IInstruction> GetExpressionInstructions(this Expression expression)
         {
             List<IInstruction> instructions = new List<IInstruction>();
-            instructions.AddRange(expression.Left.GetInstructions());
-            if (expression.Right != null)
-                instructions.AddRange(expression.Right.GetInstructions());
+            //instructions.AddRange(expression.Left.GetInstructions());
+            //if (expression.Right != null)
+            //    instructions.AddRange(expression.Right.GetInstructions());
             switch (expression.ExpressionType)
             {
                 case Tree.Nodes.Enums.ExpressionType.Add:
-                    instructions.Add(GetAddInstruction(expression.Left.ReturnType));
+                    instructions.AddRange(
+                        GetArithmethicsInstuction(
+                            expression.Left.GetInstructions(),
+                            expression.Right.GetInstructions(),
+                            GetAddInstruction(expression.Left.ReturnType)));
                     break;
                 case Tree.Nodes.Enums.ExpressionType.Sub:
-                    instructions.Add(GetSubInstruction(expression.Left.ReturnType));
+                    instructions.AddRange(
+                        GetArithmethicsInstuction(
+                            expression.Left.GetInstructions(),
+                            expression.Right.GetInstructions(),
+                            GetSubInstruction(expression.Left.ReturnType)));
                     break;
                 case Tree.Nodes.Enums.ExpressionType.Mul:
-                    instructions.Add(GetMulInstruction(expression.Left.ReturnType));
+                    instructions.AddRange(
+                        GetArithmethicsInstuction(
+                            expression.Left.GetInstructions(),
+                            expression.Right.GetInstructions(),
+                            GetMulInstruction(expression.Left.ReturnType)));
                     break;
                 case Tree.Nodes.Enums.ExpressionType.Div:
-                    instructions.Add(GetDivInstruction(expression.Left.ReturnType));
+                    instructions.AddRange(
+                        GetArithmethicsInstuction(
+                            expression.Left.GetInstructions(),
+                            expression.Right.GetInstructions(),
+                            GetDivInstruction(expression.Left.ReturnType)));
                     break;
                 case Tree.Nodes.Enums.ExpressionType.Equal:
-                    instructions.AddRange(InstuctionsBuilder.BuildCompareInstrution(If_icmpeqInstruction));
+                    instructions.AddRange(InstuctionsBuilder.BuildCompareInstrution(expression.Left.GetInstructions(),
+                        expression.Right.GetInstructions(), If_icmpeqInstruction));
                     break;
                 case Tree.Nodes.Enums.ExpressionType.Greater:
-                    instructions.AddRange(InstuctionsBuilder.BuildCompareInstrution(If_icmpgtInstruction));
+                    instructions.AddRange(InstuctionsBuilder.BuildCompareInstrution(expression.Left.GetInstructions(),
+                        expression.Right.GetInstructions(), If_icmpgtInstruction));
                     break;
                 case Tree.Nodes.Enums.ExpressionType.EqualOrGreater:
-                    instructions.AddRange(InstuctionsBuilder.BuildCompareInstrution(If_icmpgeInstruction));
+                    instructions.AddRange(InstuctionsBuilder.BuildCompareInstrution(expression.Left.GetInstructions(),
+                        expression.Right.GetInstructions(), If_icmpgeInstruction));
                     break;
                 case Tree.Nodes.Enums.ExpressionType.Less:
-                    instructions.AddRange(InstuctionsBuilder.BuildCompareInstrution(If_icmpltInstruction));
+                    instructions.AddRange(InstuctionsBuilder.BuildCompareInstrution(expression.Left.GetInstructions(),
+                        expression.Right.GetInstructions(), If_icmpltInstruction));
                     break;
                 case Tree.Nodes.Enums.ExpressionType.EqualOrLess:
-                    instructions.AddRange(InstuctionsBuilder.BuildCompareInstrution(If_icmpleInstruction));
+                    instructions.AddRange(InstuctionsBuilder.BuildCompareInstrution(expression.Left.GetInstructions(),
+                        expression.Right.GetInstructions(), If_icmpleInstruction));
                     break;
                 case Tree.Nodes.Enums.ExpressionType.NotEqual:
-                    instructions.AddRange(InstuctionsBuilder.BuildCompareInstrution(If_icmpneInstruction));
+                    instructions.AddRange(InstuctionsBuilder.BuildCompareInstrution(expression.Left.GetInstructions(),
+                        expression.Right.GetInstructions(), If_icmpneInstruction));
                     break;
                 //case Tree.Nodes.Enums.ExpressionType.Not:
                 //    break;
@@ -140,6 +163,17 @@ namespace MathLang.CodeGeneration.JasminJava
             }
             return instructions;
         }
+
+        private static IEnumerable<IInstruction> GetArithmethicsInstuction(IEnumerable<IInstruction> left,
+            IEnumerable<IInstruction> right, IInstruction arithmeticsInstruction)
+        {
+            List<IInstruction> instructions = new List<IInstruction>();
+            instructions.AddRange(left);
+            instructions.AddRange(right);
+            instructions.Add(arithmeticsInstruction);
+            return instructions;
+        }
+
 
         private static IInstruction GetSubInstruction(ReturnType returnType)
         {

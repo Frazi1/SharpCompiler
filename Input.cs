@@ -22,11 +22,12 @@ class Main
         //Library.PrintInt(2*2+a);
         //Library.PrintChar(a);
         Library.PrintInt(IntTest() + IntTest());
+        Library.PrintBool(TestChar());
     }
 
     static int IntTest()
     {
-        return 1;
+        return 1+21*3;
     }
     
     static bool TestChar()
@@ -37,7 +38,7 @@ class Main
         bool t4 = 1 >= 2;
         bool t5 = 1 > 2;
         
-        return 1 < 2;
+        return true == false;
     }
 }
 
