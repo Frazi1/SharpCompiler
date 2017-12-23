@@ -21,10 +21,16 @@ class Main
         //Library.PrintString("1");
         //Library.PrintInt(2*2+a);
         //Library.PrintChar(a);
-        Library.PrintInt(IntTest() + IntTest());
-        Library.PrintBool(TestChar());
+        //Library.PrintInt(IntTest() + IntTest());
+        //Library.PrintBool(TestChar());
+        Library.PrintBool(boolT(1 < 2, true));
     }
 
+    static bool boolT(bool a, bool b)
+    {
+        return a && b;
+    }
+    
     static int IntTest()
     {
         return 1+21*3;

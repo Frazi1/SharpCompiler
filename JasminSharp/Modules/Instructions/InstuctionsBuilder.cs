@@ -8,24 +8,29 @@ namespace MathLang.CodeGeneration.JasminJava
         private static int _count;
 
 
-        public static IEnumerable<IInstruction> BuildLogicalAnd()
+        public static IEnumerable<IInstruction> BuildLogicalAnd(IEnumerable<IInstruction> leftOperandInstructions,
+            IEnumerable<IInstruction> rightOperandInstructions)
         {
             List<IInstruction> instructions = new List<IInstruction>();
-            var compareInstruction = IfeqInstruction;
-            string labelEnd = $"{compareInstruction.Name}_{_count}_end";
-            string labelFalse = $"{compareInstruction.Name}_{_count}_false";
-
-            instructions.Add(Iload_0Instruction);
-            instructions.Add(compareInstruction.WithLabel(labelFalse));
-            instructions.Add(Iload_1Instruction);
-            instructions.Add(compareInstruction.WithLabel(labelFalse));
-
-
+            var ifeqInstruction = IfeqInstruction;
+            string labelEnd = $"{ifeqInstruction.Name}_{_count}_end";
+            string labelFalse = $"{ifeqInstruction.Name}_{_count}_false";
             _count++;
+
+            instructions.AddRange(leftOperandInstructions);
+            instructions.Add(ifeqInstruction.WithLabel(labelFalse));
+            instructions.AddRange(rightOperandInstructions);
+            instructions.Add(ifeqInstruction.WithLabel(labelFalse));
+            instructions.Add(Iconst_1Instruction);
+            instructions.Add(GotoInstruction.WithLabel(labelEnd));
+            instructions.Add(Instructions.InsertLabelInstruction.WithLabel(labelFalse));
+            instructions.Add(Iconst_0Instruction);
+            instructions.Add(Instructions.InsertLabelInstruction.WithLabel(labelEnd));
             return instructions;
         }
 
-        public static IEnumerable<IInstruction> BuildCompareInstrution(IEnumerable<IInstruction> leftOperandInstructions,
+        public static IEnumerable<IInstruction> BuildCompareInstrution(
+            IEnumerable<IInstruction> leftOperandInstructions,
             IEnumerable<IInstruction> rightOperandInstructions, LabelInstruction compareInstruction)
         {
             string labelEnd = $"{compareInstruction.Name}_{_count}_end";

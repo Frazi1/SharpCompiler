@@ -149,8 +149,9 @@ namespace MathLang.CodeGeneration.JasminJava
                 //    break;
                 //case Tree.Nodes.Enums.ExpressionType.Or:
                 //    break;
-                //case Tree.Nodes.Enums.ExpressionType.And:
-                //    break;
+                case Tree.Nodes.Enums.ExpressionType.And:
+                    return InstuctionsBuilder.BuildLogicalAnd(expression.Left.GetInstructions(),
+                        expression.Right.GetInstructions());
                 //case Tree.Nodes.Enums.ExpressionType.FunctionCall:
                 //    break;
                 //case Tree.Nodes.Enums.ExpressionType.VariableDeclaration:
