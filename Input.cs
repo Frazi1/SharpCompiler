@@ -17,11 +17,57 @@ class Main
 {
     static void Main(string[] args)
     {
-        for (int i = 0; i < 10; i=i+1)
-        {
-            Library.PrintInt(i);
-        }
+        //int l = 10;
+        //int[] a = new int[l];
+        //for (int i = 0; i < l; i=i+1)
+        //    a[i] = l - i;
 
+        //BubbleSort(a, l);
+
+        //PrintIntArray(a, l);
+        Library.PrintInt(Fact(20));
+    }
+
+    //static void Swap(int[] arr, int a, int b)
+    //{
+    //    int t = arr[a];
+    //    arr[a] = arr[b];
+    //    arr[b] = t;
+    //}
+
+    //static void BubbleSort(int[] a, int l)
+    //{
+    //    for (int i = 0; i < l; i = i + 1)
+    //        for (int j = 0; j < l - 1; j = j + 1)
+    //            if (a[j] > a[j + 1])
+    //                Swap(a, j, j + 1);
+    //}
+    
+    //static void PrintIntArray(int[] arr, int lenght)
+    //{
+    //    for (int i = 0; i < lenght; i = i + 1)
+    //    {
+    //        Library.PrintInt(arr[i]);
+    //    }
+    //}
+
+    static int Fibbonacchi(int n)
+    {
+        if (n > 1)
+        {
+            int i = Fibbonacchi(n - 1) + Fibbonacchi(n - 2);
+            Library.PrintInt(i);
+            return i;
+        }
+        Library.PrintInt(n);
+        return n;
+    }
+
+    static int Fact(int n)
+    {
+        if (n == 0)
+            return 1;
+        return n * Fact(n - 1);
     }
 
     //static void Compare(int a, int b)

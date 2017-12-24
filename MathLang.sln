@@ -10,6 +10,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstuctionsCodeGenerator", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenerationLib", "CodeGenerationLib\CodeGenerationLib.csproj", "{732A2647-F33E-41AA-A76A-A07C05B98E12}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6C666120-348D-4F40-964A-8A7B2F89E82B}"
+	ProjectSection(SolutionItems) = preProject
+		UnitTestProject1\UnitTestProject1.csproj = UnitTestProject1\UnitTestProject1.csproj
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
