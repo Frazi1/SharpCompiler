@@ -7,7 +7,7 @@
             AddLibraryClasses(program);
             program.PreProcess();
             program.Process();
-            program.SetVariableIndexes();
+            program.SetVariableIndexes(FunctionIndexingStrategy.United);
         }
 
         public static void AddLibraryClasses(Nodes.Program program)

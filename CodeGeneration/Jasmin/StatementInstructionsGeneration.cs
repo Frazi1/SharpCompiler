@@ -178,6 +178,7 @@ namespace MathLang.CodeGeneration.JasminJava
 
         private static IEnumerable<IInstruction> GetArrayDeclarationInstructions(this ArrayDeclaration arrayDeclaration)
         {
+            //TODO: array initialization
             List<IInstruction> instructions = new List<IInstruction>();
             instructions.AddRange(arrayDeclaration.Value.GetInstructions());
             instructions.Add(GetStoreInstruction(arrayDeclaration.ReturnType, arrayDeclaration.Index.Value));

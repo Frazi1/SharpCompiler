@@ -17,12 +17,12 @@ class Main
 {
     static void Main(string[] args)
     {
-        //int a = 13;
+        int i = 12;
         string[] a = new string[13];
-        a[5] = "123";
-        //Library.PrintString("1");
-        //Library.PrintInt(2*2+a);
-        //Library.PrintChar(a);
+        a[i] = "test";
+        Library.PrintString(a[i]);
+        //Library.PrintString(a[i]);
+        //Library.PrintInt(2 * 2 + a);
         //Library.PrintInt(IntTest() + IntTest());
         //Library.PrintBool(TestChar());
         //Library.PrintBool(!(!boolT(1 < 2, true)));
@@ -32,12 +32,12 @@ class Main
     //{
     //    return b || a;
     //}
-    
+
     //static int IntTest()
     //{
-    //    return 1+21*3;
+    //    return 1 + 21 * 3;
     //}
-    
+
     //static bool TestChar()
     //{
     //    bool t1 = 10 != 15;
@@ -45,7 +45,7 @@ class Main
     //    bool t3 = 1 <= 2;
     //    bool t4 = 1 >= 2;
     //    bool t5 = 1 > 2;
-        
+
     //    return true == false;
     //}
 }

@@ -33,10 +33,10 @@ namespace MathLang.CodeGeneration.JasminJava
                     .RemoveFirstAndLastCharacters();
                 invokestaticInstruction invokestaticInstruction = Instructions.InvokestaticInstruction
                     .WithMethodFullName(externName)
-                    .WithReturnType(ReturnTypeToJavaConverter.ConvertToJasminRepresentation(functionDeclaration.ReturnType));
+                    .WithReturnType(ReturnTypeToJavaConverter.ConvertToFullRepresentation(functionDeclaration.ReturnType));
                 functionDeclaration
                     .ParameterNodes
-                    .Select(parameter => ReturnTypeToJavaConverter.ConvertToJasminRepresentation(parameter.ReturnType))
+                    .Select(parameter => ReturnTypeToJavaConverter.ConvertToFullRepresentation(parameter.ReturnType))
                     .ForEach(typeName => invokestaticInstruction.WithParameterType(typeName));
                 instructions.Add(invokestaticInstruction);
             }
@@ -50,10 +50,10 @@ namespace MathLang.CodeGeneration.JasminJava
                 //    correctedName = $"{splittedName[0]}/{splittedName[1].ToCamelCase()}";
                 invokestaticInstruction invokestaticInstruction = Instructions.InvokestaticInstruction
                     .WithMethodFullName(/*correctedName*/functionCall.FunctionDeclaration.FullName)
-                    .WithReturnType(ReturnTypeToJavaConverter.ConvertToJasminRepresentation(functionCall.ReturnType));
+                    .WithReturnType(ReturnTypeToJavaConverter.ConvertToFullRepresentation(functionCall.ReturnType));
                 functionDeclaration
                     .ParameterNodes
-                    .Select(parameter => ReturnTypeToJavaConverter.ConvertToJasminRepresentation(parameter.ReturnType))
+                    .Select(parameter => ReturnTypeToJavaConverter.ConvertToFullRepresentation(parameter.ReturnType))
                     .ForEach(typeName => invokestaticInstruction.WithParameterType(typeName));
                 instructions.Add(invokestaticInstruction);
             }

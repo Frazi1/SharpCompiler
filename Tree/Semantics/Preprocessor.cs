@@ -632,22 +632,32 @@ namespace MathLang.Tree.Semantics
 
         #region After Process
 
-        public static void SetVariableIndexes(this Nodes.Program program)
+        public static void SetVariableIndexes(this Nodes.Program program, FunctionIndexingStrategy functionIndexingStrategy)
         {
             program.ClassNodes.ForEach(classDeclaration =>
             {
                 classDeclaration.FunctionDeclarationNodes.ForEach(functionDeclaration =>
                 {
-                    SetFunctionArgsIndexes(functionDeclaration);
-                    int varIndex = 0;
-                    if (functionDeclaration.StatementBlock != null)
-                        SetBlockVarsIndexes(functionDeclaration.StatementBlock, ref varIndex);
+                    if (functionIndexingStrategy == FunctionIndexingStrategy.United)
+                    {
+                        int varIndex = functionDeclaration.IsStatic ? 0 : 1;
+                        SetFunctionArgsIndexes(functionDeclaration, ref varIndex);
+                        if (functionDeclaration.StatementBlock != null)
+                            SetBlockVarsIndexes(functionDeclaration.StatementBlock, ref varIndex);
+                    }
+                    else if (functionIndexingStrategy == FunctionIndexingStrategy.Splitted)
+                    {
+                        int argumenIndex = functionDeclaration.IsStatic ? 0 : 1;
+                        int localIndex = 0;
+                        SetFunctionArgsIndexes(functionDeclaration, ref argumenIndex);
+                        if (functionDeclaration.StatementBlock != null)
+                            SetBlockVarsIndexes(functionDeclaration.StatementBlock, ref localIndex);
+                    }
                 });
             });
 
-            void SetFunctionArgsIndexes(FunctionDeclaration functionDeclaration)
+            void SetFunctionArgsIndexes(FunctionDeclaration functionDeclaration, ref int index)
             {
-                int index = 0;
                 foreach (var parameter in functionDeclaration.ParameterNodes)
                     parameter.Index = index++;
                 //SetBlockVarsIndexes(functionDeclaration.StatementBlock, ref index);

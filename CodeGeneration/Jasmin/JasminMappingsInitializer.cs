@@ -20,13 +20,13 @@ namespace MathLang.CodeGeneration.JasminJava
         private static void InitTypeMappings()
         {
             IMapper typeMapper = Jasmin.TypeMapper;
-            typeMapper.CreateMap(ReturnType.Int, JasminReferenceConstants.JavaIntegerShort);
+            typeMapper.CreateMap(ReturnType.Int, JasminReferenceConstants.JavaIntegerPrimitive);
             //typeMapper.CreateMap(ReturnType.ArrayOf(ReturnType.Int),
             //    $"{JasminReferenceConstants.ArrayMark}{typeMapper.Map<IntReturnType, string>()}");
-            typeMapper.CreateMap(ReturnType.Void, JasminReferenceConstants.JavaVoidShort);
-            typeMapper.CreateMap(ReturnType.Bool, JasminReferenceConstants.JavaBooleanClass);
-            typeMapper.CreateMap(ReturnType.Char, JasminReferenceConstants.JavaCharShort);
-            typeMapper.CreateMap(ReturnType.String, JasminReferenceConstants.JavaStringClass);
+            typeMapper.CreateMap(ReturnType.Void, JasminReferenceConstants.JavaVoidPrimitive);
+            typeMapper.CreateMap(ReturnType.Bool, JasminReferenceConstants.JavaBooleanClassFull);
+            typeMapper.CreateMap(ReturnType.Char, JasminReferenceConstants.JavaCharPrimitive);
+            typeMapper.CreateMap(ReturnType.String, JasminReferenceConstants.JavaStringClassFull);
             //typeMapper.CreateMap(ReturnType.ArrayOf(ReturnType.String),
             //    $"{JasminReferenceConstants.ArrayMark}{typeMapper.Map<StringReturnType, string>()}");
             //typeMapper.CreateMap(new ArrayReturnType(null), $"{JasminReferenceConstants.ArrayMark}{typeMapper.Map<>()}" );

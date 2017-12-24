@@ -20,46 +20,47 @@ namespace MathLang.CodeGeneration.Helpers.Converters
             return !returnType.IsPrimitiveType();
         }
         
-        public static string ConvertToJasminRepresentation(this ReturnType returnType)
+        public static string ConvertToFullRepresentation(this ReturnType returnType)
         {
             switch (returnType)
             {
                 case BoolReturnType boolReturnType:
-                    return JasminReferenceConstants.JavaBoolShort;
+                    return JasminReferenceConstants.JavaBooleanPrimitive;
                 case CharReturnType charReturnType:
-                    return JasminReferenceConstants.JavaCharShort;
+                    return JasminReferenceConstants.JavaCharPrimitive;
                 case ArrayReturnType arrayReturnType:
-                    return $"{JasminReferenceConstants.ArrayMark}{ConvertToJasminRepresentation(arrayReturnType.InnerType)}";
+                    return $"{JasminReferenceConstants.ArrayMark}{ConvertToFullRepresentation(arrayReturnType.InnerType)}";
                 case IntReturnType intReturnType:
-                    return JasminReferenceConstants.JavaIntegerShort;
+                    return JasminReferenceConstants.JavaIntegerPrimitive;
                 case StringReturnType stringReturnType:
-                    return JasminReferenceConstants.JavaStringClass;
+                    return JasminReferenceConstants.JavaStringClassFull;
                 case VoidReturnType voidReturnType:
-                    return JasminReferenceConstants.JavaVoidShort;
+                    return JasminReferenceConstants.JavaVoidPrimitive;
                 default:
                     throw new InvalidOperationException($"Bad type {returnType} (Convert)");
             }
         }
 
-        public static string ConvertToJavaRepresentation(this ReturnType returnType)
+        public static string ConvertToKeywordRepresentation(this ReturnType returnType)
         {
             switch (returnType)
             {
                 case BoolReturnType boolReturnType:
-                    return JasminReferenceConstants.JavaBool;
+                    return JasminReferenceConstants.JavaBooleanKeyword;
                 case CharReturnType charReturnType:
-                    return JasminReferenceConstants.JavaChar;
+                    return JasminReferenceConstants.JavaCharKeyword;
                 case ArrayReturnType arrayReturnType:
-                    return $"{JasminReferenceConstants.ArrayMark}{ConvertToJavaRepresentation(arrayReturnType.InnerType)}";
+                    return $"{JasminReferenceConstants.ArrayMark}{ConvertToKeywordRepresentation(arrayReturnType.InnerType)}";
                 case IntReturnType intReturnType:
-                    return JasminReferenceConstants.JavaInt;
+                    return JasminReferenceConstants.JavaIntKeyword;
                 case StringReturnType stringReturnType:
-                    return JasminReferenceConstants.JavaStringClass;
+                    return JasminReferenceConstants.JavaStringClassShort;
                 case VoidReturnType voidReturnType:
-                    return JasminReferenceConstants.JavaVoidShort;
+                    return JasminReferenceConstants.JavaVoidPrimitive;
                 default:
                     throw new InvalidOperationException($"Bad type {returnType} (Convert)");
             }
         }
+        
     }
 }

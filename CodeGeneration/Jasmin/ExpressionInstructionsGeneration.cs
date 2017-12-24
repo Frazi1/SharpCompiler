@@ -228,7 +228,7 @@ namespace MathLang.CodeGeneration.JasminJava
             instructions.AddRange(newArray.ArraySize.GetInstructions());
 
             instructions.Add(
-                arrayCreationInstruction.WithType(newArray.InnerElementsReturnType.ConvertToJavaRepresentation()));
+                arrayCreationInstruction.WithType(newArray.InnerElementsReturnType.ConvertToKeywordRepresentation()));
             return instructions;
         }
 

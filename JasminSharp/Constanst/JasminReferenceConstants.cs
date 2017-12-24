@@ -4,26 +4,32 @@ namespace MathLang.CodeGeneration.JasminJava
 {
     public static class JasminReferenceConstants
     {
-        public const string JavaObjectClass = "Ljava/lang/Object;";
-        public const string JavaIntegerClass = "jLava/lang/Integer;";
-        public const string JavaVoidShort = "V";
-        public const string JavaIntegerShort = "I";
-        public const string JavaBoolShort = "Z";
-        public const string JavaByteShort = "B";
-        public const string JavaCharShort = "C";
-        
-        public const string JavaBooleanClass = "Ljava/lang/Boolean;";
-        public const string JavaCharacterClass = "Ljava/lang/Character;";
-        public const string JavaStringClass = "Ljava/lang/String;";
-
         public const char ArrayMark = '[';
+        public const string JavaVoidPrimitive = "V";
+        public const string JavaIntegerPrimitive = "I";
+        public const string JavaBooleanPrimitive = "Z";
+        public const string JavaBytePrimitive = "B";
+        public const string JavaCharPrimitive = "C";
 
-        public const string JavaInt = "int";
-        public const string JavaChar = "char";
-        public const string JavaBool = "boolean";
-        public const string JavaByte = "byte";
+        public const string JavaIntKeyword = "int";
+        public const string JavaCharKeyword = "char";
+        public const string JavaBooleanKeyword = "boolean";
+        public const string JavaByteKeyword = "byte";
+
+        public const string JavaBooleanClassShort = "java/lang/Boolean";
+        public const string JavaObjectClassShort = "java/lang/Object";
+        public const string JavaIntegerClassShort = "java/lang/Integer";
+        public const string JavaStringClassShort = "java/lang/String";
+        public const string JavaCharacterClassShort = "java/lang/Character";
+
+        public const string JavaObjectClassFull = "L" + JavaObjectClassShort + ";";
+        public const string JavaBooleanClassFull = "L" + JavaBooleanClassShort + ";";
+        public const string JavaIntegerClassFull = "L" + JavaIntegerClassShort + ";";
+        public const string JavaStringClassFull = "L" + JavaStringClassShort + ";";
+        public const string JavaCharacterClassFull = "L" + JavaCharacterClassShort + ";";
 
 
+        private static string GetFullPathWithLAndSemicolumn(string path) => $"L{path};";
         //public static string IntegerValueOf(string parameterType) => $"{JavaIntegerClass}/valueOf(I){parameterType}";
     }
 }

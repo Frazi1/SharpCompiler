@@ -15,7 +15,7 @@ namespace MathLang.CodeGeneration.JasminJava
         public string Name { get; private set; }
         public string InheritsFrom { get; private set; }
 
-        public JasminClassModule(string name, string inheritsFrom = JasminReferenceConstants.JavaObjectClass)
+        public JasminClassModule(string name, string inheritsFrom = JasminReferenceConstants.JavaObjectClassFull)
         {
             Name = name;
             InheritsFrom = inheritsFrom;

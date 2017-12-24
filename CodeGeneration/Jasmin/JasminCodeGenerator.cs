@@ -53,7 +53,7 @@ namespace MathLang.CodeGeneration.JasminJava
             JasminFunctionModule jasminFunction = new JasminFunctionModule()
                 .WithName(function.Name.ToCamelCase())
                 .WithModifiers(JasminModifier.Public, JasminModifier.Static)
-                .WithReturnType(ReturnTypeToJavaConverter.ConvertToJasminRepresentation(function.ReturnType));
+                .WithReturnType(ReturnTypeToJavaConverter.ConvertToFullRepresentation(function.ReturnType));
 
             function.ParameterNodes.ForEach(functionParameter =>
                 jasminFunction.WithParameter(BuildJasminFunctionParameter(functionParameter)));
@@ -72,7 +72,7 @@ namespace MathLang.CodeGeneration.JasminJava
             JasminFunctionParameter jasminFunctionParameter =
                 new JasminFunctionParameter()
                     .WithName(functionParameter.Name)
-                    .WithType(ReturnTypeToJavaConverter.ConvertToJasminRepresentation(functionParameter.ReturnType));
+                    .WithType(ReturnTypeToJavaConverter.ConvertToFullRepresentation(functionParameter.ReturnType));
             return jasminFunctionParameter;
         }
 
