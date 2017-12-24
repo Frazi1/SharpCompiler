@@ -7,14 +7,15 @@ namespace MathLang.Tree.Nodes.Expressions
 {
     public class IntExpression : Atom
     {
+        public new int Value { get; set; }
         public IntExpression(INode parent, Scope parentScope)
             : base(parent, parentScope)
         {
+            ReturnType = ReturnType.Int;
         }
 
         public override void Construct(CommonTree node)
         {
-            ReturnType = ReturnType.Int;
             base.Construct(node);
         }
     }
