@@ -7,6 +7,7 @@ using System.Reflection.Emit;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
+using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Expressions;
 using MathLang.Tree.Nodes.Interfaces;
 using MathLang.Tree.Nodes.Statements;
@@ -321,9 +322,9 @@ namespace MathLang.CodeGeneration
                 case ExtendedId extendedId:
                     GenerateExtendedId(extendedId, ilGenerator);
                     break;
-                //case Expression expression:
-                //    expression.Generate();
-                //    break;
+                case Expression expression:
+                    GenerateExpression(expression, ilGenerator);
+                    break;
                 case Atom atom:
                     GenerateAtom(atom, ilGenerator);
                     break;
@@ -433,6 +434,78 @@ namespace MathLang.CodeGeneration
             //load array element with index onto stack
             ilGenerator.Emit(OpCodes.Ldelem, arrayElementReferenceNode.ReturnType.ConvertToType());
 
+        }
+
+        private void GenerateExpression(Expression expressionNode, ILGenerator ilGenerator)
+        {
+            //IsMathematicalComparison
+
+            if (expressionNode.ExpressionType == ExpressionType.Add ||
+                expressionNode.ExpressionType == ExpressionType.Div ||
+                expressionNode.ExpressionType == ExpressionType.Sub ||
+                expressionNode.ExpressionType == ExpressionType.Mul)
+            {
+                GenerateExpression(expressionNode.Left, ilGenerator);
+                GenerateExpression(expressionNode.Right, ilGenerator);
+
+                switch (expressionNode.ExpressionType)
+                {
+                    case ExpressionType.Add:
+                        ilGenerator.Emit(OpCodes.Add);
+                        break;
+                    case ExpressionType.Sub:
+                        ilGenerator.Emit(OpCodes.Sub);
+                        break;
+                    case ExpressionType.Mul:
+                        ilGenerator.Emit(OpCodes.Mul);
+                        break;
+                    case ExpressionType.Div:
+                        ilGenerator.Emit(OpCodes.Div);
+                        break;
+                }
+            }
+
+            //switch (expressionNode.ExpressionType)
+            //{
+            //    case ExpressionType.Unset:
+            //        break;
+            //    case ExpressionType.Add:
+            //        break;
+            //    case ExpressionType.Sub:
+            //        break;
+            //    case ExpressionType.Mul:
+            //        break;
+            //    case ExpressionType.Div:
+            //        break;
+            //    case ExpressionType.Equal:
+            //        break;
+            //    case ExpressionType.Greater:
+            //        break;
+            //    case ExpressionType.EqualOrGreater:
+            //        break;
+            //    case ExpressionType.Less:
+            //        break;
+            //    case ExpressionType.EqualOrLess:
+            //        break;
+            //    case ExpressionType.NotEqual:
+            //        break;
+            //    case ExpressionType.Not:
+            //        break;
+            //    case ExpressionType.Or:
+            //        break;
+            //    case ExpressionType.And:
+            //        break;
+            //    case ExpressionType.FunctionCall:
+            //        break;
+            //    case ExpressionType.VariableDeclaration:
+            //        break;
+            //    case ExpressionType.VariableReference:
+            //        break;
+            //    case ExpressionType.ArrayElementReference:
+            //        break;
+            //    default:
+            //        throw new ArgumentOutOfRangeException();
+            //}
         }
 
         private void PopAndStore(ExtendedId exId, ILGenerator ilGenerator)
