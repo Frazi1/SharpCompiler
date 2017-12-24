@@ -167,18 +167,18 @@ namespace MathLang.CodeGeneration
                 //case ReturnStatement returnStatement:
                 //    returnStatement.Generate();
                 //    break;
-                //case WhileStatement whileStatement:
-                //    whileStatement.Generate();
-                //    break;
-                //case IfStatement ifStatement:
-                //    ifStatement.Generate();
-                //    break;
+                case WhileStatement whileStatement:
+                    GenerateWhileStatement(whileStatement, ilGenerator);
+                    break;
+                case IfStatement ifStatement:
+                    GenerateIfStatement(ifStatement, ilGenerator);
+                    break;
                 //case ForStatement forStatement:
                 //    forStatement.Generate();
                 //    break;
-                //case BlockStatement blockStatement:
-                //    blockStatement.Generate();
-                //    break;
+                case BlockStatement blockStatement:
+                    GenerateBlockStatement(blockStatement, ilGenerator);
+                    break;
                 default:
                     throw new NotImplementedException($"Cannot Generate statement: {statement.GetType()}");
             }
@@ -310,6 +310,61 @@ namespace MathLang.CodeGeneration
                 }
                 else
                     ilGenerator.Emit(OpCodes.Stelem_I4);
+            }
+        }
+        
+        public void GenerateIfStatement(IfStatement ifStatementNode, ILGenerator ilGenerator)
+        {
+            //ifStatementNode.TrueCaseBlockStatement
+            Label trueCase = ilGenerator.DefineLabel();
+            Label falseCase = ilGenerator.DefineLabel();
+
+            GenerateExpression(ifStatementNode.ConditionExpression, ilGenerator);
+
+            //jump if false
+            ilGenerator.Emit(OpCodes.Brfalse_S, falseCase);
+
+            GenerateStatement(ifStatementNode.TrueCaseBlockStatement, ilGenerator);
+
+            //unconditional
+            ilGenerator.Emit(OpCodes.Br_S, trueCase);
+
+            
+            ilGenerator.MarkLabel(falseCase);
+
+            if (ifStatementNode.FasleCaseBlockStatement != null)
+            {
+                GenerateStatement(ifStatementNode.FasleCaseBlockStatement, ilGenerator);
+            }
+            
+            ilGenerator.MarkLabel(trueCase);
+        }
+
+        public void GenerateWhileStatement(WhileStatement whileStatementNode, ILGenerator ilGenerator)
+        {
+            Label conditionCheck = ilGenerator.DefineLabel();
+            Label whileBody = ilGenerator.DefineLabel();
+
+            //unconditional
+            ilGenerator.Emit(OpCodes.Br_S, conditionCheck);
+
+            ilGenerator.MarkLabel(whileBody);
+
+            GenerateStatement(whileStatementNode.BlockOrSingleStatement, ilGenerator);
+
+            ilGenerator.MarkLabel(conditionCheck);
+
+            GenerateExpression(whileStatementNode.ConditionExpression, ilGenerator);
+
+            //jump if false
+            ilGenerator.Emit(OpCodes.Brtrue_S, whileBody);
+        }
+
+        public void GenerateBlockStatement(BlockStatement blockStatementNode, ILGenerator ilGenerator)
+        {
+            foreach (var statement in blockStatementNode.Statements)
+            {
+                GenerateStatement(statement, ilGenerator);    
             }
         }
 

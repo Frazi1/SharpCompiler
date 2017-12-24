@@ -45,30 +45,55 @@ static class ValeraTest
         ////call func with wrong arguments
         //Leaf('u');
 
-        Hello(89);
+        Hello(5);
     }
 
-    static void Hello(int uiuiui)
+    static void Hello(int len)
     {
+        int[] myArr = new int[len];
+
+        int i = 0;
+
+        while (i<len)
+        {
+            myArr[i] = i;
+            i = i + 1;
+        }
+
+        i = 0;
+        while (i < len)
+        {
+            Console.WriteLineInt(myArr[i]);
+            i = i + 1;
+        }
         //Console.WriteLineInt(uiuiui);
 
         //char helen = 'h';
-        
+
         //Console.WriteLineInt(helen);
 
         //helen = 'H';
         //Console.WriteLineInt(helen);
 
-        int[] myArr = new int[uiuiui];
-        myArr[0] = 78 + 2;
-        int klkl = myArr[0];
-        Console.WriteLineInt(klkl);
-        Arraprint(myArr);
+
+        //myArr[0] = 78 + 2;
+        //int klkl = myArr[0];
+        //Console.WriteLineInt(klkl);
+        //Arraprint(myArr);
     }
 
     static void Arraprint(int[] arra)
     {
         Console.WriteLineInt(arra[0]);
+
+        if (1 < 2)
+        {
+            Console.WriteLineChar('t');
+        }
+        else
+        {
+            Console.WriteLineChar('f');
+        }
 
         Console.WriteLineBool(1<2);
         Console.WriteLineBool(1 > 2);
