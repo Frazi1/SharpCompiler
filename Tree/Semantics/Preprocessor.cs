@@ -149,7 +149,7 @@ namespace MathLang.Tree.Semantics
             IExpression variableDeclarationValueExpression = variableDeclaration.Value;
             if (variableDeclarationValueExpression == null) return;
             variableDeclarationValueExpression.Process();
-            
+
             if (!(variableDeclaration.ReturnType == variableDeclarationValueExpression.ReturnType))
             {
                 if (variableDeclarationValueExpression.ReturnType.IsCastableTo(variableDeclaration.ReturnType))
@@ -162,7 +162,7 @@ namespace MathLang.Tree.Semantics
                         $"Variable \"{variableDeclaration.Name}\" return type {variableDeclaration.ReturnType} is different from {variableDeclarationValueExpression.ReturnType} ");
                 }
             }
-            
+
             if (checkName)
             {
                 variableDeclaration.Scope.AddVariable(variableDeclaration);
@@ -663,41 +663,48 @@ namespace MathLang.Tree.Semantics
                 //SetBlockVarsIndexes(functionDeclaration.StatementBlock, ref index);
             }
 
+            void SetDeclarationIndex(Declaration declaration, ref int varIndex)
+            {
+                declaration.Index = varIndex++;
+            }
+
             void SetBlockVarsIndexes(BlockStatement blockStatement, ref int varIndex)
             {
                 foreach (var statement in blockStatement.Statements)
-                    switch (statement)
+                    SetStatementIndexes(statement, ref varIndex);
+            }
+
+            void SetStatementIndexes(IStatement statement, ref int varIndex)
+            {
+                switch (statement)
+                {
+                    case Declaration declaration:
                     {
-                        case Declaration declaration:
-                        {
-                            declaration.Index = varIndex++;
-                            break;
-                        }
-                        case IfStatement ifStatement:
-                        {
-                            if (ifStatement.TrueCaseBlockStatement is BlockStatement trueBlock)
-                                SetBlockVarsIndexes(trueBlock, ref varIndex);
-                            if (ifStatement.FasleCaseBlockStatement is BlockStatement falseBlock)
-                                SetBlockVarsIndexes(falseBlock, ref varIndex);
-                            break;
-                        }
-                        case WhileStatement whileStatement:
-                        {
-                            if (whileStatement.BlockOrSingleStatement is BlockStatement block)
-                                SetBlockVarsIndexes(block, ref varIndex);
-                            break;
-                        }
-                        case ForStatement forStatement:
-                        {
-                            if (forStatement.InitializationStatement is BlockStatement initializationBlock)
-                                SetBlockVarsIndexes(initializationBlock, ref varIndex);
-                            if (forStatement.IterationStatement is BlockStatement iterationBlock)
-                                SetBlockVarsIndexes(iterationBlock, ref varIndex);
-                            if (forStatement.BlockOrSingleStatement is BlockStatement statementsBlock)
-                                SetBlockVarsIndexes(statementsBlock, ref varIndex);
-                            break;
-                        }
+                        SetDeclarationIndex(declaration, ref varIndex);
+                        break;
                     }
+                    case BlockStatement blockStatement:
+                        SetBlockVarsIndexes(blockStatement, ref varIndex);
+                        break;
+                    case IfStatement ifStatement:
+                    {
+                        SetStatementIndexes(ifStatement.TrueCaseBlockStatement, ref varIndex);
+                        SetStatementIndexes(ifStatement.FasleCaseBlockStatement, ref varIndex);
+                        break;
+                    }
+                    case WhileStatement whileStatement:
+                    {
+                        SetStatementIndexes(whileStatement.BlockOrSingleStatement, ref varIndex);
+                        break;
+                    }
+                    case ForStatement forStatement:
+                    {
+                        SetStatementIndexes(forStatement.InitializationStatement, ref varIndex);
+                        SetStatementIndexes(forStatement.BlockOrSingleStatement, ref varIndex);
+                        SetStatementIndexes(forStatement.IterationStatement, ref varIndex);
+                        break;
+                    }
+                }
             }
         }
 
