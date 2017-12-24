@@ -26,7 +26,9 @@ namespace MathLang.CodeGeneration
 
         protected Dictionary<string, MethodBuilder> funcsMethodBuilders = new Dictionary<string, MethodBuilder>();
 
-        public CodeGenerator (string assName, string moduleName, Tree.Nodes.Program programNode)
+        protected Dictionary<string, LocalBuilder> varsLocalBuilders = new Dictionary<string, LocalBuilder>();
+
+        public CodeGenerator (string assName, Tree.Nodes.Program programNode)
         {
             // create a dynamic assembly and module 
             assemblyName = new AssemblyName();
@@ -35,7 +37,7 @@ namespace MathLang.CodeGeneration
             assemblyBuilder = Thread.GetDomain()
                 .DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndSave);
 
-            module = assemblyBuilder.DefineDynamicModule(assName + ".exe");
+            module = assemblyBuilder.DefineDynamicModule(assName + ".exe", true);
 
             GenerateProgram(programNode);
 
@@ -109,7 +111,7 @@ namespace MathLang.CodeGeneration
                 for (int i = 0; i < typesNamesTuple.Item2.Length; i++)
                 {
                     
-                    methodbuilder.DefineParameter(i, ParameterAttributes.None, typesNamesTuple.Item2[i]);
+                    methodbuilder.DefineParameter(i+1, ParameterAttributes.None, typesNamesTuple.Item2[i]);
                 }
             }
 
@@ -184,15 +186,15 @@ namespace MathLang.CodeGeneration
         {
             switch (statement)
             {
-                //case VariableAssignment variableAssignment:
-                //    variableAssignment.Generate();
-                //    break;
+                case VariableAssignment variableAssignment:
+                    GenerateVarAssignment(variableAssignment, ilGenerator);
+                    break;
                 //case ArrayElementAssignment arrayElementAssignment:
                 //    arrayElementAssignment.Generate();
                 //    break;
-                //case Declaration declaration:
-                //    declaration.Generate();
-                //    break;
+                case Declaration declaration:
+                    GenerateDeclaration(declaration, ilGenerator);
+                    break;
                 case FunctionCall functionCall:
                     GenerateFuncCall(functionCall, ilGenerator);
                     break;
@@ -255,7 +257,37 @@ namespace MathLang.CodeGeneration
                     throw new NotSupportedException($"Cannot find func {funcCallNode.Name.GetFullPath} when calling.");
                 }
             }
-        } 
+        }
+
+        public void GenerateDeclaration(Declaration declNode, ILGenerator ilGenerator)
+        {
+            LocalBuilder localBuilder = ilGenerator.DeclareLocal(declNode.ReturnType.ConvertToType());
+
+            localBuilder.SetLocalSymInfo(declNode.Name);
+            //add our local to dictionary
+            varsLocalBuilders.Add(declNode.Name, localBuilder);
+
+            if (declNode.Value != null)
+            {
+                GenerateExpression(declNode.Value, ilGenerator);
+                //pop var from the stack and store in a value
+                ilGenerator.Emit(OpCodes.Stloc, localBuilder);
+            }
+            
+        }
+
+        public void GenerateVarAssignment(VariableAssignment varAssignmentNode, ILGenerator ilGenerator)
+        {
+            GenerateExpression(varAssignmentNode.AssignmentValue, ilGenerator);
+
+            if (varsLocalBuilders.Keys.Contains(varAssignmentNode.VariableName.GetFullPath))
+            {
+                var localBuilder = varsLocalBuilders[varAssignmentNode.VariableName.GetFullPath];
+                //pop var from the stack and store in a value
+                ilGenerator.Emit(OpCodes.Stloc, localBuilder);
+            }
+        }
+
         #endregion
 
         private void GenerateExpression(IExpression iexpression, ILGenerator ilGenerator)
@@ -298,9 +330,13 @@ namespace MathLang.CodeGeneration
                 {
                     if (extendedIdNode.Declaration is FunctionDeclarationParameter fdParam)
                     {
+                        ilGenerator.Emit(OpCodes.Ldarg, (int) extendedIdNode.Declaration.Index);
                         
-                        //wrong, very wrong
-                        ilGenerator.Emit(OpCodes.Ldarg, (int)extendedIdNode.Declaration.Index);
+                    }
+                    else
+                    {
+                        ilGenerator.Emit(OpCodes.Ldloc, (int)extendedIdNode.Declaration.Index);
+                        
                     }
                 }
                 //this class static field

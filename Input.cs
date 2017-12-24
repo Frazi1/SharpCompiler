@@ -51,6 +51,13 @@ static class ValeraTest
     static void Hello(int uiuiui)
     {
         Console.WriteLineInt(uiuiui);
+
+        char helen = 'h';
+
+        Console.WriteLineInt(helen);
+
+        helen = 'H';
+        Console.WriteLineInt(helen);
     }
 
     //static int ReadTest( int kkk, char ppp)
