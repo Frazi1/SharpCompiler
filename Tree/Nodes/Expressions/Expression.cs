@@ -35,7 +35,12 @@ namespace MathLang.Tree.Nodes.Expressions
                 Right = TreeHelper.GetExpression(this, Scope, syntaxRight);
                 Right.Construct(syntaxRight);
             }
-
+            if (ExpressionType == ExpressionType.Sub && Right == null)
+            {
+                var zeroExpression = new IntExpression(Parent, Parent.Scope) {Value = 0};
+                Right = Left;
+                Left = zeroExpression;
+            }
             ReturnType = ReturnType.Unset;
             //if (Right == null) ReturnType = Left.ReturnType;
             //else
