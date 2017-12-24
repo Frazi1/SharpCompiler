@@ -4,8 +4,8 @@ class JavaTestBuild {
     }
 
     public static void arrayTest() {
-        int[] ar = new int[13];
-        int a = ar[1];
+        String[] ar = new String[13];
+        String a = ar[1];
 }
     
 }

@@ -138,6 +138,44 @@ namespace MathLang.CodeGeneration.JasminJava
             }
         }
 
+        public static NoArgumentInstruction GetArrayLoadInstruction(ReturnType returnType)
+        {
+            switch (returnType)
+            {
+                case BoolReturnType boolReturnType:
+                    return BaloadInstruction;
+                case CharReturnType charReturnType:
+                    return CaloadInstruction;
+                case ArrayReturnType arrayReturnType:
+                    return AaloadInstruction;
+                case IntReturnType intReturnType:
+                    return IaloadInstruction;
+                case StringReturnType stringReturnType:
+                    return AaloadInstruction;
+                default:
+                    throw new NotImplementedException(nameof(ReturnType) + " array load instruction generation");
+            }
+        }
+
+        public static NoArgumentInstruction GetArrayStoreInstruction(ReturnType returnType)
+        {
+            switch (returnType)
+            {
+                case BoolReturnType boolReturnType:
+                    return BastoreInstruction;
+                case CharReturnType charReturnType:
+                    return CastoreInstruction;
+                case ArrayReturnType arrayReturnType:
+                    return AastoreInstruction;
+                case IntReturnType intReturnType:
+                    return IastoreInstruction;
+                case StringReturnType stringReturnType:
+                    return AastoreInstruction;
+                default:
+                    throw new NotImplementedException(nameof(ReturnType) + " array load instruction generation");
+            }
+        }
+
         private static IEnumerable<IInstruction> GetArrayDeclarationInstructions(this ArrayDeclaration arrayDeclaration)
         {
             List<IInstruction> instructions = new List<IInstruction>();

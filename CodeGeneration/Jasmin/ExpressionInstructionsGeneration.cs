@@ -16,8 +16,8 @@ namespace MathLang.CodeGeneration.JasminJava
         {
             switch (iexpression)
             {
-                //case ArrayElementReference arrayElementReference:
-                //    break;
+                case ArrayElementReference arrayElementReference:
+                    return arrayElementReference.GetArrayElementReferenceInstructions();
                 case BoolExpression boolExpression:
                     return GetBoolExpressionInstructions(boolExpression);
                 case CharExpression charExpression:
@@ -160,8 +160,8 @@ namespace MathLang.CodeGeneration.JasminJava
                 //    break;
                 //case Tree.Nodes.Enums.ExpressionType.VariableReference:
                 //    break;
-                //case Tree.Nodes.Enums.ExpressionType.ArrayElementReference:
-                //    break;
+                case Tree.Nodes.Enums.ExpressionType.ArrayElementReference:
+                    break;
                 default: throw new NotImplementedException($"Expression code generation: {expression}");
             }
             return instructions;
@@ -223,11 +223,23 @@ namespace MathLang.CodeGeneration.JasminJava
             JasminTypeArgumentInstruction arrayCreationInstruction = newArray.InnerElementsReturnType.IsPrimitiveType()
                 ? (JasminTypeArgumentInstruction) Instructions.NewArrayInstruction
                 : Instructions.ANewArrayInstruction;
-            
+
             List<IInstruction> instructions = new List<IInstruction>();
             instructions.AddRange(newArray.ArraySize.GetInstructions());
 
-            instructions.Add(arrayCreationInstruction.WithType(newArray.InnerElementsReturnType.ConvertToJavaRepresentation()));
+            instructions.Add(
+                arrayCreationInstruction.WithType(newArray.InnerElementsReturnType.ConvertToJavaRepresentation()));
+            return instructions;
+        }
+
+        private static IEnumerable<IInstruction> GetArrayElementReferenceInstructions(
+            this ArrayElementReference arrayElementReference)
+        {
+            List<IInstruction> instructions = new List<IInstruction>();
+            instructions.Add(StatementInstructionsGeneration.GetLoadInstruction(arrayElementReference.ArrayDeclaration.ReturnType,
+                arrayElementReference.ArrayDeclaration.Index.Value));
+            instructions.AddRange(arrayElementReference.ArrayIndex.GetInstructions());
+            instructions.Add(StatementInstructionsGeneration.GetArrayLoadInstruction(arrayElementReference.ReturnType));
             return instructions;
         }
     }
