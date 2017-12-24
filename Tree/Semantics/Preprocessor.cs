@@ -104,19 +104,28 @@ namespace MathLang.Tree.Semantics
                         variableDeclaration.Name, Scope.FunctionLevel)
                     != null)
                     throw new ScopeException($"Variable with name: \"{variableDeclaration.Name}\" already exists");
-                variableDeclaration.Scope.AddVariable(variableDeclaration);
             }
             IExpression variableDeclarationValueExpression = variableDeclaration.Value;
             if (variableDeclarationValueExpression == null) return;
             variableDeclarationValueExpression.Process();
-            if (variableDeclaration.ReturnType == variableDeclarationValueExpression.ReturnType) return;
-            if (variableDeclarationValueExpression.ReturnType.IsCastableTo(variableDeclaration.ReturnType))
+            
+            if (!(variableDeclaration.ReturnType == variableDeclarationValueExpression.ReturnType))
             {
-                variableDeclarationValueExpression.CastToType = variableDeclaration.ReturnType;
+                if (variableDeclarationValueExpression.ReturnType.IsCastableTo(variableDeclaration.ReturnType))
+                {
+                    variableDeclarationValueExpression.CastToType = variableDeclaration.ReturnType;
+                }
+                else
+                {
+                    throw new ScopeException(
+                        $"Variable \"{variableDeclaration.Name}\" return type {variableDeclaration.ReturnType} is different from {variableDeclarationValueExpression.ReturnType} ");
+                }
             }
-            else
-                throw new ScopeException(
-                    $"Variable \"{variableDeclaration.Name}\" return type {variableDeclaration.ReturnType} is different from {variableDeclarationValueExpression.ReturnType} ");
+            
+            if (checkName)
+            {
+                variableDeclaration.Scope.AddVariable(variableDeclaration);
+            }
         }
 
         private static void Process(this FunctionDeclaration functionDeclaration)
@@ -132,7 +141,7 @@ namespace MathLang.Tree.Semantics
                         .FindAll(statement => statement is ReturnStatement)
                         .Cast<ReturnStatement>()
                         .ToList();
-                if(returnStatements.Count == 0)
+                if (returnStatements.Count == 0)
                     throw new ExpressionException($"Function {functionDeclaration.Name} missing a return statement");
                 returnStatements.ForEach(statement =>
                 {
@@ -435,7 +444,6 @@ namespace MathLang.Tree.Semantics
                                                   $"({arrayElementAssignment.ArrayElementReference.ReturnType}) " +
                                                   $"expression of type {arrayElementAssignment.AssignmentExpression.ReturnType}");
                 }
-                
             }
 
             //blockStatement.Statements.ForEach(st => st.Process());

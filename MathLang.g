@@ -113,10 +113,10 @@ mathexpression: term ;
 
 expression:  
 			 newexpression
-		
+		| funccallbody
 		| boolexpression
 		| mathexpression
-		| funccallbody
+		
 		
 ;
 extended_id: ID (DOT! ID)? -> ^(EXTENDED_ID ID ID?);
