@@ -188,5 +188,8 @@
         public static ldcInstruction LdcInstruction => new ldcInstruction();
         public static ldc_wInstruction Ldc_wInstruction => new ldc_wInstruction();
         public static InsertLabelInstruction InsertLabelInstruction => new InsertLabelInstruction();
+        public static NewArrayInstruction NewArrayInstruction => new NewArrayInstruction();
+        public static ANewArrayInstruction ANewArrayInstruction => new ANewArrayInstruction();
+
     }
 }

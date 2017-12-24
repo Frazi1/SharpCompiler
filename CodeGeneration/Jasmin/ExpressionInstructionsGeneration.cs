@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
+using MathLang.CodeGeneration.Helpers.Converters;
 using MathLang.Extensions;
 using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Expressions;
@@ -33,8 +34,8 @@ namespace MathLang.CodeGeneration.JasminJava
                 //    break;
                 case FunctionCall functionCall:
                     return functionCall.GetFunctionCallInstructions();
-                //case NewArray newArray:
-                //    break;
+                case NewArray newArray:
+                    return newArray.GetNewArrayInstructions();
                 //Variable reference
                 case ExtendedId extendedId:
                     return extendedId.GetVariableReferenceInstructions();
@@ -215,6 +216,19 @@ namespace MathLang.CodeGeneration.JasminJava
                     return IaddInstruction;
                 default: throw new NotImplementedException($"GetAddInstuction: {nameof(returnType)}");
             }
+        }
+
+        private static IEnumerable<IInstruction> GetNewArrayInstructions(this NewArray newArray)
+        {
+            JasminTypeArgumentInstruction arrayCreationInstruction = newArray.InnerElementsReturnType.IsPrimitiveType()
+                ? (JasminTypeArgumentInstruction) Instructions.NewArrayInstruction
+                : Instructions.ANewArrayInstruction;
+            
+            List<IInstruction> instructions = new List<IInstruction>();
+            instructions.AddRange(newArray.ArraySize.GetInstructions());
+
+            instructions.Add(arrayCreationInstruction.WithType(newArray.InnerElementsReturnType.ConvertToJavaRepresentation()));
+            return instructions;
         }
     }
 }

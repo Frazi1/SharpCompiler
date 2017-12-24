@@ -20,6 +20,8 @@ namespace MathLang.CodeGeneration.JasminJava
                 //    break;
                 case VariableDeclaration variableDeclaration:
                     return variableDeclaration.GetVariableDeclarationInstructions();
+                case ArrayDeclaration arrayDeclaration:
+                    return arrayDeclaration.GetArrayDeclarationInstructions();
                 //case BoolExpression boolExpression:
                 //    break;
                 //case CharExpression charExpression:
@@ -48,7 +50,6 @@ namespace MathLang.CodeGeneration.JasminJava
                 //    break;
                 case ReturnStatement returnStatement:
                     return returnStatement.GetReturnStatementInstruction();
-                    break;
                 case VariableAssignment variableAssignment:
                     return variableAssignment.GetVariableAssignmentInstructions();
                 //case WhileStatement whileStatement:
@@ -108,8 +109,7 @@ namespace MathLang.CodeGeneration.JasminJava
                 case CharReturnType charReturnType:
                     return IstoreInstruction.WithIndex(index);
                 case ArrayReturnType arrayReturnType:
-                    throw new NotImplementedException(nameof(ReturnType) + "store instruction generation");
-                    break;
+                    return AstoreInstruction.WithIndex(index);
                 case IntReturnType intReturnType:
                     return IstoreInstruction.WithIndex(index);
                 case StringReturnType stringReturnType:
@@ -128,8 +128,7 @@ namespace MathLang.CodeGeneration.JasminJava
                 case CharReturnType charReturnType:
                     return IloadInstruction.WithIndex(index);
                 case ArrayReturnType arrayReturnType:
-                    throw new NotImplementedException(nameof(ReturnType) + " load instruction generation");
-                    break;
+                    return AloadInstruction.WithIndex(index);
                 case IntReturnType intReturnType:
                     return IloadInstruction.WithIndex(index);
                 case StringReturnType stringReturnType:
@@ -137,6 +136,14 @@ namespace MathLang.CodeGeneration.JasminJava
                 default:
                     throw new NotImplementedException(nameof(ReturnType) + " load instruction generation");
             }
+        }
+
+        private static IEnumerable<IInstruction> GetArrayDeclarationInstructions(this ArrayDeclaration arrayDeclaration)
+        {
+            List<IInstruction> instructions = new List<IInstruction>();
+            instructions.AddRange(arrayDeclaration.Value.GetInstructions());
+            instructions.Add(GetStoreInstruction(arrayDeclaration.ReturnType, arrayDeclaration.Index.Value));
+            return instructions;
         }
     }
 }

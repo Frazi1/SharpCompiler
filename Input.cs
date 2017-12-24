@@ -18,34 +18,35 @@ class Main
     static void Main(string[] args)
     {
         //int a = 13;
+        string[] a = new string[13];
         //Library.PrintString("1");
         //Library.PrintInt(2*2+a);
         //Library.PrintChar(a);
         //Library.PrintInt(IntTest() + IntTest());
         //Library.PrintBool(TestChar());
-        Library.PrintBool(!(!boolT(1 < 2, true)));
+        //Library.PrintBool(!(!boolT(1 < 2, true)));
     }
 
-    static bool boolT(bool a, bool b)
-    {
-        return b || a;
-    }
+    //static bool boolT(bool a, bool b)
+    //{
+    //    return b || a;
+    //}
     
-    static int IntTest()
-    {
-        return 1+21*3;
-    }
+    //static int IntTest()
+    //{
+    //    return 1+21*3;
+    //}
     
-    static bool TestChar()
-    {
-        bool t1 = 10 != 15;
-        bool t2 = 1 == 2;
-        bool t3 = 1 <= 2;
-        bool t4 = 1 >= 2;
-        bool t5 = 1 > 2;
+    //static bool TestChar()
+    //{
+    //    bool t1 = 10 != 15;
+    //    bool t2 = 1 == 2;
+    //    bool t3 = 1 <= 2;
+    //    bool t4 = 1 >= 2;
+    //    bool t5 = 1 > 2;
         
-        return true == false;
-    }
+    //    return true == false;
+    //}
 }
 
 //static class Test

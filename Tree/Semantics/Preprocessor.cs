@@ -149,10 +149,18 @@ namespace MathLang.Tree.Semantics
             IExpression variableDeclarationValueExpression = variableDeclaration.Value;
             if (variableDeclarationValueExpression == null) return;
             variableDeclarationValueExpression.Process();
-            if (variableDeclaration.ReturnType == variableDeclarationValueExpression.ReturnType) return;
-            if (variableDeclarationValueExpression.ReturnType.IsCastableTo(variableDeclaration.ReturnType))
+            
+            if (!(variableDeclaration.ReturnType == variableDeclarationValueExpression.ReturnType))
             {
-                variableDeclarationValueExpression.CastToType = variableDeclaration.ReturnType;
+                if (variableDeclarationValueExpression.ReturnType.IsCastableTo(variableDeclaration.ReturnType))
+                {
+                    variableDeclarationValueExpression.CastToType = variableDeclaration.ReturnType;
+                }
+                else
+                {
+                    throw new ScopeException(
+                        $"Variable \"{variableDeclaration.Name}\" return type {variableDeclaration.ReturnType} is different from {variableDeclarationValueExpression.ReturnType} ");
+                }
             }
             else
             {

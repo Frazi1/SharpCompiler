@@ -12,11 +12,6 @@ namespace MathLang.CodeGeneration.JasminJava
 {
     public class JasminCodeGenerator
     {
-        public JasminCodeGenerator()
-        {
-            //JasminMappingsInitializer.Initilalize();
-        }
-
         public string CodeListing { get; private set; } = "";
 
 
@@ -58,7 +53,7 @@ namespace MathLang.CodeGeneration.JasminJava
             JasminFunctionModule jasminFunction = new JasminFunctionModule()
                 .WithName(function.Name.ToCamelCase())
                 .WithModifiers(JasminModifier.Public, JasminModifier.Static)
-                .WithReturnType(ReturnTypeToStringConverter.Convert(function.ReturnType));
+                .WithReturnType(ReturnTypeToJavaConverter.ConvertToJasminRepresentation(function.ReturnType));
 
             function.ParameterNodes.ForEach(functionParameter =>
                 jasminFunction.WithParameter(BuildJasminFunctionParameter(functionParameter)));
@@ -77,7 +72,7 @@ namespace MathLang.CodeGeneration.JasminJava
             JasminFunctionParameter jasminFunctionParameter =
                 new JasminFunctionParameter()
                     .WithName(functionParameter.Name)
-                    .WithType(ReturnTypeToStringConverter.Convert(functionParameter.ReturnType));
+                    .WithType(ReturnTypeToJavaConverter.ConvertToJasminRepresentation(functionParameter.ReturnType));
             return jasminFunctionParameter;
         }
 

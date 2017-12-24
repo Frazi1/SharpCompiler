@@ -62,6 +62,7 @@
     <Compile Include="Modules\Instructions\JasminMethodInvokationInstructions.cs" />
     <Compile Include="Modules\Instructions\JasminNoArgumentInstruction.cs" />
     <Compile Include="Modules\Instructions\JasminTwoIntArgumentInstruction.cs" />
+    <Compile Include="Modules\Instructions\JasminTypeArgumentInstruction.cs" />
     <Compile Include="Modules\JasminClassModule.cs" />
     <Compile Include="Modules\IJasminModule.cs" />
     <Compile Include="Constanst\JasminDirectives.cs" />

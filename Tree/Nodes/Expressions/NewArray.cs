@@ -18,7 +18,8 @@ namespace MathLang.Tree.Nodes.Expressions
         public ReturnType CastToType { get; set; }
         public IExpression ArraySize { get; private set; }
         public List<IExpression> InitializationParameters { get; } = new List<IExpression>();
-
+        public ReturnType InnerElementsReturnType => ReturnType.CastTo<ArrayReturnType>().InnerType;
+        
         public NewArray(INode parent, Scope parentScope)
         {
             Parent = parent;

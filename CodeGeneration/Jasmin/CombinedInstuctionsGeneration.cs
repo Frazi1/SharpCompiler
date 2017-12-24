@@ -33,10 +33,10 @@ namespace MathLang.CodeGeneration.JasminJava
                     .RemoveFirstAndLastCharacters();
                 invokestaticInstruction invokestaticInstruction = Instructions.InvokestaticInstruction
                     .WithMethodFullName(externName)
-                    .WithReturnType(ReturnTypeToStringConverter.Convert(functionDeclaration.ReturnType));
+                    .WithReturnType(ReturnTypeToJavaConverter.ConvertToJasminRepresentation(functionDeclaration.ReturnType));
                 functionDeclaration
                     .ParameterNodes
-                    .Select(parameter => ReturnTypeToStringConverter.Convert(parameter.ReturnType))
+                    .Select(parameter => ReturnTypeToJavaConverter.ConvertToJasminRepresentation(parameter.ReturnType))
                     .ForEach(typeName => invokestaticInstruction.WithParameterType(typeName));
                 instructions.Add(invokestaticInstruction);
             }
@@ -50,10 +50,10 @@ namespace MathLang.CodeGeneration.JasminJava
                 //    correctedName = $"{splittedName[0]}/{splittedName[1].ToCamelCase()}";
                 invokestaticInstruction invokestaticInstruction = Instructions.InvokestaticInstruction
                     .WithMethodFullName(/*correctedName*/functionCall.FunctionDeclaration.FullName)
-                    .WithReturnType(ReturnTypeToStringConverter.Convert(functionCall.ReturnType));
+                    .WithReturnType(ReturnTypeToJavaConverter.ConvertToJasminRepresentation(functionCall.ReturnType));
                 functionDeclaration
                     .ParameterNodes
-                    .Select(parameter => ReturnTypeToStringConverter.Convert(parameter.ReturnType))
+                    .Select(parameter => ReturnTypeToJavaConverter.ConvertToJasminRepresentation(parameter.ReturnType))
                     .ForEach(typeName => invokestaticInstruction.WithParameterType(typeName));
                 instructions.Add(invokestaticInstruction);
             }

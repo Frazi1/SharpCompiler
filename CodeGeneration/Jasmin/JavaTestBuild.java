@@ -3,8 +3,9 @@ class JavaTestBuild {
         //test(1,2);
     }
 
-    public static boolean test(boolean a, boolean b) {
-        return !a;
-    }
+    public static void arrayTest() {
+        int[] ar = new int[13];
+        int a = ar[1];
+}
     
 }
