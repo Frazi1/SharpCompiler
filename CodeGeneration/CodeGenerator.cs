@@ -291,8 +291,7 @@ namespace MathLang.CodeGeneration
                 {
                     if (arrayElementAssignmentNode.ArrayElementReference.Name.Declaration is FunctionDeclarationParameter fdParam)
                     {
-                        //pop var from the stack and store in a func arg
-                        ilGenerator.Emit(OpCodes.Starg, (int)arrayElementAssignmentNode.ArrayElementReference.Name.Declaration.Index);
+                        ilGenerator.Emit(OpCodes.Ldarg, (int)arrayElementAssignmentNode.ArrayElementReference.Name.Declaration.Index);
 
                     }
                 }
@@ -477,7 +476,7 @@ namespace MathLang.CodeGeneration
             //load arr size onto stack
             GenerateExpression(newArrayNode.ArraySize, ilGenerator);
             //new array
-            ilGenerator.Emit(OpCodes.Newarr, newArrayNode.ReturnType.ConvertToType());
+            ilGenerator.Emit(OpCodes.Newarr, newArrayNode.ReturnType.ConvertToType(false));
             //pop var from stack and store
 
             //if (newArrayNode.Parent is Declaration declaration)

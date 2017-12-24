@@ -11,7 +11,7 @@ namespace MathLang.CodeGeneration
 {
     public static class GenerationHelper
     {
-        public static Type ConvertToType(this ReturnType returnType)
+        public static Type ConvertToType(this ReturnType returnType, bool array = true)
         {
             switch (returnType)
             {
@@ -29,11 +29,11 @@ namespace MathLang.CodeGeneration
                         switch (arrayReturnType.InnerType)
                         {
                             case BoolReturnType boolReturnType:
-                                return typeof(bool);
+                                return array? typeof(bool[]) : typeof(bool);
                             case CharReturnType charReturnType:
-                                return typeof(char);
+                                return array ? typeof(char[]): typeof(char);
                             case IntReturnType intReturnType:
-                                return typeof(int);
+                                return array ? typeof(int[]): typeof(int);
                             default: throw new InvalidOperationException(
                                 $"Bad inner type {(returnType as ArrayReturnType)?.InnerType}" +
                                 $" of type {returnType} (cannot convert)");

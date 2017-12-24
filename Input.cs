@@ -52,11 +52,19 @@ static class ValeraTest
 
         while (i < len)
         {
-            myArr[i] = i+1;
+            myArr[i] = len - i;
             i = i + 1;
         }
 
-        ArrayPrint(myArr, 5);
+        
+
+        ArrayPrint(myArr, len);
+
+        //Change(myArr, 0, myArr, len - 1);
+
+        QuickSort(myArr, 0, len - 1);
+
+        ArrayPrint(myArr, len);
     }
 
     static int GetLen(int lll)
@@ -72,6 +80,7 @@ static class ValeraTest
             Console.WriteLineInt(myArr[i]);
             i = i + 1;
         }
+        Console.WriteLineChar('-');
         //Console.WriteLineInt(uiuiui);
 
         //char helen = 'h';
@@ -109,14 +118,51 @@ static class ValeraTest
         Console.WriteLineBool(1 == 1);
         Console.WriteLineBool(1 != 2);
     }
+    static void QuickSort(int[] arr, int first, int last)
+    {
+        if (last > first)
+        {
+            int position = ReplaceElementsAndReturnPosition(arr, first, last);
+            QuickSort(arr, first, position - 1);
+            QuickSort(arr, position + 1, last);
+        }
+    }
+    static int ReplaceElementsAndReturnPosition(int[] arr, int first, int last)
+    {
+        int key = arr[last];
+        int lastPositionOfTheLeast = first - 1;
 
-    //static int ReadTest( int kkk, char ppp)
-    //{
-    //    int k;
-    //    int oo;
+        //for (int i = first; i < last; i++)
+        //{
+        //    if (arr[i] < key)
+        //    {
+        //        lastPositionOfTheLeast = lastPositionOfTheLeast + 1;
+        //        Change(arr, i, arr, lastPositionOfTheLeast);
+        //    }
+        //}
 
-    //    oo = kkk + ReadTest(k, ppp);
+        int i = first;
 
-    //    return Console.ReadChar();
-    //}
+        while ( i < last)
+        {
+            if (arr[i] < key)
+            {
+                lastPositionOfTheLeast = lastPositionOfTheLeast + 1;
+                Change(arr, i, arr, lastPositionOfTheLeast);
+            }
+
+            i = i + 1;
+        }
+
+        lastPositionOfTheLeast = lastPositionOfTheLeast + 1;
+        Change(arr, last, arr, lastPositionOfTheLeast);
+        return lastPositionOfTheLeast;
+    }
+
+    static void Change(int[] a1, int i1, int[] a2, int i2)
+    {
+        int temp = a1[i1];
+        a1[i1] = a2[i2];
+        a2[i2] = temp;
+    }
 }
