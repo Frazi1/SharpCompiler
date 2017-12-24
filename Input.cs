@@ -19,7 +19,7 @@ class Main
     {
         //int a = 13;
         string[] a = new string[13];
-        string test = a[5];
+        a[5] = "123";
         //Library.PrintString("1");
         //Library.PrintInt(2*2+a);
         //Library.PrintChar(a);

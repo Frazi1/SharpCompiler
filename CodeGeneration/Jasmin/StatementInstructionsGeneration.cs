@@ -38,8 +38,8 @@ namespace MathLang.CodeGeneration.JasminJava
                     return functionCall.GetFunctionCallInstructions();
                 //case NewArray newArray:
                 //    break;
-                //case ArrayElementAssignment arrayElementAssignment:
-                //    break;
+                case ArrayElementAssignment arrayElementAssignment:
+                    return arrayElementAssignment.GetArrayElementAssignmentInstructions();
                 //case BlockStatement blockStatement:
                 //    break;
                 //case DoWhileStatement doWhileStatement:
@@ -181,6 +181,19 @@ namespace MathLang.CodeGeneration.JasminJava
             List<IInstruction> instructions = new List<IInstruction>();
             instructions.AddRange(arrayDeclaration.Value.GetInstructions());
             instructions.Add(GetStoreInstruction(arrayDeclaration.ReturnType, arrayDeclaration.Index.Value));
+            return instructions;
+        }
+
+        private static IEnumerable<IInstruction> GetArrayElementAssignmentInstructions(
+            this ArrayElementAssignment arrayElementAssignment)
+        {
+            List<IInstruction> instructions = new List<IInstruction>();
+            instructions.Add(GetLoadInstruction(
+                arrayElementAssignment.ArrayElementReference.ArrayDeclaration.ReturnType,
+                arrayElementAssignment.ArrayElementReference.ArrayDeclaration.Index.Value));
+            instructions.AddRange(arrayElementAssignment.ArrayElementReference.ArrayIndex.GetInstructions());
+            instructions.AddRange(arrayElementAssignment.AssignmentExpression.GetInstructions());
+            instructions.Add(GetArrayStoreInstruction(arrayElementAssignment.AssignmentExpression.ReturnType));
             return instructions;
         }
     }

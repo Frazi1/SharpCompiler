@@ -5,7 +5,7 @@ class JavaTestBuild {
 
     public static void arrayTest() {
         String[] ar = new String[13];
-        String a = ar[1];
+        ar[7] = "test";
 }
     
 }
