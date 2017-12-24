@@ -17,17 +17,9 @@ class Main
 {
     static void Main(string[] args)
     {
-        if (1 > 2)
+        for (int i = 0; i < 10; i=i+1)
         {
-            Library.PrintString("1>2");
-        }
-        else if (2 < 2)
-        {
-            Library.PrintString("1<2");
-        }
-        else
-        {
-            Library.PrintString("1==2");
+            Library.PrintInt(i);
         }
 
     }

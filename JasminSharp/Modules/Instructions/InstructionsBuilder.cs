@@ -105,5 +105,26 @@ namespace MathLang.CodeGeneration.JasminJava
             instructions.Add(Instructions.InsertLabelInstruction.WithLabel(labelEnd));
             return instructions;
         }
+
+        public static IEnumerable<IInstruction> BuildFor(IEnumerable<IInstruction> initializationInstructions,
+            IEnumerable<IInstruction> bodyInstructions,
+            IEnumerable<IInstruction> conditionInstructions,
+            IEnumerable<IInstruction> iterationInstructions)
+        {
+            int currentCount = _count++;
+            string labelEnd = $"ForCodeGeneration_{currentCount}_end";
+            string labelStart = $"ForCodeGeneration_{currentCount}_start";
+            string labelTrue = $"ForCodeGeneration_{currentCount}_true";
+            List<IInstruction> instructions = new List<IInstruction>();
+            instructions.AddRange(initializationInstructions);
+            instructions.Add(Instructions.InsertLabelInstruction.WithLabel(labelStart));
+            instructions.AddRange(conditionInstructions);
+            instructions.Add(IfeqInstruction.WithLabel(labelEnd));
+            instructions.AddRange(bodyInstructions);
+            instructions.AddRange(iterationInstructions);
+            instructions.Add(GotoInstruction.WithLabel(labelStart));
+            instructions.Add(Instructions.InsertLabelInstruction.WithLabel(labelEnd));
+            return instructions;
+        }
     }
 }

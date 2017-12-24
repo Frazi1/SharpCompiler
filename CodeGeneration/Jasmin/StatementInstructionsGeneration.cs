@@ -40,12 +40,10 @@ namespace MathLang.CodeGeneration.JasminJava
                 //    break;
                 case ArrayElementAssignment arrayElementAssignment:
                     return arrayElementAssignment.GetArrayElementAssignmentInstructions();
-                //case BlockStatement blockStatement:
-                //    break;
                 //case DoWhileStatement doWhileStatement:
                 //    break;
-                //case ForStatement forStatement:
-                //    break;
+                case ForStatement forStatement:
+                    return forStatement.GetForStatementInstructions();
                 case IfStatement ifStatement:
                     return ifStatement.GetIfStatementInstructions();
                 case ReturnStatement returnStatement:
@@ -213,6 +211,14 @@ namespace MathLang.CodeGeneration.JasminJava
             List<IInstruction> instructions = new List<IInstruction>();
             blockStatement.Statements.ForEach(statement => instructions.AddRange(statement.GetInstructions()));
             return instructions;
+        }
+
+        private static IEnumerable<IInstruction> GetForStatementInstructions(this ForStatement forStatement)
+        {
+            return InstructionsBuilder.BuildFor(forStatement.InitializationStatement.GetInstructions(),
+                forStatement.BlockOrSingleStatement.GetInstructions(),
+                forStatement.ConditionExpression.GetInstructions(),
+                forStatement.IterationStatement.GetInstructions());
         }
     }
 }

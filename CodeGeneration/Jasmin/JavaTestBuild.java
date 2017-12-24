@@ -3,21 +3,11 @@ class JavaTestBuild {
        
     }
 
-    public void compare(int a, int b)
+    public void testFor()
     {
-        if (a < b)
-        {
-            Library.printString("a < b");
-        }
-        else if (a > b)
-        {
-            Library.printString("a > b");
-        }
-        else
-        {
-            Library.printString("a==b");
-        }
-
+        for(int i=0;i<10;i=i+1){
+            Library.printInt(i);
+        }        
     }
 
     
