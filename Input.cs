@@ -44,23 +44,29 @@ static class ValeraTest
 
         ////call func with wrong arguments
         //Leaf('u');
+        int len = GetLen(5);
 
-        Hello(5);
-    }
-
-    static void Hello(int len)
-    {
         int[] myArr = new int[len];
 
         int i = 0;
 
-        while (i<len)
+        while (i < len)
         {
-            myArr[i] = i;
+            myArr[i] = i+1;
             i = i + 1;
         }
 
-        i = 0;
+        ArrayPrint(myArr, 5);
+    }
+
+    static int GetLen(int lll)
+    {
+        return lll;
+    }
+
+    static void ArrayPrint(int[] myArr, int len)
+    {
+        int i = 0;
         while (i < len)
         {
             Console.WriteLineInt(myArr[i]);

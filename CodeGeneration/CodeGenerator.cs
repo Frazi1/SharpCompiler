@@ -133,6 +133,7 @@ namespace MathLang.CodeGeneration
             {
                 throw new NotSupportedException($"Cannot find func {functionDeclarationNode.Name}");
             }
+            
         }
 
         public void GenerateFuncStatementBlock(BlockStatement blockStatementNode, MethodBuilder methodBuilder)
@@ -145,7 +146,12 @@ namespace MathLang.CodeGeneration
             }
             //ilGenerator.EmitWriteLine("Hello world");
 
-            ilGenerator.Emit(OpCodes.Ret);
+            if (blockStatementNode.Parent is FunctionDeclaration funcDecl)
+            {
+                if(funcDecl.ReturnType == ReturnType.Void)
+                    ilGenerator.Emit(OpCodes.Ret);
+            }
+            
         }
 
         public void GenerateStatement(IStatement statement, ILGenerator ilGenerator)
@@ -164,9 +170,9 @@ namespace MathLang.CodeGeneration
                 case FunctionCall functionCall:
                     GenerateFuncCall(functionCall, ilGenerator);
                     break;
-                //case ReturnStatement returnStatement:
-                //    returnStatement.Generate();
-                //    break;
+                case ReturnStatement returnStatement:
+                    GenerateReturnStatement(returnStatement, ilGenerator);
+                    break;
                 case WhileStatement whileStatement:
                     GenerateWhileStatement(whileStatement, ilGenerator);
                     break;
@@ -368,6 +374,12 @@ namespace MathLang.CodeGeneration
             }
         }
 
+        public void GenerateReturnStatement(ReturnStatement returnStatementNode, ILGenerator ilGenerator)
+        {
+            GenerateExpression(returnStatementNode.ReturnExpression, ilGenerator);
+            ilGenerator.Emit(OpCodes.Ret);
+        }
+
         #endregion
 
         private void GenerateExpression(IExpression iexpression, ILGenerator ilGenerator)
@@ -383,16 +395,16 @@ namespace MathLang.CodeGeneration
                 case Atom atom:
                     GenerateAtom(atom, ilGenerator);
                     break;
-                //case FunctionCall functionCall:
-                //    functionCall.Generate();
-                //    break;
+                case FunctionCall functionCall:
+                    GenerateFuncCall(functionCall, ilGenerator);
+                    break;
                 case NewArray newArray:
                     GenerateNewArray(newArray, ilGenerator);
                     break;
                 case ArrayElementReference arrayElementReference:
                     GenerateArrayElementReference(arrayElementReference, ilGenerator);
                     break;
-                default: throw new ArgumentOutOfRangeException(nameof(iexpression));
+                default: throw new ArgumentOutOfRangeException($"Cannot find {iexpression} in expression types");
             }
         }
 
