@@ -29,9 +29,12 @@ static class ValeraTest
     //    //arr['8'] = Cat;
     //}
 
-    static void Main(int p)
+    static void Main()
     {
-        Console.WriteLineInt(8);
+        Console.WriteLineInt(790);
+        Console.WriteLineChar('i');
+        Console.WriteLineBool(true);
+        Console.WriteLineBool(false);
 
         ////call not existing func
         //lalala(p);

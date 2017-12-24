@@ -44,7 +44,7 @@ namespace MathLang
                 TreeConsolePrinter tp = new TreeConsolePrinter();
                 tp.Print(astProgram); 
                 
-                CodeGenerator cg = new CodeGenerator("ass", "mod", astProgram);
+                CodeGenerator cg = new CodeGenerator("AssTest", "Modu", astProgram);
             }
             catch (Exception e)
             {

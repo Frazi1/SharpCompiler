@@ -22,6 +22,8 @@ namespace MathLang.CodeGeneration
 
         protected ModuleBuilder module;
 
+        protected MethodBuilder mainMethodbuilder;
+
         public CodeGenerator (string assName, string moduleName, Tree.Nodes.Program programNode)
         {
             // create a dynamic assembly and module 
@@ -31,9 +33,11 @@ namespace MathLang.CodeGeneration
             assemblyBuilder = Thread.GetDomain()
                 .DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndSave);
 
-            module = assemblyBuilder.DefineDynamicModule(moduleName+".exe");
+            module = assemblyBuilder.DefineDynamicModule(assName + ".exe");
 
             GenerateProgram(programNode);
+
+            assemblyBuilder.SetEntryPoint(mainMethodbuilder, PEFileKinds.ConsoleApplication);
 
             assemblyBuilder.Save(assName + ".exe");
         }
@@ -50,11 +54,12 @@ namespace MathLang.CodeGeneration
 
         public  void GenerateClass(ClassDeclaration classNode, ModuleBuilder module)
         {
-            
+            if (classNode.Name == "Console") return;
+
             // create public static class
             TypeBuilder typeBuilder = module.DefineType(classNode.Name, TypeAttributes.Public |
                 TypeAttributes.Class | TypeAttributes.Sealed | TypeAttributes.Abstract);
-
+            //todo uncomment above
             foreach (var funcNode in classNode.FunctionDeclarationNodes)
             {
                 GenerateFunc(funcNode, typeBuilder);                
@@ -69,29 +74,39 @@ namespace MathLang.CodeGeneration
             //get tuple of arrays of type and names of func parameters
             var typesNamesTuple = GenerationHelper.GetTypesAndNamesOfFuncParams(functionDeclarationNode.ParameterNodes);
 
-
-            MethodBuilder methodbuilder =
-                typeBuilder.DefineMethod(functionDeclarationNode.Name,
-                    MethodAttributes.HideBySig |
-                    MethodAttributes.Static |
-                    MethodAttributes.Public,
-                    functionDeclarationNode.ReturnType.ConvertToType(),
-                    /*new Type[] { typeof(string[]) }*/
-                    typesNamesTuple.Item1);
-
-            //set names to parameters
-            for (int i = 0; i < typesNamesTuple.Item2.Length; i++)
-            {
-                methodbuilder.DefineParameter(i, ParameterAttributes.None, typesNamesTuple.Item2[i]);
-            }
+            MethodBuilder methodbuilder;
 
             //the firs main will be our entry point
             if (functionDeclarationNode.Name == "Main" || assemblyBuilder.EntryPoint == null)
             {
                 // set the entry point for the application
-                assemblyBuilder.SetEntryPoint(methodbuilder, PEFileKinds.ConsoleApplication);
+
+                methodbuilder = typeBuilder.DefineMethod("Main", MethodAttributes.HideBySig | MethodAttributes.Static |
+                    MethodAttributes.Public, typeof(void), new Type[] { typeof(string[]) });
+
+                mainMethodbuilder = methodbuilder;
+
+            }
+            else
+            {
+                methodbuilder =
+                    typeBuilder.DefineMethod(functionDeclarationNode.Name,
+                        MethodAttributes.HideBySig |
+                        MethodAttributes.Static |
+                        MethodAttributes.Public,
+                        functionDeclarationNode.ReturnType.ConvertToType(),
+                        /*new Type[] { typeof(string[]) }*/
+                        typesNamesTuple.Item1);
+
+                //set names to parameters
+                for (int i = 0; i < typesNamesTuple.Item2.Length; i++)
+                {
+                    //todo uncomment
+                    methodbuilder.DefineParameter(i, ParameterAttributes.None, typesNamesTuple.Item2[i]);
+                }
             }
             
+            //todo uncomment
             GenerateFuncStatementBlock(functionDeclarationNode.StatemenBlock, methodbuilder);
         }
 
@@ -154,7 +169,7 @@ namespace MathLang.CodeGeneration
                 //get argument type for Write line
                 Type[] param = new Type[]
                 {
-                    funcCallNode.FunctionCallParameters[0].ReturnType.GetType()
+                    funcCallNode.FunctionCallParameters[0].ReturnType.ConvertToType()
                 };
                 //generate method
                 MethodInfo writeLineMI = typeof(Console).GetMethod(
@@ -229,6 +244,18 @@ namespace MathLang.CodeGeneration
             if (Int32.TryParse(value, out num))
             {
                 ilGenerator.Emit(OpCodes.Ldc_I4, num);
+            }
+            else
+            {
+                char ch;
+                if (Char.TryParse(value, out ch))
+                {
+                    ilGenerator.Emit(OpCodes.Ldc_I4_S, (int) ch);
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Bad value : {value}");
+                }
             }
 
 
