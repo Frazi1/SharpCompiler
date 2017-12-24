@@ -442,9 +442,7 @@ namespace MathLang.Tree.Semantics
                 throw new ExpressionException(
                     $"Index of array element reference \"{arrayElementReference.Name}\" must be of type {ReturnType.Int}, but received {arrayElementReference.ArrayIndex.ReturnType}");
             arrayElementReference.ArrayDeclaration = arrayElementReference.Scope
-                .GlobalVariableSearch(arrayElementReference.Name.Name)
-                .CastTo<ArrayDeclaration>();
-        }
+                .GlobalVariableSearch(arrayElementReference.Name.Name);        }
 
         #endregion
 
