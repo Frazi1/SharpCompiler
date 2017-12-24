@@ -162,11 +162,7 @@ namespace MathLang.Tree.Semantics
                         $"Variable \"{variableDeclaration.Name}\" return type {variableDeclaration.ReturnType} is different from {variableDeclarationValueExpression.ReturnType} ");
                 }
             }
-            else
-            {
-                throw new ScopeException(
-                    $"Variable \"{variableDeclaration.Name}\" return type {variableDeclaration.ReturnType} is different from {variableDeclarationValueExpression.ReturnType} ");
-            }
+            
             if (checkName)
             {
                 variableDeclaration.Scope.AddVariable(variableDeclaration);
