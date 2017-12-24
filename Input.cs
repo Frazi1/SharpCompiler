@@ -44,6 +44,13 @@ static class ValeraTest
 
         ////call func with wrong arguments
         //Leaf('u');
+
+        Hello(89);
+    }
+
+    static void Hello(int uiuiui)
+    {
+        Console.WriteLineInt(uiuiui);
     }
 
     //static int ReadTest( int kkk, char ppp)

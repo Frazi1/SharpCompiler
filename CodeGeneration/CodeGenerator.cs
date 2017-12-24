@@ -24,6 +24,8 @@ namespace MathLang.CodeGeneration
 
         protected MethodBuilder mainMethodbuilder;
 
+        protected Dictionary<string, MethodBuilder> funcsMethodBuilders = new Dictionary<string, MethodBuilder>();
+
         public CodeGenerator (string assName, string moduleName, Tree.Nodes.Program programNode)
         {
             // create a dynamic assembly and module 
@@ -59,17 +61,22 @@ namespace MathLang.CodeGeneration
             // create public static class
             TypeBuilder typeBuilder = module.DefineType(classNode.Name, TypeAttributes.Public |
                 TypeAttributes.Class | TypeAttributes.Sealed | TypeAttributes.Abstract);
-            //todo uncomment above
+
+            foreach (var funcNode in classNode.FunctionDeclarationNodes)
+            {
+                GeclareFunc(funcNode, typeBuilder);
+            }
+
             foreach (var funcNode in classNode.FunctionDeclarationNodes)
             {
                 GenerateFunc(funcNode, typeBuilder);                
             }
 
-            // ??? will it work if it calls func from anotherr class, that is not baked yet?
+            // ??? will it work if it calls func from another class, that is not baked yet?
             Type helloWorldType = typeBuilder.CreateType();
         }
 
-        public void GenerateFunc(FunctionDeclaration functionDeclarationNode, TypeBuilder typeBuilder)
+        public void GeclareFunc(FunctionDeclaration functionDeclarationNode, TypeBuilder typeBuilder)
         {
             //get tuple of arrays of type and names of func parameters
             var typesNamesTuple = GenerationHelper.GetTypesAndNamesOfFuncParams(functionDeclarationNode.ParameterNodes);
@@ -77,12 +84,12 @@ namespace MathLang.CodeGeneration
             MethodBuilder methodbuilder;
 
             //the firs main will be our entry point
-            if (functionDeclarationNode.Name == "Main" || assemblyBuilder.EntryPoint == null)
+            if (functionDeclarationNode.Name == "Main" || mainMethodbuilder == null)
             {
                 // set the entry point for the application
 
                 methodbuilder = typeBuilder.DefineMethod("Main", MethodAttributes.HideBySig | MethodAttributes.Static |
-                    MethodAttributes.Public, typeof(void), new Type[] { typeof(string[]) });
+                                                                 MethodAttributes.Public, typeof(void), new Type[] { typeof(string[]) });
 
                 mainMethodbuilder = methodbuilder;
 
@@ -101,13 +108,63 @@ namespace MathLang.CodeGeneration
                 //set names to parameters
                 for (int i = 0; i < typesNamesTuple.Item2.Length; i++)
                 {
-                    //todo uncomment
+                    
                     methodbuilder.DefineParameter(i, ParameterAttributes.None, typesNamesTuple.Item2[i]);
                 }
             }
-            
-            //todo uncomment
-            GenerateFuncStatementBlock(functionDeclarationNode.StatemenBlock, methodbuilder);
+
+            funcsMethodBuilders.Add(functionDeclarationNode.Name, methodbuilder);
+
+            //GenerateFuncStatementBlock(functionDeclarationNode.StatemenBlock, methodbuilder);
+        }
+
+        public void GenerateFunc(FunctionDeclaration functionDeclarationNode, TypeBuilder typeBuilder)
+        {
+            ////get tuple of arrays of type and names of func parameters
+            //var typesNamesTuple = GenerationHelper.GetTypesAndNamesOfFuncParams(functionDeclarationNode.ParameterNodes);
+
+            //MethodBuilder methodbuilder;
+
+            ////the firs main will be our entry point
+            //if (functionDeclarationNode.Name == "Main" || assemblyBuilder.EntryPoint == null)
+            //{
+            //    // set the entry point for the application
+
+            //    methodbuilder = typeBuilder.DefineMethod("Main", MethodAttributes.HideBySig | MethodAttributes.Static |
+            //        MethodAttributes.Public, typeof(void), new Type[] { typeof(string[]) });
+
+            //    mainMethodbuilder = methodbuilder;
+
+            //}
+            //else
+            //{
+            //    methodbuilder =
+            //        typeBuilder.DefineMethod(functionDeclarationNode.Name,
+            //            MethodAttributes.HideBySig |
+            //            MethodAttributes.Static |
+            //            MethodAttributes.Public,
+            //            functionDeclarationNode.ReturnType.ConvertToType(),
+            //            /*new Type[] { typeof(string[]) }*/
+            //            typesNamesTuple.Item1);
+
+            //    //set names to parameters
+            //    for (int i = 0; i < typesNamesTuple.Item2.Length; i++)
+            //    {
+            //        //todo uncomment
+            //        methodbuilder.DefineParameter(i, ParameterAttributes.None, typesNamesTuple.Item2[i]);
+            //    }
+            //}
+
+            if (funcsMethodBuilders.Keys.Contains(functionDeclarationNode.Name))
+            {
+                var methodbuilder = funcsMethodBuilders[functionDeclarationNode.Name];
+
+                GenerateFuncStatementBlock(functionDeclarationNode.StatemenBlock, methodbuilder);
+            }
+            else
+            {
+                throw new NotSupportedException($"Cannot find func {functionDeclarationNode.Name}");
+            }
         }
 
         public void GenerateFuncStatementBlock(BlockStatement blockStatementNode, MethodBuilder methodBuilder)
@@ -179,6 +236,24 @@ namespace MathLang.CodeGeneration
                 GenerateExpression(funcCallNode.FunctionCallParameters[0], ilGenerator);
                 //call WriteLine
                 ilGenerator.EmitCall(OpCodes.Call, writeLineMI, null);
+            }
+            if (ids.Length == 1)
+            {
+                foreach (var functionCallParameter in funcCallNode.FunctionCallParameters)
+                {
+                    GenerateExpression(functionCallParameter, ilGenerator);
+                }
+
+                if (funcsMethodBuilders.Keys.Contains(funcCallNode.Name.GetFullPath))
+                {
+                    var methodbuilder = funcsMethodBuilders[funcCallNode.Name.GetFullPath];
+
+                    ilGenerator.EmitCall(OpCodes.Call, methodbuilder, null);
+                }
+                else
+                {
+                    throw new NotSupportedException($"Cannot find func {funcCallNode.Name.GetFullPath} when calling.");
+                }
             }
         } 
         #endregion

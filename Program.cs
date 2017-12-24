@@ -34,6 +34,7 @@ namespace MathLang
                 if (ErrorService.Instance.HasErrors)
                 {
                     ErrorService.Instance.PrintErrorsToConsole();
+                    Console.ReadLine();
                     return;
                 }
                 //AST
