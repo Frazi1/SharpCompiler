@@ -63,13 +63,21 @@ static class ValeraTest
         myArr[0] = 78 + 2;
         int klkl = myArr[0];
         Console.WriteLineInt(klkl);
-        //Arraprint(myArr);
+        Arraprint(myArr);
     }
 
-    //static void Arraprint(int[] arra)
-    //{
-    //    Console.WriteLineInt(arra[0]);
-    //}
+    static void Arraprint(int[] arra)
+    {
+        Console.WriteLineInt(arra[0]);
+
+        Console.WriteLineBool(1<2);
+        Console.WriteLineBool(1 > 2);
+        Console.WriteLineBool(1 <= 2);
+        Console.WriteLineBool(1 >= 2);
+        Console.WriteLineBool(1 == 2);
+        Console.WriteLineBool(1 == 1);
+        Console.WriteLineBool(1 != 2);
+    }
 
     //static int ReadTest( int kkk, char ppp)
     //{
@@ -77,7 +85,7 @@ static class ValeraTest
     //    int oo;
 
     //    oo = kkk + ReadTest(k, ppp);
-        
+
     //    return Console.ReadChar();
     //}
 }

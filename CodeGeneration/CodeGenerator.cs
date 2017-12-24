@@ -365,7 +365,7 @@ namespace MathLang.CodeGeneration
                         if (varsLocalBuilders.Keys.Contains(extendedIdNode.GetFullPath))
                         {
                             var localBuilder = varsLocalBuilders[extendedIdNode.GetFullPath];
-                            
+
                             ilGenerator.Emit(OpCodes.Ldloc, localBuilder);
                         }
 
@@ -440,10 +440,7 @@ namespace MathLang.CodeGeneration
         {
             //IsMathematicalComparison
 
-            if (expressionNode.ExpressionType == ExpressionType.Add ||
-                expressionNode.ExpressionType == ExpressionType.Div ||
-                expressionNode.ExpressionType == ExpressionType.Sub ||
-                expressionNode.ExpressionType == ExpressionType.Mul)
+            
             {
                 GenerateExpression(expressionNode.Left, ilGenerator);
                 GenerateExpression(expressionNode.Right, ilGenerator);
@@ -462,33 +459,35 @@ namespace MathLang.CodeGeneration
                     case ExpressionType.Div:
                         ilGenerator.Emit(OpCodes.Div);
                         break;
+
+                    case ExpressionType.Equal:
+                        ilGenerator.Emit(OpCodes.Ceq);
+                        break;
+                    case ExpressionType.Greater:
+                        ilGenerator.Emit(OpCodes.Cgt);
+                        break;
+                    case ExpressionType.EqualOrGreater:
+                        ilGenerator.Emit(OpCodes.Clt);
+                        ilGenerator.Emit(OpCodes.Ldc_I4_0);
+                        ilGenerator.Emit(OpCodes.Ceq);
+                        break;
+                    case ExpressionType.Less:
+                        ilGenerator.Emit(OpCodes.Clt);
+                        break;
+                    case ExpressionType.EqualOrLess:
+                        ilGenerator.Emit(OpCodes.Cgt);
+                        ilGenerator.Emit(OpCodes.Ldc_I4_0);
+                        ilGenerator.Emit(OpCodes.Ceq);
+                        break;
+                    case ExpressionType.NotEqual:
+                        ilGenerator.Emit(OpCodes.Ceq);
+                        ilGenerator.Emit(OpCodes.Ldc_I4_0);
+                        ilGenerator.Emit(OpCodes.Ceq);
+                        break;
                 }
             }
 
-            //switch (expressionNode.ExpressionType)
-            //{
-            //    case ExpressionType.Unset:
-            //        break;
-            //    case ExpressionType.Add:
-            //        break;
-            //    case ExpressionType.Sub:
-            //        break;
-            //    case ExpressionType.Mul:
-            //        break;
-            //    case ExpressionType.Div:
-            //        break;
-            //    case ExpressionType.Equal:
-            //        break;
-            //    case ExpressionType.Greater:
-            //        break;
-            //    case ExpressionType.EqualOrGreater:
-            //        break;
-            //    case ExpressionType.Less:
-            //        break;
-            //    case ExpressionType.EqualOrLess:
-            //        break;
-            //    case ExpressionType.NotEqual:
-            //        break;
+
             //    case ExpressionType.Not:
             //        break;
             //    case ExpressionType.Or:
@@ -554,7 +553,7 @@ namespace MathLang.CodeGeneration
             if (varsLocalBuilders.Keys.Contains(extendedIdNode.GetFullPath))
             {
                 var localBuilder = varsLocalBuilders[extendedIdNode.GetFullPath];
-                
+
                 ilGenerator.Emit(OpCodes.Ldloc, localBuilder);
             }
             else
@@ -563,7 +562,7 @@ namespace MathLang.CodeGeneration
                 {
                     if (extendedIdNode.Declaration is FunctionDeclarationParameter fdParam)
                     {
-                        ilGenerator.Emit(OpCodes.Ldarg, (int) extendedIdNode.Declaration.Index);
+                        ilGenerator.Emit(OpCodes.Ldarg, (int)extendedIdNode.Declaration.Index);
 
                     }
                 }
