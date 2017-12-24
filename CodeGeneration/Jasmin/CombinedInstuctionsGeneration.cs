@@ -15,7 +15,7 @@ namespace MathLang.CodeGeneration.JasminJava
             List<IInstruction> instructions = new List<IInstruction>();
 
             //Add parameters to stack
-            functionCall.FunctionCallParameters.ReverseForEach(expression =>
+            functionCall.FunctionCallParameters.ForEach(expression =>
             {
                 instructions.AddRange(expression.GetInstructions());
             });
