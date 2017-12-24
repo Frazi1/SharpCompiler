@@ -34,8 +34,6 @@ namespace MathLang.CodeGeneration
                                 return typeof(char);
                             case IntReturnType intReturnType:
                                 return typeof(int);
-                            case VoidReturnType voidReturnType:
-                                return typeof(void);
                             default: throw new InvalidOperationException(
                                 $"Bad inner type {(returnType as ArrayReturnType)?.InnerType}" +
                                 $" of type {returnType} (cannot convert)");

@@ -14,7 +14,7 @@ using MathLang.Tree.Semantics;
 
 namespace MathLang.CodeGeneration
 {
-    public  class CodeGenerator
+    public class CodeGenerator
     {
         protected AssemblyBuilder assemblyBuilder;
 
@@ -28,7 +28,7 @@ namespace MathLang.CodeGeneration
 
         protected Dictionary<string, LocalBuilder> varsLocalBuilders = new Dictionary<string, LocalBuilder>();
 
-        public CodeGenerator (string assName, Tree.Nodes.Program programNode)
+        public CodeGenerator(string assName, Tree.Nodes.Program programNode)
         {
             // create a dynamic assembly and module 
             assemblyName = new AssemblyName();
@@ -46,17 +46,17 @@ namespace MathLang.CodeGeneration
             assemblyBuilder.Save(assName + ".exe");
         }
 
-        public  void GenerateProgram(Tree.Nodes.Program programNode)
+        public void GenerateProgram(Tree.Nodes.Program programNode)
         {
-            
+
             foreach (var classNode in programNode.ClassNodes)
             {
                 GenerateClass(classNode, module);
             }
-            
+
         }
 
-        public  void GenerateClass(ClassDeclaration classNode, ModuleBuilder module)
+        public void GenerateClass(ClassDeclaration classNode, ModuleBuilder module)
         {
             if (classNode.Name == "Console") return;
 
@@ -71,7 +71,7 @@ namespace MathLang.CodeGeneration
 
             foreach (var funcNode in classNode.FunctionDeclarationNodes)
             {
-                GenerateFunc(funcNode, typeBuilder);                
+                GenerateFunc(funcNode, typeBuilder);
             }
 
             // ??? will it work if it calls func from another class, that is not baked yet?
@@ -110,52 +110,17 @@ namespace MathLang.CodeGeneration
                 //set names to parameters
                 for (int i = 0; i < typesNamesTuple.Item2.Length; i++)
                 {
-                    
-                    methodbuilder.DefineParameter(i+1, ParameterAttributes.None, typesNamesTuple.Item2[i]);
+
+                    methodbuilder.DefineParameter(i + 1, ParameterAttributes.None, typesNamesTuple.Item2[i]);
                 }
             }
 
             funcsMethodBuilders.Add(functionDeclarationNode.Name, methodbuilder);
-
-            //GenerateFuncStatementBlock(functionDeclarationNode.StatemenBlock, methodbuilder);
         }
 
         public void GenerateFunc(FunctionDeclaration functionDeclarationNode, TypeBuilder typeBuilder)
         {
-            ////get tuple of arrays of type and names of func parameters
-            //var typesNamesTuple = GenerationHelper.GetTypesAndNamesOfFuncParams(functionDeclarationNode.ParameterNodes);
-
-            //MethodBuilder methodbuilder;
-
-            ////the firs main will be our entry point
-            //if (functionDeclarationNode.Name == "Main" || assemblyBuilder.EntryPoint == null)
-            //{
-            //    // set the entry point for the application
-
-            //    methodbuilder = typeBuilder.DefineMethod("Main", MethodAttributes.HideBySig | MethodAttributes.Static |
-            //        MethodAttributes.Public, typeof(void), new Type[] { typeof(string[]) });
-
-            //    mainMethodbuilder = methodbuilder;
-
-            //}
-            //else
-            //{
-            //    methodbuilder =
-            //        typeBuilder.DefineMethod(functionDeclarationNode.Name,
-            //            MethodAttributes.HideBySig |
-            //            MethodAttributes.Static |
-            //            MethodAttributes.Public,
-            //            functionDeclarationNode.ReturnType.ConvertToType(),
-            //            /*new Type[] { typeof(string[]) }*/
-            //            typesNamesTuple.Item1);
-
-            //    //set names to parameters
-            //    for (int i = 0; i < typesNamesTuple.Item2.Length; i++)
-            //    {
-            //        //todo uncomment
-            //        methodbuilder.DefineParameter(i, ParameterAttributes.None, typesNamesTuple.Item2[i]);
-            //    }
-            //}
+            varsLocalBuilders.Clear();
 
             if (funcsMethodBuilders.Keys.Contains(functionDeclarationNode.Name))
             {
@@ -189,9 +154,9 @@ namespace MathLang.CodeGeneration
                 case VariableAssignment variableAssignment:
                     GenerateVarAssignment(variableAssignment, ilGenerator);
                     break;
-                //case ArrayElementAssignment arrayElementAssignment:
-                //    arrayElementAssignment.Generate();
-                //    break;
+                case ArrayElementAssignment arrayElementAssignment:
+                    GenerateArrayElementAssignment(arrayElementAssignment, ilGenerator);
+                    break;
                 case Declaration declaration:
                     GenerateDeclaration(declaration, ilGenerator);
                     break;
@@ -273,18 +238,77 @@ namespace MathLang.CodeGeneration
                 //pop var from the stack and store in a value
                 ilGenerator.Emit(OpCodes.Stloc, localBuilder);
             }
-            
+
         }
 
         public void GenerateVarAssignment(VariableAssignment varAssignmentNode, ILGenerator ilGenerator)
         {
             GenerateExpression(varAssignmentNode.AssignmentValue, ilGenerator);
 
+            //local var
             if (varsLocalBuilders.Keys.Contains(varAssignmentNode.VariableName.GetFullPath))
             {
                 var localBuilder = varsLocalBuilders[varAssignmentNode.VariableName.GetFullPath];
                 //pop var from the stack and store in a value
                 ilGenerator.Emit(OpCodes.Stloc, localBuilder);
+            }
+            //func argument var
+            else
+            {
+                if (varAssignmentNode.VariableName.Declaration != null)
+                {
+                    if (varAssignmentNode.VariableName.Declaration is FunctionDeclarationParameter fdParam)
+                    {
+                        //pop var from the stack and store in a func arg
+                        ilGenerator.Emit(OpCodes.Starg, (int)varAssignmentNode.VariableName.Declaration.Index);
+
+                    }
+                }
+            }
+        }
+
+        public void GenerateArrayElementAssignment(ArrayElementAssignment arrayElementAssignmentNode, ILGenerator ilGenerator)
+        {
+            #region load_arr_onto_stack
+            //local var
+            if (varsLocalBuilders.Keys.Contains(arrayElementAssignmentNode.ArrayElementReference.Name.GetFullPath))
+            {
+                var localBuilder = varsLocalBuilders[arrayElementAssignmentNode.ArrayElementReference.Name.GetFullPath];
+                //load var into the stack
+                ilGenerator.Emit(OpCodes.Ldloc, localBuilder);
+            }
+            //func arg
+            else
+            {
+                if (arrayElementAssignmentNode.ArrayElementReference.Name.Declaration != null)
+                {
+                    if (arrayElementAssignmentNode.ArrayElementReference.Name.Declaration is FunctionDeclarationParameter fdParam)
+                    {
+                        //pop var from the stack and store in a func arg
+                        ilGenerator.Emit(OpCodes.Starg, (int)arrayElementAssignmentNode.ArrayElementReference.Name.Declaration.Index);
+
+                    }
+                }
+            }
+            #endregion
+
+            //load arr index onto stack
+            GenerateExpression(arrayElementAssignmentNode.ArrayElementReference.ArrayIndex, ilGenerator);
+            //load value onto stack
+            GenerateExpression(arrayElementAssignmentNode.AssignmentExpression, ilGenerator);
+
+            if (arrayElementAssignmentNode.ArrayElementReference.ReturnType.ConvertToType() == typeof(char))
+            {
+                ilGenerator.Emit(OpCodes.Stelem_I2);
+            }
+            else
+            {
+                if (arrayElementAssignmentNode.ArrayElementReference.ReturnType.ConvertToType() == typeof(bool))
+                {
+                    ilGenerator.Emit(OpCodes.Stelem_I1);
+                }
+                else
+                    ilGenerator.Emit(OpCodes.Stelem_I4);
             }
         }
 
@@ -306,37 +330,44 @@ namespace MathLang.CodeGeneration
                 //case FunctionCall functionCall:
                 //    functionCall.Generate();
                 //    break;
-                //case NewArray newArray:
-                //    newArray.Generate();
-                //    break;
-                //case ArrayElementReference arrayElementReference:
-                //    arrayElementReference.Generate();
-                //    break;
+                case NewArray newArray:
+                    GenerateNewArray(newArray, ilGenerator);
+                    break;
+                case ArrayElementReference arrayElementReference:
+                    GenerateArrayElementReference(arrayElementReference, ilGenerator);
+                    break;
                 default: throw new ArgumentOutOfRangeException(nameof(iexpression));
             }
         }
 
-       
+
 
         private void GenerateExtendedId(ExtendedId extendedIdNode, ILGenerator ilGenerator)
         {
             var ids = extendedIdNode.GetFullPath.Split('.');
 
             //local var/func argument or this class static field
-            if (ids.Length == 1 )
+            if (ids.Length == 1)
             {
                 //local var/func argument or 
                 if (extendedIdNode.Declaration != null)
                 {
                     if (extendedIdNode.Declaration is FunctionDeclarationParameter fdParam)
                     {
-                        ilGenerator.Emit(OpCodes.Ldarg, (int) extendedIdNode.Declaration.Index);
-                        
+                        ilGenerator.Emit(OpCodes.Ldarg, (int)extendedIdNode.Declaration.Index);
+
                     }
                     else
                     {
-                        ilGenerator.Emit(OpCodes.Ldloc, (int)extendedIdNode.Declaration.Index);
-                        
+                        //ilGenerator.Emit(OpCodes.Ldloc, (int)extendedIdNode.Declaration.Index);
+
+                        if (varsLocalBuilders.Keys.Contains(extendedIdNode.GetFullPath))
+                        {
+                            var localBuilder = varsLocalBuilders[extendedIdNode.GetFullPath];
+                            
+                            ilGenerator.Emit(OpCodes.Ldloc, localBuilder);
+                        }
+
                     }
                 }
                 //this class static field
@@ -361,7 +392,7 @@ namespace MathLang.CodeGeneration
                 char ch;
                 if (Char.TryParse(value, out ch))
                 {
-                    ilGenerator.Emit(OpCodes.Ldc_I4_S, (int) ch);
+                    ilGenerator.Emit(OpCodes.Ldc_I4_S, (int)ch);
                 }
                 else
                 {
@@ -372,5 +403,99 @@ namespace MathLang.CodeGeneration
 
 
         }
+
+        private void GenerateNewArray(NewArray newArrayNode, ILGenerator ilGenerator)
+        {
+            //load arr size onto stack
+            GenerateExpression(newArrayNode.ArraySize, ilGenerator);
+            //new array
+            ilGenerator.Emit(OpCodes.Newarr, newArrayNode.ReturnType.ConvertToType());
+            //pop var from stack and store
+
+            //if (newArrayNode.Parent is Declaration declaration)
+            //{
+            //    PopAndStore(declaration.Name, (int)declaration.Index, ilGenerator);
+            //}
+            //else
+            //    if (newArrayNode.Parent is VariableAssignment varAssignment)
+            //    {
+            //        PopAndStore(varAssignment.VariableName, ilGenerator);
+            //    }
+        }
+
+        private void GenerateArrayElementReference(ArrayElementReference arrayElementReferenceNode,
+            ILGenerator ilGenerator)
+        {
+            //load array
+            LoadOntoStack(arrayElementReferenceNode.Name, ilGenerator);
+            //load index
+            GenerateExpression(arrayElementReferenceNode.ArrayIndex, ilGenerator);
+            //load array element with index onto stack
+            ilGenerator.Emit(OpCodes.Ldelem, arrayElementReferenceNode.ReturnType.ConvertToType());
+
+        }
+
+        private void PopAndStore(ExtendedId exId, ILGenerator ilGenerator)
+        {
+            //local var
+            if (varsLocalBuilders.Keys.Contains(exId.GetFullPath))
+            {
+                var localBuilder = varsLocalBuilders[exId.GetFullPath];
+                //pop var from the stack and store in a value
+                ilGenerator.Emit(OpCodes.Stloc, localBuilder);
+            }
+            //func argument var
+            else
+            {
+                if (exId.Declaration != null)
+                {
+                    if (exId.Declaration is FunctionDeclarationParameter fdParam)
+                    {
+                        //pop var from the stack and store in a func arg
+                        ilGenerator.Emit(OpCodes.Starg, (int)exId.Declaration.Index);
+
+                    }
+                }
+            }
+        }
+
+        private void PopAndStore(string name, int index, ILGenerator ilGenerator)
+        {
+            //local var
+            if (varsLocalBuilders.Keys.Contains(name))
+            {
+                var localBuilder = varsLocalBuilders[name];
+                //pop var from the stack and store in a value
+                ilGenerator.Emit(OpCodes.Stloc, localBuilder);
+            }
+            //func argument var
+            else
+            {           //pop var from the stack and store in a func arg
+                ilGenerator.Emit(OpCodes.Starg, index);
+
+            }
+        }
+
+        private void LoadOntoStack(ExtendedId extendedIdNode, ILGenerator ilGenerator)
+        {
+            if (varsLocalBuilders.Keys.Contains(extendedIdNode.GetFullPath))
+            {
+                var localBuilder = varsLocalBuilders[extendedIdNode.GetFullPath];
+                
+                ilGenerator.Emit(OpCodes.Ldloc, localBuilder);
+            }
+            else
+            {
+                if (extendedIdNode.Declaration != null)
+                {
+                    if (extendedIdNode.Declaration is FunctionDeclarationParameter fdParam)
+                    {
+                        ilGenerator.Emit(OpCodes.Ldarg, (int) extendedIdNode.Declaration.Index);
+
+                    }
+                }
+            }
+        }
     }
 }
+

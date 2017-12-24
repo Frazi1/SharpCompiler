@@ -50,14 +50,24 @@ static class ValeraTest
 
     static void Hello(int uiuiui)
     {
-        Console.WriteLineInt(uiuiui);
+        //Console.WriteLineInt(uiuiui);
 
-        char helen = 'h';
+        //char helen = 'h';
+        
+        //Console.WriteLineInt(helen);
 
-        Console.WriteLineInt(helen);
+        //helen = 'H';
+        //Console.WriteLineInt(helen);
 
-        helen = 'H';
-        Console.WriteLineInt(helen);
+        int[] myArr = new int[uiuiui];
+        myArr[0] = 898;
+        //Console.WriteLineInt(myArr[0]);
+        Arraprint(myArr);
+    }
+
+    static void Arraprint(int[] arra)
+    {
+        Console.WriteLineInt(arra[0]);
     }
 
     //static int ReadTest( int kkk, char ppp)
