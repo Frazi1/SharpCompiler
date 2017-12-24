@@ -75,10 +75,5 @@ namespace MathLang.CodeGeneration.JasminJava
                     .WithType(ReturnTypeToJavaConverter.ConvertToFullRepresentation(functionParameter.ReturnType));
             return jasminFunctionParameter;
         }
-
-        private void GenerateStatementBlockCode(BlockStatement functionDeclarationStatemenBlock)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -17,16 +17,37 @@ class Main
 {
     static void Main(string[] args)
     {
-        int i = 12;
-        string[] a = new string[13];
-        a[i] = "test";
-        Library.PrintString(a[i]);
-        //Library.PrintString(a[i]);
-        //Library.PrintInt(2 * 2 + a);
-        //Library.PrintInt(IntTest() + IntTest());
-        //Library.PrintBool(TestChar());
-        //Library.PrintBool(!(!boolT(1 < 2, true)));
+        if (1 > 2)
+        {
+            Library.PrintString("1>2");
+        }
+        else if (2 < 2)
+        {
+            Library.PrintString("1<2");
+        }
+        else
+        {
+            Library.PrintString("1==2");
+        }
+
     }
+
+    //static void Compare(int a, int b)
+    //{
+    //    if (a < b)
+    //    {
+    //        Library.PrintString("a < b");
+    //    }
+    //    else if (a > b)
+    //    {
+    //        Library.PrintString("a > b");
+    //    }
+    //    else
+    //    {
+    //        Library.PrintString("a==b");
+    //    }
+
+    //}
 
     //static bool boolT(bool a, bool b)
     //{

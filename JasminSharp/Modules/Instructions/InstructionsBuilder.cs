@@ -87,5 +87,23 @@ namespace MathLang.CodeGeneration.JasminJava
             instructions.Add(Instructions.InsertLabelInstruction.WithLabel(labelEnd));
             return instructions;
         }
+
+        public static IEnumerable<IInstruction> BuildIf(IEnumerable<IInstruction> conditionInstructions,
+            IEnumerable<IInstruction> trueCondtionInstructions, IEnumerable<IInstruction> falseConditionInstructions)
+        {
+            int currentCount = _count++;
+            List<IInstruction> instructions = new List<IInstruction>();
+            string labelEnd = $"IfCodeGeneration_{currentCount}_end";
+            string labelFalse = $"IfCodeGeneration_{currentCount}_false";
+            string labelTrue = $"IfCodeGeneration_{currentCount}_true";
+            instructions.AddRange(conditionInstructions);
+            instructions.Add(IfeqInstruction.WithLabel(labelFalse));
+            instructions.AddRange(trueCondtionInstructions);
+            instructions.Add(GotoInstruction.WithLabel(labelEnd));
+            instructions.Add(Instructions.InsertLabelInstruction.WithLabel(labelFalse));
+            instructions.AddRange(falseConditionInstructions);
+            instructions.Add(Instructions.InsertLabelInstruction.WithLabel(labelEnd));
+            return instructions;
+        }
     }
 }

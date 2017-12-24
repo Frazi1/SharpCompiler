@@ -46,14 +46,16 @@ namespace MathLang.CodeGeneration.JasminJava
                 //    break;
                 //case ForStatement forStatement:
                 //    break;
-                //case IfStatement ifStatement:
-                //    break;
+                case IfStatement ifStatement:
+                    return ifStatement.GetIfStatementInstructions();
                 case ReturnStatement returnStatement:
                     return returnStatement.GetReturnStatementInstruction();
                 case VariableAssignment variableAssignment:
                     return variableAssignment.GetVariableAssignmentInstructions();
                 //case WhileStatement whileStatement:
                 //    break;
+                case BlockStatement blockStatement:
+                    return blockStatement.GetBlockStatementInstructions();
                 default: throw new NotImplementedException($"Statement generation of {statement}");
             }
         }
@@ -94,7 +96,6 @@ namespace MathLang.CodeGeneration.JasminJava
             else
             {
                 instructions.AddRange(variableDeclaration.Value.GetInstructions());
-                IIndexedInstruction storeInstruction = null;
                 instructions.Add(GetStoreInstruction(variableDeclaration.ReturnType, variableDeclaration.Index.Value));
             }
             return instructions;
@@ -195,6 +196,22 @@ namespace MathLang.CodeGeneration.JasminJava
             instructions.AddRange(arrayElementAssignment.ArrayElementReference.ArrayIndex.GetInstructions());
             instructions.AddRange(arrayElementAssignment.AssignmentExpression.GetInstructions());
             instructions.Add(GetArrayStoreInstruction(arrayElementAssignment.AssignmentExpression.ReturnType));
+            return instructions;
+        }
+
+        private static IEnumerable<IInstruction> GetIfStatementInstructions(this IfStatement ifStatement)
+        {
+            return InstructionsBuilder.BuildIf(ifStatement.ConditionExpression.GetInstructions(),
+                ifStatement.TrueCaseBlockStatement.GetInstructions(),
+                ifStatement.FasleCaseBlockStatement != null
+                    ? ifStatement.FasleCaseBlockStatement.GetInstructions()
+                    : new List<IInstruction>());
+        }
+
+        private static IEnumerable<IInstruction> GetBlockStatementInstructions(this BlockStatement blockStatement)
+        {
+            List<IInstruction> instructions = new List<IInstruction>();
+            blockStatement.Statements.ForEach(statement => instructions.AddRange(statement.GetInstructions()));
             return instructions;
         }
     }

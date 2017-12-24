@@ -1,9 +1,23 @@
 class JavaTestBuild {
     public static void main(String[] args){
-        String[] ar = new String[13];
-        ar[7] = "test";
-        String s = ar[7];
-        Library.printString(s);
+       
+    }
+
+    public void compare(int a, int b)
+    {
+        if (a < b)
+        {
+            Library.printString("a < b");
+        }
+        else if (a > b)
+        {
+            Library.printString("a > b");
+        }
+        else
+        {
+            Library.printString("a==b");
+        }
+
     }
 
     
