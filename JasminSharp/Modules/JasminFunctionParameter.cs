@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Text;
-using JasminSharp.Helpers;
 
-namespace MathLang.CodeGeneration.JasminJava
+namespace JasminSharp
 {
     public class JasminFunctionParameter : IJasminModule
     {

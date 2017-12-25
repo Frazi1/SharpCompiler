@@ -1,6 +1,4 @@
-﻿using System;
-using Antlr.Runtime.Tree;
-using MathLang.Extensions;
+﻿using Antlr.Runtime.Tree;
 using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Interfaces;
 using MathLang.Tree.Scopes;

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Antlr.Runtime.Tree;
+﻿using Antlr.Runtime.Tree;
 using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Interfaces;
 using MathLang.Tree.Scopes;

@@ -1,5 +1,4 @@
 ﻿using MathLang.Tree.Nodes.Declarations;
-using MathLang.Tree.Scopes.Exceptions;
 
 namespace MathLang.Tree.Scopes
 {

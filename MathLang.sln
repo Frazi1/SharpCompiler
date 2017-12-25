@@ -8,8 +8,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JasminSharp", "JasminSharp\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstuctionsCodeGenerator", "InstuctionsCodeGenerator\InstuctionsCodeGenerator.csproj", "{E9945C17-3BC6-434E-B8DE-2D33BA26C7C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenerationLib", "CodeGenerationLib\CodeGenerationLib.csproj", "{732A2647-F33E-41AA-A76A-A07C05B98E12}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6C666120-348D-4F40-964A-8A7B2F89E82B}"
 	ProjectSection(SolutionItems) = preProject
 		UnitTestProject1\UnitTestProject1.csproj = UnitTestProject1\UnitTestProject1.csproj
@@ -33,10 +31,6 @@ Global
 		{E9945C17-3BC6-434E-B8DE-2D33BA26C7C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9945C17-3BC6-434E-B8DE-2D33BA26C7C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9945C17-3BC6-434E-B8DE-2D33BA26C7C1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{732A2647-F33E-41AA-A76A-A07C05B98E12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{732A2647-F33E-41AA-A76A-A07C05B98E12}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{732A2647-F33E-41AA-A76A-A07C05B98E12}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{732A2647-F33E-41AA-A76A-A07C05B98E12}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

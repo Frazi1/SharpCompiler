@@ -1,4 +1,7 @@
-﻿namespace MathLang.CodeGeneration.JasminJava
+﻿using JasminSharp;
+using JasminSharp.MathLang.CodeGeneration.JasminJava;
+
+namespace MathLang.CodeGeneration
 {
     public static class Instructions
     {

@@ -1,6 +1,7 @@
-﻿using JasminSharp.Helpers;
+﻿
+using JasminSharp.Helpers;
 
-namespace MathLang.CodeGeneration.JasminJava
+namespace JasminSharp
 {
     public enum JasminModifier
     {

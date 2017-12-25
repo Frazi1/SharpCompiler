@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using Antlr.Runtime.Tree;
 using MathLang.Extensions;
 using MathLang.Tree.Nodes.Enums;

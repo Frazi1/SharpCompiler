@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using JasminSharp;
 using JasminSharp.Helpers;
 
-namespace MathLang.CodeGeneration.JasminJava
+namespace JasminSharp
 {
     public sealed class JasminClassModule : IJasminModule
     {

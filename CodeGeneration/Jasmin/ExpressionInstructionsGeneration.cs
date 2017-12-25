@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
+using JasminSharp;
 using MathLang.CodeGeneration.Helpers.Converters;
+using MathLang.CodeGeneration.JasminJava;
 using MathLang.Extensions;
 using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Expressions;
 using MathLang.Tree.Nodes.Interfaces;
-using static MathLang.CodeGeneration.JasminJava.Instructions;
+using static MathLang.CodeGeneration.Instructions;
 
-namespace MathLang.CodeGeneration.JasminJava
+namespace MathLang.CodeGeneration
 {
     public static class ExpressionInstructionsGeneration
     {

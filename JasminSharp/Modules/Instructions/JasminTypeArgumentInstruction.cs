@@ -1,4 +1,4 @@
-﻿namespace MathLang.CodeGeneration.JasminJava
+﻿namespace JasminSharp
 {
     public class JasminTypeArgumentInstruction : ArgumentInstruction
     {

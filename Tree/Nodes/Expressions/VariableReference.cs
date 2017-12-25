@@ -1,5 +1,4 @@
-﻿using System.Collections.Specialized;
-using Antlr.Runtime.Tree;
+﻿using Antlr.Runtime.Tree;
 using MathLang.Extensions;
 using MathLang.Tree.Nodes.Declarations;
 using MathLang.Tree.Nodes.Enums;

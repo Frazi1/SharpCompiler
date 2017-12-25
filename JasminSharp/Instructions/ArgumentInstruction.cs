@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MathLang.CodeGeneration.JasminJava
+namespace JasminSharp
 {
     public class ArgumentInstruction : IArgumentInstruction
     {

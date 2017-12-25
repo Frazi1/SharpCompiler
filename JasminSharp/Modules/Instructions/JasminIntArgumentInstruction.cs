@@ -1,29 +1,33 @@
-﻿namespace MathLang.CodeGeneration.JasminJava
+﻿namespace JasminSharp
 {
-    public class bipushInstruction : IntArgumentInstruction
+    namespace MathLang.CodeGeneration.JasminJava
     {
-        public bipushInstruction()
+        public class bipushInstruction : IntArgumentInstruction
         {
-            Name = "bipush";
+            public bipushInstruction()
+            {
+                Name = "bipush";
+            }
+
+            public bipushInstruction WithArgument(int argument)
+            {
+                IntArgument = argument;
+                return this;
+            }
         }
 
-        public bipushInstruction WithArgument(int argument)
+        public class sipushInstruction : IntArgumentInstruction
         {
-            IntArgument = argument;
-            return this;
-        }
-    }
+            public sipushInstruction()
+            {
+                Name = "sipush";
+            }
 
-    public class sipushInstruction : IntArgumentInstruction
-    {
-        public sipushInstruction()
-        {
-            Name = "sipush";
-        }
-        public sipushInstruction WithArgument(int argument)
-        {
-            IntArgument = argument;
-            return this;
+            public sipushInstruction WithArgument(int argument)
+            {
+                IntArgument = argument;
+                return this;
+            }
         }
     }
 }

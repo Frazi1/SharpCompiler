@@ -6,7 +6,7 @@ using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Expressions;
 using MathLang.Tree.Nodes.Interfaces;
 using MathLang.Tree.Nodes.Statements;
-using static MathLang.CodeGeneration.JasminJava.Instructions;
+using static MathLang.CodeGeneration.Instructions;
 
 namespace MathLang.CodeGeneration.JasminJava
 {
@@ -220,5 +220,7 @@ namespace MathLang.CodeGeneration.JasminJava
                 forStatement.ConditionExpression.GetInstructions(),
                 forStatement.IterationStatement.GetInstructions());
         }
+        
+        //private static IEnumerable<IInstru>
     }
 }

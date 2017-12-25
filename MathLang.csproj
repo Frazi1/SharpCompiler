@@ -47,7 +47,6 @@
     <Compile Include="CodeGeneration\Jasmin\CombinedInstuctionsGeneration.cs" />
     <Compile Include="CodeGeneration\Jasmin\ExpressionInstructionsGeneration.cs" />
     <Compile Include="CodeGeneration\Jasmin\JasminCodeGenerator.cs" />
-    <Compile Include="CodeGeneration\Jasmin\JasminMappingsInitializer.cs" />
     <Compile Include="CodeGeneration\Jasmin\StatementInstructionsGeneration.cs" />
     <Compile Include="ErrorService.cs" />
     <Compile Include="Extensions\Extensions.cs" />
@@ -140,10 +139,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="CodeGenerationLib\CodeGenerationLib.csproj">
-      <Project>{732a2647-f33e-41aa-a76a-a07c05b98e12}</Project>
-      <Name>CodeGenerationLib</Name>
-    </ProjectReference>
     <ProjectReference Include="JasminSharp\JasminSharp.csproj">
       <Project>{bebd05a2-6382-41a3-8108-b11960ed60b0}</Project>
       <Name>JasminSharp</Name>

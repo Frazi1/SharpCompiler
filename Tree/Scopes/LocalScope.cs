@@ -1,5 +1,4 @@
-﻿using System;
-using MathLang.Tree.Nodes.Declarations;
+﻿using MathLang.Tree.Nodes.Declarations;
 
 namespace MathLang.Tree.Scopes
 {

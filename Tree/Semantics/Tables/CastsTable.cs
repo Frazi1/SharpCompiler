@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Interfaces;
-using MathLang.Tree.Scopes.Exceptions;
 
 namespace MathLang.Tree.Nodes.Expressions
 {

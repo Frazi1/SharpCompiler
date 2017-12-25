@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using MathLang.Tree.Nodes.Declarations;
 using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Expressions;

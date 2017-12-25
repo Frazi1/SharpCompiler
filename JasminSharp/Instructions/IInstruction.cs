@@ -1,4 +1,6 @@
-﻿namespace MathLang.CodeGeneration.JasminJava
+﻿using MathLang.CodeGeneration.JasminJava;
+
+namespace JasminSharp
 {
     public interface IInstruction : IListingGenerator
     {

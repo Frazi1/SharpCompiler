@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Antlr.Runtime.Tree;
 using MathLang.Extensions;
 using MathLang.Tree.Nodes.Interfaces;

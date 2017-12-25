@@ -6,7 +6,7 @@ using MathLang.Extensions;
 using MathLang.Tree.Nodes.Declarations;
 using MathLang.Tree.Nodes.Expressions;
 
-namespace MathLang.CodeGeneration.JasminJava
+namespace MathLang.CodeGeneration
 {
     public static class CombinedInstuctionsGeneration
     {

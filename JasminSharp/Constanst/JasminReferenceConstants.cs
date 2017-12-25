@@ -1,6 +1,4 @@
-﻿using JasminSharp.Helpers;
-
-namespace MathLang.CodeGeneration.JasminJava
+﻿namespace JasminSharp
 {
     public static class JasminReferenceConstants
     {

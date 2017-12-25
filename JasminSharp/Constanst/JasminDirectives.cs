@@ -1,8 +1,4 @@
-﻿using System.Reflection.Emit;
-using JasminSharp.Helpers;
-using static MathLang.CodeGeneration.JasminJava.JasminDirectives;
-
-namespace MathLang.CodeGeneration.JasminJava
+﻿namespace JasminSharp
 {
     public static class JasminDirectives
     {

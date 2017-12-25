@@ -1,5 +1,5 @@
 ﻿using System;
-using MathLang.CodeGeneration.JasminJava;
+using JasminSharp;
 using MathLang.Tree.Nodes.Enums;
 
 namespace MathLang.CodeGeneration.Helpers.Converters

@@ -44,14 +44,17 @@
     <Compile Include="Constanst\JasminModifier.cs" />
     <Compile Include="Constanst\JasminReferenceConstants.cs" />
     <Compile Include="Helpers\Extensions.cs" />
-    <Compile Include="Helpers\Mapper\IMapper.cs" />
-    <Compile Include="Helpers\Mapper\IMapperConfiguration.cs" />
-    <Compile Include="Helpers\Mapper\SimpleMapperConfiguration.cs" />
-    <Compile Include="Helpers\Mapper\SimpleMapper.cs" />
-    <Compile Include="Helpers\Mapper\SimpleObjectMapper.cs" />
-    <Compile Include="Helpers\Mapper\SimpleObjectMapperConfiguration.cs" />
     <Compile Include="Helpers\TextValue.cs" />
-    <Compile Include="Jasmin.cs" />
+    <Compile Include="IListingGenerator.cs" />
+    <Compile Include="IModule.cs" />
+    <Compile Include="Instructions\ArgumentInstruction.cs" />
+    <Compile Include="Instructions\IInstruction.cs" />
+    <Compile Include="Instructions\IndexedInstruction.cs" />
+    <Compile Include="Instructions\IntArgumentInstruction.cs" />
+    <Compile Include="Instructions\LabelInstruction.cs" />
+    <Compile Include="Instructions\MethodInvocationInstruction.cs" />
+    <Compile Include="Instructions\NoArgumentInstruction.cs" />
+    <Compile Include="Instructions\TwoIntArgumentInstruction.cs" />
     <Compile Include="JasminException.cs" />
     <Compile Include="Helpers\Instructions.cs" />
     <Compile Include="Modules\Instructions\InstructionsBuilder.cs" />
@@ -68,14 +71,7 @@
     <Compile Include="Constanst\JasminDirectives.cs" />
     <Compile Include="Modules\JasminFunctionModule.cs" />
     <Compile Include="Modules\JasminFunctionParameter.cs" />
-    <Compile Include="Modules\Library\JasminLibraryFunctionsHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CodeGenerationLib\CodeGenerationLib.csproj">
-      <Project>{732a2647-f33e-41aa-a76a-a07c05b98e12}</Project>
-      <Name>CodeGenerationLib</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

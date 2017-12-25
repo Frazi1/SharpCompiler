@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
-using static MathLang.CodeGeneration.JasminJava.Instructions;
+using MathLang.CodeGeneration;
+using static MathLang.CodeGeneration.Instructions;
 
-namespace MathLang.CodeGeneration.JasminJava
+namespace JasminSharp
 {
     public static class InstructionsBuilder
     {

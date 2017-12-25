@@ -1,4 +1,4 @@
-﻿namespace MathLang.CodeGeneration.JasminJava
+﻿namespace JasminSharp
 {
     public sealed class ldcInstruction : ArgumentInstruction
     {

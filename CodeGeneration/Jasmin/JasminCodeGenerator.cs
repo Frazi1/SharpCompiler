@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using MathLang.CodeGeneration.Helpers;
+using JasminSharp;
 using MathLang.CodeGeneration.Helpers.Converters;
+using MathLang.CodeGeneration.JasminJava;
 using MathLang.Extensions;
 using MathLang.Tree.Nodes.Declarations;
 using MathLang.Tree.Nodes.Enums;
-using MathLang.Tree.Nodes.Statements;
-using static JasminSharp.Jasmin;
 
-namespace MathLang.CodeGeneration.JasminJava
+namespace MathLang.CodeGeneration
 {
     public class JasminCodeGenerator
     {
