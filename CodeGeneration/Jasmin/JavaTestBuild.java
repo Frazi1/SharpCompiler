@@ -5,9 +5,10 @@ class JavaTestBuild {
 
     public void testFor()
     {
-        for(int i=0;i<10;i=i+1){
-            Library.printInt(i);
-        }        
+        int i = 0;
+        while(i<10){
+            return;
+        }
     }
 
     

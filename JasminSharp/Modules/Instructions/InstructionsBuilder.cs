@@ -127,5 +127,21 @@ namespace JasminSharp
             instructions.Add(Instructions.InsertLabelInstruction.WithLabel(labelEnd));
             return instructions;
         }
+
+        public static IEnumerable<IInstruction> BuildWhile(IEnumerable<IInstruction> conditionInstructions,
+            IEnumerable<IInstruction> bodyInstructions)
+        {
+            int currentCount = _count++;
+            string labelEnd = $"WhileCodeGeneration_{currentCount}_end";
+            string labelStart = $"WhileCodeGeneration_{currentCount}_start";
+            List<IInstruction> instructions = new List<IInstruction>();
+            instructions.Add(Instructions.InsertLabelInstruction.WithLabel(labelStart));
+            instructions.AddRange(conditionInstructions);
+            instructions.Add(IfeqInstruction.WithLabel(labelEnd));
+            instructions.AddRange(bodyInstructions);
+            instructions.Add(GotoInstruction.WithLabel(labelStart));
+            instructions.Add(Instructions.InsertLabelInstruction.WithLabel(labelEnd));
+            return instructions;
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using JasminSharp;
 using MathLang.CodeGeneration.Helpers.Converters;
@@ -25,8 +26,9 @@ namespace MathLang.CodeGeneration
                     return GetCharExpressionInstructions(charExpression);
                 case IntExpression intExpression:
                     return GetIntExpressionInstructions(intExpression);
-                //case VoidExpression voidExpression:
-                //    break;
+                case VoidExpression voidExpression:
+                    //Nothing to do here
+                    return new List<IInstruction>();
                 //case Atom atom:
                 //    break;
                 case Expression expression:

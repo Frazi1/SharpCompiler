@@ -50,8 +50,8 @@ namespace MathLang.CodeGeneration.JasminJava
                     return returnStatement.GetReturnStatementInstruction();
                 case VariableAssignment variableAssignment:
                     return variableAssignment.GetVariableAssignmentInstructions();
-                //case WhileStatement whileStatement:
-                //    break;
+                case WhileStatement whileStatement:
+                    return whileStatement.GetWhileStatementInstructions();
                 case BlockStatement blockStatement:
                     return blockStatement.GetBlockStatementInstructions();
                 default: throw new NotImplementedException($"Statement generation of {statement}");
@@ -70,8 +70,7 @@ namespace MathLang.CodeGeneration.JasminJava
             else if (returnStatement.ReturnExpression.ReturnType == ReturnType.String)
                 instructions.Add(AreturnInstruction);
             else
-                throw new NotImplementedException(
-                    $"{nameof(returnStatement.ReturnExpression)} GetReturnStatementInstructions");
+                instructions.Add(ReturnInstruction);
             return instructions;
         }
 
@@ -220,7 +219,11 @@ namespace MathLang.CodeGeneration.JasminJava
                 forStatement.ConditionExpression.GetInstructions(),
                 forStatement.IterationStatement.GetInstructions());
         }
-        
-        //private static IEnumerable<IInstru>
+
+        private static IEnumerable<IInstruction> GetWhileStatementInstructions(this WhileStatement whileStatement)
+        {
+            return InstructionsBuilder.BuildWhile(whileStatement.ConditionExpression.GetInstructions(),
+                whileStatement.BlockOrSingleStatement.GetInstructions());
+        }
     }
 }

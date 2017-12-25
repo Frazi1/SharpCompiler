@@ -17,15 +17,23 @@ class Main
 {
     static void Main(string[] args)
     {
-        int l = 10;
-        int[] a = new int[l];
-        for (int i = 0; i < l; i = i + 1)
-            a[i] = l - i;
-        
-        PrintIntArray(a, l);
-        BubbleSort(a, l);
-        Library.PrintString("Sorted:");
-        PrintIntArray(a, l);
+        int i = 0;
+        TestReturn(!true!=false);
+        while (i<10)
+        {
+            Library.PrintInt(i);
+            return;
+        }
+
+        //int l = 10;
+        //int[] a = new int[l];
+        //for (int i = 0; i < l; i = i + 1)
+        //    a[i] = l - i;
+
+        //PrintIntArray(a, l);
+        //BubbleSort(a, l);
+        //Library.PrintString("Sorted:");
+        //PrintIntArray(a, l);
 
 
 
@@ -35,6 +43,15 @@ class Main
         //Library.PrintInt(Test.GetAHundred());
     }
 
+    static void TestReturn(bool b)
+    {
+        if (b)
+        {
+            return;
+        }
+        Library.PrintString("not returned");
+    }
+    
     static void Swap(int[] arr, int a, int b)
     {
         int t = arr[a];
