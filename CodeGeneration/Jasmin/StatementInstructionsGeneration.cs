@@ -90,7 +90,7 @@ namespace MathLang.CodeGeneration.JasminJava
         {
             List<IInstruction> instructions = new List<IInstruction>();
             if (variableDeclaration.IsStatic) throw new JasminException("static decl are not supported atm");
-            else
+            else if(variableDeclaration.Initialized)
             {
                 instructions.AddRange(variableDeclaration.Value.GetInstructions());
                 instructions.Add(GetStoreInstruction(variableDeclaration.ReturnType, variableDeclaration.Index.Value));

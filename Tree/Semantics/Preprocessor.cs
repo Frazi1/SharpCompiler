@@ -145,27 +145,25 @@ namespace MathLang.Tree.Semantics
                         variableDeclaration.Name, Scope.FunctionLevel)
                     != null)
                     throw new ScopeException($"Variable with name: \"{variableDeclaration.Name}\" already exists");
+                variableDeclaration.Scope.AddVariable(variableDeclaration);
             }
             IExpression variableDeclarationValueExpression = variableDeclaration.Value;
-            if (variableDeclarationValueExpression == null) return;
-            variableDeclarationValueExpression.Process();
-
-            if (!(variableDeclaration.ReturnType == variableDeclarationValueExpression.ReturnType))
+            if (variableDeclarationValueExpression != null)
             {
-                if (variableDeclarationValueExpression.ReturnType.IsCastableTo(variableDeclaration.ReturnType))
-                {
-                    variableDeclarationValueExpression.CastToType = variableDeclaration.ReturnType;
-                }
-                else
-                {
-                    throw new ScopeException(
-                        $"Variable \"{variableDeclaration.Name}\" return type {variableDeclaration.ReturnType} is different from {variableDeclarationValueExpression.ReturnType} ");
-                }
-            }
+                variableDeclarationValueExpression.Process();
 
-            if (checkName)
-            {
-                variableDeclaration.Scope.AddVariable(variableDeclaration);
+                if (!(variableDeclaration.ReturnType == variableDeclarationValueExpression.ReturnType))
+                {
+                    if (variableDeclarationValueExpression.ReturnType.IsCastableTo(variableDeclaration.ReturnType))
+                    {
+                        variableDeclarationValueExpression.CastToType = variableDeclaration.ReturnType;
+                    }
+                    else
+                    {
+                        throw new ScopeException(
+                            $"Variable \"{variableDeclaration.Name}\" return type {variableDeclaration.ReturnType} is different from {variableDeclarationValueExpression.ReturnType} ");
+                    }
+                }
             }
         }
 
@@ -267,9 +265,9 @@ namespace MathLang.Tree.Semantics
             {
                 var declaration = scope.GlobalVariableSearch(extendedId.Name);
                 extendedId.Declaration = declaration;
-                extendedId.ReturnType = declaration != null
-                    ? declaration.ReturnType
-                    : throw new ScopeException($"Variable with name \"{extendedId.Name}\" does not exist.");
+                if(!declaration.Initialized)
+                    throw new ScopeException($"Variable with name \"{extendedId.Name}\" was not initialized before accessing");
+                extendedId.ReturnType = declaration.ReturnType;
             }
             else
             {

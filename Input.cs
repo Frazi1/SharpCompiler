@@ -17,13 +17,13 @@ class Main
 {
     static void Main(string[] args)
     {
-        int i = 0;
-        TestReturn(!true!=false);
-        while (i<10)
-        {
-            Library.PrintInt(i);
-            return;
-        }
+        //int i = 0;
+        //TestReturn(!true!=false);
+        //while (i<10)
+        //{
+        //    Library.PrintInt(i);
+        //    return;
+        //}
 
         //int l = 10;
         //int[] a = new int[l];
@@ -45,9 +45,10 @@ class Main
 
     static void TestReturn(bool b)
     {
+        int[] i = new int[1];
         if (b)
         {
-            return;
+            return i;
         }
         Library.PrintString("not returned");
     }
