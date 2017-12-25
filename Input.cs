@@ -17,50 +17,51 @@ class Main
 {
     static void Main(string[] args)
     {
-        //int l = 10;
-        //int[] a = new int[l];
-        //for (int i = 0; i < l; i=i+1)
-        //    a[i] = l - i;
+        int l = 10;
+        int[] a = new int[l];
+        for (int i = 0; i < l; i = i + 1)
+            a[i] = l - i;
 
-        //BubbleSort(a, l);
+        BubbleSort(a, l);
 
         //PrintIntArray(a, l);
-        Library.PrintInt(Fact(20));
+        //Library.PrintInt(Fact(20));
+        Library.PrintInt(Fibbonacchi(13));
     }
 
-    //static void Swap(int[] arr, int a, int b)
-    //{
-    //    int t = arr[a];
-    //    arr[a] = arr[b];
-    //    arr[b] = t;
-    //}
+    static void Swap(int[] arr, int a, int b)
+    {
+        int t = arr[a];
+        arr[a] = arr[b];
+        arr[b] = t;
+    }
 
-    //static void BubbleSort(int[] a, int l)
-    //{
-    //    for (int i = 0; i < l; i = i + 1)
-    //        for (int j = 0; j < l - 1; j = j + 1)
-    //            if (a[j] > a[j + 1])
-    //                Swap(a, j, j + 1);
-    //}
-    
-    //static void PrintIntArray(int[] arr, int lenght)
-    //{
-    //    for (int i = 0; i < lenght; i = i + 1)
-    //    {
-    //        Library.PrintInt(arr[i]);
-    //    }
-    //}
+    static void BubbleSort(int[] a, int l)
+    {
+        for (int i = 0; i < l; i = i + 1)
+            for (int j = 0; j < l - 1; j = j + 1)
+                if (a[j] > a[j + 1])
+                    Swap(a, j, j + 1);
+    }
+
+    static void PrintIntArray(int[] arr, int lenght)
+    {
+        for (int i = 0; i < lenght; i = i + 1)
+        {
+            Library.PrintInt(arr[i]);
+        }
+    }
 
     static int Fibbonacchi(int n)
     {
-        if (n > 1)
+        if (n > 2)
         {
             int i = Fibbonacchi(n - 1) + Fibbonacchi(n - 2);
-            Library.PrintInt(i);
+            //Library.PrintInt(i);
             return i;
         }
-        Library.PrintInt(n);
-        return n;
+        //Library.PrintInt(1);
+        return 1;
     }
 
     static int Fact(int n)
@@ -109,61 +110,61 @@ class Main
     //}
 }
 
-//static class Test
-//{
-    
-//}
+static class Test
+{
+
+}
 
 //static class ValeraTest
 //{
-    //static char Tom = 't';
-    //static int Cat = 8 + Tom;
+//static char Tom = 't';
+//static int Cat = 8 + Tom;
 
-    
-    //static int GoodCat(int alla)
-    //{
-    //    alla = Tom;
-    //    return Tom;
-    //}
 
-    ////return cast check & cast check
-    //static char BadCat()
-    //{
-    //    return -7;
-    //}
+//static int GoodCat(int alla)
+//{
+//    alla = Tom;
+//    return Tom;
+//}
 
-    ////array check
-    //static void Method(int funArr, char test2)
-    //{
-    //    int[] arr = new int[4];
-    //    arr[(6 - 5)] = Cat;
-    //    arr[Cat] = 'r';
+////return cast check & cast check
+//static char BadCat()
+//{
+//    return -7;
+//}
 
-    //    //char, not int
-    //    //arr['8'] = Cat;
-    //}
+////array check
+//static void Method(int funArr, char test2)
+//{
+//    int[] arr = new int[4];
+//    arr[(6 - 5)] = Cat;
+//    arr[Cat] = 'r';
 
-    //static int Leaf(int[] p)
-    //{
-    //    ////call not existing func
-    //    //lalala(p);
+//    //char, not int
+//    //arr['8'] = Cat;
+//}
 
-    //    //leaf returns void
-    //    int test = Leaf(new int[3]);
-    //    //char =  Console.ReadChar();
+//static int Leaf(int[] p)
+//{
+//    ////call not existing func
+//    //lalala(p);
 
-    //    ////call func with wrong arguments
-    //    //Leaf('u');
-    //    return 1;
-    //}
+//    //leaf returns void
+//    int test = Leaf(new int[3]);
+//    //char =  Console.ReadChar();
 
-    //static int ReadTest( int kkk, char ppp)
-    //{
-    //    int k;
-    //    int oo;
+//    ////call func with wrong arguments
+//    //Leaf('u');
+//    return 1;
+//}
 
-    //    oo = kkk + ReadTest(k, ppp);
-        
-    //    return Console.ReadChar();
-    //}
+//static int ReadTest( int kkk, char ppp)
+//{
+//    int k;
+//    int oo;
+
+//    oo = kkk + ReadTest(k, ppp);
+
+//    return Console.ReadChar();
+//}
 //}

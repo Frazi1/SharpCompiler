@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using MathLang.CodeGeneration.Helpers;
 using MathLang.CodeGeneration.Helpers.Converters;
@@ -14,7 +16,8 @@ namespace MathLang.CodeGeneration.JasminJava
     {
         public string CodeListing { get; private set; } = "";
 
-
+        private readonly Dictionary<string, string> _classListings = new Dictionary<string, string>();
+        
         private void PushLine(string text)
         {
             CodeListing += text + Environment.NewLine;
@@ -40,7 +43,14 @@ namespace MathLang.CodeGeneration.JasminJava
                     jasminClass.WithFunction(BuildJasminFunction(function));
             });
 
-            jasminClass.GenerateListing().ForEach(PushLine);
+                _classListings.Add(jasminClass.Name, string.Empty);
+
+            jasminClass.GenerateListing()
+                .ForEach(classListing =>
+                {
+                    _classListings[jasminClass.Name] += classListing + Environment.NewLine;
+                //_classListings.Add(jasminClass.Name, classListing + Environment.NewLine);
+            });
             //PushLine($"{Class} {Public} "
             //         + $"{(classDeclaration.IsStatic ? Final + " " : string.Empty)}"
             //         + $"{classDeclaration.Name}");
@@ -74,6 +84,18 @@ namespace MathLang.CodeGeneration.JasminJava
                     .WithName(functionParameter.Name)
                     .WithType(ReturnTypeToJavaConverter.ConvertToFullRepresentation(functionParameter.ReturnType));
             return jasminFunctionParameter;
+        }
+
+        public void SaveFiles()
+        {
+            _classListings.ForEach(pair =>
+            {
+                var writer = new StreamWriter(pair.Key);
+                writer.Write(pair.Key);
+                writer.Flush();
+                writer.Close();
+            });
+            
         }
     }
 }

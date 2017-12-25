@@ -49,8 +49,9 @@ namespace MathLang
 
                 JasminCodeGenerator generator = new JasminCodeGenerator();
                 generator.GenerateCode(astProgram);
-                Helpers.FilePrinter.WriteTextToFile(generator.CodeListing, "output.j");
-                Console.WriteLine(generator.CodeListing);
+                generator.SaveFiles();
+                //Helpers.FilePrinter.WriteTextToFile(generator.CodeListing, "output.j");
+                //Console.WriteLine(generator.CodeListing);
                 RunJasminBuildScript();
             }
             catch (Exception e)
@@ -58,6 +59,10 @@ namespace MathLang
                 Console.WriteLine("Error: {0}", e);
             }
             Console.ReadLine();
+        }
+        static int Fibbonacchi(int n)
+        {
+            return n > 1 ? Fibbonacchi(n - 1) + Fibbonacchi(n - 2):n;
         }
 
         private static void RunJasminBuildScript()
