@@ -264,6 +264,8 @@ namespace MathLang.Tree.Semantics
             if (isVariable)
             {
                 var declaration = scope.GlobalVariableSearch(extendedId.Name);
+                if(declaration == null)
+                    throw new ScopeException($"Variable with name \"{extendedId.Name}\" does not exist");
                 extendedId.Declaration = declaration;
                 if(!declaration.Initialized)
                     throw new ScopeException($"Variable with name \"{extendedId.Name}\" was not initialized before accessing");
