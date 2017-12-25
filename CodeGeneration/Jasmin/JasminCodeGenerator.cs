@@ -90,8 +90,8 @@ namespace MathLang.CodeGeneration.JasminJava
         {
             _classListings.ForEach(pair =>
             {
-                var writer = new StreamWriter(pair.Key);
-                writer.Write(pair.Key);
+                var writer = new StreamWriter(pair.Key + ".j");
+                writer.Write(pair.Value);
                 writer.Flush();
                 writer.Close();
             });

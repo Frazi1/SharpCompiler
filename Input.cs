@@ -21,12 +21,18 @@ class Main
         int[] a = new int[l];
         for (int i = 0; i < l; i = i + 1)
             a[i] = l - i;
-
+        
+        PrintIntArray(a, l);
         BubbleSort(a, l);
+        Library.PrintString("Sorted:");
+        PrintIntArray(a, l);
 
-        //PrintIntArray(a, l);
+
+
         //Library.PrintInt(Fact(20));
-        Library.PrintInt(Fibbonacchi(13));
+        //Library.PrintInt(Fibbonacchi(13));
+        //Library.PrintString("HUNDRED");
+        //Library.PrintInt(Test.GetAHundred());
     }
 
     static void Swap(int[] arr, int a, int b)
@@ -112,7 +118,10 @@ class Main
 
 static class Test
 {
-
+    static int GetAHundred()
+    {
+        return 100;
+    }
 }
 
 //static class ValeraTest
