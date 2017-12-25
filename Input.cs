@@ -81,6 +81,14 @@ static class ValeraTest
             i = i + 1;
         }
         Console.WriteLineChar('-');
+
+        for (int t = 0; t < len; t = t + 1)
+        {
+            Console.WriteLineInt(myArr[t]);
+        }
+
+        Console.WriteLineChar('-');
+
         //Console.WriteLineInt(uiuiui);
 
         //char helen = 'h';

@@ -179,9 +179,9 @@ namespace MathLang.CodeGeneration
                 case IfStatement ifStatement:
                     GenerateIfStatement(ifStatement, ilGenerator);
                     break;
-                //case ForStatement forStatement:
-                //    forStatement.Generate();
-                //    break;
+                case ForStatement forStatement:
+                    GenerateForStatement(forStatement, ilGenerator);
+                    break;
                 case BlockStatement blockStatement:
                     GenerateBlockStatement(blockStatement, ilGenerator);
                     break;
@@ -345,6 +345,30 @@ namespace MathLang.CodeGeneration
             ilGenerator.MarkLabel(trueCase);
         }
 
+        private void GenerateForStatement(ForStatement forStatement, ILGenerator ilGenerator)
+        {
+            Label conditionCheck = ilGenerator.DefineLabel();
+            Label forBody = ilGenerator.DefineLabel();
+
+            GenerateStatement( forStatement.InitializationStatement, ilGenerator);
+
+            //unconditional
+            ilGenerator.Emit(OpCodes.Br_S, conditionCheck);
+
+            ilGenerator.MarkLabel(forBody);
+            
+            GenerateStatement(forStatement.BlockOrSingleStatement, ilGenerator);
+            
+            GenerateStatement(forStatement.IterationStatement, ilGenerator);
+
+            ilGenerator.MarkLabel(conditionCheck);
+            
+            GenerateExpression(forStatement.ConditionExpression, ilGenerator);
+
+            //jump if true
+            ilGenerator.Emit(OpCodes.Brtrue_S, forBody);
+        }
+
         public void GenerateWhileStatement(WhileStatement whileStatementNode, ILGenerator ilGenerator)
         {
             Label conditionCheck = ilGenerator.DefineLabel();
@@ -361,7 +385,7 @@ namespace MathLang.CodeGeneration
 
             GenerateExpression(whileStatementNode.ConditionExpression, ilGenerator);
 
-            //jump if false
+            //jump if true
             ilGenerator.Emit(OpCodes.Brtrue_S, whileBody);
         }
 
@@ -407,7 +431,7 @@ namespace MathLang.CodeGeneration
             }
         }
 
-
+        
 
         private void GenerateExtendedId(ExtendedId extendedIdNode, ILGenerator ilGenerator)
         {
