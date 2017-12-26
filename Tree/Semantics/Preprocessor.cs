@@ -117,19 +117,6 @@ namespace MathLang.Tree.Semantics
             classDeclaration.VarDeclarationNodes.ForEach(declaration => declaration.Process(false));
         }
 
-        //private static void Process(this Declaration declaration, bool checkName)
-        //{
-        //    switch (declaration)
-        //    {
-        //        case VariableDeclaration variableDeclaration:
-        //            variableDeclaration.Process(checkName);
-        //            break;
-        //        case ArrayDeclaration arrayDeclaration:
-        //            arrayDeclaration.Process();
-        //            break;
-        //    }
-        //}
-
         private static void Process(this VariableDeclaration variableDeclaration, bool checkName = true, int? upTpLevel = null)
         {
             //Process assignment value
@@ -436,7 +423,7 @@ namespace MathLang.Tree.Semantics
             if (arrayElementReference.ArrayIndex.GetResultReturnType() != ReturnType.Int)
                 throw new ExpressionException(
                     $"Index of array element reference \"{arrayElementReference.Name}\" must be of type {ReturnType.Int}, but received {arrayElementReference.ArrayIndex.ReturnType}");
-            arrayElementReference.ArrayDeclaration = arrayElementReference.Scope
+            arrayElementReference.ArrayVariableDeclaration = arrayElementReference.Scope
                 .GlobalVariableSearch(arrayElementReference.Name.Name);        }
 
         #endregion

@@ -7,7 +7,7 @@ using MathLang.Tree.Scopes;
 
 namespace MathLang.Tree.Nodes.Declarations
 {
-    public class VariableDeclaration: IStatement
+    public class VariableDeclaration : IStatement
     {
         private IExpression _value;
 
