@@ -6,7 +6,7 @@ using MathLang.Tree.Scopes;
 
 namespace MathLang.Tree.Nodes.Declarations
 {
-    public class FunctionDeclarationParameter : Declaration
+    public class FunctionVariableDeclarationParameter : VariableDeclaration
     {
         //public INode Parent { get; set; }
 
@@ -18,7 +18,7 @@ namespace MathLang.Tree.Nodes.Declarations
         //    Parent = parent;
         //}
 
-        public FunctionDeclarationParameter(INode parent, Scope parentScope)
+        public FunctionVariableDeclarationParameter(INode parent, Scope parentScope)
             : base(parent, parentScope)
         {
             Initialized = true;

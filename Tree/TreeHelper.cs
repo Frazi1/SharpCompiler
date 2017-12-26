@@ -135,7 +135,7 @@ namespace MathLang.Tree
                 case VARDECLARATION: return new VariableDeclaration(parentNode, parentScope).AsListOf<IStatement>();
                 case ID: return new VariableReference(parentNode, parentScope).AsListOf<IStatement>();
                 case BLOCK: return new BlockStatement(parentNode, parentScope).AsListOf<IStatement>();
-                case ARRAYDECLARATION: return new ArrayDeclaration(parentNode, parentScope).AsListOf<IStatement>();
+                case ARRAYDECLARATION: return new VariableDeclaration(parentNode, parentScope).AsListOf<IStatement>();
                 case ARRAY_INITIALIZER: return new NewArray(parentNode, parentScope).AsListOf<IStatement>();
                 case ARRAYELEMENTASSIGNMENT:
                     return new ArrayElementAssignment(parentNode, parentScope).AsListOf<IStatement>();

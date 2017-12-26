@@ -185,7 +185,7 @@ namespace MathLang.Extensions
                 }
                 return;
             }
-            if (statement is Declaration declaration)
+            if (statement is VariableDeclaration declaration)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
                                   $"DECLARE {declaration.Name} " +
@@ -251,11 +251,11 @@ namespace MathLang.Extensions
 
             if (expression is ExtendedId exId)
             {
-                string s = exId.Declaration is FunctionDeclarationParameter ? "funcParam" : "funcIndex";
+                string s = exId.VariableDeclaration is FunctionVariableDeclarationParameter ? "funcParam" : "funcIndex";
                 
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
                                   $"{exId.Name} ({exId.ReturnType}) " +
-                                  $"{((exId.Declaration?.Index == null ) ? "": $" with {s} {exId.Declaration.Index}")}"+
+                                  $"{((exId.VariableDeclaration?.Index == null ) ? "": $" with {s} {exId.VariableDeclaration.Index}")}"+
                                   $"{(exId.CastToType == null ? "" : $" [cast to {exId.CastToType}]")}");
                 return;
             }
@@ -322,13 +322,13 @@ namespace MathLang.Extensions
 
             if (expression is ArrayElementReference arrEl)
             {
-                string s = arrEl.Name.Declaration is FunctionDeclarationParameter ? "funcParam" : "funcIndex";
+                string s = arrEl.Name.VariableDeclaration is FunctionVariableDeclarationParameter ? "funcParam" : "funcIndex";
 
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
                                   $"element ({arrEl.ReturnType}) " +
                                   $"{(arrEl.CastToType == null ? "" : $" [cast to {arrEl.CastToType}]")}" +
                                   $" of array {arrEl.Name} " +
-                                  $"{(arrEl.Name.Declaration.Index == null? "": $"with {s} {arrEl.Name.Declaration.Index}")}" +
+                                  $"{(arrEl.Name.VariableDeclaration.Index == null? "": $"with {s} {arrEl.Name.VariableDeclaration.Index}")}" +
                                   $" with array index :");
 
                 PrintExpression($"{ind}{(isFinal ? indent : indentBar)}", arrEl.ArrayIndex, true);

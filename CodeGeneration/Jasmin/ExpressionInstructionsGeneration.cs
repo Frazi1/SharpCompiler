@@ -68,8 +68,8 @@ namespace MathLang.CodeGeneration
         private static IEnumerable<IInstruction> GetVariableReferenceInstructions(this ExtendedId extendedId)
         {
             List<IInstruction> instructions = new List<IInstruction>();
-            instructions.Add(StatementInstructionsGeneration.GetLoadInstruction(extendedId.Declaration.ReturnType,
-                extendedId.Declaration.Index.Value));
+            instructions.Add(StatementInstructionsGeneration.GetLoadInstruction(extendedId.VariableDeclaration.ReturnType,
+                extendedId.VariableDeclaration.Index.Value));
             return instructions;
         }
 

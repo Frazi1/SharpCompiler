@@ -75,12 +75,12 @@ namespace MathLang.CodeGeneration
             return jasminFunction;
         }
 
-        public JasminFunctionParameter BuildJasminFunctionParameter(FunctionDeclarationParameter functionParameter)
+        public JasminFunctionParameter BuildJasminFunctionParameter(FunctionVariableDeclarationParameter functionVariableParameter)
         {
             JasminFunctionParameter jasminFunctionParameter =
                 new JasminFunctionParameter()
-                    .WithName(functionParameter.Name)
-                    .WithType(ReturnTypeToJavaConverter.ConvertToFullRepresentation(functionParameter.ReturnType));
+                    .WithName(functionVariableParameter.Name)
+                    .WithType(ReturnTypeToJavaConverter.ConvertToFullRepresentation(functionVariableParameter.ReturnType));
             return jasminFunctionParameter;
         }
 

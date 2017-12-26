@@ -130,12 +130,7 @@ namespace MathLang.Tree.Semantics
         //    }
         //}
 
-        private static void Process(this ArrayDeclaration arrayDeclaration)
-        {
-            //            throw  new NotImplementedException();
-        }
-
-        private static void Process(this Declaration variableDeclaration, bool checkName = true, int? upTpLevel = null)
+        private static void Process(this VariableDeclaration variableDeclaration, bool checkName = true, int? upTpLevel = null)
         {
             //Process assignment value
             if (checkName)
@@ -266,7 +261,7 @@ namespace MathLang.Tree.Semantics
                 var declaration = scope.GlobalVariableSearch(extendedId.Name);
                 if(declaration == null)
                     throw new ScopeException($"Variable with name \"{extendedId.Name}\" does not exist");
-                extendedId.Declaration = declaration;
+                extendedId.VariableDeclaration = declaration;
                 if(!declaration.Initialized)
                     throw new ScopeException($"Variable with name \"{extendedId.Name}\" was not initialized before accessing");
                 extendedId.ReturnType = declaration.ReturnType;
@@ -379,7 +374,7 @@ namespace MathLang.Tree.Semantics
         }
 
         private static void CheckCallParameters(INode invoker, IList<IExpression> callParameters,
-            IList<FunctionDeclarationParameter> declarationParameters)
+            IList<FunctionVariableDeclarationParameter> declarationParameters)
         {
             if (declarationParameters.Count != callParameters.Count)
                 throw new ScopeException(
@@ -458,7 +453,7 @@ namespace MathLang.Tree.Semantics
                 case ArrayElementAssignment arrayElementAssignment:
                     arrayElementAssignment.Process();
                     break;
-                case Declaration declaration:
+                case VariableDeclaration declaration:
                     declaration.Process();
                     break;
                 case FunctionCall functionCall:
@@ -661,7 +656,7 @@ namespace MathLang.Tree.Semantics
                 //SetBlockVarsIndexes(functionDeclaration.StatementBlock, ref index);
             }
 
-            void SetDeclarationIndex(Declaration declaration, ref int varIndex)
+            void SetDeclarationIndex(VariableDeclaration declaration, ref int varIndex)
             {
                 declaration.Index = varIndex++;
             }
@@ -676,7 +671,7 @@ namespace MathLang.Tree.Semantics
             {
                 switch (statement)
                 {
-                    case Declaration declaration:
+                    case VariableDeclaration declaration:
                     {
                         SetDeclarationIndex(declaration, ref varIndex);
                         break;

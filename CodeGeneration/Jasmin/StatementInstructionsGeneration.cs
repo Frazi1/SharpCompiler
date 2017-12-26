@@ -18,10 +18,8 @@ namespace MathLang.CodeGeneration.JasminJava
             {
                 //case FunctionDeclarationParameter functionDeclarationParameter:
                 //    break;
-                case VariableDeclaration variableDeclaration:
-                    return variableDeclaration.GetVariableDeclarationInstructions();
-                case ArrayDeclaration arrayDeclaration:
-                    return arrayDeclaration.GetArrayDeclarationInstructions();
+                case VariableDeclaration declaration:
+                    return declaration.GetDeclarationInstructions();
                 //case BoolExpression boolExpression:
                 //    break;
                 //case CharExpression charExpression:
@@ -80,12 +78,12 @@ namespace MathLang.CodeGeneration.JasminJava
             List<IInstruction> instructions = new List<IInstruction>();
             instructions.AddRange(variableAssignment.AssignmentValue.GetInstructions());
             instructions.Add(GetStoreInstruction(
-                variableAssignment.VariableName.Declaration.ReturnType,
-                variableAssignment.VariableName.Declaration.Index.Value));
+                variableAssignment.VariableName.VariableDeclaration.ReturnType,
+                variableAssignment.VariableName.VariableDeclaration.Index.Value));
             return instructions;
         }
 
-        private static IEnumerable<IInstruction> GetVariableDeclarationInstructions(
+        private static IEnumerable<IInstruction> GetDeclarationInstructions(
             this VariableDeclaration variableDeclaration)
         {
             List<IInstruction> instructions = new List<IInstruction>();
@@ -173,16 +171,6 @@ namespace MathLang.CodeGeneration.JasminJava
                     throw new NotImplementedException(nameof(ReturnType) + " array load instruction generation");
             }
         }
-
-        private static IEnumerable<IInstruction> GetArrayDeclarationInstructions(this ArrayDeclaration arrayDeclaration)
-        {
-            //TODO: array initialization
-            List<IInstruction> instructions = new List<IInstruction>();
-            instructions.AddRange(arrayDeclaration.Value.GetInstructions());
-            instructions.Add(GetStoreInstruction(arrayDeclaration.ReturnType, arrayDeclaration.Index.Value));
-            return instructions;
-        }
-
         private static IEnumerable<IInstruction> GetArrayElementAssignmentInstructions(
             this ArrayElementAssignment arrayElementAssignment)
         {

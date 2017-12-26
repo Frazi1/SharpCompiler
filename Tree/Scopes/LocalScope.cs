@@ -10,7 +10,7 @@ namespace MathLang.Tree.Scopes
         {
         }
         
-        public override Declaration GlobalVariableSearch(string name)
+        public override VariableDeclaration GlobalVariableSearch(string name)
         {
             var declaration = VariableDeclarations.FindByKey(name);
             return declaration ?? ParentScope?.GlobalVariableSearch(name);

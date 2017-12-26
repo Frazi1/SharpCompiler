@@ -19,7 +19,7 @@ namespace MathLang.Tree.Nodes.Expressions
         public string Name => string.Join(".", IdList);
         public ReturnType ReturnType { get; set; }
         public ReturnType CastToType { get; set; }
-        public Declaration Declaration { get; set; }
+        public VariableDeclaration VariableDeclaration { get; set; }
         
         public ExtendedId(INode parent, Scope parentScope)
         {

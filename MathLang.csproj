@@ -55,7 +55,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Tree\Nodes\AttributeUsage.cs" />
     <Compile Include="Tree\Nodes\Declarations\AttributeDeclaration.cs" />
-    <Compile Include="Tree\Nodes\Declarations\Declaration.cs" />
+    <Compile Include="Tree\Nodes\Declarations\VariableDeclaration.cs" />
     <Compile Include="Tree\Nodes\Expressions\ArrayElementReference.cs" />
     <Compile Include="Tree\Nodes\Expressions\BoolExpression.cs" />
     <Compile Include="Tree\Nodes\Expressions\CastExpression\CastExpression.cs" />
@@ -72,7 +72,6 @@
     <Compile Include="Tree\Nodes\Expressions\IntExpression.cs" />
     <Compile Include="Tree\Nodes\Expressions\NewArray.cs" />
     <Compile Include="Tree\Nodes\Expressions\VariableReference.cs" />
-    <Compile Include="Tree\Nodes\Declarations\ArrayDeclaration.cs" />
     <Compile Include="Tree\Nodes\Statements\ArrayElementAssignment.cs" />
     <Compile Include="Tree\Nodes\Statements\BlockStatement.cs" />
     <Compile Include="Tree\Nodes\Statements\DoWhileStatement.cs" />
@@ -88,9 +87,8 @@
     <Compile Include="Tree\Nodes\Interfaces\INode.cs" />
     <Compile Include="Tree\Nodes\Interfaces\IStatement.cs" />
     <Compile Include="Tree\Nodes\Program.cs" />
-    <Compile Include="Tree\Nodes\Declarations\FunctionDeclarationParameter.cs" />
+    <Compile Include="Tree\Nodes\Declarations\FunctionVariableDeclarationParameter.cs" />
     <Compile Include="Tree\Nodes\Enums\ReturnType.cs" />
-    <Compile Include="Tree\Nodes\Declarations\VariableDeclaration.cs" />
     <Compile Include="Tree\Nodes\Statements\ReturnStatement.cs" />
     <Compile Include="Tree\Semantics\Exceptions\ExpressionException.cs" />
     <Compile Include="Tree\Semantics\Exceptions\ScopeException.cs" />

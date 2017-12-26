@@ -16,7 +16,7 @@ namespace MathLang.Tree.Nodes.Expressions
         public IExpression ArrayIndex { get; private set; }
         public ReturnType ReturnType { get; set; }
         public ReturnType CastToType { get; set; }
-        public Declaration ArrayDeclaration { get; set; }
+        public VariableDeclaration ArrayDeclaration { get; set; }
 
         public ArrayElementReference(INode parent, Scope parentScope)
         {
