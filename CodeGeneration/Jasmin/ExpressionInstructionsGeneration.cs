@@ -43,9 +43,6 @@ namespace MathLang.CodeGeneration
                 case ExtendedId extendedId:
                     return extendedId.GetVariableReferenceInstructions();
 
-                case VariableReference variableReference:
-                    throw new InvalidOperationException($"EXpressin instruction generation {iexpression}");
-                    break;
                 case StringExpression stringExpression:
                     return GetStringExpressionInstruction(stringExpression);
                 default:

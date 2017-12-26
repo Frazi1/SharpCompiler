@@ -218,9 +218,6 @@ namespace MathLang.Tree.Semantics
                 case ExtendedId extendedId:
                     extendedId.Process();
                     break;
-                case VariableReference variableReference:
-                    variableReference.Process();
-                    break;
                 case Expression expression:
                     expression.Process();
                     break;
@@ -261,17 +258,6 @@ namespace MathLang.Tree.Semantics
                     ? declaration.ReturnType
                     : throw new ScopeException($"Variable with name \"{extendedId.Name}\" does not exist.");
             }
-        }
-
-        private static void Process(this VariableReference variableReference)
-        {
-            throw new NotImplementedException("var ref");
-            var scope = variableReference.Scope;
-            var name = variableReference.Name.Name;
-            var globalVariableSearchResult = scope.GlobalVariableSearch(name);
-            if (globalVariableSearchResult == null)
-                throw new ScopeException($"Variable with name \"{name}\" does not exist.");
-            variableReference.ReturnType = globalVariableSearchResult.ReturnType;
         }
 
         private static void Process(this Expression expression)
