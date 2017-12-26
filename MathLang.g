@@ -168,7 +168,7 @@ for_initialization: (longdeclarationbody?) -> ^(FOR_INITIALIZATION longdeclarati
 			| (assignmentbody?) -> ^(FOR_INITIALIZATION assignmentbody?)
 			;
 forstatement: FOR^ OPEN_BRACE! for_initialization ';'! boolexpression? ';'! assignmentbody? CLOSE_BRACE! block_or_statement
-		-> ^(FOR for_initialization ^(FOR_CONDITION boolexpression) ^(FOR_ITERATION assignmentbody) block_or_statement);
+		-> ^(FOR for_initialization ^(FOR_CONDITION boolexpression?) ^(FOR_ITERATION assignmentbody?) block_or_statement);
 returnstatement: RETURN^ expression? ';'! ;
 dowhilestatement: DO^ (block | statement) WHILE! OPEN_BRACE! boolexpression CLOSE_BRACE! ';'! ;
 emptystatement: ';'! ;

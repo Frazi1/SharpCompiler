@@ -5,9 +5,9 @@ class JavaTestBuild {
 
     public void testFor()
     {
-        int i = 0;
-        while(i<10){
-            return;
+        int i =1;
+        for(;i<10;i++){
+            Library.printInt(i);
         }
     }
 

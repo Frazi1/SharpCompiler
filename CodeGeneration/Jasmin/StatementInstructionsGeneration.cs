@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using JasminSharp;
 using MathLang.Tree.Nodes.Declarations;
 using MathLang.Tree.Nodes.Enums;
@@ -88,7 +89,7 @@ namespace MathLang.CodeGeneration.JasminJava
         {
             List<IInstruction> instructions = new List<IInstruction>();
             if (variableDeclaration.IsStatic) throw new JasminException("static decl are not supported atm");
-            else if(variableDeclaration.Initialized)
+            else if (variableDeclaration.Initialized)
             {
                 instructions.AddRange(variableDeclaration.Value.GetInstructions());
                 instructions.Add(GetStoreInstruction(variableDeclaration.ReturnType, variableDeclaration.Index.Value));
@@ -171,6 +172,7 @@ namespace MathLang.CodeGeneration.JasminJava
                     throw new NotImplementedException(nameof(ReturnType) + " array load instruction generation");
             }
         }
+
         private static IEnumerable<IInstruction> GetArrayElementAssignmentInstructions(
             this ArrayElementAssignment arrayElementAssignment)
         {
@@ -202,10 +204,11 @@ namespace MathLang.CodeGeneration.JasminJava
 
         private static IEnumerable<IInstruction> GetForStatementInstructions(this ForStatement forStatement)
         {
-            return InstructionsBuilder.BuildFor(forStatement.InitializationStatement.GetInstructions(),
+            return InstructionsBuilder.BuildFor(
+                forStatement.InitializationStatement?.GetInstructions() ?? Enumerable.Empty<IInstruction>(),
                 forStatement.BlockOrSingleStatement.GetInstructions(),
-                forStatement.ConditionExpression.GetInstructions(),
-                forStatement.IterationStatement.GetInstructions());
+                forStatement.ConditionExpression?.GetInstructions() ?? Enumerable.Empty<IInstruction>(),
+                forStatement.IterationStatement?.GetInstructions() ?? Enumerable.Empty<IInstruction>());
         }
 
         private static IEnumerable<IInstruction> GetWhileStatementInstructions(this WhileStatement whileStatement)
