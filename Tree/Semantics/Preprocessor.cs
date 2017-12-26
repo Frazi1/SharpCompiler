@@ -423,7 +423,7 @@ namespace MathLang.Tree.Semantics
             if (arrayElementReference.ArrayIndex.GetResultReturnType() != ReturnType.Int)
                 throw new ExpressionException(
                     $"Index of array element reference \"{arrayElementReference.Name}\" must be of type {ReturnType.Int}, but received {arrayElementReference.ArrayIndex.ReturnType}");
-            arrayElementReference.ArrayVariableDeclaration = arrayElementReference.Scope
+            arrayElementReference.ArrayDeclaration = arrayElementReference.Scope
                 .GlobalVariableSearch(arrayElementReference.Name.Name);        }
 
         #endregion
