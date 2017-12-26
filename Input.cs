@@ -18,22 +18,22 @@ class Main
     static void Main(string[] args)
     {
         //int i = 0;
-        //TestReturn(!true!=false);
-        //while (i<10)
+        ////TestReturn(!true!=false);
+        //while (i < 10)
         //{
         //    Library.PrintInt(i);
         //    return;
         //}
 
-        //int l = 10;
-        //int[] a = new int[l];
-        //for (int i = 0; i < l; i = i + 1)
-        //    a[i] = l - i;
+        int l = 10;
+        int[] a = new int[l];
+        for (int i = 0; i < l; i = i + 1)
+            a[i] = l - i;
 
-        //PrintIntArray(a, l);
-        //BubbleSort(a, l);
-        //Library.PrintString("Sorted:");
-        //PrintIntArray(a, l);
+        PrintIntArray(a, l);
+        BubbleSort(a, l);
+        Library.PrintString("Sorted:");
+        PrintIntArray(a, l);
 
 
 
@@ -43,15 +43,15 @@ class Main
         //Library.PrintInt(Test.GetAHundred());
     }
 
-    static void TestReturn(bool b)
-    {
-        int[] i = new int[1];
-        if (b)
-        {
-            return i;
-        }
-        Library.PrintString("not returned");
-    }
+    //static void TestReturn(bool b)
+    //{
+    //    int[] i = new int[1];
+    //    if (b)
+    //    {
+    //        return i;
+    //    }
+    //    Library.PrintString("not returned");
+    //}
     
     static void Swap(int[] arr, int a, int b)
     {
