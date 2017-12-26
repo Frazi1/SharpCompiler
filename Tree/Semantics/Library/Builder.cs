@@ -18,7 +18,7 @@ namespace MathLang.Tree.Semantics
             foreach (var paramTuple in paramTuples)
             {
                 var paramDeclaration =
-                    new FunctionDeclarationParameter(funcDeclaration, funcDeclaration.Scope)
+                    new FunctionVariableDeclarationParameter(funcDeclaration, funcDeclaration.Scope)
                     {
                         Name = paramTuple.name,
                         ReturnType = paramTuple.returnType

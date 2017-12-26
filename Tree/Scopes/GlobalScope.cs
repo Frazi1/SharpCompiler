@@ -29,7 +29,7 @@ namespace MathLang.Tree.Scopes
 
         }
 
-        public override Declaration GlobalVariableSearch(string name)
+        public override VariableDeclaration GlobalVariableSearch(string name)
         {
             var splitName = SplitName(name);
             if (splitName.Length < 2)

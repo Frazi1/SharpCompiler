@@ -13,7 +13,7 @@ namespace MathLang.Tree.Nodes.Declarations
         public Scope Scope { get; }
 
         public string Name { get; set; }
-        public List<Declaration> VarDeclarationNodes { get; } = new List<Declaration>();
+        public List<VariableDeclaration> VarDeclarationNodes { get; } = new List<VariableDeclaration>();
         public List<FunctionDeclaration> FunctionDeclarationNodes { get; } = new List<FunctionDeclaration>();
         public bool IsPrintable { get; }
         
@@ -43,7 +43,7 @@ namespace MathLang.Tree.Nodes.Declarations
                             {
                                 var variableDeclaration = TreeHelper
                                     .GetStatements(this, Scope, syntaxVariableDeclaration).First()
-                                    .CastTo<Declaration>();
+                                    .CastTo<VariableDeclaration>();
                                 variableDeclaration.Construct(syntaxVariableDeclaration);
                                 return variableDeclaration;
                             })

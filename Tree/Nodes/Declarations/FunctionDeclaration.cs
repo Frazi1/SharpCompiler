@@ -18,7 +18,7 @@ namespace MathLang.Tree.Nodes.Declarations
         public ReturnType ReturnType { get; set; }
         public BlockStatement StatemenBlock { get; set; }
 
-        public List<FunctionDeclarationParameter> ParameterNodes { get; } = new List<FunctionDeclarationParameter>();
+        public List<FunctionVariableDeclarationParameter> ParameterNodes { get; } = new List<FunctionVariableDeclarationParameter>();
 
         public FunctionDeclaration(INode parent, Scope parentScope)
         {
@@ -41,11 +41,11 @@ namespace MathLang.Tree.Nodes.Declarations
                 syntaxParametersNode.Children.Cast<CommonTree>()
                     .ForEach(syntaxParameter =>
                     {
-                        FunctionDeclarationParameter functionDeclarationParameter =
-                            new FunctionDeclarationParameter(this, Scope);
-                        ParameterNodes.Add(functionDeclarationParameter);
+                        FunctionVariableDeclarationParameter functionVariableDeclarationParameter =
+                            new FunctionVariableDeclarationParameter(this, Scope);
+                        ParameterNodes.Add(functionVariableDeclarationParameter);
 //                        Scope.AddVariable(functionDeclarationParameter);
-                        functionDeclarationParameter.Construct(syntaxParameter);
+                        functionVariableDeclarationParameter.Construct(syntaxParameter);
                     });
             }
 

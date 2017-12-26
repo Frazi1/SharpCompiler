@@ -89,42 +89,37 @@ namespace MathLang.Tree.Semantics
         //    }
         //}
 
-        private static void Process(this ArrayDeclaration arrayDeclaration)
-        {
-            //            throw  new NotImplementedException();
-        }
-
-        private static void Process(this Declaration variableDeclaration, bool checkName = true, int? upTpLevel = null)
+        private static void Process(this VariableDeclaration variableVariableDeclaration, bool checkName = true, int? upTpLevel = null)
         {
             //Process assignment value
             if (checkName)
             {
                 //variableDeclaration.CheckName(variableDeclaration.Scope);
-                if (variableDeclaration.Scope.GlobalVariableSearch(
-                        variableDeclaration.Name, Scope.FunctionLevel)
+                if (variableVariableDeclaration.Scope.GlobalVariableSearch(
+                        variableVariableDeclaration.Name, Scope.FunctionLevel)
                     != null)
-                    throw new ScopeException($"Variable with name: \"{variableDeclaration.Name}\" already exists");
+                    throw new ScopeException($"Variable with name: \"{variableVariableDeclaration.Name}\" already exists");
             }
-            IExpression variableDeclarationValueExpression = variableDeclaration.Value;
+            IExpression variableDeclarationValueExpression = variableVariableDeclaration.Value;
             if (variableDeclarationValueExpression == null) return;
             variableDeclarationValueExpression.Process();
 
-            if (!(variableDeclaration.ReturnType == variableDeclarationValueExpression.ReturnType))
+            if (!(variableVariableDeclaration.ReturnType == variableDeclarationValueExpression.ReturnType))
             {
-                if (variableDeclarationValueExpression.ReturnType.IsCastableTo(variableDeclaration.ReturnType))
+                if (variableDeclarationValueExpression.ReturnType.IsCastableTo(variableVariableDeclaration.ReturnType))
                 {
-                    variableDeclarationValueExpression.CastToType = variableDeclaration.ReturnType;
+                    variableDeclarationValueExpression.CastToType = variableVariableDeclaration.ReturnType;
                 }
                 else
                 {
                     throw new ScopeException(
-                        $"Variable \"{variableDeclaration.Name}\" return type {variableDeclaration.ReturnType} is different from {variableDeclarationValueExpression.ReturnType} ");
+                        $"Variable \"{variableVariableDeclaration.Name}\" return type {variableVariableDeclaration.ReturnType} is different from {variableDeclarationValueExpression.ReturnType} ");
                 }
             }
 
             if (checkName)
             {
-                variableDeclaration.Scope.AddVariable(variableDeclaration);
+                variableVariableDeclaration.Scope.AddVariable(variableVariableDeclaration);
             }
         }
 
@@ -193,7 +188,7 @@ namespace MathLang.Tree.Semantics
         {
             var scope = extendedId.Scope;
             var declaration = scope.GlobalVariableSearch(extendedId.GetFullPath);
-            extendedId.Declaration = declaration;
+            extendedId.VariableDeclaration = declaration;
             extendedId.ReturnType = declaration != null
                 ? declaration.ReturnType
                 : throw new ScopeException($"Variable with name \"{extendedId.GetFullPath}\" does not exist.");
@@ -353,7 +348,7 @@ namespace MathLang.Tree.Semantics
             if (arrayElementReference.ArrayIndex.GetResultReturnType() != ReturnType.Int)
                 throw new ExpressionException(
                     $"Index of array element reference \"{arrayElementReference.Name}\" must be of type {ReturnType.Int}, but received {arrayElementReference.ArrayIndex.ReturnType}");
-            arrayElementReference.ArrayDeclaration = arrayElementReference.Scope
+            arrayElementReference.ArrayVariableDeclaration = arrayElementReference.Scope
                 .GlobalVariableSearch(arrayElementReference.Name.GetFullPath);
         }
 
@@ -371,7 +366,7 @@ namespace MathLang.Tree.Semantics
                 case ArrayElementAssignment arrayElementAssignment:
                     arrayElementAssignment.Process();
                     break;
-                case Declaration declaration:
+                case VariableDeclaration declaration:
                     declaration.Process();
                     break;
                 case FunctionCall functionCall:
@@ -552,7 +547,7 @@ namespace MathLang.Tree.Semantics
                 SetBlockVarsIndexes(functionDeclaration.StatemenBlock, ref index);
             }
 
-            void SetDeclarationIndex(Declaration declaration, ref int varIndex)
+            void SetDeclarationIndex(VariableDeclaration declaration, ref int varIndex)
             {
                 declaration.Index = varIndex++;
             }
@@ -567,7 +562,7 @@ namespace MathLang.Tree.Semantics
             {
                 switch (statement)
                 {
-                    case Declaration declaration:
+                    case VariableDeclaration declaration:
                     {
                         SetDeclarationIndex(declaration, ref varIndex);
                         break;
