@@ -2,7 +2,6 @@
 using System.Linq;
 using Antlr.Runtime.Tree;
 using MathLang.Extensions;
-using MathLang.Tree.Nodes.Declarations;
 using MathLang.Tree.Nodes.Interfaces;
 using MathLang.Tree.Scopes;
 

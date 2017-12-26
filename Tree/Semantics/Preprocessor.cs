@@ -1,38 +1,68 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using MathLang.Tree.Nodes.Declarations;
 using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Expressions;
 using MathLang.Tree.Nodes.Interfaces;
 using MathLang.Tree.Nodes.Statements;
 using MathLang.Tree.Scopes.Exceptions;
-using Microsoft.Win32.SafeHandles;
 using MathLang.Extensions;
+using MathLang.Tree.Nodes;
 using MathLang.Tree.Scopes;
 
 namespace MathLang.Tree.Semantics
 {
     public static class Preprocessor
     {
+        private const string MainClassName = "Main";
+        private const string MainFuncName = "Main";
+
         #region PreProcss
 
         public static void PreProcess(this Nodes.Program program)
         {
             var scope = program.Scope;
+            FunctionDeclaration mainFunction = null;
             program.ClassNodes.ForEach(classDeclaration =>
             {
                 classDeclaration.CheckName(scope);
                 scope.AddClass(classDeclaration);
                 classDeclaration.PreProcess();
+
+                //FunctionDeclaration func = classDeclaration.Scope.LocalFunctionSearch(MainClassName);
+                //if(func != null && classDeclaration.IsStatic)
+                //    throw new ScopeException("Main function must be declared inside of a non static class");
+                //if(func != null && mainFunction != null)
+                //    throw new ScopeException("Only 1 Main function can be present");
+                //mainFunction = func ?? mainFunction;
             });
+            CheckMainClass(program);
+            //if(mainFunction == null)
+            //    throw new ScopeException("Program must contain a Main function which is an entry point");
         }
 
         private static void PreProcess(this ClassDeclaration classDeclaration)
         {
             var scope = classDeclaration.Scope;
 
+            var duplicatedModifiers = classDeclaration.ModifiersList
+                .GetDuplicatedItems().ToList();
+            if (duplicatedModifiers.Any())
+                throw new ScopeException($"Modifier {duplicatedModifiers.First()} was specified more than once");
+
+            classDeclaration.ModifiersList.ForEach(modifier =>
+            {
+                if (modifier == Modifier.Static) classDeclaration.IsStatic = true;
+                if (modifier == Modifier.Extern) classDeclaration.IsExtern = true;
+            });
+
+            if (classDeclaration.Name != MainClassName)
+            {
+                if (!classDeclaration.IsStatic && !classDeclaration.IsAttribute)
+                    throw new ScopeException(
+                        $"Only static classes are supported at the moment ({classDeclaration.Name})");
+            }
             classDeclaration.FunctionDeclarationNodes
                 .ForEach(functionDeclaration =>
                 {
@@ -51,12 +81,23 @@ namespace MathLang.Tree.Semantics
 
         private static void PreProcess(this FunctionDeclaration functionDeclaration)
         {
+            
             functionDeclaration.ParameterNodes
                 .ForEach(parameter =>
                 {
                     parameter.CheckName(functionDeclaration.Scope);
                     functionDeclaration.Scope.AddVariable(parameter);
                 });
+        }
+
+        private static void CheckMainClass(this Nodes.Program program)
+        {
+            var mainClass = program.Scope.LocalClassSearch(MainClassName);
+            if (mainClass == null)
+                throw new ScopeException("Program must contain a non-static class\"Main\"");
+            var mainFunc = mainClass.Scope.LocalFunctionSearch(MainFuncName);
+            if (mainFunc == null)
+                throw new ScopeException("Program must contain a \"Main\" function inside of Main class");
         }
 
         #endregion
@@ -110,29 +151,59 @@ namespace MathLang.Tree.Semantics
 
         private static void Process(this FunctionDeclaration functionDeclaration)
         {
-            var scope = functionDeclaration.Scope;
-            functionDeclaration.StatemenBlock.Statements
-                .ForEach(statement => statement.Process());
-
-            if (functionDeclaration.ReturnType != ReturnType.Void)
+            functionDeclaration.ModifiersList.ForEach(modifier =>
             {
-                var returnStatements =
-                    functionDeclaration.StatemenBlock.Statements
-                        .FindAll(statement => statement is ReturnStatement)
-                        .Cast<ReturnStatement>()
-                        .ToList();
-                if (returnStatements.Count == 0)
-                    throw new ExpressionException($"Function {functionDeclaration.Name} missing a return statement");
-                returnStatements.ForEach(statement =>
+                switch (modifier)
                 {
-                    //statement.Process();
-                    if (statement.ReturnExpression.GetResultReturnType() != functionDeclaration.ReturnType)
-                    {
-                        throw new ExpressionException(
-                            $"Function {functionDeclaration.Name} must return {functionDeclaration.ReturnType} but returns {statement.ReturnExpression.GetResultReturnType()}");
-                    }
-                });
+                    case Modifier.Static:
+                        if (functionDeclaration.IsStatic)
+                            throw new ScopeException($"Modifier {modifier} is used more than one time");
+                        functionDeclaration.IsStatic = true;
+                        break;
+                    case Modifier.Extern:
+                        if (functionDeclaration.IsExternal)
+                            throw new ScopeException($"Modifier {modifier} is used more than one time");
+                        functionDeclaration.IsExternal = true;
+                        break;
+                }
+            });
+
+            if (functionDeclaration.IsExternal)
+            {
+                if (functionDeclaration.StatementBlock != null)
+                {
+                    throw new ScopeException(
+                        $"Extern function {functionDeclaration.Name} can not have a declaration body");
+                }
             }
+            else
+            {
+                var scope = functionDeclaration.Scope;
+                functionDeclaration.StatementBlock.Statements
+                    .ForEach(statement => statement.Process());
+
+                if (functionDeclaration.ReturnType != ReturnType.Void)
+                {
+                    var returnStatements =
+                        functionDeclaration.StatementBlock.Statements
+                            .FindAll(statement => statement is ReturnStatement)
+                            .Cast<ReturnStatement>()
+                            .ToList();
+                    if (returnStatements.Count == 0)
+                        throw new ExpressionException(
+                            $"Function {functionDeclaration.Name} missing a return statement");
+                    returnStatements.ForEach(statement =>
+                    {
+                        //statement.Process();
+                        if (statement.ReturnExpression.GetResultReturnType() != functionDeclaration.ReturnType)
+                        {
+                            throw new ExpressionException(
+                                $"Function {functionDeclaration.Name} must return {functionDeclaration.ReturnType} but returns {statement.ReturnExpression.GetResultReturnType()}");
+                        }
+                    });
+                }
+            }
+            functionDeclaration.AttributeUsages.ForEach(ProcessAttributeUsage);
         }
 
         #endregion
@@ -169,21 +240,33 @@ namespace MathLang.Tree.Semantics
             }
         }
 
-        private static void Process(this ExtendedId extendedId)
+        private static void Process(this ExtendedId extendedId, bool isVariable = true)
         {
             var scope = extendedId.Scope;
-            var declaration = scope.GlobalVariableSearch(extendedId.GetFullPath);
-            extendedId.VariableDeclaration = declaration;
-            extendedId.ReturnType = declaration != null
-                ? declaration.ReturnType
-                : throw new ScopeException($"Variable with name \"{extendedId.GetFullPath}\" does not exist.");
+            if (isVariable)
+            {
+                var declaration = scope.GlobalVariableSearch(extendedId.Name);
+                if(declaration == null)
+                    throw new ScopeException($"Variable with name \"{extendedId.Name}\" does not exist");
+                extendedId.VariableDeclaration = declaration;
+                if(!declaration.Initialized)
+                    throw new ScopeException($"Variable with name \"{extendedId.Name}\" was not initialized before accessing");
+                extendedId.ReturnType = declaration.ReturnType;
+            }
+            else
+            {
+                FunctionDeclaration declaration = scope.GlobalFunctionSearch(extendedId.Name);
+                extendedId.ReturnType = declaration != null
+                    ? declaration.ReturnType
+                    : throw new ScopeException($"Variable with name \"{extendedId.Name}\" does not exist.");
+            }
         }
 
         private static void Process(this VariableReference variableReference)
         {
             throw new NotImplementedException("var ref");
             var scope = variableReference.Scope;
-            var name = variableReference.Name.GetFullPath;
+            var name = variableReference.Name.Name;
             var globalVariableSearchResult = scope.GlobalVariableSearch(name);
             if (globalVariableSearchResult == null)
                 throw new ScopeException($"Variable with name \"{name}\" does not exist.");
@@ -269,16 +352,24 @@ namespace MathLang.Tree.Semantics
         private static void Process(this FunctionCall functionCall)
         {
             //functionCall.Name.Process();
-            var functionDeclaration = functionCall.Scope.GlobalFunctionSearch(functionCall.Name.GetFullPath);
+            var functionDeclaration = functionCall.Scope.GlobalFunctionSearch(functionCall.ExtendedId.Name);
             if (functionDeclaration == null)
-                throw new ScopeException($"Function with name \"{functionCall.Name.GetFullPath}\" does not exist");
-            if (functionDeclaration.ParameterNodes.Count != functionCall.FunctionCallParameters.Count)
+                throw new ScopeException($"Function with name \"{functionCall.ExtendedId.Name}\" does not exist");
+            
+            CheckCallParameters(functionCall,functionCall.FunctionCallParameters, functionDeclaration.ParameterNodes);
+            functionCall.ReturnType = functionDeclaration.ReturnType;
+        }
+
+        private static void CheckCallParameters(INode invoker, IList<IExpression> callParameters,
+            IList<FunctionVariableDeclarationParameter> declarationParameters)
+        {
+            if (declarationParameters.Count != callParameters.Count)
                 throw new ScopeException(
-                    $"Function \"{functionCall.Name.GetFullPath}\" call signature is different from defined function with that name");
-            for (int i = 0; i < functionDeclaration.ParameterNodes.Count; i++)
+                    $"Function \"{invoker}\" call signature is different from defined function with that name");
+            for (int i = 0; i < declarationParameters.Count; i++)
             {
-                var parameter = functionDeclaration.ParameterNodes[i];
-                var callParameter = functionCall.FunctionCallParameters[i];
+                var parameter = declarationParameters[i];
+                var callParameter = callParameters[i];
                 callParameter.Process();
 
                 if (parameter.ReturnType == callParameter.ReturnType) continue;
@@ -286,9 +377,8 @@ namespace MathLang.Tree.Semantics
                     callParameter.CastToType = parameter.ReturnType;
                 else
                     throw new ScopeException(
-                        $"Type {callParameter.ReturnType} can not be matched to type {parameter.ReturnType}");
+                        $"Type {callParameter.ReturnType} can not be matched to type {parameter.ReturnType} in {invoker}");
             }
-            functionCall.ReturnType = functionDeclaration.ReturnType;
         }
 
         private static void Process(this NewArray newArray)
@@ -333,9 +423,8 @@ namespace MathLang.Tree.Semantics
             if (arrayElementReference.ArrayIndex.GetResultReturnType() != ReturnType.Int)
                 throw new ExpressionException(
                     $"Index of array element reference \"{arrayElementReference.Name}\" must be of type {ReturnType.Int}, but received {arrayElementReference.ArrayIndex.ReturnType}");
-            arrayElementReference.ArrayVariableDeclaration = arrayElementReference.Scope
-                .GlobalVariableSearch(arrayElementReference.Name.GetFullPath);
-        }
+            arrayElementReference.ArrayDeclaration = arrayElementReference.Scope
+                .GlobalVariableSearch(arrayElementReference.Name.Name);        }
 
         #endregion
 
@@ -508,28 +597,50 @@ namespace MathLang.Tree.Semantics
 
         #endregion
 
+        private static void ProcessAttributeUsage(this AttributeUsage attributeUsage)
+        {
+            ClassDeclaration classDeclaration = attributeUsage.Scope.GlobalClassSearch(attributeUsage.Name.Name);
+            if (classDeclaration == null)
+                throw new ScopeException($"Attribute {attributeUsage.Name.Name} was not found");
+            if (!classDeclaration.IsAttribute)
+                throw new ScopeException($"Class {attributeUsage.Name.Name} is not an attribute");
+            AttributeDeclaration attributeDeclarationClass = classDeclaration.CastTo<AttributeDeclaration>();
+            CheckCallParameters(attributeUsage,attributeUsage.FunctionCallParameters, attributeDeclarationClass.ParameterNodes);
+        }
+
         #endregion
 
         #region After Process
 
-        public static void SetVariableIndexes(this Nodes.Program program)
+        public static void SetVariableIndexes(this Nodes.Program program, FunctionIndexingStrategy functionIndexingStrategy)
         {
             program.ClassNodes.ForEach(classDeclaration =>
             {
                 classDeclaration.FunctionDeclarationNodes.ForEach(functionDeclaration =>
                 {
-                    SetFunctionArgsIndexes(functionDeclaration);
-                    int varIndex = 0;
-                    SetBlockVarsIndexes(functionDeclaration.StatemenBlock, ref varIndex);
+                    if (functionIndexingStrategy == FunctionIndexingStrategy.United)
+                    {
+                        int varIndex = functionDeclaration.IsStatic ? 0 : 1;
+                        SetFunctionArgsIndexes(functionDeclaration, ref varIndex);
+                        if (functionDeclaration.StatementBlock != null)
+                            SetBlockVarsIndexes(functionDeclaration.StatementBlock, ref varIndex);
+                    }
+                    else if (functionIndexingStrategy == FunctionIndexingStrategy.Splitted)
+                    {
+                        int argumenIndex = functionDeclaration.IsStatic ? 0 : 1;
+                        int localIndex = 0;
+                        SetFunctionArgsIndexes(functionDeclaration, ref argumenIndex);
+                        if (functionDeclaration.StatementBlock != null)
+                            SetBlockVarsIndexes(functionDeclaration.StatementBlock, ref localIndex);
+                    }
                 });
             });
 
-            void SetFunctionArgsIndexes(FunctionDeclaration functionDeclaration)
+            void SetFunctionArgsIndexes(FunctionDeclaration functionDeclaration, ref int index)
             {
-                int index = 0;
                 foreach (var parameter in functionDeclaration.ParameterNodes)
                     parameter.Index = index++;
-                SetBlockVarsIndexes(functionDeclaration.StatemenBlock, ref index);
+                //SetBlockVarsIndexes(functionDeclaration.StatementBlock, ref index);
             }
 
             void SetDeclarationIndex(VariableDeclaration declaration, ref int varIndex)

@@ -15,6 +15,7 @@ namespace MathLang.Tree.Semantics
         public ClassDeclaration Build()
         {
             var console = LibraryClasses.BuildClassDeclaration(_program, "Console");
+            console.IsStatic = true;
             var writeLineBool = LibraryClasses.BuildFunctionDeclaration(console, "WriteLineBool", ReturnType.Void,
                 ("input", ReturnType.Bool));
 

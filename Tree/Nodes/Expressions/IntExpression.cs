@@ -16,7 +16,7 @@ namespace MathLang.Tree.Nodes.Expressions
 
         public override void Construct(CommonTree node)
         {
-            base.Construct(node);
+            Value = int.Parse(node.Text);
         }
     }
 }

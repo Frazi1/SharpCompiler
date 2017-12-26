@@ -1,10 +1,9 @@
 using System;
 using System.Globalization;
-
 using Antlr.Runtime;
 using Antlr.Runtime.Tree;
+using MathLang.CodeGeneration;
 using MathLang.Extensions;
-using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Semantics;
 
 
@@ -28,7 +27,7 @@ namespace MathLang
                 MathLangParser parser = new MathLangParser(tokens);
                 ITree program = (ITree)parser.execute().Tree;
 
-                //AstNodePrinter.Print(program);
+                AstNodePrinter.Print(program);
 
                 if (ErrorService.Instance.HasErrors)
                 {
@@ -41,13 +40,37 @@ namespace MathLang
                 SemanticsRunner.Run(astProgram);
 
                 TreeConsolePrinter tp = new TreeConsolePrinter();
-                tp.Print(astProgram);   
+                tp.Print(astProgram);
+
+
+
+                JasminCodeGenerator generator = new JasminCodeGenerator();
+                generator.GenerateCode(astProgram);
+                generator.SaveFiles();
+                //Helpers.FilePrinter.WriteTextToFile(generator.CodeListing, "output.j");
+                //Console.WriteLine(generator.CodeListing);
+                RunJasminBuildScript();
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error: {0}", e.Message);
+                Console.WriteLine("Error: {0}", e);
             }
             Console.ReadLine();
+        }
+        static int Fibbonacchi(int n)
+        {
+            return n > 1 ? Fibbonacchi(n - 1) + Fibbonacchi(n - 2):n;
+        }
+
+        private static void RunJasminBuildScript()
+        {
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+            startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            startInfo.FileName = "jasmin_build.bat";
+            //startInfo.Arguments = "/C copy /b Image1.jpg + Archive.rar Image2.jpg";
+            process.StartInfo = startInfo;
+            process.Start();
         }
     }
 }

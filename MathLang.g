@@ -46,6 +46,10 @@ tokens {
   FOR_ITERATION;
   ARRAY_SIZE;
   EXTENDED_ID;
+  MODIFIERS;
+  FUNCTION_BODY;
+  ATTRIBUTES;
+  ATTRIBUTE_USAGE;
 }
 
 
@@ -76,8 +80,9 @@ tokens {
 public execute:
 	class_list EOF!  -> ^(PROGRAM class_list) 
 ;
+modifiers: MODIFIER* -> ^(MODIFIERS MODIFIER*);
 
-class_declaration: MODIFIER CLASS_WORD ID class_block -> ^(CLASS_WORD ID class_block) ;
+class_declaration: modifiers CLASS_WORD ID class_block -> ^(CLASS_WORD ID modifiers class_block) ;
 
 class_block: '{'! static_func_or_var_declaration* '}'! -> ^(CLASSBLOCK static_func_or_var_declaration * );
 
@@ -107,17 +112,15 @@ number :  NUMBER
 		| funccallbody
 		| CHAR
 		| arrayelement
-		
+		| STRING
 		;
 mathexpression: term ;
 
 expression:  
 			 newexpression
-		| funccallbody
 		| boolexpression
 		| mathexpression
-		
-		
+	//	| funccallbody
 ;
 extended_id: ID (DOT! ID)? -> ^(EXTENDED_ID ID ID?);
 
@@ -182,8 +185,8 @@ returnstatement: RETURN^ expression? ';'! ;
 dowhilestatement: DO^ (block | statement) WHILE! OPEN_BRACE! boolexpression CLOSE_BRACE! ';'! ;
 emptystatement: ';'! ;
 
-funcdeclaration: MODIFIER any_type ID^ ( OPEN_BRACE! paramsdeclaration CLOSE_BRACE! ) block 
-		-> ^(FUNCDECLARATION ID ^(RETURN_TYPE any_type) OPEN_BRACE! paramsdeclaration CLOSE_BRACE! block);
+funcdeclaration: attribute_usage* modifiers any_type ID^ ( OPEN_BRACE! paramsdeclaration CLOSE_BRACE! ) (block | ';') 
+		-> ^(FUNCDECLARATION ID modifiers ^(ATTRIBUTES attribute_usage*) ^(RETURN_TYPE any_type) paramsdeclaration ^(FUNCTION_BODY block?));
 paramsdeclaration: ( declarationbody ( ','! declarationbody)* )?  -> ^(PARAMETERS ( declarationbody)* );
 
 funccallbody: extended_id^ OPEN_BRACE expressioncommalist? CLOSE_BRACE -> ^(FUNC_CALL extended_id ^(PARAMETERS expressioncommalist)?);
@@ -202,11 +205,9 @@ block: '{'! statementlist '}'!;
 
 statementlist: statement* -> ^(BLOCK statement*) ;
 
-/*console_write_statement: CONSOLE_WORD '.'! ('WriteLine' | 'Write') OPEN_BRACE! expression CLOSE_BRACE! ';'! -> ^(PRINT expression)  ;
-console_read_statement: console_read_body ';'! ;
+attribute_usage: OPEN_SQUARE_BRACE extended_id OPEN_BRACE expressioncommalist? CLOSE_BRACE CLOSE_SQUARE_BRACE 
+	-> ^(ATTRIBUTE_USAGE extended_id ^(PARAMETERS expressioncommalist)?) ;
 
-console_read_body: CONSOLE_WORD '.'! ('ReadLine' | 'Read') OPEN_BRACE CLOSE_BRACE -> INPUT  ;
-*/
 
 /*
  * Lexer Rules
@@ -217,7 +218,12 @@ OPEN_SQUARE_BRACE:'[';
 CLOSE_SQUARE_BRACE:']';
 OPEN_BRACE: '(';
 CLOSE_BRACE: ')';
-TYPE: 'int' | 'bool' | 'char';
+TYPE: 'int' 
+	| 'bool'
+	| 'char'
+	| 'string'
+;
+
 VOID: 'void';
 NUMBER: ('0'..'9')+ ;
 ADD:    '+'     ;
@@ -243,12 +249,13 @@ WS:
   }
 ;
 DOT: '.';
-MODIFIER: 'static';
+MODIFIER: 'static' | 'public' | 'extern';
 //CHAR:  '\''('a'..'z')'\'' ;
-CHAR:  '\'' . '\'' ;
 ID:		( 'a'..'z' | 'A'..'Z' | '_' )
         ( 'a'..'z' | 'A'..'Z' | '_' | '0'..'9' )*
 ;
+STRING: '"' .*'"';
+CHAR:  '\'' . '\'' ;
 
 
 SL_COMMENT:
@@ -261,5 +268,3 @@ ML_COMMENT:
     $channel=Hidden;
   }
 ;
-
-

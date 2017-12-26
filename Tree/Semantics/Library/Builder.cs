@@ -25,13 +25,13 @@ namespace MathLang.Tree.Semantics
                     };
                 funcDeclaration.ParameterNodes.Add(paramDeclaration);
             }
-            funcDeclaration.StatemenBlock = new BlockStatement(funcDeclaration, funcDeclaration.Scope);
+            funcDeclaration.StatementBlock = new BlockStatement(funcDeclaration, funcDeclaration.Scope);
             if (funcDeclaration.ReturnType != ReturnType.Void)
             {
                 var returnStatement = new ReturnStatement(funcDeclaration, funcDeclaration.Scope);
                 returnStatement.ReturnExpression = new CharExpression(returnStatement, returnStatement.Scope);
                 returnStatement.ReturnExpression.ReturnType = returnType;
-                funcDeclaration.StatemenBlock.Statements.Add(returnStatement);
+                funcDeclaration.StatementBlock.Statements.Add(returnStatement);
             }
             return funcDeclaration;
         }

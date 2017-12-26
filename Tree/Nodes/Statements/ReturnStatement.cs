@@ -1,8 +1,5 @@
-﻿using System;
-using System.Diagnostics;
-using Antlr.Runtime.Tree;
+﻿using Antlr.Runtime.Tree;
 using MathLang.Extensions;
-using MathLang.Tree.Nodes;
 using MathLang.Tree.Nodes.Expressions;
 using MathLang.Tree.Nodes.Interfaces;
 using MathLang.Tree.Scopes;

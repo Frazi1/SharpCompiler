@@ -7,7 +7,8 @@
         Int,
         Double,
         Void,
-        Char
+        Char,
+        String
     }
 
     public abstract class ReturnType
@@ -25,7 +26,8 @@
         public static CharReturnType Char => new CharReturnType();
         public static VoidReturnType Void => new VoidReturnType();
         public static ArrayReturnType ArrayOf(ReturnType returnType) => new ArrayReturnType(returnType);
-
+        public static StringReturnType String => new StringReturnType();
+        
         protected bool Equals(ReturnType other)
         {
             return string.Equals(Name, other.Name);
@@ -125,6 +127,14 @@
     {
         public VoidReturnType()
             : base(ReturnTypeEnum.Void.ToString())
+        {
+        }
+    }
+
+    public sealed class StringReturnType : SimpleReturnType
+    {
+        public StringReturnType() 
+            : base("String")
         {
         }
     }

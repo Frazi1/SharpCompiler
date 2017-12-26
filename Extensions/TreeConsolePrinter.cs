@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using MathLang.Tree.Nodes.Declarations;
 using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Expressions;
@@ -36,8 +35,9 @@ namespace MathLang.Extensions
                 string nextInd = (i + 1 == printableClassNodes.Count) ?
                     indent : indentBar;
 
+                var staticModifier = printableClassNodes[i].IsStatic ? "static" : "";
                 Console.WriteLine($"{indent}" +
-                                  $"{ind}class {printableClassNodes[i].Name}");
+                                  $"{ind}{staticModifier} class {printableClassNodes[i].Name}");
 
                 for (int k = 0; k < printableClassNodes[i].VarDeclarationNodes.Count; k++)
                 {
@@ -79,12 +79,12 @@ namespace MathLang.Extensions
             if (funcDecl.ParameterNodes.Count > 0)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indent : indentBar)}" +
-                                  $"{(funcDecl.StatemenBlock.Statements.Count==0? indentEndBar:indentBranchBar)}paremeters");
+                                  $"{(funcDecl.StatementBlock?.Statements.Count==0? indentEndBar:indentBranchBar)}paremeters");
 
                 for (int k = 0; k < funcDecl.ParameterNodes.Count; k++)
                 {
                     Console.WriteLine($"{ind}{(isFinal ? indent : indentBar)}" +
-                                      $"{(funcDecl.StatemenBlock.Statements.Count == 0 ? indent : indentBar)}" +
+                                      $"{(funcDecl.StatementBlock?.Statements.Count == 0 ? indent : indentBar)}" +
                                       $"{(k+1 == funcDecl.ParameterNodes.Count? indentEndBar: indentBranchBar)}" +
                                       $"{funcDecl.ParameterNodes[k].Name} ({funcDecl.ParameterNodes[k].ReturnType})"+
                                       $"{(funcDecl.ParameterNodes[k].Index == null ? "" : $" with funcParam {funcDecl.ParameterNodes[k].Index}")}");
@@ -92,9 +92,9 @@ namespace MathLang.Extensions
             }
 
             //block
-            if (funcDecl.StatemenBlock.Statements.Count > 0)
+            if (funcDecl.StatementBlock?.Statements.Count > 0)
             {
-                PrintStatement($"{ind}{(isFinal ? indent : indentBar)}", funcDecl.StatemenBlock, true);
+                PrintStatement($"{ind}{(isFinal ? indent : indentBar)}", funcDecl.StatementBlock, true);
 
                 //Console.WriteLine($"{ind}{(isFinal ? indent : indentBar)}" +
                 //                  $"{indentBranchBar}block");
@@ -254,7 +254,7 @@ namespace MathLang.Extensions
                 string s = exId.VariableDeclaration is FunctionVariableDeclarationParameter ? "funcParam" : "funcIndex";
                 
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"{exId.GetFullPath} ({exId.ReturnType}) " +
+                                  $"{exId.Name} ({exId.ReturnType}) " +
                                   $"{((exId.VariableDeclaration?.Index == null ) ? "": $" with {s} {exId.VariableDeclaration.Index}")}"+
                                   $"{(exId.CastToType == null ? "" : $" [cast to {exId.CastToType}]")}");
                 return;
@@ -302,7 +302,7 @@ namespace MathLang.Extensions
             if (expression is FunctionCall fc)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"CALL {fc.Name} that returns {fc.ReturnType}" +
+                                  $"CALL {fc.ExtendedId} that returns {fc.ReturnType}" +
                                   $"{(fc.CastToType == null ? "" : $" [cast to {fc.CastToType}]")}");
 
                 if (fc.FunctionCallParameters.Count > 0)

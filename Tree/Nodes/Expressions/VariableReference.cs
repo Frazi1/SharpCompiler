@@ -1,5 +1,4 @@
-﻿using System.Collections.Specialized;
-using Antlr.Runtime.Tree;
+﻿using Antlr.Runtime.Tree;
 using MathLang.Extensions;
 using MathLang.Tree.Nodes.Declarations;
 using MathLang.Tree.Nodes.Enums;
@@ -36,7 +35,5 @@ namespace MathLang.Tree.Nodes.Expressions
             Name = TreeHelper.GetExpression(this, Scope, syntaxExtendedId).CastTo<ExtendedId>();
             Name.Construct(syntaxExtendedId);
         }
-
-        
     }
 }

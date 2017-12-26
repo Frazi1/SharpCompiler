@@ -19,14 +19,13 @@ namespace MathLang.Tree.Nodes.Declarations
         public ReturnType ReturnType { get; set; }
 
         public int? Index { get; set; }
+        public bool IsStatic => Index == null;
 
-        public IExpression Value
-        {
+        public IExpression Value {
             get { return _value; }
-            set
-            {
+            set {
                 _value = value;
-                Initialized = _value != null;
+                Initialized = true;
             }
         }
 
