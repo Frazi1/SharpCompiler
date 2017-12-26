@@ -25,7 +25,6 @@ tokens {
   PARAMS              ;
   VARDECLARATION ;
   FUNCDECLARATION ;
-  ARRAYDECLARATION ;
   VARASSIGNMENT ;
   ARRAYELEMENTASSIGNMENT;
   ARRAYELEMENT ;
@@ -38,9 +37,6 @@ tokens {
   STATIC_DECLARATION;
   CLASSBLOCK;
   CLASS_WORD = 'class';
-  CALL;
-  VARS;
-  MULT_ARRAY_DECL;
   FOR_INITIALIZATION;
   FOR_CONDITION;
   FOR_ITERATION;
@@ -104,7 +100,7 @@ statement: ( declaration
 	| emptystatement
 	 ) ;
 
-type: TYPE ;
+type: array_type | TYPE ;
 array_type: t+=TYPE t+=ARRAY_DECLARATION_MARK ;
 any_type: array_type | type | VOID;
 number :  NUMBER
@@ -128,33 +124,22 @@ arrayelement:  extended_id OPEN_SQUARE_BRACE mathexpression CLOSE_SQUARE_BRACE -
 static_declaration:  MODIFIER declaration -> ^(STATIC_DECLARATION declaration);
 
 declaration: var_declaration 
- | array_declaration;
+;
 var_declaration: t=type! d_list[t.Tree] ';'!;
-array_declaration: at=array_type! d_array_list[at.Tree] ';'!;
 
 d_list[object type]: d[type] (','! d[type])* ;
-d_array_list[object type]: d_array[type] (','! d_array[type])* ;
 
 d[object type]: declarationbody_d[type] | longdeclarationbody_d[type] ;
-d_array[object type]: declarationbody_array_d[type] | longdeclarationbody_array_d[type];
 
 declarationbody_d[object type]: (ID -> ^(VARDECLARATION ^(RETURN_TYPE {$type}) ID) );				
-declarationbody_array_d[object type]: ( ID -> ^(ARRAYDECLARATION ^(RETURN_TYPE {$type}) ID));
 
 longdeclarationbody_d[object type]: (ID ASSIGN expression  -> ^(VARDECLARATION ^(RETURN_TYPE {$type}) ID expression));
-longdeclarationbody_array_d[object type]: (ID ASSIGN expression -> ^(ARRAYDECLARATION ^(RETURN_TYPE {$type}) ID expression));
 
-
-//declarationbody: (type ID -> ^(VARDECLARATION type ID) )
-//				| (array_type ID -> ^(ARRAYDECLARATION array_type) ID)
-//				;
 declarationbody: 
 					type ID -> ^(VARDECLARATION ^(RETURN_TYPE type) ID )
-			| array_type ID -> ^(ARRAYDECLARATION ^(RETURN_TYPE array_type) ID)
-		 ;
+;
 
 longdeclarationbody: ( type ID ASSIGN expression  -> ^(VARDECLARATION ^(RETURN_TYPE type) ID expression))
-					| (array_type ID ASSIGN expression -> ^(ARRAYDECLARATION ^(RETURN_TYPE array_type) ID expression))
 					;
 
 add: mul ( (ADD | SUB)^ mul )*;
