@@ -76,50 +76,35 @@ namespace MathLang.Tree.Semantics
             classDeclaration.VarDeclarationNodes.ForEach(declaration => declaration.Process(false));
         }
 
-        //private static void Process(this Declaration declaration, bool checkName)
-        //{
-        //    switch (declaration)
-        //    {
-        //        case VariableDeclaration variableDeclaration:
-        //            variableDeclaration.Process(checkName);
-        //            break;
-        //        case ArrayDeclaration arrayDeclaration:
-        //            arrayDeclaration.Process();
-        //            break;
-        //    }
-        //}
-
-        private static void Process(this VariableDeclaration variableVariableDeclaration, bool checkName = true, int? upTpLevel = null)
+        private static void Process(this VariableDeclaration variableDeclaration, bool checkName = true, int? upTpLevel = null)
         {
             //Process assignment value
             if (checkName)
             {
                 //variableDeclaration.CheckName(variableDeclaration.Scope);
-                if (variableVariableDeclaration.Scope.GlobalVariableSearch(
-                        variableVariableDeclaration.Name, Scope.FunctionLevel)
+                if (variableDeclaration.Scope.GlobalVariableSearch(
+                        variableDeclaration.Name, Scope.FunctionLevel)
                     != null)
-                    throw new ScopeException($"Variable with name: \"{variableVariableDeclaration.Name}\" already exists");
+                    throw new ScopeException($"Variable with name: \"{variableDeclaration.Name}\" already exists");
+                variableDeclaration.Scope.AddVariable(variableDeclaration);
             }
-            IExpression variableDeclarationValueExpression = variableVariableDeclaration.Value;
-            if (variableDeclarationValueExpression == null) return;
-            variableDeclarationValueExpression.Process();
-
-            if (!(variableVariableDeclaration.ReturnType == variableDeclarationValueExpression.ReturnType))
+            IExpression variableDeclarationValueExpression = variableDeclaration.Value;
+            if (variableDeclarationValueExpression != null)
             {
-                if (variableDeclarationValueExpression.ReturnType.IsCastableTo(variableVariableDeclaration.ReturnType))
-                {
-                    variableDeclarationValueExpression.CastToType = variableVariableDeclaration.ReturnType;
-                }
-                else
-                {
-                    throw new ScopeException(
-                        $"Variable \"{variableVariableDeclaration.Name}\" return type {variableVariableDeclaration.ReturnType} is different from {variableDeclarationValueExpression.ReturnType} ");
-                }
-            }
+                variableDeclarationValueExpression.Process();
 
-            if (checkName)
-            {
-                variableVariableDeclaration.Scope.AddVariable(variableVariableDeclaration);
+                if (!(variableDeclaration.ReturnType == variableDeclarationValueExpression.ReturnType))
+                {
+                    if (variableDeclarationValueExpression.ReturnType.IsCastableTo(variableDeclaration.ReturnType))
+                    {
+                        variableDeclarationValueExpression.CastToType = variableDeclaration.ReturnType;
+                    }
+                    else
+                    {
+                        throw new ScopeException(
+                            $"Variable \"{variableDeclaration.Name}\" return type {variableDeclaration.ReturnType} is different from {variableDeclarationValueExpression.ReturnType} ");
+                    }
+                }
             }
         }
 
