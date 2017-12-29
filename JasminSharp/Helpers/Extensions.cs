@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace JasminSharp.Helpers
 {
@@ -12,7 +13,7 @@ namespace JasminSharp.Helpers
             var type = typeof(TEnum);
             var memInfo = type.GetMember(value.ToString(CultureInfo.InvariantCulture));
             var attributes = memInfo[0].GetCustomAttributes(typeof(TextValue), false);
-            var textValue = ((TextValue)attributes[0]).Value;
+            var textValue = ((TextValue) attributes[0]).Value;
             return textValue;
         }
 
@@ -20,6 +21,16 @@ namespace JasminSharp.Helpers
         {
             foreach (T item in enumerable)
                 action(item);
+        }
+
+        public static IEnumerable<Enum> GetFlags(this Enum e)
+        {
+            return Enum.GetValues(e.GetType()).Cast<Enum>().Where(e.HasFlag);
+        }
+
+        public static IEnumerable<T> GetFlags<T>(this Enum e)
+        {
+            return e.GetFlags().Cast<T>();
         }
     }
 }

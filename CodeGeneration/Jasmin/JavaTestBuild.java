@@ -1,7 +1,6 @@
 class JavaTestBuild {
     static int testI = 1;
     public static void main(String[] args){
-       testI++;
     }
 
     // public void testFor()

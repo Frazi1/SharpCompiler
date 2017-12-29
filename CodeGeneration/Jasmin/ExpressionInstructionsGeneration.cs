@@ -8,6 +8,7 @@ using MathLang.Extensions;
 using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Expressions;
 using MathLang.Tree.Nodes.Interfaces;
+using static MathLang.CodeGeneration.CombinedInstuctionsGeneration;
 using static MathLang.CodeGeneration.Instructions;
 
 namespace MathLang.CodeGeneration
@@ -73,7 +74,7 @@ namespace MathLang.CodeGeneration
             }
             else
             {
-                instructions.Add(StatementInstructionsGeneration.GetLoadInstruction(
+                instructions.Add(GetLoadInstruction(
                     extendedId.VariableDeclaration.ReturnType,
                     extendedId.VariableDeclaration.Index.Value));
             }
@@ -246,11 +247,11 @@ namespace MathLang.CodeGeneration
             this ArrayElementReference arrayElementReference)
         {
             List<IInstruction> instructions = new List<IInstruction>();
-            instructions.Add(StatementInstructionsGeneration.GetLoadInstruction(
+            instructions.Add(GetLoadInstruction(
                 arrayElementReference.ArrayDeclaration.ReturnType,
                 arrayElementReference.ArrayDeclaration.Index.Value));
             instructions.AddRange(arrayElementReference.ArrayIndex.GetInstructions());
-            instructions.Add(StatementInstructionsGeneration.GetArrayLoadInstruction(arrayElementReference.ReturnType));
+            instructions.Add(GetArrayLoadInstruction(arrayElementReference.ReturnType));
             return instructions;
         }
     }

@@ -46,7 +46,6 @@
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\TextValue.cs" />
     <Compile Include="IListingGenerator.cs" />
-    <Compile Include="IModule.cs" />
     <Compile Include="Instructions\ArgumentInstruction.cs" />
     <Compile Include="Instructions\IInstruction.cs" />
     <Compile Include="Instructions\IndexedInstruction.cs" />
@@ -72,7 +71,7 @@
     <Compile Include="Constanst\JasminDirectives.cs" />
     <Compile Include="Modules\JasminFunctionModule.cs" />
     <Compile Include="Modules\JasminFunctionParameter.cs" />
-    <Compile Include="Modules\JasminStaticVariable.cs" />
+    <Compile Include="Modules\JasminField.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

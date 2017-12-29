@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JasminSharp;
 using MathLang.CodeGeneration.Helpers.Converters;
 using MathLang.Extensions;
 using MathLang.Tree.Nodes.Declarations;
+using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Expressions;
+using static MathLang.CodeGeneration.Instructions;
 
 namespace MathLang.CodeGeneration
 {
@@ -31,7 +34,7 @@ namespace MathLang.CodeGeneration
                     .CastTo<StringExpression>()
                     .Value
                     .RemoveFirstAndLastCharacters();
-                invokestaticInstruction invokestaticInstruction = Instructions.InvokestaticInstruction
+                invokestaticInstruction invokestaticInstruction = InvokestaticInstruction
                     .WithMethodFullName(externName)
                     .WithReturnType(ReturnTypeToJavaConverter.ConvertToFullRepresentation(functionDeclaration.ReturnType));
                 functionDeclaration
@@ -48,7 +51,7 @@ namespace MathLang.CodeGeneration
                 //    correctedName = splittedName[0].ToCamelCase();
                 //else
                 //    correctedName = $"{splittedName[0]}/{splittedName[1].ToCamelCase()}";
-                invokestaticInstruction invokestaticInstruction = Instructions.InvokestaticInstruction
+                invokestaticInstruction invokestaticInstruction = InvokestaticInstruction
                     .WithMethodFullName(/*correctedName*/functionCall.FunctionDeclaration.FullName)
                     .WithReturnType(ReturnTypeToJavaConverter.ConvertToFullRepresentation(functionCall.ReturnType));
                 functionDeclaration
@@ -58,6 +61,82 @@ namespace MathLang.CodeGeneration
                 instructions.Add(invokestaticInstruction);
             }
             return instructions;
+        }
+
+        public static IIndexedInstruction GetStoreInstruction(ReturnType returnType, int index)
+        {
+            switch (returnType)
+            {
+                case BoolReturnType boolReturnType:
+                    return IstoreInstruction.WithIndex(index);
+                case CharReturnType charReturnType:
+                    return IstoreInstruction.WithIndex(index);
+                case ArrayReturnType arrayReturnType:
+                    return AstoreInstruction.WithIndex(index);
+                case IntReturnType intReturnType:
+                    return IstoreInstruction.WithIndex(index);
+                case StringReturnType stringReturnType:
+                    return AstoreInstruction.WithIndex(index);
+                default:
+                    throw new NotImplementedException(nameof(ReturnType) + "store instruction generation");
+            }
+        }
+
+        public static IIndexedInstruction GetLoadInstruction(ReturnType returnType, int index)
+        {
+            switch (returnType)
+            {
+                case BoolReturnType boolReturnType:
+                    return IloadInstruction.WithIndex(index);
+                case CharReturnType charReturnType:
+                    return IloadInstruction.WithIndex(index);
+                case ArrayReturnType arrayReturnType:
+                    return AloadInstruction.WithIndex(index);
+                case IntReturnType intReturnType:
+                    return IloadInstruction.WithIndex(index);
+                case StringReturnType stringReturnType:
+                    return AloadInstruction.WithIndex(index);
+                default:
+                    throw new NotImplementedException(nameof(ReturnType) + " load instruction generation");
+            }
+        }
+
+        public static NoArgumentInstruction GetArrayLoadInstruction(ReturnType returnType)
+        {
+            switch (returnType)
+            {
+                case BoolReturnType boolReturnType:
+                    return BaloadInstruction;
+                case CharReturnType charReturnType:
+                    return CaloadInstruction;
+                case ArrayReturnType arrayReturnType:
+                    return AaloadInstruction;
+                case IntReturnType intReturnType:
+                    return IaloadInstruction;
+                case StringReturnType stringReturnType:
+                    return AaloadInstruction;
+                default:
+                    throw new NotImplementedException(nameof(ReturnType) + " array load instruction generation");
+            }
+        }
+
+        public static NoArgumentInstruction GetArrayStoreInstruction(ReturnType returnType)
+        {
+            switch (returnType)
+            {
+                case BoolReturnType boolReturnType:
+                    return BastoreInstruction;
+                case CharReturnType charReturnType:
+                    return CastoreInstruction;
+                case ArrayReturnType arrayReturnType:
+                    return AastoreInstruction;
+                case IntReturnType intReturnType:
+                    return IastoreInstruction;
+                case StringReturnType stringReturnType:
+                    return AastoreInstruction;
+                default:
+                    throw new NotImplementedException(nameof(ReturnType) + " array load instruction generation");
+            }
         }
     }
 }

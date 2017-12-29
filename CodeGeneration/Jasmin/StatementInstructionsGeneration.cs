@@ -8,6 +8,7 @@ using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Expressions;
 using MathLang.Tree.Nodes.Interfaces;
 using MathLang.Tree.Nodes.Statements;
+using static MathLang.CodeGeneration.CombinedInstuctionsGeneration;
 using static MathLang.CodeGeneration.Instructions;
 
 namespace MathLang.CodeGeneration.JasminJava
@@ -113,81 +114,7 @@ namespace MathLang.CodeGeneration.JasminJava
             return instructions;
         }
 
-        public static IIndexedInstruction GetStoreInstruction(ReturnType returnType, int index)
-        {
-            switch (returnType)
-            {
-                case BoolReturnType boolReturnType:
-                    return IstoreInstruction.WithIndex(index);
-                case CharReturnType charReturnType:
-                    return IstoreInstruction.WithIndex(index);
-                case ArrayReturnType arrayReturnType:
-                    return AstoreInstruction.WithIndex(index);
-                case IntReturnType intReturnType:
-                    return IstoreInstruction.WithIndex(index);
-                case StringReturnType stringReturnType:
-                    return AstoreInstruction.WithIndex(index);
-                default:
-                    throw new NotImplementedException(nameof(ReturnType) + "store instruction generation");
-            }
-        }
-
-        public static IIndexedInstruction GetLoadInstruction(ReturnType returnType, int index)
-        {
-            switch (returnType)
-            {
-                case BoolReturnType boolReturnType:
-                    return IloadInstruction.WithIndex(index);
-                case CharReturnType charReturnType:
-                    return IloadInstruction.WithIndex(index);
-                case ArrayReturnType arrayReturnType:
-                    return AloadInstruction.WithIndex(index);
-                case IntReturnType intReturnType:
-                    return IloadInstruction.WithIndex(index);
-                case StringReturnType stringReturnType:
-                    return AloadInstruction.WithIndex(index);
-                default:
-                    throw new NotImplementedException(nameof(ReturnType) + " load instruction generation");
-            }
-        }
-
-        public static NoArgumentInstruction GetArrayLoadInstruction(ReturnType returnType)
-        {
-            switch (returnType)
-            {
-                case BoolReturnType boolReturnType:
-                    return BaloadInstruction;
-                case CharReturnType charReturnType:
-                    return CaloadInstruction;
-                case ArrayReturnType arrayReturnType:
-                    return AaloadInstruction;
-                case IntReturnType intReturnType:
-                    return IaloadInstruction;
-                case StringReturnType stringReturnType:
-                    return AaloadInstruction;
-                default:
-                    throw new NotImplementedException(nameof(ReturnType) + " array load instruction generation");
-            }
-        }
-
-        public static NoArgumentInstruction GetArrayStoreInstruction(ReturnType returnType)
-        {
-            switch (returnType)
-            {
-                case BoolReturnType boolReturnType:
-                    return BastoreInstruction;
-                case CharReturnType charReturnType:
-                    return CastoreInstruction;
-                case ArrayReturnType arrayReturnType:
-                    return AastoreInstruction;
-                case IntReturnType intReturnType:
-                    return IastoreInstruction;
-                case StringReturnType stringReturnType:
-                    return AastoreInstruction;
-                default:
-                    throw new NotImplementedException(nameof(ReturnType) + " array load instruction generation");
-            }
-        }
+ 
 
         private static IEnumerable<IInstruction> GetArrayElementAssignmentInstructions(
             this ArrayElementAssignment arrayElementAssignment)

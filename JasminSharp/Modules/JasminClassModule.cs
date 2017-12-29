@@ -7,13 +7,14 @@ namespace JasminSharp
     public sealed class JasminClassModule : IJasminModule
     {
         private readonly List<string> _codeListing = new List<string>();
-        private readonly List<JasminModifier> _modifiers = new List<JasminModifier>();
         private readonly List<JasminFunctionModule> _functions = new List<JasminFunctionModule>();
-        private readonly List<JasminStaticVariable> _staticVariables = new List<JasminStaticVariable>();
-        
-        
+        private readonly List<JasminField> _fields = new List<JasminField>();
+
+        private IEnumerable<JasminField> StaticFields => _fields.Where(field => field.IsStatic);
+
         public string Name { get; private set; }
         public string InheritsFrom { get; private set; }
+        public JasminModifier Modifier { get; private set; }
 
         public JasminClassModule(string name, string inheritsFrom = JasminReferenceConstants.JavaObjectClassFull)
         {
@@ -23,14 +24,23 @@ namespace JasminSharp
 
         #region public methods
 
-        public JasminClassModule WithModifiers(params JasminModifier[] modifiers)
+        #region Builder
+
+        public JasminClassModule WithFunction(JasminFunctionModule jasminFunction)
         {
-            modifiers.ForEach(modifier =>
-            {
-                if (_modifiers.Contains(modifier))
-                    throw new JasminException($"Modifier {modifier} already assigned to module {ToString()} ");
-                _modifiers.Add(modifier);
-            });
+            _functions.Add(jasminFunction);
+            return this;
+        }
+
+        public JasminClassModule WithField(JasminField jasminField)
+        {
+            _fields.Add(jasminField);
+            return this;
+        }
+
+        public JasminClassModule WithModifier(JasminModifier modifier)
+        {
+            Modifier = modifier;
             return this;
         }
 
@@ -40,43 +50,41 @@ namespace JasminSharp
             return this;
         }
 
-        public JasminClassModule WithFunction(JasminFunctionModule jasminFunction)
-        {
-            _functions.Add(jasminFunction);
-            return this;
-        }
-
-        public JasminClassModule WithStaticVariable(JasminStaticVariable jasminStaticVariable)
-        {
-            _staticVariables.Add(jasminStaticVariable);
-            return this;
-        }
-
-        public IEnumerable<JasminModifier> Modifiers => _modifiers.ToList();
+        #endregion
 
         public IEnumerable<string> GenerateListing()
         {
+            AddStaticInitializer();
+            //TODO: fix
+            //string classSignature = $"{JasminDirectives.Class} {ModifiersString} {Name}";
             string classSignature = $"{JasminDirectives.Class} {ModifiersString} {Name}";
             _codeListing.Add(classSignature);
 
             string inheritanceDeclaration = $"{JasminDirectives.Super} {InheritsFrom}";
             _codeListing.Add(inheritanceDeclaration);
 
-            _staticVariables.ForEach(variable =>
-            {
-                _codeListing.AddRange(variable.GenerateListing());
-            });
-            
-            _functions.ForEach(function =>
-            {
-                _codeListing.AddRange(function.GenerateListing());
-            });
-            
+            _fields.ForEach(variable => { _codeListing.AddRange(variable.GenerateListing()); });
+
+            _functions.ForEach(function => { _codeListing.AddRange(function.GenerateListing()); });
+
+
             return _codeListing;
         }
 
         #endregion
 
-        private string ModifiersString => string.Join(" ", _modifiers.Select(modifier => modifier.GetTextValue()));
+        private void AddStaticInitializer()
+        {
+            JasminFunctionModule staticInitializer = new JasminFunctionModule().WithModifiers(JasminModifier.Static)
+                .WithName(JasminReferenceConstants.MethodClInit)
+                .WithReturnType(JasminReferenceConstants.JavaVoidPrimitive);
+            StaticFields.Where(field => field.IsInitialized)
+                .ForEach(field => { staticInitializer.WithInstructions(field.ValueInstructions); });
+            _functions.Add(staticInitializer);
+        }
+
+        //private string ModifiersString => string.Join(" ", _modifiers.Select(modifier => modifier.GetTextValue()));
+        private string ModifiersString =>
+            string.Join(" ", Modifier.GetFlags<JasminModifier>().Select(m => m.GetTextValue()));
     }
 }

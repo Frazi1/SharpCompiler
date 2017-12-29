@@ -16,11 +16,6 @@ namespace MathLang.CodeGeneration
 
         private readonly Dictionary<string, string> _classListings = new Dictionary<string, string>();
 
-        private void PushLine(string text)
-        {
-            CodeListing += text + Environment.NewLine;
-        }
-
         public void GenerateCode(Tree.Nodes.Program program)
         {
             program.ClassNodes.ForEach(GenerateClassCode);
@@ -30,15 +25,16 @@ namespace MathLang.CodeGeneration
         {
             if (classDeclaration.IsExtern || !classDeclaration.CodeGeneration) return;
 
+            JasminModifier classModifier = JasminModifier.Public;
+            if (classDeclaration.IsStatic) classModifier |= JasminModifier.Final;
+
             JasminClassModule jasminClass = new JasminClassModule(classDeclaration.Name)
-                .WithModifiers(JasminModifier.Public);
-            if (classDeclaration.IsStatic)
-                jasminClass.WithModifiers(JasminModifier.Final);
+                .WithModifier(classModifier);
 
             classDeclaration.VarDeclarationNodes.ForEach(declaration =>
             {
                 if (declaration.Initialized)
-                    jasminClass.WithStaticVariable(BuildJasminStaticVariable(declaration));
+                    jasminClass.WithField(BuildJasminStaticVariable(declaration));
             });
 
             classDeclaration.FunctionDeclarationNodes.ForEach(function =>
@@ -92,16 +88,20 @@ namespace MathLang.CodeGeneration
             return jasminFunctionParameter;
         }
 
-        public JasminStaticVariable BuildJasminStaticVariable(VariableDeclaration variableDeclaration)
+        public JasminField BuildJasminStaticVariable(VariableDeclaration variableDeclaration)
         {
             if (!variableDeclaration.IsStatic)
                 throw new Exception($"{variableDeclaration} is not static!");
-
-            JasminStaticVariable jasminStaticVariable = new JasminStaticVariable()
-                .WithName(variableDeclaration.FullName)
+            JasminModifier modifier = JasminModifier.Public;
+            if (variableDeclaration.IsStatic)
+                modifier |= JasminModifier.Static;
+           
+            JasminField jasminField = new JasminField()
+                .WithName(variableDeclaration.Name)
                 .WithSignature(variableDeclaration.ReturnType.ConvertToFullRepresentation())
+                .WithModifier(modifier)
                 .WithValue(variableDeclaration.Value.GetInstructions());
-            return jasminStaticVariable;
+            return jasminField;
         }
 
         public void SaveFiles()
