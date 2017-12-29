@@ -2,7 +2,8 @@
 
 namespace JasminSharp
 {
-    public interface IJasminModule : IModule
+    public interface IJasminModule : IListingGenerator
     {
+        string Name { get; }
     }
 }

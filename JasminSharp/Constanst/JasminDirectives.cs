@@ -7,10 +7,12 @@
         internal const string Source = ".source";
         internal const string Method = ".method";
         internal const string EndMethod = ".end method";
-        public const string LimitLocals = ".limit locals";
-        public const string LimitStack = ".limit stack";
+        internal const string Field = ".field";
+        
+        internal const string LimitLocals = ".limit locals";
+        internal const string LimitStack = ".limit stack";
 
-        public static string LimitStackTo(int number) => $"{LimitStack} {number}";
-        public static string LimitLocalsTo(int number) => $"{LimitLocals} {number}";
+        internal static string LimitStackTo(int number) => $"{LimitStack} {number}";
+        internal static string LimitLocalsTo(int number) => $"{LimitLocals} {number}";
     }
 }

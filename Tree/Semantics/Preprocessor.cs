@@ -81,7 +81,6 @@ namespace MathLang.Tree.Semantics
 
         private static void PreProcess(this FunctionDeclaration functionDeclaration)
         {
-            
             functionDeclaration.ParameterNodes
                 .ForEach(parameter =>
                 {
@@ -117,7 +116,8 @@ namespace MathLang.Tree.Semantics
             classDeclaration.VarDeclarationNodes.ForEach(declaration => declaration.Process(false));
         }
 
-        private static void Process(this VariableDeclaration variableDeclaration, bool checkName = true, int? upTpLevel = null)
+        private static void Process(this VariableDeclaration variableDeclaration, bool checkName = true,
+            int? upTpLevel = null)
         {
             //Process assignment value
             if (checkName)
@@ -218,9 +218,6 @@ namespace MathLang.Tree.Semantics
                 case ExtendedId extendedId:
                     extendedId.Process();
                     break;
-                case VariableReference variableReference:
-                    variableReference.Process();
-                    break;
                 case Expression expression:
                     expression.Process();
                     break;
@@ -246,11 +243,12 @@ namespace MathLang.Tree.Semantics
             if (isVariable)
             {
                 var declaration = scope.GlobalVariableSearch(extendedId.Name);
-                if(declaration == null)
+                if (declaration == null)
                     throw new ScopeException($"Variable with name \"{extendedId.Name}\" does not exist");
                 extendedId.VariableDeclaration = declaration;
-                if(!declaration.Initialized)
-                    throw new ScopeException($"Variable with name \"{extendedId.Name}\" was not initialized before accessing");
+                if (!declaration.Initialized)
+                    throw new ScopeException(
+                        $"Variable with name \"{extendedId.Name}\" was not initialized before accessing");
                 extendedId.ReturnType = declaration.ReturnType;
             }
             else
@@ -260,17 +258,6 @@ namespace MathLang.Tree.Semantics
                     ? declaration.ReturnType
                     : throw new ScopeException($"Variable with name \"{extendedId.Name}\" does not exist.");
             }
-        }
-
-        private static void Process(this VariableReference variableReference)
-        {
-            throw new NotImplementedException("var ref");
-            var scope = variableReference.Scope;
-            var name = variableReference.Name.Name;
-            var globalVariableSearchResult = scope.GlobalVariableSearch(name);
-            if (globalVariableSearchResult == null)
-                throw new ScopeException($"Variable with name \"{name}\" does not exist.");
-            variableReference.ReturnType = globalVariableSearchResult.ReturnType;
         }
 
         private static void Process(this Expression expression)
@@ -355,8 +342,8 @@ namespace MathLang.Tree.Semantics
             var functionDeclaration = functionCall.Scope.GlobalFunctionSearch(functionCall.ExtendedId.Name);
             if (functionDeclaration == null)
                 throw new ScopeException($"Function with name \"{functionCall.ExtendedId.Name}\" does not exist");
-            
-            CheckCallParameters(functionCall,functionCall.FunctionCallParameters, functionDeclaration.ParameterNodes);
+
+            CheckCallParameters(functionCall, functionCall.FunctionCallParameters, functionDeclaration.ParameterNodes);
             functionCall.ReturnType = functionDeclaration.ReturnType;
         }
 
@@ -424,7 +411,8 @@ namespace MathLang.Tree.Semantics
                 throw new ExpressionException(
                     $"Index of array element reference \"{arrayElementReference.Name}\" must be of type {ReturnType.Int}, but received {arrayElementReference.ArrayIndex.ReturnType}");
             arrayElementReference.ArrayDeclaration = arrayElementReference.Scope
-                .GlobalVariableSearch(arrayElementReference.Name.Name);        }
+                .GlobalVariableSearch(arrayElementReference.Name.Name);
+        }
 
         #endregion
 
@@ -576,16 +564,19 @@ namespace MathLang.Tree.Semantics
 
         private static void Process(this ForStatement forStatement)
         {
-            forStatement.InitializationStatement.Process();
-            forStatement.ConditionExpression.Process();
-
-            if (forStatement.ConditionExpression.ReturnType != ReturnType.Bool)
+            if (forStatement.InitializationStatement != null)
+                forStatement.InitializationStatement.Process();
+            if (forStatement.ConditionExpression != null)
             {
-                throw new ExpressionException($"conditional expression in if must be of type bool, not " +
-                                              $"{forStatement.ConditionExpression.ReturnType}");
+                forStatement.ConditionExpression.Process();
+                if (forStatement.ConditionExpression.ReturnType != ReturnType.Bool)
+                {
+                    throw new ExpressionException($"conditional expression in if must be of type bool, not " +
+                                                  $"{forStatement.ConditionExpression.ReturnType}");
+                }
             }
-
-            forStatement.IterationStatement.Process();
+            if (forStatement.IterationStatement != null)
+                forStatement.IterationStatement.Process();
 
             forStatement.BlockOrSingleStatement.Process();
         }
@@ -605,14 +596,16 @@ namespace MathLang.Tree.Semantics
             if (!classDeclaration.IsAttribute)
                 throw new ScopeException($"Class {attributeUsage.Name.Name} is not an attribute");
             AttributeDeclaration attributeDeclarationClass = classDeclaration.CastTo<AttributeDeclaration>();
-            CheckCallParameters(attributeUsage,attributeUsage.FunctionCallParameters, attributeDeclarationClass.ParameterNodes);
+            CheckCallParameters(attributeUsage, attributeUsage.FunctionCallParameters,
+                attributeDeclarationClass.ParameterNodes);
         }
 
         #endregion
 
         #region After Process
 
-        public static void SetVariableIndexes(this Nodes.Program program, FunctionIndexingStrategy functionIndexingStrategy)
+        public static void SetVariableIndexes(this Nodes.Program program,
+            FunctionIndexingStrategy functionIndexingStrategy)
         {
             program.ClassNodes.ForEach(classDeclaration =>
             {

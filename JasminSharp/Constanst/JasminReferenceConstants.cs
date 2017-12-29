@@ -26,8 +26,8 @@
         public const string JavaStringClassFull = "L" + JavaStringClassShort + ";";
         public const string JavaCharacterClassFull = "L" + JavaCharacterClassShort + ";";
 
-
-        private static string GetFullPathWithLAndSemicolumn(string path) => $"L{path};";
-        //public static string IntegerValueOf(string parameterType) => $"{JavaIntegerClass}/valueOf(I){parameterType}";
+        public const string MethodClInit = "<clinit>";
+        public const string MethodInit = "<init>";
+        
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using MathLang.CodeGeneration;
 using static MathLang.CodeGeneration.Instructions;
 
@@ -120,7 +121,8 @@ namespace JasminSharp
             instructions.AddRange(initializationInstructions);
             instructions.Add(Instructions.InsertLabelInstruction.WithLabel(labelStart));
             instructions.AddRange(conditionInstructions);
-            instructions.Add(IfeqInstruction.WithLabel(labelEnd));
+            if (conditionInstructions.Any())
+                instructions.Add(IfeqInstruction.WithLabel(labelEnd));
             instructions.AddRange(bodyInstructions);
             instructions.AddRange(iterationInstructions);
             instructions.Add(GotoInstruction.WithLabel(labelStart));

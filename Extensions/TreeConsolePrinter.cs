@@ -260,13 +260,6 @@ namespace MathLang.Extensions
                 return;
             }
 
-            if (expression is VariableReference varRef)
-            {
-                Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"{varRef.Name.ToString()}"+
-                                  $"{(varRef.CastToType == null ? "" : $" [cast to {varRef.CastToType}]")}");
-            }
-
             if (expression is NewArray newArr)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +

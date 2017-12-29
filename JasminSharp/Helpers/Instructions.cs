@@ -193,6 +193,9 @@ namespace MathLang.CodeGeneration
         public static InsertLabelInstruction InsertLabelInstruction => new InsertLabelInstruction();
         public static NewArrayInstruction NewArrayInstruction => new NewArrayInstruction();
         public static ANewArrayInstruction ANewArrayInstruction => new ANewArrayInstruction();
-
+        public static GetStaticInstruction GetStaticInstruction => new GetStaticInstruction();
+        public static PutStaticInstruction PutStaticInstruction => new PutStaticInstruction();
+        public static GetFieldInstruction GetFieldInstruction => new GetFieldInstruction();
+        public static PutFieldInstruction PutFieldInstruction => new PutFieldInstruction();
     }
 }

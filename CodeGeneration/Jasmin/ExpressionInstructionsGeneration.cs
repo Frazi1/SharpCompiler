@@ -8,6 +8,7 @@ using MathLang.Extensions;
 using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Expressions;
 using MathLang.Tree.Nodes.Interfaces;
+using static MathLang.CodeGeneration.CombinedInstuctionsGeneration;
 using static MathLang.CodeGeneration.Instructions;
 
 namespace MathLang.CodeGeneration
@@ -43,9 +44,6 @@ namespace MathLang.CodeGeneration
                 case ExtendedId extendedId:
                     return extendedId.GetVariableReferenceInstructions();
 
-                case VariableReference variableReference:
-                    throw new InvalidOperationException($"EXpressin instruction generation {iexpression}");
-                    break;
                 case StringExpression stringExpression:
                     return GetStringExpressionInstruction(stringExpression);
                 default:
@@ -67,10 +65,7 @@ namespace MathLang.CodeGeneration
 
         private static IEnumerable<IInstruction> GetVariableReferenceInstructions(this ExtendedId extendedId)
         {
-            List<IInstruction> instructions = new List<IInstruction>();
-            instructions.Add(StatementInstructionsGeneration.GetLoadInstruction(extendedId.VariableDeclaration.ReturnType,
-                extendedId.VariableDeclaration.Index.Value));
-            return instructions;
+            return GetLoadInstruction(extendedId.VariableDeclaration).AsList();
         }
 
         private static IEnumerable<IInstruction> GetStringExpressionInstruction(this StringExpression stringExpression)
@@ -239,10 +234,9 @@ namespace MathLang.CodeGeneration
             this ArrayElementReference arrayElementReference)
         {
             List<IInstruction> instructions = new List<IInstruction>();
-            instructions.Add(StatementInstructionsGeneration.GetLoadInstruction(arrayElementReference.ArrayDeclaration.ReturnType,
-                arrayElementReference.ArrayDeclaration.Index.Value));
+            instructions.Add(GetLoadInstruction(arrayElementReference.ArrayDeclaration));
             instructions.AddRange(arrayElementReference.ArrayIndex.GetInstructions());
-            instructions.Add(StatementInstructionsGeneration.GetArrayLoadInstruction(arrayElementReference.ReturnType));
+            instructions.Add(GetArrayLoadInstruction(arrayElementReference.ReturnType));
             return instructions;
         }
     }
