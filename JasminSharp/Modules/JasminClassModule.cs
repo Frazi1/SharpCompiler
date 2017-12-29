@@ -9,6 +9,8 @@ namespace JasminSharp
         private readonly List<string> _codeListing = new List<string>();
         private readonly List<JasminModifier> _modifiers = new List<JasminModifier>();
         private readonly List<JasminFunctionModule> _functions = new List<JasminFunctionModule>();
+        private readonly List<JasminStaticVariable> _staticVariables = new List<JasminStaticVariable>();
+        
         
         public string Name { get; private set; }
         public string InheritsFrom { get; private set; }
@@ -44,6 +46,12 @@ namespace JasminSharp
             return this;
         }
 
+        public JasminClassModule WithStaticVariable(JasminStaticVariable jasminStaticVariable)
+        {
+            _staticVariables.Add(jasminStaticVariable);
+            return this;
+        }
+
         public IEnumerable<JasminModifier> Modifiers => _modifiers.ToList();
 
         public IEnumerable<string> GenerateListing()
@@ -54,6 +62,11 @@ namespace JasminSharp
             string inheritanceDeclaration = $"{JasminDirectives.Super} {InheritsFrom}";
             _codeListing.Add(inheritanceDeclaration);
 
+            _staticVariables.ForEach(variable =>
+            {
+                _codeListing.AddRange(variable.GenerateListing());
+            });
+            
             _functions.ForEach(function =>
             {
                 _codeListing.AddRange(function.GenerateListing());

@@ -65,8 +65,18 @@ namespace MathLang.CodeGeneration
         private static IEnumerable<IInstruction> GetVariableReferenceInstructions(this ExtendedId extendedId)
         {
             List<IInstruction> instructions = new List<IInstruction>();
-            instructions.Add(StatementInstructionsGeneration.GetLoadInstruction(extendedId.VariableDeclaration.ReturnType,
-                extendedId.VariableDeclaration.Index.Value));
+            if (extendedId.VariableDeclaration.IsStatic)
+            {
+                instructions.Add(Instructions.GetStaticInstruction
+                    .WithFieldName(extendedId.VariableDeclaration.FullName)
+                    .WithSignature(extendedId.ReturnType.ConvertToFullRepresentation()));
+            }
+            else
+            {
+                instructions.Add(StatementInstructionsGeneration.GetLoadInstruction(
+                    extendedId.VariableDeclaration.ReturnType,
+                    extendedId.VariableDeclaration.Index.Value));
+            }
             return instructions;
         }
 
@@ -236,7 +246,8 @@ namespace MathLang.CodeGeneration
             this ArrayElementReference arrayElementReference)
         {
             List<IInstruction> instructions = new List<IInstruction>();
-            instructions.Add(StatementInstructionsGeneration.GetLoadInstruction(arrayElementReference.ArrayDeclaration.ReturnType,
+            instructions.Add(StatementInstructionsGeneration.GetLoadInstruction(
+                arrayElementReference.ArrayDeclaration.ReturnType,
                 arrayElementReference.ArrayDeclaration.Index.Value));
             instructions.AddRange(arrayElementReference.ArrayIndex.GetInstructions());
             instructions.Add(StatementInstructionsGeneration.GetArrayLoadInstruction(arrayElementReference.ReturnType));

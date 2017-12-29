@@ -54,6 +54,7 @@
     <Compile Include="Instructions\LabelInstruction.cs" />
     <Compile Include="Instructions\MethodInvocationInstruction.cs" />
     <Compile Include="Instructions\NoArgumentInstruction.cs" />
+    <Compile Include="Instructions\TwoArgumentInstruction.cs" />
     <Compile Include="Instructions\TwoIntArgumentInstruction.cs" />
     <Compile Include="JasminException.cs" />
     <Compile Include="Helpers\Instructions.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Constanst\JasminDirectives.cs" />
     <Compile Include="Modules\JasminFunctionModule.cs" />
     <Compile Include="Modules\JasminFunctionParameter.cs" />
+    <Compile Include="Modules\JasminStaticVariable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

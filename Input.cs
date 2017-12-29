@@ -2,7 +2,7 @@
 {
     [JavaRef("Library/printString")]
     static extern void PrintString(string s);
-    
+
     [JavaRef("Library/printInt")]
     static extern void PrintInt(int i);
 
@@ -15,25 +15,31 @@
 
 class Main
 {
+    static int Valera = 22;
+
     static void Main(string[] args)
     {
+        Library.PrintInt(Valera);
         //int i = 0;
-        ////TestReturn(!true!=false);
         //while (i < 10)
         //{
         //    Library.PrintInt(i);
+        //    if(i ==10)
         //    return;
         //}
 
-        int l = 10;
-        int[] a = new int[l];
-        for (int i = 0; i < l; i = i + 1)
-            a[i] = l - i;
+        //int l = 10;
+        //int[] a = new int[l];
+        //for (i = 0; i < l; i = i + 1)
+        //{
+        //    a[i] = l - i;
+        //    Library.PrintInt(i);
+        //}
 
-        PrintIntArray(a, l);
-        BubbleSort(a, l);
-        Library.PrintString("Sorted:");
-        PrintIntArray(a, l);
+        //PrintIntArray(a, l);
+        //BubbleSort(a, l);
+        //Library.PrintString("Sorted:");
+        //PrintIntArray(a, l);
 
 
 
@@ -52,48 +58,48 @@ class Main
     //    }
     //    Library.PrintString("not returned");
     //}
-    
-    static void Swap(int[] arr, int a, int b)
-    {
-        int t = arr[a];
-        arr[a] = arr[b];
-        arr[b] = t;
-    }
 
-    static void BubbleSort(int[] a, int l)
-    {
-        for (int i = 0; i < l; i = i + 1)
-            for (int j = 0; j < l - 1; j = j + 1)
-                if (a[j] > a[j + 1])
-                    Swap(a, j, j + 1);
-    }
+    //static void Swap(int[] arr, int a, int b)
+    //{
+    //    int t = arr[a];
+    //    arr[a] = arr[b];
+    //    arr[b] = t;
+    //}
 
-    static void PrintIntArray(int[] arr, int lenght)
-    {
-        for (int i = 0; i < lenght; i = i + 1)
-        {
-            Library.PrintInt(arr[i]);
-        }
-    }
+    //static void BubbleSort(int[] a, int l)
+    //{
+    //    for (int i = 0; i < l; i = i + 1)
+    //        for (int j = 0; j < l - 1; j = j + 1)
+    //            if (a[j] > a[j + 1])
+    //                Swap(a, j, j + 1);
+    //}
 
-    static int Fibbonacchi(int n)
-    {
-        if (n > 2)
-        {
-            int i = Fibbonacchi(n - 1) + Fibbonacchi(n - 2);
-            //Library.PrintInt(i);
-            return i;
-        }
-        //Library.PrintInt(1);
-        return 1;
-    }
+    //static void PrintIntArray(int[] arr, int lenght)
+    //{
+    //    for (int i = 0; i < lenght; i = i + 1)
+    //    {
+    //        Library.PrintInt(arr[i]);
+    //    }
+    //}
 
-    static int Fact(int n)
-    {
-        if (n == 0)
-            return 1;
-        return n * Fact(n - 1);
-    }
+    //static int Fibbonacchi(int n)
+    //{
+    //    if (n > 2)
+    //    {
+    //        int i = Fibbonacchi(n - 1) + Fibbonacchi(n - 2);
+    //        //Library.PrintInt(i);
+    //        return i;
+    //    }
+    //    //Library.PrintInt(1);
+    //    return 1;
+    //}
+
+    //static int Fact(int n)
+    //{
+    //    if (n == 0)
+    //        return 1;
+    //    return n * Fact(n - 1);
+    //}
 
     //static void Compare(int a, int b)
     //{
@@ -134,13 +140,13 @@ class Main
     //}
 }
 
-static class Test
-{
-    static int GetAHundred()
-    {
-        return 100;
-    }
-}
+//static class Test
+//{
+//    static int GetAHundred()
+//    {
+//        return 100;
+//    }
+//}
 
 //static class ValeraTest
 //{

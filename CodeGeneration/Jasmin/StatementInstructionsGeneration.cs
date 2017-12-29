@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using JasminSharp;
+using MathLang.CodeGeneration.Helpers.Converters;
 using MathLang.Tree.Nodes.Declarations;
 using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Expressions;
@@ -78,9 +79,18 @@ namespace MathLang.CodeGeneration.JasminJava
         {
             List<IInstruction> instructions = new List<IInstruction>();
             instructions.AddRange(variableAssignment.AssignmentValue.GetInstructions());
-            instructions.Add(GetStoreInstruction(
-                variableAssignment.VariableName.VariableDeclaration.ReturnType,
-                variableAssignment.VariableName.VariableDeclaration.Index.Value));
+            if (variableAssignment.VariableName.VariableDeclaration.IsStatic)
+            {
+                instructions.Add(Instructions.PutStaticInstruction
+                    .WithFieldName(variableAssignment.VariableName.VariableDeclaration.FullName)
+                    .WithSignature(variableAssignment.VariableName.ReturnType.ConvertToFullRepresentation()));
+            }
+            else
+            {
+                instructions.Add(GetStoreInstruction(
+                    variableAssignment.VariableName.VariableDeclaration.ReturnType,
+                    variableAssignment.VariableName.VariableDeclaration.Index.Value));
+            }
             return instructions;
         }
 
@@ -88,11 +98,17 @@ namespace MathLang.CodeGeneration.JasminJava
             this VariableDeclaration variableDeclaration)
         {
             List<IInstruction> instructions = new List<IInstruction>();
-            if (variableDeclaration.IsStatic) throw new JasminException("static decl are not supported atm");
-            else if (variableDeclaration.Initialized)
+            if (variableDeclaration.Initialized)
             {
                 instructions.AddRange(variableDeclaration.Value.GetInstructions());
-                instructions.Add(GetStoreInstruction(variableDeclaration.ReturnType, variableDeclaration.Index.Value));
+
+                if (variableDeclaration.IsStatic)
+                    instructions.Add(Instructions.PutStaticInstruction
+                        .WithFieldName(variableDeclaration.FullName)
+                        .WithSignature(variableDeclaration.ReturnType.ConvertToFullRepresentation()));
+                else
+                    instructions.Add(GetStoreInstruction(variableDeclaration.ReturnType,
+                        variableDeclaration.Index.Value));
             }
             return instructions;
         }

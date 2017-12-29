@@ -21,9 +21,11 @@ namespace MathLang.Tree.Nodes.Declarations
         public int? Index { get; set; }
         public bool IsStatic => Index == null;
 
-        public IExpression Value {
+        public IExpression Value
+        {
             get { return _value; }
-            set {
+            set
+            {
                 _value = value;
                 Initialized = true;
             }
@@ -31,6 +33,10 @@ namespace MathLang.Tree.Nodes.Declarations
 
         //This may be useful for semantics
         public bool Initialized { get; protected set; }
+
+        public string FullName => IsStatic 
+            ? $"{Parent.CastTo<ClassDeclaration>().Name}/{Name}" 
+            : Name;
 
         public VariableDeclaration(INode parent, Scope parentScope)
         {
