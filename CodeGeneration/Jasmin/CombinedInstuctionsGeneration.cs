@@ -36,7 +36,8 @@ namespace MathLang.CodeGeneration
                     .RemoveFirstAndLastCharacters();
                 invokestaticInstruction invokestaticInstruction = InvokestaticInstruction
                     .WithMethodFullName(externName)
-                    .WithReturnType(ReturnTypeToJavaConverter.ConvertToFullRepresentation(functionDeclaration.ReturnType));
+                    .WithReturnType(
+                        ReturnTypeToJavaConverter.ConvertToFullRepresentation(functionDeclaration.ReturnType));
                 functionDeclaration
                     .ParameterNodes
                     .Select(parameter => ReturnTypeToJavaConverter.ConvertToFullRepresentation(parameter.ReturnType))
@@ -52,7 +53,7 @@ namespace MathLang.CodeGeneration
                 //else
                 //    correctedName = $"{splittedName[0]}/{splittedName[1].ToCamelCase()}";
                 invokestaticInstruction invokestaticInstruction = InvokestaticInstruction
-                    .WithMethodFullName(/*correctedName*/functionCall.FunctionDeclaration.FullName)
+                    .WithMethodFullName( /*correctedName*/functionCall.FunctionDeclaration.FullName)
                     .WithReturnType(ReturnTypeToJavaConverter.ConvertToFullRepresentation(functionCall.ReturnType));
                 functionDeclaration
                     .ParameterNodes
@@ -63,9 +64,15 @@ namespace MathLang.CodeGeneration
             return instructions;
         }
 
-        public static IIndexedInstruction GetStoreInstruction(ReturnType returnType, int index)
+        public static IInstruction GetStoreInstruction(VariableDeclaration variableDeclaration)
         {
-            switch (returnType)
+            if (variableDeclaration.IsStatic)
+            {
+                return Instructions.PutStaticInstruction.WithFieldName(variableDeclaration.Name)
+                    .WithSignature(variableDeclaration.ReturnType.ConvertToFullRepresentation());
+            }
+            int index = variableDeclaration.Index.Value;
+            switch (variableDeclaration.ReturnType)
             {
                 case BoolReturnType boolReturnType:
                     return IstoreInstruction.WithIndex(index);
@@ -82,9 +89,13 @@ namespace MathLang.CodeGeneration
             }
         }
 
-        public static IIndexedInstruction GetLoadInstruction(ReturnType returnType, int index)
+        public static IInstruction GetLoadInstruction(VariableDeclaration variableDeclaration)
         {
-            switch (returnType)
+            if (variableDeclaration.IsStatic)
+                return Instructions.GetStaticInstruction.WithFieldName(variableDeclaration.FullName)
+                    .WithSignature(variableDeclaration.ReturnType.ConvertToFullRepresentation());
+            int index = variableDeclaration.Index.Value;
+            switch (variableDeclaration.ReturnType)
             {
                 case BoolReturnType boolReturnType:
                     return IloadInstruction.WithIndex(index);

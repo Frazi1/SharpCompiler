@@ -80,18 +80,7 @@ namespace MathLang.CodeGeneration.JasminJava
         {
             List<IInstruction> instructions = new List<IInstruction>();
             instructions.AddRange(variableAssignment.AssignmentValue.GetInstructions());
-            if (variableAssignment.VariableName.VariableDeclaration.IsStatic)
-            {
-                instructions.Add(Instructions.PutStaticInstruction
-                    .WithFieldName(variableAssignment.VariableName.VariableDeclaration.FullName)
-                    .WithSignature(variableAssignment.VariableName.ReturnType.ConvertToFullRepresentation()));
-            }
-            else
-            {
-                instructions.Add(GetStoreInstruction(
-                    variableAssignment.VariableName.VariableDeclaration.ReturnType,
-                    variableAssignment.VariableName.VariableDeclaration.Index.Value));
-            }
+            instructions.Add(GetStoreInstruction(variableAssignment.VariableName.VariableDeclaration));
             return instructions;
         }
 
@@ -102,27 +91,17 @@ namespace MathLang.CodeGeneration.JasminJava
             if (variableDeclaration.Initialized)
             {
                 instructions.AddRange(variableDeclaration.Value.GetInstructions());
-
-                if (variableDeclaration.IsStatic)
-                    instructions.Add(Instructions.PutStaticInstruction
-                        .WithFieldName(variableDeclaration.FullName)
-                        .WithSignature(variableDeclaration.ReturnType.ConvertToFullRepresentation()));
-                else
-                    instructions.Add(GetStoreInstruction(variableDeclaration.ReturnType,
-                        variableDeclaration.Index.Value));
+                instructions.Add(GetStoreInstruction(variableDeclaration));
             }
             return instructions;
         }
 
- 
 
         private static IEnumerable<IInstruction> GetArrayElementAssignmentInstructions(
             this ArrayElementAssignment arrayElementAssignment)
         {
             List<IInstruction> instructions = new List<IInstruction>();
-            instructions.Add(GetLoadInstruction(
-                arrayElementAssignment.ArrayElementReference.ArrayDeclaration.ReturnType,
-                arrayElementAssignment.ArrayElementReference.ArrayDeclaration.Index.Value));
+            instructions.Add(GetLoadInstruction(arrayElementAssignment.ArrayElementReference.ArrayDeclaration));
             instructions.AddRange(arrayElementAssignment.ArrayElementReference.ArrayIndex.GetInstructions());
             instructions.AddRange(arrayElementAssignment.AssignmentExpression.GetInstructions());
             instructions.Add(GetArrayStoreInstruction(arrayElementAssignment.AssignmentExpression.ReturnType));
