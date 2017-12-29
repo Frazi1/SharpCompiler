@@ -19,6 +19,7 @@ class Main
 
     static void Main(string[] args)
     {
+        Valera = 13;
         Library.PrintInt(Valera);
         //int i = 0;
         //while (i < 10)

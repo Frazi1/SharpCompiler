@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using JasminSharp;
 using MathLang.CodeGeneration.Helpers.Converters;
 using MathLang.CodeGeneration.JasminJava;
@@ -92,15 +93,21 @@ namespace MathLang.CodeGeneration
         {
             if (!variableDeclaration.IsStatic)
                 throw new Exception($"{variableDeclaration} is not static!");
+
             JasminModifier modifier = JasminModifier.Public;
             if (variableDeclaration.IsStatic)
                 modifier |= JasminModifier.Static;
-           
+
+            var fieldInitializationInstructions = variableDeclaration.Value.GetInstructions().ToList();
+            fieldInitializationInstructions.Add(Instructions.PutStaticInstruction
+                .WithFieldName(variableDeclaration.FullName)
+                .WithSignature(variableDeclaration.ReturnType.ConvertToFullRepresentation()));
+
             JasminField jasminField = new JasminField()
                 .WithName(variableDeclaration.Name)
                 .WithSignature(variableDeclaration.ReturnType.ConvertToFullRepresentation())
                 .WithModifier(modifier)
-                .WithValue(variableDeclaration.Value.GetInstructions());
+                .WithValue(fieldInitializationInstructions);
             return jasminField;
         }
 

@@ -10,7 +10,7 @@ namespace MathLang.Extensions
         public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
         {
             foreach (T item in enumerable)
-                action(item);
+                    action(item);
         }
 
         public static void ReverseForEach<T>(this IEnumerable<T> enumerable, Action<T> action)

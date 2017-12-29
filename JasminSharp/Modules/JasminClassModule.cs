@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using JasminSharp.Helpers;
+using MathLang.CodeGeneration;
 
 namespace JasminSharp
 {
@@ -75,11 +76,13 @@ namespace JasminSharp
 
         private void AddStaticInitializer()
         {
-            JasminFunctionModule staticInitializer = new JasminFunctionModule().WithModifiers(JasminModifier.Static)
+            JasminFunctionModule staticInitializer = new JasminFunctionModule()
+                .WithModifiers(JasminModifier.Static)
                 .WithName(JasminReferenceConstants.MethodClInit)
                 .WithReturnType(JasminReferenceConstants.JavaVoidPrimitive);
             StaticFields.Where(field => field.IsInitialized)
                 .ForEach(field => { staticInitializer.WithInstructions(field.ValueInstructions); });
+            staticInitializer.WithInstructions(Instructions.ReturnInstruction);
             _functions.Add(staticInitializer);
         }
 
