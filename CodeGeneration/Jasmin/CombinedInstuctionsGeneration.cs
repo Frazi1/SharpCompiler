@@ -68,7 +68,7 @@ namespace MathLang.CodeGeneration
         {
             if (variableDeclaration.IsStatic)
             {
-                return Instructions.PutStaticInstruction.WithFieldName(variableDeclaration.Name)
+                return Instructions.PutStaticInstruction.WithFieldName(variableDeclaration.FullName)
                     .WithSignature(variableDeclaration.ReturnType.ConvertToFullRepresentation());
             }
             int index = variableDeclaration.Index.Value;

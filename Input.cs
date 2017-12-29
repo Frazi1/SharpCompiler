@@ -16,11 +16,19 @@
 class Main
 {
     static int Valera = 22;
-
+    static string[] Strs = new string[3];
+    
     static void Main(string[] args)
     {
+        Strs[0] = "Privet";
+        Strs[1] = "Valera";
+        Strs[2] = "Girl";
         Valera = 13;
         Library.PrintInt(Valera);
+        for (int i = 0; i < 3; i=i+1)
+        {
+            Library.PrintString(Strs[i]);
+        }
         //int i = 0;
         //while (i < 10)
         //{
