@@ -42,13 +42,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AstNodePrinter.cs" />
+    <Compile Include="Helpers\AstNodePrinter.cs" />
     <Compile Include="CodeGeneration\Helpers\Converters\ReturnTypeToJavaConverter.cs" />
     <Compile Include="CodeGeneration\Jasmin\CombinedInstuctionsGeneration.cs" />
     <Compile Include="CodeGeneration\Jasmin\ExpressionInstructionsGeneration.cs" />
     <Compile Include="CodeGeneration\Jasmin\JasminCodeGenerator.cs" />
     <Compile Include="CodeGeneration\Jasmin\StatementInstructionsGeneration.cs" />
-    <Compile Include="ErrorService.cs" />
+    <Compile Include="Helpers\ErrorService.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Extensions\TreeConsolePrinter.cs" />
     <Compile Include="Helpers\FilePrinter.cs" />
@@ -162,13 +162,14 @@
     <RebuildDependsOn>CleanAntlrCode;$(RebuildDependsOn)</RebuildDependsOn>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>del ..\..\RunScripts\* -Q
+    <PostBuildEvent>del ..\..\RunScripts\* /Q
 xcopy  *.exe ..\..\RunScripts\
 xcopy  *.dll ..\..\RunScripts\</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>del ..\..\RunScripts\* /Q
+xcopy  *.exe ..\..\RunScripts\
+xcopy  *.dll ..\..\RunScripts\</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
