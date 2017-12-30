@@ -144,6 +144,9 @@
   <PropertyGroup>
     <JavaHome>C:\Program_Files\Java\jdk7</JavaHome>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+  </PropertyGroup>
   <Target Name="GenerateAntlrCode" Inputs="@(AntlrGrammarFile)" Outputs="$(AntlrLexerFile);$(AntlrParserFile)">
     <Exec Command="&quot;$(JavaHome)\bin\java&quot; -classpath antlr\java\antlr-3.3-complete.jar org.antlr.Tool -message-format vs2005 @(AntlrGrammarFile)" />
     <!--Exec Command="&quot;antlr\.net\antlr3.exe&quot; -message-format vs2005 @(AntlrGrammarFile)" /-->
@@ -157,6 +160,15 @@
   </PropertyGroup>
   <PropertyGroup>
     <RebuildDependsOn>CleanAntlrCode;$(RebuildDependsOn)</RebuildDependsOn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>del ..\..\RunScripts\* -Q
+xcopy  *.exe ..\..\RunScripts\
+xcopy  *.dll ..\..\RunScripts\</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

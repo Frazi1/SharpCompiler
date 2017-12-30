@@ -13,7 +13,7 @@ namespace MathLang
     {
         // "�������������������" ������ ��� ����� (� ������������ ������)
         public static readonly NumberFormatInfo NFI = new NumberFormatInfo();
-        
+
         public static void Main(string[] args)
         {
             try
@@ -49,7 +49,7 @@ namespace MathLang
                 generator.SaveFiles();
                 //Helpers.FilePrinter.WriteTextToFile(generator.CodeListing, "output.j");
                 //Console.WriteLine(generator.CodeListing);
-                RunJasminBuildScript();
+                //RunJasminBuildScript();
             }
             catch (Exception e)
             {
@@ -59,7 +59,7 @@ namespace MathLang
         }
         static int Fibbonacchi(int n)
         {
-            return n > 1 ? Fibbonacchi(n - 1) + Fibbonacchi(n - 2):n;
+            return n > 1 ? Fibbonacchi(n - 1) + Fibbonacchi(n - 2) : n;
         }
 
         private static void RunJasminBuildScript()
