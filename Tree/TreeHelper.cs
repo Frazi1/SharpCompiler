@@ -26,13 +26,20 @@ namespace MathLang.Tree
                 case "char": return ReturnType.Char;
                 case "void": return ReturnType.Void;
                 case "string": return ReturnType.String;
-                default: throw new ArgumentException(nameof(type));
+                default: return ReturnType.CustomType(type);
             }
         }
 
         public static string GetStringTypeFromSyntaxNode(CommonTree syntaxReturnType)
         {
-            return String.Concat(syntaxReturnType.Children.Select(t => t.Text));
+            if (syntaxReturnType.GetChild(0).Type == EXTENDED_ID)
+            {
+                return string.Concat(syntaxReturnType.GetChild(0)
+                    .CastTo<CommonTree>()
+                    .Children
+                    .Select(t => t.Text));
+            }
+            return string.Concat(syntaxReturnType.Children.Select(t => t.Text));
         }
 
         public static ExpressionType GetExpressionType(int type)
@@ -56,6 +63,7 @@ namespace MathLang.Tree
                 case VARDECLARATION: return ExpressionType.VariableDeclaration;
                 case ID: return ExpressionType.VariableReference;
                 case ARRAYELEMENT: return ExpressionType.ArrayElementReference;
+                case NEWVAR: return ExpressionType.NewVar;
                 default: throw new ArgumentException(nameof(type));
             }
         }
@@ -178,6 +186,7 @@ namespace MathLang.Tree
                    || et == ExpressionType.Less
                    || et == ExpressionType.Not;
         }
+
         //public static bool 
     }
 }

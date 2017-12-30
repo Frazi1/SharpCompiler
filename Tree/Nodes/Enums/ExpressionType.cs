@@ -19,6 +19,7 @@
         FunctionCall,
         VariableDeclaration,
         VariableReference,
-        ArrayElementReference
+        ArrayElementReference,
+        NewVar
     }
 }

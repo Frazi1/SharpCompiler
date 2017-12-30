@@ -46,6 +46,7 @@ tokens {
   FUNCTION_BODY;
   ATTRIBUTES;
   ATTRIBUTE_USAGE;
+  NAMESPACE_DECLARATION;
 }
 
 
@@ -74,8 +75,12 @@ tokens {
  */
 
 public execute:
-	class_list EOF!  -> ^(PROGRAM class_list) 
+	class_list -> ^(PROGRAM ^(NAMESPACE_DECLARATION) class_list) |
+	namespace_declaration -> ^(PROGRAM namespace_declaration)
+	EOF!
 ;
+
+namespace_declaration: NAMESPACE extended_id OPEN_CURLY_BRACE class_list? CLOSE_CURLY_BRACE -> ^(NAMESPACE_DECLARATION extended_id class_list?); 
 modifiers: MODIFIER* -> ^(MODIFIERS MODIFIER*);
 
 class_declaration: modifiers CLASS_WORD ID class_block -> ^(CLASS_WORD ID modifiers class_block) ;
@@ -100,7 +105,7 @@ statement: ( declaration
 	| emptystatement
 	 ) ;
 
-type: array_type | TYPE ;
+type: array_type | type | extended_id ;
 array_type: t+=TYPE t+=ARRAY_DECLARATION_MARK ;
 any_type: array_type | type | VOID;
 number :  NUMBER
@@ -118,7 +123,7 @@ expression:
 		| mathexpression
 	//	| funccallbody
 ;
-extended_id: ID (DOT! ID)? -> ^(EXTENDED_ID ID ID?);
+extended_id: ID (DOT ID)* -> ^(EXTENDED_ID ID*);
 
 arrayelement:  extended_id OPEN_SQUARE_BRACE mathexpression CLOSE_SQUARE_BRACE -> ^(ARRAYELEMENT extended_id mathexpression) ;
 static_declaration:  MODIFIER declaration -> ^(STATIC_DECLARATION declaration);
@@ -206,6 +211,9 @@ OPEN_SQUARE_BRACE:'[';
 CLOSE_SQUARE_BRACE:']';
 OPEN_BRACE: '(';
 CLOSE_BRACE: ')';
+OPEN_CURLY_BRACE: '{';
+CLOSE_CURLY_BRACE : '}';
+
 TYPE: 'int' 
 	| 'bool'
 	| 'char'
@@ -236,8 +244,10 @@ WS:
     $channel=Hidden;
   }
 ;
+USING: 'using';
+NAMESPACE: 'namespace';
 DOT: '.';
-MODIFIER: 'static' | 'public' | 'extern';
+MODIFIER: 'static' | 'public' | 'extern' | 'private' | 'protected' | 'internal';
 //CHAR:  '\''('a'..'z')'\'' ;
 ID:		( 'a'..'z' | 'A'..'Z' | '_' )
         ( 'a'..'z' | 'A'..'Z' | '_' | '0'..'9' )*

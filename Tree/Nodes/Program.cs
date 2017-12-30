@@ -24,7 +24,8 @@ namespace MathLang.Tree.Nodes
         public void Construct(CommonTree syntaxProgram)
         {
             if(syntaxProgram.ChildCount == 0) return;
-            syntaxProgram.Children
+            // 1 - Namespace
+            syntaxProgram.Children.Skip(1)
                 .Cast<CommonTree>()
                 .ForEach(syntaxClass =>
                 {

@@ -27,6 +27,7 @@
         public static VoidReturnType Void => new VoidReturnType();
         public static ArrayReturnType ArrayOf(ReturnType returnType) => new ArrayReturnType(returnType);
         public static StringReturnType String => new StringReturnType();
+        public static CustomReturnType CustomType(string name) => new CustomReturnType(name);
         
         protected bool Equals(ReturnType other)
         {
@@ -135,6 +136,13 @@
     {
         public StringReturnType() 
             : base("String")
+        {
+        }
+    }
+    
+    public sealed class CustomReturnType : SimpleReturnType
+    {
+        public CustomReturnType(string name) : base(name)
         {
         }
     }

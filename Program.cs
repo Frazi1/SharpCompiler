@@ -11,9 +11,6 @@ namespace MathLang
 {
     public class Program
     {
-        // "�������������������" ������ ��� ����� (� ������������ ������)
-        public static readonly NumberFormatInfo NFI = new NumberFormatInfo();
-        
         public static void Main(string[] args)
         {
             try
@@ -39,17 +36,17 @@ namespace MathLang
                 astProgram.Construct(program.CastTo<CommonTree>());
                 SemanticsRunner.Run(astProgram);
 
-                TreeConsolePrinter tp = new TreeConsolePrinter();
-                tp.Print(astProgram);
+                //TreeConsolePrinter tp = new TreeConsolePrinter();
+                //tp.Print(astProgram);
 
 
 
-                JasminCodeGenerator generator = new JasminCodeGenerator();
-                generator.GenerateCode(astProgram);
-                generator.SaveFiles();
-                //Helpers.FilePrinter.WriteTextToFile(generator.CodeListing, "output.j");
-                //Console.WriteLine(generator.CodeListing);
-                RunJasminBuildScript();
+                //JasminCodeGenerator generator = new JasminCodeGenerator();
+                //generator.GenerateCode(astProgram);
+                //generator.SaveFiles();
+                ////Helpers.FilePrinter.WriteTextToFile(generator.CodeListing, "output.j");
+                ////Console.WriteLine(generator.CodeListing);
+                //RunJasminBuildScript();
             }
             catch (Exception e)
             {

@@ -13,3 +13,8 @@
         //    static extern void PrintChar(char c);
         //}
     }
+
+    class Mamasha
+    {
+        static Mamasha[] a = new Mamasha();
+    }
