@@ -42,17 +42,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AstNodePrinter.cs" />
+    <Compile Include="Helpers\AstNodePrinter.cs" />
     <Compile Include="CodeGeneration\Helpers\Converters\ReturnTypeToJavaConverter.cs" />
     <Compile Include="CodeGeneration\Jasmin\CombinedInstuctionsGeneration.cs" />
     <Compile Include="CodeGeneration\Jasmin\ExpressionInstructionsGeneration.cs" />
     <Compile Include="CodeGeneration\Jasmin\JasminCodeGenerator.cs" />
     <Compile Include="CodeGeneration\Jasmin\StatementInstructionsGeneration.cs" />
-    <Compile Include="ErrorService.cs" />
+    <Compile Include="Helpers\ErrorService.cs" />
     <Compile Include="Extensions\Extensions.cs" />
-    <Compile Include="Extensions\TreeConsolePrinter.cs" />
     <Compile Include="Helpers\FilePrinter.cs" />
+    <Compile Include="Helpers\TreeConsolePrinter.cs" />
     <Compile Include="Program.cs" />
+    <None Include="RunScripts\output\Input.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="RunScripts\output\Library.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Compile Include="Tree\Nodes\AttributeUsage.cs" />
     <Compile Include="Tree\Nodes\Declarations\AttributeDeclaration.cs" />
     <Compile Include="Tree\Nodes\Declarations\FunctionVariableDeclarationParameter.cs" />
@@ -103,9 +109,11 @@
     <Compile Include="Tree\TreeHelper.cs" />
     <Compile Include="Tree\Nodes\Statements\VariableAssignment.cs" />
     <Compile Include="Tree\Nodes\Statements\WhileStatement.cs" />
+    <None Include="RunScripts\output\TestClass.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Input.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -134,6 +142,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>@(AntlrGrammarFile)</DependentUpon>
     </Content>
+    <Content Include="RunScripts\Antlr3.Runtime.dll" />
+    <Content Include="RunScripts\JasminSharp.dll" />
+    <Content Include="RunScripts\jasmin_build.bat" />
+    <Content Include="RunScripts\Library.class" />
+    <Content Include="RunScripts\MathLang.exe" />
+    <Content Include="RunScripts\System.ValueTuple.dll" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="JasminSharp\JasminSharp.csproj">
@@ -143,6 +157,9 @@
   </ItemGroup>
   <PropertyGroup>
     <JavaHome>C:\Program_Files\Java\jdk7</JavaHome>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
   <Target Name="GenerateAntlrCode" Inputs="@(AntlrGrammarFile)" Outputs="$(AntlrLexerFile);$(AntlrParserFile)">
     <Exec Command="&quot;$(JavaHome)\bin\java&quot; -classpath antlr\java\antlr-3.3-complete.jar org.antlr.Tool -message-format vs2005 @(AntlrGrammarFile)" />
@@ -157,6 +174,14 @@
   </PropertyGroup>
   <PropertyGroup>
     <RebuildDependsOn>CleanAntlrCode;$(RebuildDependsOn)</RebuildDependsOn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>xcopy  *.exe ..\..\RunScripts\ /Y
+xcopy  *.dll ..\..\RunScripts\ /Y</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>xcopy  *.exe ..\..\RunScripts\ /Y
+xcopy  *.dll ..\..\RunScripts\ /Y</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
