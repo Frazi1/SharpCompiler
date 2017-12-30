@@ -75,8 +75,8 @@ tokens {
  */
 
 public execute:
-	class_list -> ^(PROGRAM ^(NAMESPACE_DECLARATION) class_list) |
-	namespace_declaration -> ^(PROGRAM namespace_declaration)
+	class_list? -> ^(PROGRAM ^(NAMESPACE_DECLARATION) class_list?) |
+	namespace_declaration? -> ^(PROGRAM namespace_declaration?)
 	EOF!
 ;
 
