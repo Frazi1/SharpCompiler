@@ -105,8 +105,8 @@ statement: ( declaration
 	| emptystatement
 	 ) ;
 
-type: array_type | type | extended_id ;
-array_type: t+=TYPE t+=ARRAY_DECLARATION_MARK ;
+type: array_type | TYPE | extended_id ;
+array_type: (TYPE | extended_id) ARRAY_DECLARATION_MARK ;
 any_type: array_type | type | VOID;
 number :  NUMBER
 		| extended_id
