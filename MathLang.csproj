@@ -176,14 +176,12 @@
     <RebuildDependsOn>CleanAntlrCode;$(RebuildDependsOn)</RebuildDependsOn>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>del ..\..\RunScripts\* /Q
-xcopy  *.exe ..\..\RunScripts\
-xcopy  *.dll ..\..\RunScripts\</PostBuildEvent>
+    <PostBuildEvent>xcopy  *.exe ..\..\RunScripts\ /Y
+xcopy  *.dll ..\..\RunScripts\ /Y</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>del ..\..\RunScripts\* /Q
-xcopy  *.exe ..\..\RunScripts\
-xcopy  *.dll ..\..\RunScripts\</PreBuildEvent>
+    <PreBuildEvent>xcopy  *.exe ..\..\RunScripts\ /Y
+xcopy  *.dll ..\..\RunScripts\ /Y</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
