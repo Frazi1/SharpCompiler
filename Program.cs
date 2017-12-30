@@ -43,7 +43,7 @@ namespace MathLang
                 generator.SaveFiles();
                 //Helpers.FilePrinter.WriteTextToFile(generator.CodeListing, "output.j");
                 //Console.WriteLine(generator.CodeListing);
-                RunJasminBuildScript();
+//                RunJasminBuildScript();
             }
             catch (Exception e)
             {
@@ -62,8 +62,10 @@ namespace MathLang
             System.Diagnostics.Process process = new System.Diagnostics.Process();
             System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
             startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            startInfo.FileName = "jasmin_build.bat";
-            //startInfo.Arguments = "/C copy /b Image1.jpg + Archive.rar Image2.jpg";
+//            startInfo.FileName = "jasmin_build.bat";
+            startInfo.FileName = "java";
+//            startInfo.Arguments = "/C copy /b Image1.jpg + Archive.rar Image2.jpg";
+            startInfo.Arguments = "-jar %JASMIN_PATH% *.j >jasmin_buildlog.txt 2>&1";
             process.StartInfo = startInfo;
             process.Start();
         }

@@ -17,7 +17,7 @@ namespace JasminSharp
         public string InheritsFrom { get; private set; }
         public JasminModifier Modifier { get; private set; }
 
-        public JasminClassModule(string name, string inheritsFrom = JasminReferenceConstants.JavaObjectClassFull)
+        public JasminClassModule(string name, string inheritsFrom = JasminReferenceConstants.JavaObjectClassShort)
         {
             Name = name;
             InheritsFrom = inheritsFrom;
