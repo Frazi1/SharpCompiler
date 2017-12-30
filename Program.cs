@@ -11,45 +11,39 @@ namespace MathLang
 {
     public class Program
     {
-        // "�������������������" ������ ��� ����� (� ������������ ������)
-        public static readonly NumberFormatInfo NFI = new NumberFormatInfo();
-
         public static void Main(string[] args)
         {
+            var astProgram = new Tree.Nodes.Program();
             try
             {
-                // � ����������� �� ������� ���������� ��������� ������ ���������
-                // ���� ���� � ������, ���������� ������ ����������, ���� ����������� ����
-                ICharStream input = args.Length == 1 ? (ICharStream)new ANTLRFileStream(args[0])
-                                                     : (ICharStream)new ANTLRReaderStream(Console.In);
-                MathLangLexer lexer = new MathLangLexer(input);
-                CommonTokenStream tokens = new CommonTokenStream(lexer);
-                MathLangParser parser = new MathLangParser(tokens);
-                ITree program = (ITree)parser.execute().Tree;
-
-                AstNodePrinter.Print(program);
-
-                if (ErrorService.Instance.HasErrors)
+                args.ForEach(arg =>
                 {
-                    ErrorService.Instance.PrintErrorsToConsole();
-                    return;
-                }
+                    ICharStream input = new ANTLRFileStream(arg);
+                    MathLangLexer lexer = new MathLangLexer(input);
+                    CommonTokenStream tokens = new CommonTokenStream(lexer);
+                    MathLangParser parser = new MathLangParser(tokens);
+                    ITree program = (ITree) parser.execute().Tree;
+                    AstNodePrinter.Print(program);
+                    
+                    if (ErrorService.Instance.HasErrors)
+                    {
+                        ErrorService.Instance.PrintErrorsToConsole();
+                    }
+                    astProgram.Construct(program.CastTo<CommonTree>());
+                });                
+                
                 //AST
-                Tree.Nodes.Program astProgram = new Tree.Nodes.Program();
-                astProgram.Construct(program.CastTo<CommonTree>());
                 SemanticsRunner.Run(astProgram);
 
                 TreeConsolePrinter tp = new TreeConsolePrinter();
                 tp.Print(astProgram);
-
-
 
                 JasminCodeGenerator generator = new JasminCodeGenerator();
                 generator.GenerateCode(astProgram);
                 generator.SaveFiles();
                 //Helpers.FilePrinter.WriteTextToFile(generator.CodeListing, "output.j");
                 //Console.WriteLine(generator.CodeListing);
-                //RunJasminBuildScript();
+                RunJasminBuildScript();
             }
             catch (Exception e)
             {
@@ -57,6 +51,7 @@ namespace MathLang
             }
             Console.ReadLine();
         }
+
         static int Fibbonacchi(int n)
         {
             return n > 1 ? Fibbonacchi(n - 1) + Fibbonacchi(n - 2) : n;

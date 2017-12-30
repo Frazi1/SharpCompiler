@@ -50,9 +50,10 @@
     <Compile Include="CodeGeneration\Jasmin\StatementInstructionsGeneration.cs" />
     <Compile Include="Helpers\ErrorService.cs" />
     <Compile Include="Extensions\Extensions.cs" />
-    <Compile Include="Extensions\TreeConsolePrinter.cs" />
     <Compile Include="Helpers\FilePrinter.cs" />
+    <Compile Include="Helpers\TreeConsolePrinter.cs" />
     <Compile Include="Program.cs" />
+    <None Include="TestClass.cs" />
     <Compile Include="Tree\Nodes\AttributeUsage.cs" />
     <Compile Include="Tree\Nodes\Declarations\AttributeDeclaration.cs" />
     <Compile Include="Tree\Nodes\Declarations\FunctionVariableDeclarationParameter.cs" />
