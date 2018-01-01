@@ -144,7 +144,9 @@
     </Content>
     <Content Include="RunScripts\Antlr3.Runtime.dll" />
     <Content Include="RunScripts\JasminSharp.dll" />
-    <Content Include="RunScripts\jasmin_build.bat" />
+    <Content Include="RunScripts\jasmin_build.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="RunScripts\Library.class" />
     <Content Include="RunScripts\MathLang.exe" />
     <Content Include="RunScripts\System.ValueTuple.dll" />
