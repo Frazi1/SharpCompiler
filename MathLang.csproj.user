@@ -12,7 +12,7 @@
     <ErrorReportUrlHistory />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <StartArguments>RunScripts/output/%2a.cs</StartArguments>
+    <StartArguments>RunScripts/output/Input.cs</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <StartArguments>RunScripts/output/Input.cs RunScripts/output/TestClass.cs RunScripts/output/Library.cs</StartArguments>
