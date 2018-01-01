@@ -13,14 +13,16 @@ namespace MathLang.Tree.Nodes.Declarations
 
         public INode Parent { get; set; }
         public Scope Scope { get; }
-        public bool IsConstructed { get; private set; }
+
+        public bool IsConstructed { get; protected set; }
 
         public string Name { get; set; }
         public ReturnType ReturnType { get; set; }
+        public Modifier Modifier { get; private set; }
 
+        public bool IsField { get; protected set; }
         public int? Index { get; set; }
-        public bool IsStatic => Index == null;
-
+        public bool IsStatic => Modifier.HasFlag(Modifier.Static);
         public IExpression Value
         {
             get { return _value; }
@@ -34,7 +36,7 @@ namespace MathLang.Tree.Nodes.Declarations
         //This may be useful for semantics
         public bool Initialized { get; protected set; }
 
-        public string FullName => IsStatic 
+        public string FullName => IsField 
             ? $"{Parent.CastTo<ClassDeclaration>().Name}/{Name}" 
             : Name;
 
@@ -46,14 +48,21 @@ namespace MathLang.Tree.Nodes.Declarations
 
         public virtual void Construct(CommonTree syntaxVariableDeclaration)
         {
+            Construct(syntaxVariableDeclaration, false);
+        }
+        public virtual void Construct(CommonTree syntaxVariableDeclaration, bool isField)
+        {
             if (IsConstructed) throw new InvalidOperationException("Variable already constructed-");
-            var syntaxReturnType = syntaxVariableDeclaration.GetChild(0).CastTo<CommonTree>();
+            IsField = isField;
+            var syntaxModifiers = syntaxVariableDeclaration.GetChild(0).CastTo<CommonTree>();
+            Modifier = TreeHelper.GetModifiersFromSyntaxModifiersNode(syntaxModifiers);
+            var syntaxReturnType = syntaxVariableDeclaration.GetChild(1).CastTo<CommonTree>();
             ReturnType = TreeHelper.GetReturnType(TreeHelper.GetStringTypeFromSyntaxNode(syntaxReturnType));
-            Name = syntaxVariableDeclaration.GetChild(1).Text;
+            Name = syntaxVariableDeclaration.GetChild(2).Text;
             //Check if we have a value assigned to the variable
-            if (syntaxVariableDeclaration.ChildCount > 2)
+            if (syntaxVariableDeclaration.ChildCount > 3)
             {
-                var syntaxValueExpression = syntaxVariableDeclaration.GetChild(2).CastTo<CommonTree>();
+                var syntaxValueExpression = syntaxVariableDeclaration.GetChild(3).CastTo<CommonTree>();
                 Value = TreeHelper.GetExpression(this, Scope, syntaxValueExpression);
                 Value.Construct(syntaxValueExpression);
             }

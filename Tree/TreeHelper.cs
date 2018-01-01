@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Antlr.Runtime.Tree;
 using MathLang.Extensions;
+using MathLang.Tree.Nodes;
 using MathLang.Tree.Nodes.Declarations;
 using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Expressions;
@@ -185,6 +186,36 @@ namespace MathLang.Tree
                    || et == ExpressionType.Greater
                    || et == ExpressionType.Less
                    || et == ExpressionType.Not;
+        }
+
+        public static Modifier GetModifiersFromSyntaxModifiersNode(CommonTree syntaxModifiers)
+        {
+            Modifier result = Modifier.None;
+            if (syntaxModifiers.ChildCount <= 0) return result;
+            syntaxModifiers.Children.ForEach(mod =>
+            {
+                switch (mod.Text)
+                {
+                    case Modifiers.Extern:
+                        result |= Modifier.Extern;
+                        break;
+                    case Modifiers.Static:
+                        result |= Modifier.Static;
+                        break;
+                    case Modifiers.Private:
+                        result |= Modifier.Private;
+                        break;
+                    case Modifiers.Public:
+                        result |= Modifier.Public;
+                        break;
+                    case Modifiers.Protected:
+                        result |= Modifier.Protected;
+                        break;
+                    default:
+                        throw new Exception($"Modifier {mod.Text} is not defined");
+                }
+            });
+            return result;
         }
 
         //public static bool 

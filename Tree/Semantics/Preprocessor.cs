@@ -48,15 +48,12 @@ namespace MathLang.Tree.Semantics
             if (duplicatedModifiers.Any())
                 throw new ScopeException($"Modifier {duplicatedModifiers.First()} was specified more than once");
 
-            classDeclaration.ModifiersList.ForEach(modifier =>
-            {
-                if (modifier == Modifier.Static) classDeclaration.IsStatic = true;
-                if (modifier == Modifier.Extern) classDeclaration.IsExtern = true;
-            });
+//            classDeclaration.ModifiersList.ForEach(modifier =>
+//            {
+//                if (modifier == Modifier.Static) classDeclaration.IsStatic = true;
+//                if (modifier == Modifier.Extern) classDeclaration.IsExtern = true;
+//            });
 
-                if (!classDeclaration.IsStatic && !classDeclaration.IsAttribute)
-                    throw new ScopeException(
-                        $"Only static classes are supported at the moment ({classDeclaration.Name})");
             classDeclaration.FunctionDeclarationNodes
                 .ForEach(functionDeclaration =>
                 {
@@ -123,6 +120,14 @@ namespace MathLang.Tree.Semantics
                     throw new ScopeException($"Variable with name: \"{variableDeclaration.Name}\" already exists");
                 variableDeclaration.Scope.AddVariable(variableDeclaration);
             }
+
+            if (variableDeclaration.IsField)
+            {
+                var parentClass = variableDeclaration.Parent.CastTo<ClassDeclaration>();
+                if(parentClass.IsStatic && !variableDeclaration.IsStatic)
+                    throw new ScopeException($"Static class {parentClass.Name} must can not contain a non static field {variableDeclaration}");
+            }
+
             IExpression variableDeclarationValueExpression = variableDeclaration.Value;
             if (variableDeclarationValueExpression != null)
             {

@@ -18,10 +18,12 @@ namespace MathLang.Tree.Nodes.Declarations
         public List<FunctionDeclaration> FunctionDeclarationNodes { get; } = new List<FunctionDeclaration>();
         public List<Modifier> ModifiersList { get; } = new List<Modifier>();
         public bool IsPrintable { get; }
-        public bool IsStatic { get; internal set; }
-        public bool IsExtern { get; internal set; }
         public bool CodeGeneration { get; }
+
         public virtual bool IsAttribute => false;
+        public bool IsStatic => ModifiersList.Contains(Modifier.Static);
+        public bool IsExtern => ModifiersList.Contains(Modifier.Extern);
+
 
         public ClassDeclaration(INode parent, Scope parentScope, bool isPrintable = true, bool codeGeneration = true)
         {
@@ -50,21 +52,18 @@ namespace MathLang.Tree.Nodes.Declarations
                 .Cast<CommonTree>()
                 .ForEach(child =>
                 {
-                    if (child.Type == MathLangParser.STATIC_DECLARATION)
+                    if (child.Type == MathLangParser.VARDECLARATION)
                     {
-                        //List<VariableDeclaration> variableList 
-                        //    =  TreeHelper.RunMultiDeclaration(this, Scope, child.GetChild(0).CastTo<CommonTree>());
-                        //VarDeclarationNodes.AddRange(variableList);
-                        child.Children.Cast<CommonTree>()
-                            .Select(syntaxVariableDeclaration =>
-                            {
+//                        child.Children.Cast<CommonTree>()
+//                            .Select(syntaxVariableDeclaration =>
+//                            {
                                 var variableDeclaration = TreeHelper
-                                    .GetStatements(this, Scope, syntaxVariableDeclaration).First()
+                                    .GetStatements(this, Scope, child).First()
                                     .CastTo<VariableDeclaration>();
-                                variableDeclaration.Construct(syntaxVariableDeclaration);
-                                return variableDeclaration;
-                            })
-                            .ForEach(declaration => VarDeclarationNodes.Add(declaration));
+                                variableDeclaration.Construct(child, true);
+                                VarDeclarationNodes.Add(variableDeclaration);
+//                            })
+//                            .ForEach(declaration => VarDeclarationNodes.Add(declaration));
                     }
                     else if (child.Type == MathLangParser.FUNCDECLARATION)
                     {
