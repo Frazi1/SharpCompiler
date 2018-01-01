@@ -16,9 +16,9 @@ namespace JasminSharp
     internal static class JasminModifiersConstants
     {
         internal const string Public = "public";
-        internal const string Private = "public";
+        internal const string Private = "private";
         internal const string Final = "final";
-        internal const string Abstarct = "public";
+        internal const string Abstarct = "abstract";
         internal const string Static = "static";
     }
 }
