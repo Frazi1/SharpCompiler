@@ -1,10 +1,9 @@
-﻿static class Main
+﻿class Main
 {
-    private Main a = new Main();
-    //static string[] Strs = new string[3];
+    static string[] Strs = new string[3];
 
     static void Main(string[] args)
     {
-        //Library.PrintInt(123);
+        Library.PrintInt(123);
     }
 }
