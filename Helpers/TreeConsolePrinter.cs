@@ -63,7 +63,7 @@ namespace MathLang.Extensions
 
         //    Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
         //                      $"{declaration.Name} " +
-        //                      $"({declaration.ReturnType})");
+        //                      $"({declaration.TypeDefinition})");
         //    if (declaration.Value != null)
         //    {
         //        PrintExpression(ind + (isFinal? indent : indentBar) , declaration.Value, true);
@@ -73,7 +73,7 @@ namespace MathLang.Extensions
         protected void PrintFuncDeclaration(string ind, FunctionDeclaration funcDecl, bool isFinal)
         {
             Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}func {funcDecl.Name} returns" +
-                              $" {funcDecl.ReturnType}");
+                              $" {funcDecl.TypeDefinition}");
 
             //params
             if (funcDecl.ParameterNodes.Count > 0)
@@ -86,7 +86,7 @@ namespace MathLang.Extensions
                     Console.WriteLine($"{ind}{(isFinal ? indent : indentBar)}" +
                                       $"{(funcDecl.StatementBlock?.Statements.Count == 0 ? indent : indentBar)}" +
                                       $"{(k+1 == funcDecl.ParameterNodes.Count? indentEndBar: indentBranchBar)}" +
-                                      $"{funcDecl.ParameterNodes[k].Name} ({funcDecl.ParameterNodes[k].ReturnType})"+
+                                      $"{funcDecl.ParameterNodes[k].Name} ({funcDecl.ParameterNodes[k].TypeDefinition})"+
                                       $"{(funcDecl.ParameterNodes[k].Index == null ? "" : $" with funcParam {funcDecl.ParameterNodes[k].Index}")}");
                 }
             }
@@ -189,7 +189,7 @@ namespace MathLang.Extensions
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
                                   $"DECLARE {declaration.Name} " +
-                                  $"of type {declaration.ReturnType}" +
+                                  $"of type {declaration.TypeDefinition}" +
                                   $"{(declaration.Index == null? "": $" with funcIndex {declaration.Index}")}");
                 if (declaration.Value != null)
                 {
@@ -244,7 +244,7 @@ namespace MathLang.Extensions
             if (expression is Atom atom)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"{atom.Value} ({atom.ReturnType.ToString()})" +
+                                  $"{atom.Value} ({atom.TypeDefinition.ToString()})" +
                                   $"{(atom.CastToType == null ? "" : $" [cast to {atom.CastToType}]")}");
                 return;
             }
@@ -254,7 +254,7 @@ namespace MathLang.Extensions
                 string s = exId.VariableDeclaration is FunctionVariableDeclarationParameter ? "funcParam" : "funcIndex";
                 
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"{exId.Name} ({exId.ReturnType}) " +
+                                  $"{exId.Name} ({exId.TypeDefinition}) " +
                                   $"{((exId.VariableDeclaration?.Index == null ) ? "": $" with {s} {exId.VariableDeclaration.Index}")}"+
                                   $"{(exId.CastToType == null ? "" : $" [cast to {exId.CastToType}]")}");
                 return;
@@ -263,7 +263,7 @@ namespace MathLang.Extensions
             if (expression is NewArray newArr)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"new {newArr.ReturnType}");
+                                  $"new {newArr.TypeDefinition}");
 
                 if (newArr.ArraySize != null)
                 {
@@ -295,7 +295,7 @@ namespace MathLang.Extensions
             if (expression is FunctionCall fc)
             {
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"CALL {fc.ExtendedId} that returns {fc.ReturnType}" +
+                                  $"CALL {fc.ExtendedId} that returns {fc.TypeDefinition}" +
                                   $"{(fc.CastToType == null ? "" : $" [cast to {fc.CastToType}]")}");
 
                 if (fc.FunctionCallParameters.Count > 0)
@@ -318,7 +318,7 @@ namespace MathLang.Extensions
                 string s = arrEl.Name.VariableDeclaration is FunctionVariableDeclarationParameter ? "funcParam" : "funcIndex";
 
                 Console.WriteLine($"{ind}{(isFinal ? indentEndBar : indentBranchBar)}" +
-                                  $"element ({arrEl.ReturnType}) " +
+                                  $"element ({arrEl.TypeDefinition}) " +
                                   $"{(arrEl.CastToType == null ? "" : $" [cast to {arrEl.CastToType}]")}" +
                                   $" of array {arrEl.Name} " +
                                   $"{(arrEl.Name.VariableDeclaration.Index == null? "": $"with {s} {arrEl.Name.VariableDeclaration.Index}")}" +

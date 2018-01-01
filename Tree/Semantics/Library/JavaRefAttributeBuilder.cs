@@ -18,7 +18,7 @@ namespace MathLang.Tree.Semantics
             attr.ParameterNodes.Add(
                 new FunctionVariableDeclarationParameter(attr, attr.Scope)
                 {
-                    ReturnType = ReturnType.String,
+                    TypeDefinition = TypeDefinition.String,
                     Name = "ReferencePath",
                     Index = 0
                 });

@@ -14,7 +14,7 @@ namespace MathLang.Tree.Nodes.Expressions
 
         public override void Construct(CommonTree node)
         {
-            ReturnType = ReturnType.String;
+            TypeDefinition = Enums.TypeDefinition.String;
             base.Construct(node);
         }
     }

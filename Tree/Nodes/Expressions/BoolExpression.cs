@@ -15,7 +15,7 @@ namespace MathLang.Tree.Nodes.Expressions
 
         public override void Construct(CommonTree syntaxBoolExpression)
         {
-            ReturnType = ReturnType.Bool;
+            TypeDefinition = Enums.TypeDefinition.Bool;
             Value = syntaxBoolExpression.Text == "true";
             //base.Construct(syntaxBoolExpression);
         }

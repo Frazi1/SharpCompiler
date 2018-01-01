@@ -9,7 +9,7 @@ namespace MathLang.Tree.Nodes.Expressions
         public VoidExpression(INode parent, Scope parentScope)
             : base(parent, parentScope)
         {
-            ReturnType = ReturnType.Void;
+            TypeDefinition = Enums.TypeDefinition.Void;
         }
     }
 }

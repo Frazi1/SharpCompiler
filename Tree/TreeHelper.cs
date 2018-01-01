@@ -16,18 +16,18 @@ namespace MathLang.Tree
 {
     public static class TreeHelper
     {
-        public static ReturnType GetReturnType(string type)
+        public static TypeDefinition GetReturnType(string type)
         {
             if (type.Contains("[]"))
-                return ReturnType.ArrayOf(GetReturnType(type.Replace("[]", "")));
+                return TypeDefinition.ArrayOf(GetReturnType(type.Replace("[]", "")));
             switch (type)
             {
-                case "int": return ReturnType.Int;
-                case "bool": return ReturnType.Bool;
-                case "char": return ReturnType.Char;
-                case "void": return ReturnType.Void;
-                case "string": return ReturnType.String;
-                default: return ReturnType.CustomType(type);
+                case "int": return TypeDefinition.Int;
+                case "bool": return TypeDefinition.Bool;
+                case "char": return TypeDefinition.Char;
+                case "void": return TypeDefinition.Void;
+                case "string": return TypeDefinition.String;
+                default: return TypeDefinition.CustomType(type);
             }
         }
 
@@ -89,6 +89,7 @@ namespace MathLang.Tree
                 case CHAR: return new CharExpression(parent, parentScope);
                 case NUMBER: return new IntExpression(parent, parentScope);
                 case STRING: return new StringExpression(parent, parentScope);
+                case NEWVAR: return new NewExpression(parent, parentScope);
             }
             return new Expression(parent, parentScope);
         }
@@ -149,6 +150,7 @@ namespace MathLang.Tree
                 case EXTENDED_ID: return new ExtendedId(parentNode, parentScope).AsListOf<IStatement>();
                 case NUMBER: return new IntExpression(parentNode, parentScope).AsListOf<IStatement>();
                 case CHAR: return new CharExpression(parentNode, parentScope).AsListOf<IStatement>();
+                case NEWVAR: return new NewExpression(parentNode, parentScope).AsListOf<IStatement>();
                 default: throw new ArgumentOutOfRangeException(nameof(syntaxStatement.Type));
             }
         }

@@ -10,8 +10,8 @@ namespace MathLang.Tree.Nodes.Expressions
         public INode Parent { get; set; }
         public Scope Scope { get; }
 
-        public ReturnType ReturnType { get; set; }
-        public ReturnType CastToType { get; set; }
+        public TypeDefinition TypeDefinition { get; set; }
+        public TypeDefinition CastToType { get; set; }
         public virtual string Value { get; set; }
 
         protected Atom(INode parent, Scope parentScope)
@@ -27,8 +27,8 @@ namespace MathLang.Tree.Nodes.Expressions
 
             //switch (node.Type)
             //{                
-            //    case MathLangParser.CHAR: ReturnType = ReturnType.Char; break;
-            //    case MathLangParser.NUMBER: ReturnType = ReturnType.Int; break;
+            //    case MathLangParser.CHAR: TypeDefinition = TypeDefinition.Char; break;
+            //    case MathLangParser.NUMBER: TypeDefinition = TypeDefinition.Int; break;
                 
             //    //If we have a variable then we must look up its type in the scope (which we don't have at the moment)
             //    default: throw new ArgumentOutOfRangeException(nameof(node.Type));

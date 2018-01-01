@@ -15,8 +15,8 @@ namespace MathLang.Tree.Nodes.Expressions
         public Scope Scope { get; }
         
         public ExtendedId ExtendedId { get; private set; }
-        public ReturnType ReturnType { get; set; }
-        public ReturnType CastToType { get; set; }
+        public TypeDefinition TypeDefinition { get; set; }
+        public TypeDefinition CastToType { get; set; }
         public List<IExpression> FunctionCallParameters { get; } = new List<IExpression>();
         public FunctionDeclaration FunctionDeclaration => Scope.GlobalFunctionSearch(ExtendedId.Name);
 
@@ -28,7 +28,7 @@ namespace MathLang.Tree.Nodes.Expressions
 
         public void Construct(CommonTree syntaxFuncCallExpression)
         {
-			ReturnType = ReturnType.Unset;            var syntaxExtendedId = syntaxFuncCallExpression.GetChild(0).CastTo<CommonTree>();
+			TypeDefinition = TypeDefinition.Unset;            var syntaxExtendedId = syntaxFuncCallExpression.GetChild(0).CastTo<CommonTree>();
             ExtendedId = TreeHelper.GetExpression(this, Scope, syntaxExtendedId).CastTo<ExtendedId>();
             ExtendedId.Construct(syntaxExtendedId);
             if (syntaxFuncCallExpression.ChildCount > 1)

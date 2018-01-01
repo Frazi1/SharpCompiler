@@ -7,13 +7,13 @@ namespace MathLang.Tree.Semantics
 {
     public static class LibraryClasses
     {
-        public static FunctionDeclaration BuildFunctionDeclaration(ClassDeclaration parentClass,string name, ReturnType returnType,
-            params (string name, ReturnType returnType)[] paramTuples)
+        public static FunctionDeclaration BuildFunctionDeclaration(ClassDeclaration parentClass,string name, TypeDefinition typeDefinition,
+            params (string name, TypeDefinition returnType)[] paramTuples)
         {
             var funcDeclaration = new FunctionDeclaration(parentClass, parentClass.Scope)
             {
                 Name = name,
-                ReturnType = returnType
+                TypeDefinition = typeDefinition
             };
             foreach (var paramTuple in paramTuples)
             {
@@ -21,16 +21,16 @@ namespace MathLang.Tree.Semantics
                     new FunctionVariableDeclarationParameter(funcDeclaration, funcDeclaration.Scope)
                     {
                         Name = paramTuple.name,
-                        ReturnType = paramTuple.returnType
+                        TypeDefinition = paramTuple.returnType
                     };
                 funcDeclaration.ParameterNodes.Add(paramDeclaration);
             }
             funcDeclaration.StatementBlock = new BlockStatement(funcDeclaration, funcDeclaration.Scope);
-            if (funcDeclaration.ReturnType != ReturnType.Void)
+            if (funcDeclaration.TypeDefinition != TypeDefinition.Void)
             {
                 var returnStatement = new ReturnStatement(funcDeclaration, funcDeclaration.Scope);
                 returnStatement.ReturnExpression = new CharExpression(returnStatement, returnStatement.Scope);
-                returnStatement.ReturnExpression.ReturnType = returnType;
+                returnStatement.ReturnExpression.TypeDefinition = typeDefinition;
                 funcDeclaration.StatementBlock.Statements.Add(returnStatement);
             }
             return funcDeclaration;

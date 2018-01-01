@@ -16,16 +16,16 @@ namespace MathLang.Tree.Semantics
 //        {
 //            var console = LibraryClasses.BuildClassDeclaration(_program, "Console");
 //            console.IsStatic = true;
-//            var writeLineBool = LibraryClasses.BuildFunctionDeclaration(console, "WriteLineBool", ReturnType.Void,
-//                ("input", ReturnType.Bool));
+//            var writeLineBool = LibraryClasses.BuildFunctionDeclaration(console, "WriteLineBool", TypeDefinition.Void,
+//                ("input", TypeDefinition.Bool));
 //
-//            var writeLineChar = LibraryClasses.BuildFunctionDeclaration(console, "WriteLineChar", ReturnType.Void,
-//                ("input", ReturnType.Char));
+//            var writeLineChar = LibraryClasses.BuildFunctionDeclaration(console, "WriteLineChar", TypeDefinition.Void,
+//                ("input", TypeDefinition.Char));
 //
-//            var writeLineInt = LibraryClasses.BuildFunctionDeclaration(console, "WriteLineInt", ReturnType.Void,
-//                ("input", ReturnType.Int));
+//            var writeLineInt = LibraryClasses.BuildFunctionDeclaration(console, "WriteLineInt", TypeDefinition.Void,
+//                ("input", TypeDefinition.Int));
 //
-//            var readChar = LibraryClasses.BuildFunctionDeclaration(console, "ReadChar", ReturnType.Char);
+//            var readChar = LibraryClasses.BuildFunctionDeclaration(console, "ReadChar", TypeDefinition.Char);
 //
 //            console.FunctionDeclarationNodes.AddRange(new[] {writeLineInt, writeLineBool, writeLineChar, readChar});
 //            return console;

@@ -14,8 +14,8 @@ namespace MathLang.Tree.Nodes.Expressions
 
         public ExtendedId Name { get; private set; }
         public IExpression ArrayIndex { get; private set; }
-        public ReturnType ReturnType { get; set; }
-        public ReturnType CastToType { get; set; }
+        public TypeDefinition TypeDefinition { get; set; }
+        public TypeDefinition CastToType { get; set; }
         public VariableDeclaration ArrayDeclaration { get; set; }
 
         public ArrayElementReference(INode parent, Scope parentScope)

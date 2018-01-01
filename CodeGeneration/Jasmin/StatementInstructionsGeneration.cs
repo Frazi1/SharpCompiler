@@ -64,11 +64,11 @@ namespace MathLang.CodeGeneration.JasminJava
         {
             List<IInstruction> instructions = new List<IInstruction>();
             instructions.AddRange(returnStatement.ReturnExpression.GetInstructions());
-            if (returnStatement.ReturnExpression.ReturnType == ReturnType.Int
-                || returnStatement.ReturnExpression.ReturnType == ReturnType.Bool
-                || returnStatement.ReturnExpression.ReturnType == ReturnType.Char)
+            if (returnStatement.ReturnExpression.TypeDefinition == TypeDefinition.Int
+                || returnStatement.ReturnExpression.TypeDefinition == TypeDefinition.Bool
+                || returnStatement.ReturnExpression.TypeDefinition == TypeDefinition.Char)
                 instructions.Add(IreturnInstruction);
-            else if (returnStatement.ReturnExpression.ReturnType == ReturnType.String)
+            else if (returnStatement.ReturnExpression.TypeDefinition == TypeDefinition.String)
                 instructions.Add(AreturnInstruction);
             else
                 instructions.Add(ReturnInstruction);
@@ -104,7 +104,7 @@ namespace MathLang.CodeGeneration.JasminJava
             instructions.Add(GetLoadInstruction(arrayElementAssignment.ArrayElementReference.ArrayDeclaration));
             instructions.AddRange(arrayElementAssignment.ArrayElementReference.ArrayIndex.GetInstructions());
             instructions.AddRange(arrayElementAssignment.AssignmentExpression.GetInstructions());
-            instructions.Add(GetArrayStoreInstruction(arrayElementAssignment.AssignmentExpression.ReturnType));
+            instructions.Add(GetArrayStoreInstruction(arrayElementAssignment.AssignmentExpression.TypeDefinition));
             return instructions;
         }
 

@@ -97,28 +97,28 @@ namespace MathLang.CodeGeneration
                         GetArithmethicsInstuction(
                             expression.Left.GetInstructions(),
                             expression.Right.GetInstructions(),
-                            GetAddInstruction(expression.Left.ReturnType)));
+                            GetAddInstruction(expression.Left.TypeDefinition)));
                     break;
                 case Tree.Nodes.Enums.ExpressionType.Sub:
                     instructions.AddRange(
                         GetArithmethicsInstuction(
                             expression.Left.GetInstructions(),
                             expression.Right.GetInstructions(),
-                            GetSubInstruction(expression.Left.ReturnType)));
+                            GetSubInstruction(expression.Left.TypeDefinition)));
                     break;
                 case Tree.Nodes.Enums.ExpressionType.Mul:
                     instructions.AddRange(
                         GetArithmethicsInstuction(
                             expression.Left.GetInstructions(),
                             expression.Right.GetInstructions(),
-                            GetMulInstruction(expression.Left.ReturnType)));
+                            GetMulInstruction(expression.Left.TypeDefinition)));
                     break;
                 case Tree.Nodes.Enums.ExpressionType.Div:
                     instructions.AddRange(
                         GetArithmethicsInstuction(
                             expression.Left.GetInstructions(),
                             expression.Right.GetInstructions(),
-                            GetDivInstruction(expression.Left.ReturnType)));
+                            GetDivInstruction(expression.Left.TypeDefinition)));
                     break;
                 case Tree.Nodes.Enums.ExpressionType.Equal:
                     instructions.AddRange(InstructionsBuilder.BuildCompareInstrution(expression.Left.GetInstructions(),
@@ -176,49 +176,49 @@ namespace MathLang.CodeGeneration
         }
 
 
-        private static IInstruction GetSubInstruction(ReturnType returnType)
+        private static IInstruction GetSubInstruction(TypeDefinition typeDefinition)
         {
-            switch (returnType)
+            switch (typeDefinition)
             {
-                case IntReturnType intReturnType:
+                case IntTypeDefinition intReturnType:
                     return IsubInstruction;
-                default: throw new NotImplementedException($"GetSubInstuction: {nameof(returnType)}");
+                default: throw new NotImplementedException($"GetSubInstuction: {nameof(typeDefinition)}");
             }
         }
 
-        private static IInstruction GetMulInstruction(ReturnType returnType)
+        private static IInstruction GetMulInstruction(TypeDefinition typeDefinition)
         {
-            switch (returnType)
+            switch (typeDefinition)
             {
-                case IntReturnType intReturnType:
+                case IntTypeDefinition intReturnType:
                     return ImulInstruction;
-                default: throw new NotImplementedException($"GetMulInstuction: {nameof(returnType)}");
+                default: throw new NotImplementedException($"GetMulInstuction: {nameof(typeDefinition)}");
             }
         }
 
-        private static IInstruction GetDivInstruction(ReturnType returnType)
+        private static IInstruction GetDivInstruction(TypeDefinition typeDefinition)
         {
-            switch (returnType)
+            switch (typeDefinition)
             {
-                case IntReturnType intReturnType:
+                case IntTypeDefinition intReturnType:
                     return IdivInstruction;
-                default: throw new NotImplementedException($"GetDivInstuction: {nameof(returnType)}");
+                default: throw new NotImplementedException($"GetDivInstuction: {nameof(typeDefinition)}");
             }
         }
 
-        private static IInstruction GetAddInstruction(ReturnType returnType)
+        private static IInstruction GetAddInstruction(TypeDefinition typeDefinition)
         {
-            switch (returnType)
+            switch (typeDefinition)
             {
-                case IntReturnType intReturnType:
+                case IntTypeDefinition intReturnType:
                     return IaddInstruction;
-                default: throw new NotImplementedException($"GetAddInstuction: {nameof(returnType)}");
+                default: throw new NotImplementedException($"GetAddInstuction: {nameof(typeDefinition)}");
             }
         }
 
         private static IEnumerable<IInstruction> GetNewArrayInstructions(this NewArray newArray)
         {
-            JasminTypeArgumentInstruction arrayCreationInstruction = newArray.InnerElementsReturnType.IsPrimitiveType()
+            JasminTypeArgumentInstruction arrayCreationInstruction = newArray.InnerElementsTypeDefinition.IsPrimitiveType()
                 ? (JasminTypeArgumentInstruction) Instructions.NewArrayInstruction
                 : Instructions.ANewArrayInstruction;
 
@@ -226,7 +226,7 @@ namespace MathLang.CodeGeneration
             instructions.AddRange(newArray.ArraySize.GetInstructions());
 
             instructions.Add(
-                arrayCreationInstruction.WithType(newArray.InnerElementsReturnType.ConvertToKeywordRepresentation()));
+                arrayCreationInstruction.WithType(newArray.InnerElementsTypeDefinition.ConvertToKeywordRepresentation()));
             return instructions;
         }
 
@@ -236,7 +236,7 @@ namespace MathLang.CodeGeneration
             List<IInstruction> instructions = new List<IInstruction>();
             instructions.Add(GetLoadInstruction(arrayElementReference.ArrayDeclaration));
             instructions.AddRange(arrayElementReference.ArrayIndex.GetInstructions());
-            instructions.Add(GetArrayLoadInstruction(arrayElementReference.ReturnType));
+            instructions.Add(GetArrayLoadInstruction(arrayElementReference.TypeDefinition));
             return instructions;
         }
     }

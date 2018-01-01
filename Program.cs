@@ -6,6 +6,7 @@ using Antlr.Runtime;
 using Antlr.Runtime.Tree;
 using MathLang.CodeGeneration;
 using MathLang.Extensions;
+using MathLang.Tree.Scopes.Exceptions;
 using MathLang.Tree.Semantics;
 
 
@@ -49,7 +50,7 @@ namespace MathLang
                 //Console.WriteLine(generator.CodeListing);
                 RunJasminBuildScript();
             }
-            catch (Exception e)
+            catch (ScopeException e)
             {
 #if DEBUG
                 Console.WriteLine("Error: {0}", e);   

@@ -66,6 +66,7 @@
     <Compile Include="Tree\Nodes\Expressions\ArrayElementReference.cs" />
     <Compile Include="Tree\Nodes\Expressions\BoolExpression.cs" />
     <Compile Include="Tree\Nodes\Expressions\CastExpression\CastExpression.cs" />
+    <Compile Include="Tree\Nodes\Expressions\NewExpression.cs" />
     <Compile Include="Tree\Nodes\Expressions\StringExpression.cs" />
     <Compile Include="Tree\Nodes\Expressions\VoidExpression.cs" />
     <Compile Include="Tree\Nodes\Modifiers.cs" />
@@ -93,7 +94,7 @@
     <Compile Include="Tree\Nodes\Interfaces\INode.cs" />
     <Compile Include="Tree\Nodes\Interfaces\IStatement.cs" />
     <Compile Include="Tree\Nodes\Program.cs" />
-    <Compile Include="Tree\Nodes\Enums\ReturnType.cs" />
+    <Compile Include="Tree\Nodes\Enums\TypeDefinition.cs" />
     <Compile Include="Tree\Nodes\Statements\ReturnStatement.cs" />
     <Compile Include="Tree\Semantics\Exceptions\ExpressionException.cs" />
     <Compile Include="Tree\Semantics\Exceptions\ScopeException.cs" />

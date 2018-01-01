@@ -37,10 +37,10 @@ namespace MathLang.CodeGeneration
                 invokestaticInstruction invokestaticInstruction = InvokestaticInstruction
                     .WithMethodFullName(externName)
                     .WithReturnType(
-                        ReturnTypeToJavaConverter.ConvertToFullRepresentation(functionDeclaration.ReturnType));
+                        ReturnTypeToJavaConverter.ConvertToFullRepresentation(functionDeclaration.TypeDefinition));
                 functionDeclaration
                     .ParameterNodes
-                    .Select(parameter => ReturnTypeToJavaConverter.ConvertToFullRepresentation(parameter.ReturnType))
+                    .Select(parameter => ReturnTypeToJavaConverter.ConvertToFullRepresentation(parameter.TypeDefinition))
                     .ForEach(typeName => invokestaticInstruction.WithParameterType(typeName));
                 instructions.Add(invokestaticInstruction);
             }
@@ -54,10 +54,10 @@ namespace MathLang.CodeGeneration
                 //    correctedName = $"{splittedName[0]}/{splittedName[1].ToCamelCase()}";
                 invokestaticInstruction invokestaticInstruction = InvokestaticInstruction
                     .WithMethodFullName( /*correctedName*/functionCall.FunctionDeclaration.FullName)
-                    .WithReturnType(ReturnTypeToJavaConverter.ConvertToFullRepresentation(functionCall.ReturnType));
+                    .WithReturnType(ReturnTypeToJavaConverter.ConvertToFullRepresentation(functionCall.TypeDefinition));
                 functionDeclaration
                     .ParameterNodes
-                    .Select(parameter => ReturnTypeToJavaConverter.ConvertToFullRepresentation(parameter.ReturnType))
+                    .Select(parameter => ReturnTypeToJavaConverter.ConvertToFullRepresentation(parameter.TypeDefinition))
                     .ForEach(typeName => invokestaticInstruction.WithParameterType(typeName));
                 instructions.Add(invokestaticInstruction);
             }
@@ -69,23 +69,23 @@ namespace MathLang.CodeGeneration
             if (variableDeclaration.IsStatic)
             {
                 return Instructions.PutStaticInstruction.WithFieldName(variableDeclaration.FullName)
-                    .WithSignature(variableDeclaration.ReturnType.ConvertToFullRepresentation());
+                    .WithSignature(variableDeclaration.TypeDefinition.ConvertToFullRepresentation());
             }
             int index = variableDeclaration.Index.Value;
-            switch (variableDeclaration.ReturnType)
+            switch (variableDeclaration.TypeDefinition)
             {
-                case BoolReturnType boolReturnType:
+                case BoolTypeDefinition boolReturnType:
                     return IstoreInstruction.WithIndex(index);
-                case CharReturnType charReturnType:
+                case CharTypeDefinition charReturnType:
                     return IstoreInstruction.WithIndex(index);
-                case ArrayReturnType arrayReturnType:
+                case ArrayTypeDefinition arrayReturnType:
                     return AstoreInstruction.WithIndex(index);
-                case IntReturnType intReturnType:
+                case IntTypeDefinition intReturnType:
                     return IstoreInstruction.WithIndex(index);
-                case StringReturnType stringReturnType:
+                case StringTypeDefinition stringReturnType:
                     return AstoreInstruction.WithIndex(index);
                 default:
-                    throw new NotImplementedException(nameof(ReturnType) + "store instruction generation");
+                    throw new NotImplementedException(nameof(TypeDefinition) + "store instruction generation");
             }
         }
 
@@ -93,60 +93,60 @@ namespace MathLang.CodeGeneration
         {
             if (variableDeclaration.IsStatic)
                 return Instructions.GetStaticInstruction.WithFieldName(variableDeclaration.FullName)
-                    .WithSignature(variableDeclaration.ReturnType.ConvertToFullRepresentation());
+                    .WithSignature(variableDeclaration.TypeDefinition.ConvertToFullRepresentation());
             int index = variableDeclaration.Index.Value;
-            switch (variableDeclaration.ReturnType)
+            switch (variableDeclaration.TypeDefinition)
             {
-                case BoolReturnType boolReturnType:
+                case BoolTypeDefinition boolReturnType:
                     return IloadInstruction.WithIndex(index);
-                case CharReturnType charReturnType:
+                case CharTypeDefinition charReturnType:
                     return IloadInstruction.WithIndex(index);
-                case ArrayReturnType arrayReturnType:
+                case ArrayTypeDefinition arrayReturnType:
                     return AloadInstruction.WithIndex(index);
-                case IntReturnType intReturnType:
+                case IntTypeDefinition intReturnType:
                     return IloadInstruction.WithIndex(index);
-                case StringReturnType stringReturnType:
+                case StringTypeDefinition stringReturnType:
                     return AloadInstruction.WithIndex(index);
                 default:
-                    throw new NotImplementedException(nameof(ReturnType) + " load instruction generation");
+                    throw new NotImplementedException(nameof(TypeDefinition) + " load instruction generation");
             }
         }
 
-        public static NoArgumentInstruction GetArrayLoadInstruction(ReturnType returnType)
+        public static NoArgumentInstruction GetArrayLoadInstruction(TypeDefinition typeDefinition)
         {
-            switch (returnType)
+            switch (typeDefinition)
             {
-                case BoolReturnType boolReturnType:
+                case BoolTypeDefinition boolReturnType:
                     return BaloadInstruction;
-                case CharReturnType charReturnType:
+                case CharTypeDefinition charReturnType:
                     return CaloadInstruction;
-                case ArrayReturnType arrayReturnType:
+                case ArrayTypeDefinition arrayReturnType:
                     return AaloadInstruction;
-                case IntReturnType intReturnType:
+                case IntTypeDefinition intReturnType:
                     return IaloadInstruction;
-                case StringReturnType stringReturnType:
+                case StringTypeDefinition stringReturnType:
                     return AaloadInstruction;
                 default:
-                    throw new NotImplementedException(nameof(ReturnType) + " array load instruction generation");
+                    throw new NotImplementedException(nameof(TypeDefinition) + " array load instruction generation");
             }
         }
 
-        public static NoArgumentInstruction GetArrayStoreInstruction(ReturnType returnType)
+        public static NoArgumentInstruction GetArrayStoreInstruction(TypeDefinition typeDefinition)
         {
-            switch (returnType)
+            switch (typeDefinition)
             {
-                case BoolReturnType boolReturnType:
+                case BoolTypeDefinition boolReturnType:
                     return BastoreInstruction;
-                case CharReturnType charReturnType:
+                case CharTypeDefinition charReturnType:
                     return CastoreInstruction;
-                case ArrayReturnType arrayReturnType:
+                case ArrayTypeDefinition arrayReturnType:
                     return AastoreInstruction;
-                case IntReturnType intReturnType:
+                case IntTypeDefinition intReturnType:
                     return IastoreInstruction;
-                case StringReturnType stringReturnType:
+                case StringTypeDefinition stringReturnType:
                     return AastoreInstruction;
                 default:
-                    throw new NotImplementedException(nameof(ReturnType) + " array load instruction generation");
+                    throw new NotImplementedException(nameof(TypeDefinition) + " array load instruction generation");
             }
         }
     }

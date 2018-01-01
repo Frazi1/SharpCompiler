@@ -16,7 +16,7 @@ namespace MathLang.Tree.Nodes.Expressions
 
         public override void Construct(CommonTree syntaxCharExpression)
         {
-            ReturnType = ReturnType.Char;
+            TypeDefinition = Enums.TypeDefinition.Char;
             char character = syntaxCharExpression.Text.RemoveFirstAndLastCharacters()[0];
             Value = character;
             //base.Construct(syntaxCharExpression);

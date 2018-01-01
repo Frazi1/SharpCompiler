@@ -4,7 +4,7 @@ namespace MathLang.Tree.Nodes.Interfaces
 {
     public interface IExpression : INode
     {
-        ReturnType ReturnType { get; set; }
-        ReturnType CastToType { get; set; }
+        TypeDefinition TypeDefinition { get; set; }
+        TypeDefinition CastToType { get; set; }
     }
 }

@@ -1,9 +1,12 @@
-﻿class Main
+﻿static class Main
 {
-    static string[] Strs = new string[3];
-
     static void Main(string[] args)
     {
-        Library.PrintInt(123);
+        Valera v = new Valera();
     }
+}
+
+class Valera
+{
+    public string Name = "Valera";
 }

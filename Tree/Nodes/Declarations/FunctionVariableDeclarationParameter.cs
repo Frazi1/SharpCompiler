@@ -18,7 +18,7 @@ namespace MathLang.Tree.Nodes.Declarations
         {
             IsField = false;
             var syntaxReturnType = syntaxVariableDeclaration.GetChild(0).CastTo<CommonTree>();
-            ReturnType = TreeHelper.GetReturnType(TreeHelper.GetStringTypeFromSyntaxNode(syntaxReturnType));
+            TypeDefinition = TreeHelper.GetReturnType(TreeHelper.GetStringTypeFromSyntaxNode(syntaxReturnType));
             Name = syntaxVariableDeclaration.GetChild(1).Text;
             IsConstructed = true;
         }

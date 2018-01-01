@@ -13,11 +13,11 @@ namespace MathLang.Tree.Nodes.Expressions
         public INode Parent { get; set; }
         public Scope Scope { get; }
 
-        public ReturnType ReturnType { get; set; }
-        public ReturnType CastToType { get; set; }
+        public TypeDefinition TypeDefinition { get; set; }
+        public TypeDefinition CastToType { get; set; }
         public IExpression ArraySize { get; private set; }
         public List<IExpression> InitializationParameters { get; } = new List<IExpression>();
-        public ReturnType InnerElementsReturnType => ReturnType.CastTo<ArrayReturnType>().InnerType;
+        public TypeDefinition InnerElementsTypeDefinition => TypeDefinition.CastTo<ArrayTypeDefinition>().InnerTypeDefinition;
         
         public NewArray(INode parent, Scope parentScope)
         {
@@ -28,7 +28,7 @@ namespace MathLang.Tree.Nodes.Expressions
         public void Construct(CommonTree syntaxArrayInitializer)
         {
             var simpleReturnType = TreeHelper.GetReturnType(syntaxArrayInitializer.GetChild(0).Text);
-            ReturnType = ReturnType.ArrayOf(simpleReturnType);
+            TypeDefinition = TypeDefinition.ArrayOf(simpleReturnType);
             
             
             //ArraySize

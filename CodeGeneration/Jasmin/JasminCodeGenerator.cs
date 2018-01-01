@@ -64,7 +64,7 @@ namespace MathLang.CodeGeneration
             JasminFunctionModule jasminFunction = new JasminFunctionModule()
                 .WithName(function.Name.ToCamelCase())
                 .WithModifiers(JasminModifier.Public, JasminModifier.Static)
-                .WithReturnType(ReturnTypeToJavaConverter.ConvertToFullRepresentation(function.ReturnType));
+                .WithReturnType(ReturnTypeToJavaConverter.ConvertToFullRepresentation(function.TypeDefinition));
 
             function.ParameterNodes.ForEach(functionParameter =>
                 jasminFunction.WithParameter(BuildJasminFunctionParameter(functionParameter)));
@@ -73,7 +73,7 @@ namespace MathLang.CodeGeneration
             {
                 jasminFunction.WithInstructions(statement.GetInstructions());
             });
-            if (function.ReturnType == ReturnType.Void)
+            if (function.TypeDefinition == TypeDefinition.Void)
                 jasminFunction.WithInstructions(Instructions.ReturnInstruction);
             return jasminFunction;
         }
@@ -85,7 +85,7 @@ namespace MathLang.CodeGeneration
                 new JasminFunctionParameter()
                     .WithName(functionVariableParameter.Name)
                     .WithType(ReturnTypeToJavaConverter.ConvertToFullRepresentation(
-                        functionVariableParameter.ReturnType));
+                        functionVariableParameter.TypeDefinition));
             return jasminFunctionParameter;
         }
 
@@ -101,11 +101,11 @@ namespace MathLang.CodeGeneration
             var fieldInitializationInstructions = variableDeclaration.Value.GetInstructions().ToList();
             fieldInitializationInstructions.Add(Instructions.PutStaticInstruction
                 .WithFieldName(variableDeclaration.FullName)
-                .WithSignature(variableDeclaration.ReturnType.ConvertToFullRepresentation()));
+                .WithSignature(variableDeclaration.TypeDefinition.ConvertToFullRepresentation()));
 
             JasminField jasminField = new JasminField()
                 .WithName(variableDeclaration.Name)
-                .WithSignature(variableDeclaration.ReturnType.ConvertToFullRepresentation())
+                .WithSignature(variableDeclaration.TypeDefinition.ConvertToFullRepresentation())
                 .WithModifier(modifier)
                 .WithValue(fieldInitializationInstructions);
             return jasminField;

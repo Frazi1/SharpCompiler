@@ -11,7 +11,7 @@ namespace MathLang.Tree.Nodes.Expressions
         public IntExpression(INode parent, Scope parentScope)
             : base(parent, parentScope)
         {
-            ReturnType = ReturnType.Int;
+            TypeDefinition = Enums.TypeDefinition.Int;
         }
 
         public override void Construct(CommonTree node)

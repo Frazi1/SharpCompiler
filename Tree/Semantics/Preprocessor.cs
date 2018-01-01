@@ -125,7 +125,7 @@ namespace MathLang.Tree.Semantics
             {
                 var parentClass = variableDeclaration.Parent.CastTo<ClassDeclaration>();
                 if(parentClass.IsStatic && !variableDeclaration.IsStatic)
-                    throw new ScopeException($"Static class {parentClass.Name} must can not contain a non static field {variableDeclaration}");
+                    throw new ScopeException($"Static class {parentClass.Name} can not contain a non static field {variableDeclaration.Name}");
             }
 
             IExpression variableDeclarationValueExpression = variableDeclaration.Value;
@@ -133,16 +133,16 @@ namespace MathLang.Tree.Semantics
             {
                 variableDeclarationValueExpression.Process();
 
-                if (!(variableDeclaration.ReturnType == variableDeclarationValueExpression.ReturnType))
+                if (!(variableDeclaration.TypeDefinition == variableDeclarationValueExpression.TypeDefinition))
                 {
-                    if (variableDeclarationValueExpression.ReturnType.IsCastableTo(variableDeclaration.ReturnType))
+                    if (variableDeclarationValueExpression.TypeDefinition.IsCastableTo(variableDeclaration.TypeDefinition))
                     {
-                        variableDeclarationValueExpression.CastToType = variableDeclaration.ReturnType;
+                        variableDeclarationValueExpression.CastToType = variableDeclaration.TypeDefinition;
                     }
                     else
                     {
                         throw new ScopeException(
-                            $"Variable \"{variableDeclaration.Name}\" return type {variableDeclaration.ReturnType} is different from {variableDeclarationValueExpression.ReturnType} ");
+                            $"Variable \"{variableDeclaration.Name}\" return type {variableDeclaration.TypeDefinition} is different from {variableDeclarationValueExpression.TypeDefinition} ");
                     }
                 }
             }
@@ -181,7 +181,7 @@ namespace MathLang.Tree.Semantics
                 functionDeclaration.StatementBlock.Statements
                     .ForEach(statement => statement.Process());
 
-                if (functionDeclaration.ReturnType != ReturnType.Void)
+                if (functionDeclaration.TypeDefinition != TypeDefinition.Void)
                 {
                     var returnStatements =
                         functionDeclaration.StatementBlock.Statements
@@ -194,10 +194,10 @@ namespace MathLang.Tree.Semantics
                     returnStatements.ForEach(statement =>
                     {
                         //statement.Process();
-                        if (statement.ReturnExpression.GetResultReturnType() != functionDeclaration.ReturnType)
+                        if (statement.ReturnExpression.GetResultReturnType() != functionDeclaration.TypeDefinition)
                         {
                             throw new ExpressionException(
-                                $"Function {functionDeclaration.Name} must return {functionDeclaration.ReturnType} but returns {statement.ReturnExpression.GetResultReturnType()}");
+                                $"Function {functionDeclaration.Name} must return {functionDeclaration.TypeDefinition} but returns {statement.ReturnExpression.GetResultReturnType()}");
                         }
                     });
                 }
@@ -248,13 +248,13 @@ namespace MathLang.Tree.Semantics
                 if (!declaration.Initialized)
                     throw new ScopeException(
                         $"Variable with name \"{extendedId.Name}\" was not initialized before accessing");
-                extendedId.ReturnType = declaration.ReturnType;
+                extendedId.TypeDefinition = declaration.TypeDefinition;
             }
             else
             {
                 FunctionDeclaration declaration = scope.GlobalFunctionSearch(extendedId.Name);
-                extendedId.ReturnType = declaration != null
-                    ? declaration.ReturnType
+                extendedId.TypeDefinition = declaration != null
+                    ? declaration.TypeDefinition
                     : throw new ScopeException($"Variable with name \"{extendedId.Name}\" does not exist.");
             }
         }
@@ -268,25 +268,25 @@ namespace MathLang.Tree.Semantics
 
 
             if (TreeHelper.IsComparisonExpression(expressionType))
-                expression.ReturnType = ReturnType.Bool;
+                expression.TypeDefinition = TypeDefinition.Bool;
 
             //HERE
 
 
             if (expression.Right == null)
             {
-                expression.ReturnType = expression.Left.ReturnType;
-                //if (expression.ReturnType == expression.Left.ReturnType) return;
-                //if (expression.Left.ReturnType.IsCastableTo(expression.ReturnType))
-                //    expression.Left.CastToType = expression.ReturnType;
+                expression.TypeDefinition = expression.Left.TypeDefinition;
+                //if (expression.TypeDefinition == expression.Left.TypeDefinition) return;
+                //if (expression.Left.TypeDefinition.IsCastableTo(expression.TypeDefinition))
+                //    expression.Left.CastToType = expression.TypeDefinition;
                 //else
                 //    throw new ExpressionException(
-                //        $"Return type {expression.Left.ReturnType} does not match {expression.ReturnType}");
+                //        $"Return type {expression.Left.TypeDefinition} does not match {expression.TypeDefinition}");
             }
 
             else if (TreeHelper.IsComparisonExpression(expressionType))
             {
-                expression.ReturnType = ReturnType.Bool;
+                expression.TypeDefinition = TypeDefinition.Bool;
 
                 if (TreeHelper.IsMathematicalComparison(expressionType))
                 {
@@ -309,24 +309,24 @@ namespace MathLang.Tree.Semantics
                 }
                 if (TreeHelper.IsBooleanComparison(expressionType))
                 {
-                    if (expression.Left.GetResultReturnType() != ReturnType.Bool)
-                        throw new ExpressionException($"Left operand must be of type {ReturnType.Bool}");
-                    if (expression.Right.GetResultReturnType() != ReturnType.Bool)
-                        throw new ExpressionException($"Right operand must be of type {ReturnType.Bool}");
+                    if (expression.Left.GetResultReturnType() != TypeDefinition.Bool)
+                        throw new ExpressionException($"Left operand must be of type {TypeDefinition.Bool}");
+                    if (expression.Right.GetResultReturnType() != TypeDefinition.Bool)
+                        throw new ExpressionException($"Right operand must be of type {TypeDefinition.Bool}");
                 }
             }
 
-            else if (expression.Left.ReturnType != expression.Right.ReturnType)
-                if (expression.Right.ReturnType.IsCastableTo(expression.Left.ReturnType))
+            else if (expression.Left.TypeDefinition != expression.Right.TypeDefinition)
+                if (expression.Right.TypeDefinition.IsCastableTo(expression.Left.TypeDefinition))
                 {
-                    expression.ReturnType = expression.Left.ReturnType;
-                    expression.Right.CastToType = expression.Left.ReturnType;
+                    expression.TypeDefinition = expression.Left.TypeDefinition;
+                    expression.Right.CastToType = expression.Left.TypeDefinition;
                 }
                 else
                     throw new ExpressionException(
-                        $"Can not cast {expression.Left.ReturnType} to type {expression.Right.ReturnType}");
+                        $"Can not cast {expression.Left.TypeDefinition} to type {expression.Right.TypeDefinition}");
             else
-                expression.ReturnType = expression.Left.ReturnType;
+                expression.TypeDefinition = expression.Left.TypeDefinition;
         }
 
         private static void Process(this Atom atom)
@@ -343,7 +343,7 @@ namespace MathLang.Tree.Semantics
                 throw new ScopeException($"Function with name \"{functionCall.ExtendedId.Name}\" does not exist");
 
             CheckCallParameters(functionCall, functionCall.FunctionCallParameters, functionDeclaration.ParameterNodes);
-            functionCall.ReturnType = functionDeclaration.ReturnType;
+            functionCall.TypeDefinition = functionDeclaration.TypeDefinition;
         }
 
         private static void CheckCallParameters(INode invoker, IList<IExpression> callParameters,
@@ -358,12 +358,12 @@ namespace MathLang.Tree.Semantics
                 var callParameter = callParameters[i];
                 callParameter.Process();
 
-                if (parameter.ReturnType == callParameter.ReturnType) continue;
-                if (callParameter.ReturnType.IsCastableTo(parameter.ReturnType))
-                    callParameter.CastToType = parameter.ReturnType;
+                if (parameter.TypeDefinition == callParameter.TypeDefinition) continue;
+                if (callParameter.TypeDefinition.IsCastableTo(parameter.TypeDefinition))
+                    callParameter.CastToType = parameter.TypeDefinition;
                 else
                     throw new ScopeException(
-                        $"Type {callParameter.ReturnType} can not be matched to type {parameter.ReturnType} in {invoker}");
+                        $"Type {callParameter.TypeDefinition} can not be matched to type {parameter.TypeDefinition} in {invoker}");
             }
         }
 
@@ -376,22 +376,22 @@ namespace MathLang.Tree.Semantics
             if (newArray.ArraySize != null)
             {
                 newArray.ArraySize.Process();
-                if (newArray.ArraySize.ReturnType != ReturnType.Int)
+                if (newArray.ArraySize.TypeDefinition != TypeDefinition.Int)
                     throw new ScopeException(
-                        $"Array size must be of {ReturnType.Int} type, but {newArray.ArraySize.ReturnType} is specified");
+                        $"Array size must be of {TypeDefinition.Int} type, but {newArray.ArraySize.TypeDefinition} is specified");
             }
-            var arrayInnerType = newArray.ReturnType.CastTo<ArrayReturnType>()
-                .InnerType;
+            var arrayInnerType = newArray.TypeDefinition.CastTo<ArrayTypeDefinition>()
+                .InnerTypeDefinition;
             newArray.InitializationParameters.ForEach(expression =>
             {
                 expression.Process();
-                if (expression.ReturnType != arrayInnerType)
+                if (expression.TypeDefinition != arrayInnerType)
                 {
-                    if (expression.ReturnType.IsCastableTo(arrayInnerType))
+                    if (expression.TypeDefinition.IsCastableTo(arrayInnerType))
                         expression.CastToType = arrayInnerType;
                     else
                         throw new ScopeException(
-                            $"Initialization parameter must be of type {arrayInnerType}, but received {expression.ReturnType}");
+                            $"Initialization parameter must be of type {arrayInnerType}, but received {expression.TypeDefinition}");
                 }
             });
         }
@@ -399,16 +399,16 @@ namespace MathLang.Tree.Semantics
         private static void Process(this ArrayElementReference arrayElementReference)
         {
             arrayElementReference.Name.Process();
-            if (arrayElementReference.Name.ReturnType is ArrayReturnType arrayReturnType)
-                arrayElementReference.ReturnType = arrayReturnType.InnerType;
+            if (arrayElementReference.Name.TypeDefinition is ArrayTypeDefinition arrayReturnType)
+                arrayElementReference.TypeDefinition = arrayReturnType.InnerTypeDefinition;
             else
                 throw new ExpressionException(
-                    $"Variable \"{arrayElementReference.Name}\" is of type {arrayElementReference.Name.ReturnType} but expected array");
+                    $"Variable \"{arrayElementReference.Name}\" is of type {arrayElementReference.Name.TypeDefinition} but expected array");
 
             arrayElementReference.ArrayIndex.Process();
-            if (arrayElementReference.ArrayIndex.GetResultReturnType() != ReturnType.Int)
+            if (arrayElementReference.ArrayIndex.GetResultReturnType() != TypeDefinition.Int)
                 throw new ExpressionException(
-                    $"Index of array element reference \"{arrayElementReference.Name}\" must be of type {ReturnType.Int}, but received {arrayElementReference.ArrayIndex.ReturnType}");
+                    $"Index of array element reference \"{arrayElementReference.Name}\" must be of type {TypeDefinition.Int}, but received {arrayElementReference.ArrayIndex.TypeDefinition}");
             arrayElementReference.ArrayDeclaration = arrayElementReference.Scope
                 .GlobalVariableSearch(arrayElementReference.Name.Name);
         }
@@ -458,20 +458,20 @@ namespace MathLang.Tree.Semantics
             var scope = variableAssignment;
 
             variableAssignment.VariableName.Process();
-            var variableReturnType = variableAssignment.VariableName.ReturnType;
+            var variableReturnType = variableAssignment.VariableName.TypeDefinition;
             var assignmentValue = variableAssignment.AssignmentValue;
 
             assignmentValue.Process();
 
-            if (assignmentValue.ReturnType != variableReturnType)
+            if (assignmentValue.TypeDefinition != variableReturnType)
             {
-                if (assignmentValue.ReturnType.IsCastableTo(variableReturnType))
+                if (assignmentValue.TypeDefinition.IsCastableTo(variableReturnType))
                 {
                     assignmentValue.CastToType = variableReturnType;
                 }
                 else
                     throw new ScopeException(
-                        $"Return type {assignmentValue.ReturnType} does not match {variableReturnType}");
+                        $"Return type {assignmentValue.TypeDefinition} does not match {variableReturnType}");
             }
         }
 
@@ -480,14 +480,14 @@ namespace MathLang.Tree.Semantics
             arrayElementAssignment.ArrayElementReference.Process();
             arrayElementAssignment.AssignmentExpression.Process();
 
-            var arrItemType = arrayElementAssignment.ArrayElementReference.ReturnType
-                //.CastTo<ArrayReturnType>()
-                //.InnerType
+            var arrItemType = arrayElementAssignment.ArrayElementReference.TypeDefinition
+                //.CastTo<ArrayTypeDefinition>()
+                //.InnerTypeDefinition
                 ;
 
-            if (arrItemType != arrayElementAssignment.AssignmentExpression.ReturnType)
+            if (arrItemType != arrayElementAssignment.AssignmentExpression.TypeDefinition)
             {
-                if (arrayElementAssignment.AssignmentExpression.ReturnType.IsCastableTo(arrItemType))
+                if (arrayElementAssignment.AssignmentExpression.TypeDefinition.IsCastableTo(arrItemType))
                 {
                     arrayElementAssignment.AssignmentExpression.CastToType = arrItemType;
                 }
@@ -496,8 +496,8 @@ namespace MathLang.Tree.Semantics
                 {
                     throw new ExpressionException($"Cannot assign to the element of array " +
                                                   $"{arrayElementAssignment.ArrayElementReference.Name} " +
-                                                  $"({arrayElementAssignment.ArrayElementReference.ReturnType}) " +
-                                                  $"expression of type {arrayElementAssignment.AssignmentExpression.ReturnType}");
+                                                  $"({arrayElementAssignment.ArrayElementReference.TypeDefinition}) " +
+                                                  $"expression of type {arrayElementAssignment.AssignmentExpression.TypeDefinition}");
                 }
             }
 
@@ -507,7 +507,7 @@ namespace MathLang.Tree.Semantics
         private static void Process(this ReturnStatement returnStatement)
         {
             returnStatement.ReturnExpression.Process();
-            var retType = returnStatement.ReturnExpression.ReturnType;
+            var retType = returnStatement.ReturnExpression.TypeDefinition;
 
             INode node = returnStatement.Parent;
 
@@ -518,16 +518,16 @@ namespace MathLang.Tree.Semantics
 
             var funcDecl = node as FunctionDeclaration;
 
-            if (funcDecl.ReturnType != retType)
+            if (funcDecl.TypeDefinition != retType)
             {
-                if (retType.IsCastableTo(funcDecl.ReturnType))
+                if (retType.IsCastableTo(funcDecl.TypeDefinition))
                 {
-                    returnStatement.ReturnExpression.CastToType = funcDecl.ReturnType;
+                    returnStatement.ReturnExpression.CastToType = funcDecl.TypeDefinition;
                 }
                 else
                 {
                     throw new ExpressionException($"Return type of func {(node as FunctionDeclaration).Name} " +
-                                                  $"({(node as FunctionDeclaration).ReturnType}) does not match {retType}");
+                                                  $"({(node as FunctionDeclaration).TypeDefinition}) does not match {retType}");
                 }
             }
         }
@@ -536,10 +536,10 @@ namespace MathLang.Tree.Semantics
         {
             whileStatement.ConditionExpression.Process();
 
-            if (whileStatement.ConditionExpression.ReturnType != ReturnType.Bool)
+            if (whileStatement.ConditionExpression.TypeDefinition != TypeDefinition.Bool)
             {
                 throw new ExpressionException($"conditional expression in while must be of type bool, not " +
-                                              $"{whileStatement.ConditionExpression.ReturnType}");
+                                              $"{whileStatement.ConditionExpression.TypeDefinition}");
             }
 
             whileStatement.BlockOrSingleStatement.Process();
@@ -548,10 +548,10 @@ namespace MathLang.Tree.Semantics
         private static void Process(this IfStatement ifStatement)
         {
             ifStatement.ConditionExpression.Process();
-            if (ifStatement.ConditionExpression.ReturnType != ReturnType.Bool)
+            if (ifStatement.ConditionExpression.TypeDefinition != TypeDefinition.Bool)
             {
                 throw new ExpressionException($"conditional expression in if must be of type bool, not " +
-                                              $"{ifStatement.ConditionExpression.ReturnType}");
+                                              $"{ifStatement.ConditionExpression.TypeDefinition}");
             }
             ifStatement.TrueCaseBlockStatement.Process();
 
@@ -568,10 +568,10 @@ namespace MathLang.Tree.Semantics
             if (forStatement.ConditionExpression != null)
             {
                 forStatement.ConditionExpression.Process();
-                if (forStatement.ConditionExpression.ReturnType != ReturnType.Bool)
+                if (forStatement.ConditionExpression.TypeDefinition != TypeDefinition.Bool)
                 {
                     throw new ExpressionException($"conditional expression in if must be of type bool, not " +
-                                                  $"{forStatement.ConditionExpression.ReturnType}");
+                                                  $"{forStatement.ConditionExpression.TypeDefinition}");
                 }
             }
             if (forStatement.IterationStatement != null)

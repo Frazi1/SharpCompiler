@@ -5,23 +5,23 @@ namespace MathLang.Tree.Nodes.Expressions
 {
     public static class MathematicalComparisonTable
     {
-        private static List<ReturnType> CastsList { get; } =
-            new List<ReturnType>();
+        private static List<TypeDefinition> CastsList { get; } =
+            new List<TypeDefinition>();
 
         static MathematicalComparisonTable()
         {
-            AddType(ReturnType.Char);
-            AddType(ReturnType.Int);
+            AddType(TypeDefinition.Char);
+            AddType(TypeDefinition.Int);
         }
 
-        public static void AddType(ReturnType returnType)
+        public static void AddType(TypeDefinition typeDefinition)
         {
-            CastsList.Add(returnType);
+            CastsList.Add(typeDefinition);
         }
 
-        public static bool IsMathematicallyComparisonable(this ReturnType returnType)
+        public static bool IsMathematicallyComparisonable(this TypeDefinition typeDefinition)
         {
-            return CastsList.Contains(returnType);
+            return CastsList.Contains(typeDefinition);
         }
     }
 }

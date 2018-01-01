@@ -34,7 +34,6 @@ tokens {
   FUNC_CALL ;
   RETURN_TYPE;
   PARAMETERS ;
-  STATIC_DECLARATION;
   CLASSBLOCK;
   CLASS_WORD = 'class';
   FOR_INITIALIZATION;
@@ -127,11 +126,10 @@ extended_id: ID (DOT ID)* -> ^(EXTENDED_ID ID*);
 
 arrayelement:  extended_id OPEN_SQUARE_BRACE mathexpression CLOSE_SQUARE_BRACE -> ^(ARRAYELEMENT extended_id mathexpression) ;
 
-declaration: var_declaration 
-;
-var_declaration: m=modifiers! t=type! d_list[t.Tree, m.Tree] ';'!;
+declaration: var_declaration;
+var_declaration: m=modifiers! t=type! declaration_list[t.Tree, m.Tree] ';'!;
 
-d_list[object type, object mod]: d[type, mod] (','! d[type, mod])* ;
+declaration_list[object type, object mod]: d[type, mod] (','! d[type, mod])* ;
 
 d[object type, object mod]: declarationbody_d[type, mod] | longdeclarationbody_d[type, mod] ;
 
@@ -189,7 +187,7 @@ expressioncommalist: expression ( ','! expression)*;
 object_initializer:  '{' expressioncommalist '}' -> expressioncommalist ;
 newexpression: KNEW! initializer;
 initializer: (simple_var_initializer | array_initializer);
-simple_var_initializer: type OPEN_BRACE CLOSE_BRACE -> ^(NEWVAR type);
+simple_var_initializer: type OPEN_BRACE CLOSE_BRACE -> ^(NEWVAR ^(RETURN_TYPE type));
 array_initializer: type ((OPEN_SQUARE_BRACE mathexpression CLOSE_SQUARE_BRACE) | ARRAY_DECLARATION_MARK) object_initializer?
 		-> ^(ARRAY_INITIALIZER type ^(ARRAY_SIZE mathexpression?) ^(PARAMETERS object_initializer?));
 

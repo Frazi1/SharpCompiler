@@ -12,8 +12,8 @@ namespace MathLang.Tree.Nodes.Expressions
         public Scope Scope { get;}
 
         public ExpressionType ExpressionType { get; set; }
-        public ReturnType ReturnType { get; set; }
-        public ReturnType CastToType { get; set; }
+        public TypeDefinition TypeDefinition { get; set; }
+        public TypeDefinition CastToType { get; set; }
         public IExpression Left { get; set; }
         public IExpression Right { get; set; }
 
@@ -41,12 +41,12 @@ namespace MathLang.Tree.Nodes.Expressions
                 Right = Left;
                 Left = zeroExpression;
             }
-            ReturnType = ReturnType.Unset;
-            //if (Right == null) ReturnType = Left.ReturnType;
+            TypeDefinition = TypeDefinition.Unset;
+            //if (Right == null) TypeDefinition = Left.TypeDefinition;
             //else
-            //    ReturnType = Left.ReturnType.Equals(Right.ReturnType) 
-            //        ? Left.ReturnType 
-            //        : ReturnType.Unset;
+            //    TypeDefinition = Left.TypeDefinition.Equals(Right.TypeDefinition) 
+            //        ? Left.TypeDefinition 
+            //        : TypeDefinition.Unset;
         }
     }
 }

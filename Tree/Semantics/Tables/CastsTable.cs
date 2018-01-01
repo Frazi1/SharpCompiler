@@ -7,40 +7,40 @@ namespace MathLang.Tree.Nodes.Expressions
 {
     public static class CastsTable
     {
-        private static List<Tuple<ReturnType, ReturnType>> CastsList { get; } =
-            new List<Tuple<ReturnType, ReturnType>>();
+        private static List<Tuple<TypeDefinition, TypeDefinition>> CastsList { get; } =
+            new List<Tuple<TypeDefinition, TypeDefinition>>();
 
         static CastsTable()
         {
-            AddCastablePair(ReturnType.Char, ReturnType.Int);
+            AddCastablePair(TypeDefinition.Char, TypeDefinition.Int);
         }
 
-        private static void AddCastablePair(ReturnType first, ReturnType second)
+        private static void AddCastablePair(TypeDefinition first, TypeDefinition second)
         {
-            CastsList.Add(new Tuple<ReturnType, ReturnType>(first, second));
-            //CastsList.Add(new Tuple<ReturnType, ReturnType>(second, first));
+            CastsList.Add(new Tuple<TypeDefinition, TypeDefinition>(first, second));
+            //CastsList.Add(new Tuple<TypeDefinition, TypeDefinition>(second, first));
         }
 
-        public static bool IsCastableTo(this ReturnType sourceReturnType, ReturnType targeReturnType)
+        public static bool IsCastableTo(this TypeDefinition sourceTypeDefinition, TypeDefinition targeTypeDefinition)
         {
             return CastsList
-                       .Find(tuple => tuple.Item1 == sourceReturnType && tuple.Item2 == targeReturnType)
+                       .Find(tuple => tuple.Item1 == sourceTypeDefinition && tuple.Item2 == targeTypeDefinition)
                    != null;
         }
 
         //public static void PerformSmartCast(this IExpression left, IExpression right)
         //{
-        //    if(left.ReturnType == right.ReturnType) return;
-        //    if(!left.ReturnType.IsCastableTo(right.ReturnType))
-        //        throw new ExpressionException($"Types {left.ReturnType} and {right.ReturnType} are not castable");
-        //    right.CastToType = left.ReturnType;
+        //    if(left.TypeDefinition == right.TypeDefinition) return;
+        //    if(!left.TypeDefinition.IsCastableTo(right.TypeDefinition))
+        //        throw new ExpressionException($"Types {left.TypeDefinition} and {right.TypeDefinition} are not castable");
+        //    right.CastToType = left.TypeDefinition;
         //}
 
-        public static ReturnType GetResultReturnType(this IExpression expression)
+        public static TypeDefinition GetResultReturnType(this IExpression expression)
         {
             return expression.CastToType != null 
                 ? expression.CastToType
-                : expression.ReturnType;
+                : expression.TypeDefinition;
         }
     }
 }

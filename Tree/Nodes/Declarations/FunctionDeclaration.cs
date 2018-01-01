@@ -16,7 +16,7 @@ namespace MathLang.Tree.Nodes.Declarations
         public Scope Scope { get; }
 
         public string Name { get; set; }
-        public ReturnType ReturnType { get; set; }
+        public TypeDefinition TypeDefinition { get; set; }
         public BlockStatement StatementBlock { get; set; }
 
         public bool IsStatic { get; internal set; }
@@ -59,12 +59,12 @@ namespace MathLang.Tree.Nodes.Declarations
                    AttributeUsages.Add(attributeUsage);
                 });
             }
-            //ReturnType
+            //TypeDefinition
             string strType = string.Empty;
             var syntaxReturnType = syntaxFunctionDeclaration.GetChild(3).CastTo<CommonTree>();
             syntaxReturnType.Children.ForEach(node => strType += node.Text);
-            //ReturnType = TreeHelper.GetReturnType(syntaxFunctionDeclaration.GetChild(1).GetChild(0).Text);
-            ReturnType = TreeHelper.GetReturnType(strType);
+            //TypeDefinition = TreeHelper.GetReturnType(syntaxFunctionDeclaration.GetChild(1).GetChild(0).Text);
+            TypeDefinition = TreeHelper.GetReturnType(strType);
             //Parameters
             var syntaxParametersNode = syntaxFunctionDeclaration.GetChild(4).CastTo<CommonTree>();
             if (syntaxParametersNode.ChildCount > 0)

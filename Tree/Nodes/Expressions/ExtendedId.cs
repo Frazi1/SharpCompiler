@@ -17,8 +17,8 @@ namespace MathLang.Tree.Nodes.Expressions
         public Scope Scope { get; }
 
         public string Name => string.Join(".", IdList);
-        public ReturnType ReturnType { get; set; }
-        public ReturnType CastToType { get; set; }
+        public TypeDefinition TypeDefinition { get; set; }
+        public TypeDefinition CastToType { get; set; }
         public VariableDeclaration VariableDeclaration { get; set; }
         
         public ExtendedId(INode parent, Scope parentScope)
@@ -31,7 +31,7 @@ namespace MathLang.Tree.Nodes.Expressions
         {
             syntaxExtendedId.Children.Cast<CommonTree>()
                 .ForEach(id => IdList.Add(id.Text));
-            ReturnType = ReturnType.Unset;
+            TypeDefinition = TypeDefinition.Unset;
         }
 
         public override string ToString()
