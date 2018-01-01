@@ -36,6 +36,7 @@ namespace MathLang
                 });
 
                 //AST
+                if (ErrorService.Instance.HasErrors) return;
                 SemanticsRunner.Run(astProgram);
 
                 //                TreeConsolePrinter tp = new TreeConsolePrinter();
