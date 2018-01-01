@@ -57,12 +57,9 @@ namespace MathLang.Tree.Semantics
                 if (modifier == Modifier.Extern) classDeclaration.IsExtern = true;
             });
 
-            if (classDeclaration.Name != MainClassName)
-            {
                 if (!classDeclaration.IsStatic && !classDeclaration.IsAttribute)
                     throw new ScopeException(
                         $"Only static classes are supported at the moment ({classDeclaration.Name})");
-            }
             classDeclaration.FunctionDeclarationNodes
                 .ForEach(functionDeclaration =>
                 {
@@ -93,7 +90,7 @@ namespace MathLang.Tree.Semantics
         {
             var mainClass = program.Scope.LocalClassSearch(MainClassName);
             if (mainClass == null)
-                throw new ScopeException("Program must contain a non-static class\"Main\"");
+                throw new ScopeException("Program must contain a class\"Main\"");
             var mainFunc = mainClass.Scope.LocalFunctionSearch(MainFuncName);
             if (mainFunc == null)
                 throw new ScopeException("Program must contain a \"Main\" function inside of Main class");
