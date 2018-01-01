@@ -87,7 +87,7 @@ class_declaration: modifiers CLASS_WORD ID class_block -> ^(CLASS_WORD ID modifi
 
 class_block: '{'! static_func_or_var_declaration* '}'! -> ^(CLASSBLOCK static_func_or_var_declaration * );
 
-static_func_or_var_declaration: static_declaration | funcdeclaration ;
+static_func_or_var_declaration: declaration | funcdeclaration ;
 
 class_list:  class_declaration* ;
 
@@ -126,19 +126,18 @@ expression:
 extended_id: ID (DOT ID)* -> ^(EXTENDED_ID ID*);
 
 arrayelement:  extended_id OPEN_SQUARE_BRACE mathexpression CLOSE_SQUARE_BRACE -> ^(ARRAYELEMENT extended_id mathexpression) ;
-static_declaration:  MODIFIER declaration -> ^(STATIC_DECLARATION declaration);
 
 declaration: var_declaration 
 ;
-var_declaration: t=type! d_list[t.Tree] ';'!;
+var_declaration: m=modifiers! t=type! d_list[t.Tree, m.Tree] ';'!;
 
-d_list[object type]: d[type] (','! d[type])* ;
+d_list[object type, object mod]: d[type, mod] (','! d[type, mod])* ;
 
-d[object type]: declarationbody_d[type] | longdeclarationbody_d[type] ;
+d[object type, object mod]: declarationbody_d[type, mod] | longdeclarationbody_d[type, mod] ;
 
-declarationbody_d[object type]: (ID -> ^(VARDECLARATION ^(RETURN_TYPE {$type}) ID) );				
+declarationbody_d[object type, object mod]: (ID -> ^(VARDECLARATION {$mod} ^(RETURN_TYPE {$type}) ID) );				
 
-longdeclarationbody_d[object type]: (ID ASSIGN expression  -> ^(VARDECLARATION ^(RETURN_TYPE {$type}) ID expression));
+longdeclarationbody_d[object type, object mod]: (ID ASSIGN expression  -> ^(VARDECLARATION {$mod} ^(RETURN_TYPE {$type}) ID expression));
 
 declarationbody: 
 					type ID -> ^(VARDECLARATION ^(RETURN_TYPE type) ID )
