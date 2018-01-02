@@ -48,7 +48,7 @@ namespace MathLang
                 generator.SaveFiles();
                 //Helpers.FilePrinter.WriteTextToFile(generator.CodeListing, "output.j");
                 //Console.WriteLine(generator.CodeListing);
-                RunJasminBuildScript();
+                //RunJasminBuildScript();
             }
             catch (Exception e)
             {

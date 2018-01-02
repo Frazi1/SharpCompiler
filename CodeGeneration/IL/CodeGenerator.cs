@@ -71,11 +71,17 @@ namespace MathLang.CodeGeneration
 
         public void DeclareClass(ClassDeclaration classNode, ModuleBuilder module)
         {
-            // create public static class
-            TypeBuilder typeBuilder = module.DefineType(classNode.Name, TypeAttributes.Public |
-                                                                        TypeAttributes.Class | TypeAttributes.Sealed | TypeAttributes.Abstract);
+            TypeBuilder typeBuilder = null;
 
-            classTypeBuilders.Add(classNode.Name, typeBuilder);
+            if (!classNode.IsExtern)
+            {
+                // create public static class
+                typeBuilder = module.DefineType(classNode.Name, TypeAttributes.Public |
+                                                                TypeAttributes.Class | TypeAttributes.Sealed |
+                                                                TypeAttributes.Abstract);
+
+                classTypeBuilders.Add(classNode.Name, typeBuilder);
+            }
 
             foreach (var funcNode in classNode.FunctionDeclarationNodes)
             {
@@ -116,7 +122,7 @@ namespace MathLang.CodeGeneration
 
                 if (attribute == null) return;
 
-                var paths = attribute.FunctionCallParameters[0].CastTo<StringExpression>().Value.Split('/');
+                var paths = attribute.FunctionCallParameters[0].CastTo<StringExpression>().Value.Replace("\"", "").Split('/');
 
                 if(paths.Count() < 2)
                     throw new ArgumentException("No class or method name in attribute");
@@ -126,12 +132,12 @@ namespace MathLang.CodeGeneration
 
                 var typesNamesTuple2 = GenerationHelper.GetTypesAndNamesOfFuncParams(functionDeclarationNode.ParameterNodes);
                 
-                Type externalClassType = Type.GetType(className);
+                Type externalClassType = Assembly.Load(className).GetTypes().First(t => t.Name == className);//Type.GetType(className);
 
-                if(externalClassType == null)
+                if (externalClassType == null)
                     throw new ApplicationException($"No external class with name {className} found");
                 
-                MethodInfo methodInfo = externalClassType.GetMethod(methodName,typesNamesTuple2.Item1);
+                MethodInfo methodInfo = externalClassType.GetMethod(methodName, typesNamesTuple2.Item1);
                 
                 funcsMethodBuilders.Add(functionDeclarationNode.FullName, methodInfo);
 
