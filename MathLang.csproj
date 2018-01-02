@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompilerSettings.cs" />
     <Compile Include="Helpers\AstNodePrinter.cs" />
     <Compile Include="CodeGeneration\Helpers\Converters\ReturnTypeToJavaConverter.cs" />
     <Compile Include="CodeGeneration\Jasmin\CombinedInstuctionsGeneration.cs" />
