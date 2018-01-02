@@ -73,8 +73,7 @@
     <Compile Include="Tree\Nodes\Modifiers.cs" />
     <Compile Include="Tree\Semantics\FunctionIndexingStrategy.cs" />
     <Compile Include="Tree\Semantics\Library\Builder.cs" />
-    <Compile Include="Tree\Semantics\Library\ConsoleBuilder.cs" />
-    <Compile Include="Tree\Semantics\Library\JavaRefAttributeBuilder.cs" />
+    <Compile Include="Tree\Semantics\Library\AttributeBuilder.cs" />
     <Compile Include="Tree\Semantics\Tables\CastsTable.cs" />
     <Compile Include="Tree\Nodes\Expressions\CharExpression.cs" />
     <Compile Include="Tree\Nodes\Expressions\ExtendedId.cs" />
