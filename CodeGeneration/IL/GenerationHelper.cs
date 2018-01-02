@@ -57,10 +57,10 @@ namespace MathLang.CodeGeneration
                 names.Add(functionDeclarationParameter.Name);
             }
 
-            if (types.Count == 0)
-            {
-                types.Add(typeof(void));
-            }
+            //if (types.Count == 0)
+            //{
+            //    types.Add(typeof(void));
+            //}
 
             return new Tuple<Type[], string[]>(types.ToArray(), names.ToArray());
         }

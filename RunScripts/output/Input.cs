@@ -1,16 +1,23 @@
-﻿
-static class Main
-{
-    //static int[] Strs = new int[3];
+﻿static class Main
+{    //static int[] Strs = new int[3];
 
     static void Main()
     {
         Library.PrintInt(1);
-        Main.Meow(5);
+        Cat.Meow('p');
+        Meow();
     }
 
-    static void Meow(int i)
+    static void Meow()
     {
-        Library.PrintInt(i);
+        Library.PrintInt(9);
+    }
+}
+
+static class Cat
+{
+    static void Meow(char uiui)
+    {
+        Library.PrintChar(uiui);
     }
 }

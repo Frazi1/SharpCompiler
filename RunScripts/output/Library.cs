@@ -11,5 +11,6 @@
     static extern void PrintBool(bool b);
 
     [JavaRef("Library/printChar")]
+    [DotNetRef("Library/PrintChar")]
     static extern void PrintChar(char c);
 }

@@ -136,7 +136,7 @@ namespace MathLang.CodeGeneration
 
                 if (externalClassType == null)
                     throw new ApplicationException($"No external class with name {className} found");
-                
+
                 MethodInfo methodInfo = externalClassType.GetMethod(methodName, typesNamesTuple2.Item1);
                 
                 funcsMethodBuilders.Add(functionDeclarationNode.FullName, methodInfo);
