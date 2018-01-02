@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using Antlr.Runtime;
 using Antlr.Runtime.Tree;
 using MathLang.CodeGeneration;
@@ -15,45 +16,18 @@ namespace MathLang
     {
         public static void Main(string[] args)
         {
-            var astProgram = new Tree.Nodes.Program();
-            var paths = ExpandWildCard(args);
+            ProcessArguments(args, out var files, out var parameters);
+
+            var paths = ExpandWildCard(files);
+            var compilerSettings = CompilerSettings.ParseCompilerSettings(paths, parameters);
             try
             {
-                paths.ForEach(arg =>
-                {
-                    ICharStream input = new ANTLRFileStream(arg);
-                    MathLangLexer lexer = new MathLangLexer(input);
-                    CommonTokenStream tokens = new CommonTokenStream(lexer);
-                    MathLangParser parser = new MathLangParser(tokens);
-                    ITree program = (ITree) parser.execute().Tree;
-                    AstNodePrinter.Print(program);
-
-                    if (ErrorService.Instance.HasErrors)
-                    {
-                        ErrorService.Instance.PrintErrorsToConsole();
-                    }
-                    astProgram.Construct(program.CastTo<CommonTree>());
-                });
-
-                //AST
-                if (ErrorService.Instance.HasErrors) return;
-                SemanticsRunner.Run(astProgram);
-
-                //                TreeConsolePrinter tp = new TreeConsolePrinter();
-                //                tp.Print(astProgram);
-
-                JasminCodeGenerator generator = new JasminCodeGenerator();
-                CodeGenerator cg = new CodeGenerator("AssTest",  astProgram);
-                generator.GenerateCode(astProgram);
-                generator.SaveFiles();
-                //Helpers.FilePrinter.WriteTextToFile(generator.CodeListing, "output.j");
-                //Console.WriteLine(generator.CodeListing);
-                //RunJasminBuildScript();
+                RunCompiler(compilerSettings);
             }
             catch (Exception e)
             {
 #if DEBUG
-                Console.WriteLine("Error: {0}", e);   
+                Console.WriteLine("Error: {0}", e);
 #else
                 Console.WriteLine("Error: {0}", e.Message);
 #endif
@@ -61,6 +35,55 @@ namespace MathLang
 #if DEBUG
             Console.ReadKey();
 #endif
+        }
+
+        private static void RunCompiler(CompilerSettings compilerSettings)
+        {
+            var astProgram = new Tree.Nodes.Program();
+            compilerSettings.FilesPaths.ForEach(path =>
+            {
+                ITree tree = RunSyntaxAnalysys(path, astProgram);
+                if (compilerSettings.PrintSyntaxTree)
+                    AstNodePrinter.Print(tree);
+
+                if (ErrorService.Instance.HasErrors)
+                    ErrorService.Instance.PrintErrorsToConsole();
+                else
+                    astProgram.Construct(tree.CastTo<CommonTree>());
+            });
+
+            //AST
+            if (ErrorService.Instance.HasErrors) return;
+            SemanticsRunner.Run(astProgram);
+
+            if (compilerSettings.PrintAstTree)
+            {
+                TreeConsolePrinter tp = new TreeConsolePrinter();
+                tp.Print(astProgram);
+            }
+
+            if (compilerSettings.CodeGenerationTarget == CodeGenerationTarget.Java)
+            {
+                JasminCodeGenerator generator = new JasminCodeGenerator();
+                generator.GenerateCode(astProgram);
+                generator.SaveFiles();
+            }
+            else if (compilerSettings.CodeGenerationTarget == CodeGenerationTarget.Dotnet)
+            {
+                CodeGenerator cg = new CodeGenerator("AssTest", astProgram);
+            }
+            //Helpers.FilePrinter.WriteTextToFile(generator.CodeListing, "output.j");
+            //Console.WriteLine(generator.CodeListing);
+            //RunJasminBuildScript();
+        }
+
+        private static ITree RunSyntaxAnalysys(string arg, Tree.Nodes.Program astProgram)
+        {
+            ICharStream input = new ANTLRFileStream(arg);
+            MathLangLexer lexer = new MathLangLexer(input);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            MathLangParser parser = new MathLangParser(tokens);
+            return (ITree) parser.execute().Tree;
         }
 
         private static IEnumerable<string> ExpandWildCard(IEnumerable<string> wildcards)
@@ -109,6 +132,14 @@ namespace MathLang
             //            startInfo.Arguments = "-jar %JASMIN_PATH% *.j >jasmin_buildlog.txt 2>&1";
             process.StartInfo = startInfo;
             process.Start();
+        }
+
+        private static void ProcessArguments(IEnumerable<string> args, out IEnumerable<string> files,
+            out IEnumerable<string> parameters)
+        {
+            var enumerable = args as IList<string> ?? args.ToList();
+            files = enumerable.Where(s => !s.Contains("--")).ToList();
+            parameters = enumerable.Where(s => s.Contains("--")).ToList();
         }
     }
 }
