@@ -48,6 +48,8 @@
     <Compile Include="CodeGeneration\Jasmin\ExpressionInstructionsGeneration.cs" />
     <Compile Include="CodeGeneration\Jasmin\JasminCodeGenerator.cs" />
     <Compile Include="CodeGeneration\Jasmin\StatementInstructionsGeneration.cs" />
+    <Compile Include="CodeGeneration\IL\CodeGenerator.cs" />
+    <Compile Include="CodeGeneration\IL\GenerationHelper.cs" />
     <Compile Include="Helpers\ErrorService.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Helpers\FilePrinter.cs" />

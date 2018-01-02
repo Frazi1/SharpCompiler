@@ -43,11 +43,12 @@ namespace MathLang
                 //                tp.Print(astProgram);
 
                 JasminCodeGenerator generator = new JasminCodeGenerator();
+                CodeGenerator cg = new CodeGenerator("AssTest",  astProgram);
                 generator.GenerateCode(astProgram);
                 generator.SaveFiles();
                 //Helpers.FilePrinter.WriteTextToFile(generator.CodeListing, "output.j");
                 //Console.WriteLine(generator.CodeListing);
-                RunJasminBuildScript();
+                //RunJasminBuildScript();
             }
             catch (Exception e)
             {
