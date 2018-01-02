@@ -7,6 +7,7 @@ using System.Reflection.Emit;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
+using MathLang.Extensions;
 using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Expressions;
 using MathLang.Tree.Nodes.Interfaces;
@@ -27,9 +28,13 @@ namespace MathLang.CodeGeneration
 
         protected Dictionary<string, TypeBuilder> classTypeBuilders = new Dictionary<string, TypeBuilder>();
 
-        protected Dictionary<string, MethodBuilder> funcsMethodBuilders = new Dictionary<string, MethodBuilder>();
+        /// <summary>
+        /// contains both method builders (for our methods) and method infos (for external libraries methods)
+        /// </summary>
+        protected Dictionary<string, MethodInfo> funcsMethodBuilders = new Dictionary<string, MethodInfo>();
 
         protected Dictionary<string, LocalBuilder> varsLocalBuilders = new Dictionary<string, LocalBuilder>();
+
 
         public CodeGenerator(string assName, Tree.Nodes.Program programNode)
         {
@@ -51,11 +56,12 @@ namespace MathLang.CodeGeneration
 
         public void GenerateProgram(Tree.Nodes.Program programNode)
         {
+            //create all class and method builders
             foreach (var classNode in programNode.ClassNodes)
             {
                 DeclareClass(classNode, module);
             }
-
+            //generate code for all declared classes 
             foreach (var classNode in programNode.ClassNodes)
             {
                 GenerateClass(classNode, module);
@@ -65,8 +71,6 @@ namespace MathLang.CodeGeneration
 
         public void DeclareClass(ClassDeclaration classNode, ModuleBuilder module)
         {
-            if (classNode.Name == "Console") return;
-
             // create public static class
             TypeBuilder typeBuilder = module.DefineType(classNode.Name, TypeAttributes.Public |
                                                                         TypeAttributes.Class | TypeAttributes.Sealed | TypeAttributes.Abstract);
@@ -75,14 +79,17 @@ namespace MathLang.CodeGeneration
 
             foreach (var funcNode in classNode.FunctionDeclarationNodes)
             {
-                GeclareFunc(funcNode, typeBuilder);
+                DeclareFunc(funcNode, typeBuilder);
             }
-        }
 
+        }
+        
         public void GenerateClass(ClassDeclaration classNode, ModuleBuilder module)
         {
-            //if (classNode.Name == "Console") return;
-
+            //we don't generate external classes, we only declare methods in them 
+            //(by finding appropriate methods in external dll)
+            if (classNode.IsExtern) return;
+            
             TypeBuilder typeBuilder = null;
 
             if (classTypeBuilders.ContainsKey(classNode.Name))
@@ -101,8 +108,36 @@ namespace MathLang.CodeGeneration
             Type helloWorldType = typeBuilder.CreateType();
         }
 
-        public void GeclareFunc(FunctionDeclaration functionDeclarationNode, TypeBuilder typeBuilder)
+        public void DeclareFunc(FunctionDeclaration functionDeclarationNode, TypeBuilder typeBuilder)
         {
+            if (functionDeclarationNode.IsExternal)
+            {
+                var attribute = functionDeclarationNode.AttributeUsages.FirstOrDefault(att => att.Name.Name == "DotNetRef");
+
+                if (attribute == null) return;
+
+                var paths = attribute.FunctionCallParameters[0].CastTo<StringExpression>().Value.Split('/');
+
+                if(paths.Count() < 2)
+                    throw new ArgumentException("No class or method name in attribute");
+
+                string className = paths[0];
+                string methodName = paths[1];
+
+                var typesNamesTuple2 = GenerationHelper.GetTypesAndNamesOfFuncParams(functionDeclarationNode.ParameterNodes);
+                
+                Type externalClassType = Type.GetType(className);
+
+                if(externalClassType == null)
+                    throw new ApplicationException($"No external class with name {className} found");
+                
+                MethodInfo methodInfo = externalClassType.GetMethod(methodName,typesNamesTuple2.Item1);
+                
+                funcsMethodBuilders.Add(functionDeclarationNode.FullName, methodInfo);
+
+                return;
+            }
+
             //get tuple of arrays of type and names of func parameters
             var typesNamesTuple = GenerationHelper.GetTypesAndNamesOfFuncParams(functionDeclarationNode.ParameterNodes);
 
@@ -138,22 +173,26 @@ namespace MathLang.CodeGeneration
                 }
             }
 
-            funcsMethodBuilders.Add(functionDeclarationNode.Name, methodbuilder);
+            funcsMethodBuilders.Add(functionDeclarationNode.FullName, methodbuilder);
         }
 
         public void GenerateFunc(FunctionDeclaration functionDeclarationNode, TypeBuilder typeBuilder)
         {
+            if(functionDeclarationNode.IsExternal) return;
+
             varsLocalBuilders.Clear();
 
-            if (funcsMethodBuilders.Keys.Contains(functionDeclarationNode.Name))
+            if (funcsMethodBuilders.Keys.Contains(functionDeclarationNode.FullName))
             {
-                var methodbuilder = funcsMethodBuilders[functionDeclarationNode.Name];
+                var methodbuilder = funcsMethodBuilders[functionDeclarationNode.FullName] as MethodBuilder;
+
+                if (methodbuilder == null) return;
 
                 GenerateFuncStatementBlock(functionDeclarationNode.StatementBlock, methodbuilder);
             }
             else
             {
-                throw new NotSupportedException($"Cannot find func {functionDeclarationNode.Name}");
+                throw new NotSupportedException($"Cannot find func {functionDeclarationNode.FullName}");
             }
             
         }
@@ -216,24 +255,24 @@ namespace MathLang.CodeGeneration
         public void GenerateFuncCall(FunctionCall funcCallNode, ILGenerator ilGenerator)
         {
             //TODO CHECK .
-            var ids = funcCallNode.FunctionDeclaration.FullName.Split('.');
+            //var ids = funcCallNode.FunctionDeclaration.FullName.Split('/');
 
-            if (ids.Length == 2 && ids[0] == "Console")
-            {
-                //get argument type for Write line
-                Type[] param = new Type[]
-                {
-                    funcCallNode.FunctionCallParameters[0].ReturnType.ConvertToType()
-                };
-                //generate method
-                MethodInfo writeLineMI = typeof(Console).GetMethod(
-                    "WriteLine",
-                    param);
-                //load parameter onto the stack
-                GenerateExpression(funcCallNode.FunctionCallParameters[0], ilGenerator);
-                //call WriteLine
-                ilGenerator.EmitCall(OpCodes.Call, writeLineMI, null);
-            }
+            //if (ids.Length == 2 && ids[0] == "Console")
+            //{
+            //    //get argument type for Write line
+            //    Type[] param = new Type[]
+            //    {
+            //        funcCallNode.FunctionCallParameters[0].ReturnType.ConvertToType()
+            //    };
+            //    //generate method
+            //    MethodInfo writeLineMI = typeof(Console).GetMethod(
+            //        "WriteLine",
+            //        param);
+            //    //load parameter onto the stack
+            //    GenerateExpression(funcCallNode.FunctionCallParameters[0], ilGenerator);
+            //    //call WriteLine
+            //    ilGenerator.EmitCall(OpCodes.Call, writeLineMI, null);
+            //}
             //if (ids.Length == 1)
             {
                 foreach (var functionCallParameter in funcCallNode.FunctionCallParameters)
