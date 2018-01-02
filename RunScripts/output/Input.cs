@@ -1,23 +1,32 @@
 ﻿static class Main
-{    //static int[] Strs = new int[3];
+{
 
-    static void Main()
+    static void Main(string[] args)
     {
-        Library.PrintInt(1);
-        Cat.Meow('p');
-        Meow();
+        int len = AnnaTest.GetLen(9);
+
+        AnnaTest.PrintHelen();
+
     }
 
-    static void Meow()
-    {
-        Library.PrintInt(9);
-    }
 }
 
-static class Cat
+static class AnnaTest
 {
-    static void Meow(char uiui)
+    static int Helen = 89;
+
+    static int GetLen(int lll)
     {
-        Library.PrintChar(uiui);
+
+
+        Helen = lll;
+
+        return lll;
+    }
+
+    static void PrintHelen()
+    {
+        Library.PrintInt(42);
+        Library.PrintInt(Helen);
     }
 }

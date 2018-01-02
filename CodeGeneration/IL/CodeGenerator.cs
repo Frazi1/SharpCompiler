@@ -28,6 +28,8 @@ namespace MathLang.CodeGeneration
 
         protected Dictionary<string, TypeBuilder> classTypeBuilders = new Dictionary<string, TypeBuilder>();
 
+        protected  Dictionary<string, FieldBuilder> fieldBuilders  = new Dictionary<string, FieldBuilder>();
+
         /// <summary>
         /// contains both method builders (for our methods) and method infos (for external libraries methods)
         /// </summary>
@@ -71,6 +73,7 @@ namespace MathLang.CodeGeneration
 
         public void DeclareClass(ClassDeclaration classNode, ModuleBuilder module)
         {
+
             TypeBuilder typeBuilder = null;
 
             if (!classNode.IsExtern)
@@ -83,35 +86,41 @@ namespace MathLang.CodeGeneration
                 classTypeBuilders.Add(classNode.Name, typeBuilder);
             }
 
+            if (classNode.VarDeclarationNodes.Count > 0)
+            {
+                ConstructorBuilder constructor = typeBuilder.DefineConstructor(
+                    MethodAttributes.Private | MethodAttributes.Static | MethodAttributes.HideBySig |
+                    MethodAttributes.SpecialName | MethodAttributes.RTSpecialName, CallingConventions.Standard, new Type[0]);
+
+                ILGenerator ilGenerator = constructor.GetILGenerator();
+                
+                foreach (var declarationNode in classNode.VarDeclarationNodes)
+                {
+                    DeclareField(declarationNode, typeBuilder, ilGenerator);
+                }
+
+                ilGenerator.Emit(OpCodes.Ret);
+            }
             foreach (var funcNode in classNode.FunctionDeclarationNodes)
             {
                 DeclareFunc(funcNode, typeBuilder);
             }
-
+            
         }
         
-        public void GenerateClass(ClassDeclaration classNode, ModuleBuilder module)
+        public void DeclareField(VariableDeclaration  varDeclarationNode, TypeBuilder typeBuilder, ILGenerator ilGenerator)
         {
-            //we don't generate external classes, we only declare methods in them 
-            //(by finding appropriate methods in external dll)
-            if (classNode.IsExtern) return;
+            FieldBuilder fieldBuilder = typeBuilder.DefineField(varDeclarationNode.Name,
+                varDeclarationNode.ReturnType.ConvertToType(), FieldAttributes.Public | FieldAttributes.Static);
+
+            fieldBuilders.Add(varDeclarationNode.FullName, fieldBuilder);
             
-            TypeBuilder typeBuilder = null;
-
-            if (classTypeBuilders.ContainsKey(classNode.Name))
+            if (varDeclarationNode.Value != null)
             {
-                typeBuilder = classTypeBuilders[classNode.Name];
+                GenerateExpression(varDeclarationNode.Value, ilGenerator);
+                //pop var from the stack and store in a value
+                ilGenerator.Emit(OpCodes.Stsfld, fieldBuilder);
             }
-
-            if (typeBuilder == null) return;
-
-            foreach (var funcNode in classNode.FunctionDeclarationNodes)
-            {
-                GenerateFunc(funcNode, typeBuilder);
-            }
-
-            // ??? will it work if it calls func from another class, that is not baked yet?
-            Type helloWorldType = typeBuilder.CreateType();
         }
 
         public void DeclareFunc(FunctionDeclaration functionDeclarationNode, TypeBuilder typeBuilder)
@@ -144,8 +153,7 @@ namespace MathLang.CodeGeneration
                 return;
             }
 
-            //get tuple of arrays of type and names of func parameters
-            var typesNamesTuple = GenerationHelper.GetTypesAndNamesOfFuncParams(functionDeclarationNode.ParameterNodes);
+           
 
             MethodBuilder methodbuilder;
 
@@ -162,6 +170,9 @@ namespace MathLang.CodeGeneration
             }
             else
             {
+                //get tuple of arrays of type and names of func parameters
+                var typesNamesTuple = GenerationHelper.GetTypesAndNamesOfFuncParams(functionDeclarationNode.ParameterNodes);
+
                 methodbuilder =
                     typeBuilder.DefineMethod(functionDeclarationNode.Name,
                         MethodAttributes.HideBySig |
@@ -180,6 +191,30 @@ namespace MathLang.CodeGeneration
             }
 
             funcsMethodBuilders.Add(functionDeclarationNode.FullName, methodbuilder);
+        }
+
+        public void GenerateClass(ClassDeclaration classNode, ModuleBuilder module)
+        {
+            //we don't generate external classes, we only declare methods in them 
+            //(by finding appropriate methods in external dll)
+            if (classNode.IsExtern) return;
+
+            TypeBuilder typeBuilder = null;
+
+            if (classTypeBuilders.ContainsKey(classNode.Name))
+            {
+                typeBuilder = classTypeBuilders[classNode.Name];
+            }
+
+            if (typeBuilder == null) return;
+
+            foreach (var funcNode in classNode.FunctionDeclarationNodes)
+            {
+                GenerateFunc(funcNode, typeBuilder);
+            }
+
+            // ??? will it work if it calls func from another class, that is not baked yet?
+            Type helloWorldType = typeBuilder.CreateType();
         }
 
         public void GenerateFunc(FunctionDeclaration functionDeclarationNode, TypeBuilder typeBuilder)
@@ -319,50 +354,55 @@ namespace MathLang.CodeGeneration
         public void GenerateVarAssignment(VariableAssignment varAssignmentNode, ILGenerator ilGenerator)
         {
             GenerateExpression(varAssignmentNode.AssignmentValue, ilGenerator);
-
-            //local var
-            if (varsLocalBuilders.Keys.Contains(varAssignmentNode.VariableName.VariableDeclaration.FullName))
-            {
-                var localBuilder = varsLocalBuilders[varAssignmentNode.VariableName.VariableDeclaration.FullName];
-                //pop var from the stack and store in a value
-                ilGenerator.Emit(OpCodes.Stloc, localBuilder);
-            }
-            //func argument var
-            else
-            {
-                if (varAssignmentNode.VariableName.VariableDeclaration != null)
-                {
-                    if (varAssignmentNode.VariableName.VariableDeclaration is FunctionVariableDeclarationParameter fdParam)
-                    {
-                        //pop var from the stack and store in a func arg
-                        ilGenerator.Emit(OpCodes.Starg, varAssignmentNode.VariableName.VariableDeclaration.Index.Value);
-                    }
-                }
-            }
+            
+            PopAndStore(varAssignmentNode.VariableName.VariableDeclaration.FullName, 
+                varAssignmentNode.VariableName.VariableDeclaration.Index, ilGenerator);
+            ////local var
+            //if (varsLocalBuilders.Keys.Contains(varAssignmentNode.VariableName.VariableDeclaration.FullName))
+            //{
+            //    var localBuilder = varsLocalBuilders[varAssignmentNode.VariableName.VariableDeclaration.FullName];
+            //    //pop var from the stack and store in a value
+            //    ilGenerator.Emit(OpCodes.Stloc, localBuilder);
+            //}
+            ////func argument var
+            //else
+            //{
+            //    if (varAssignmentNode.VariableName.VariableDeclaration != null)
+            //    {
+            //        if (varAssignmentNode.VariableName.VariableDeclaration is FunctionVariableDeclarationParameter fdParam)
+            //        {
+            //            //pop var from the stack and store in a func arg
+            //            ilGenerator.Emit(OpCodes.Starg, varAssignmentNode.VariableName.VariableDeclaration.Index.Value);
+            //        }
+            //    }
+            //}
         }
 
         public void GenerateArrayElementAssignment(ArrayElementAssignment arrayElementAssignmentNode, ILGenerator ilGenerator)
         {
             #region load_arr_onto_stack
-            //local var
-            if (varsLocalBuilders.Keys.Contains(arrayElementAssignmentNode.ArrayElementReference.ArrayDeclaration.FullName))
-            {
-                var localBuilder = varsLocalBuilders[arrayElementAssignmentNode.ArrayElementReference.ArrayDeclaration.FullName];
-                //load var into the stack
-                ilGenerator.Emit(OpCodes.Ldloc, localBuilder);
-            }
-            //func arg
-            else
-            {
-                if (arrayElementAssignmentNode.ArrayElementReference.Name.VariableDeclaration != null)
-                {
-                    if (arrayElementAssignmentNode.ArrayElementReference.Name.VariableDeclaration is FunctionVariableDeclarationParameter fdParam)
-                    {
-                        ilGenerator.Emit(OpCodes.Ldarg, (int)arrayElementAssignmentNode.ArrayElementReference.Name.VariableDeclaration.Index);
+            ////local var
+            //if (varsLocalBuilders.Keys.Contains(arrayElementAssignmentNode.ArrayElementReference.ArrayDeclaration.FullName))
+            //{
+            //    var localBuilder = varsLocalBuilders[arrayElementAssignmentNode.ArrayElementReference.ArrayDeclaration.FullName];
+            //    //load var into the stack
+            //    ilGenerator.Emit(OpCodes.Ldloc, localBuilder);
+            //}
+            ////func arg
+            //else
+            //{
+            //    if (arrayElementAssignmentNode.ArrayElementReference.Name.VariableDeclaration != null)
+            //    {
+            //        if (arrayElementAssignmentNode.ArrayElementReference.Name.VariableDeclaration is FunctionVariableDeclarationParameter fdParam)
+            //        {
+            //            ilGenerator.Emit(OpCodes.Ldarg, (int)arrayElementAssignmentNode.ArrayElementReference.Name.VariableDeclaration.Index);
 
-                    }
-                }
-            }
+            //        }
+            //    }
+            //}
+
+            LoadOntoStack(arrayElementAssignmentNode.ArrayElementReference.Name, ilGenerator);
+
             #endregion
 
             //load arr index onto stack
@@ -503,37 +543,39 @@ namespace MathLang.CodeGeneration
         private void GenerateExtendedId(ExtendedId extendedIdNode, ILGenerator ilGenerator)
         {
             //TODO: Check .
-            var ids = extendedIdNode.VariableDeclaration.FullName.Split('.');
+            //var ids = extendedIdNode.VariableDeclaration.FullName.Split('.');
+
+            LoadOntoStack(extendedIdNode, ilGenerator);
 
             //local var/func argument or this class static field
-            if (ids.Length == 1)
-            {
-                //local var/func argument or 
-                if (extendedIdNode.VariableDeclaration != null)
-                {
-                    if (extendedIdNode.VariableDeclaration is FunctionVariableDeclarationParameter fdParam)
-                    {
-                        ilGenerator.Emit(OpCodes.Ldarg, (int)extendedIdNode.VariableDeclaration.Index);
+            //if (ids.Length == 1)
+            //{
+            //    //local var/ func argument or
+            //    if (extendedIdNode.VariableDeclaration != null)
+            //    {
+            //        if (extendedIdNode.VariableDeclaration is FunctionVariableDeclarationParameter fdParam)
+            //        {
+            //            ilGenerator.Emit(OpCodes.Ldarg, (int)extendedIdNode.VariableDeclaration.Index);
 
-                    }
-                    else
-                    {
-                        //ilGenerator.Emit(OpCodes.Ldloc, (int)extendedIdNode.Declaration.Index);
+            //        }
+            //        else
+            //        {
+            //            ilGenerator.Emit(OpCodes.Ldloc, (int)extendedIdNode.Declaration.Index);
 
-                        if (varsLocalBuilders.Keys.Contains(extendedIdNode.VariableDeclaration.FullName))
-                        {
-                            var localBuilder = varsLocalBuilders[extendedIdNode.VariableDeclaration.FullName];
+            //            if (varsLocalBuilders.Keys.Contains(extendedIdNode.VariableDeclaration.FullName))
+            //            {
+            //                var localBuilder = varsLocalBuilders[extendedIdNode.VariableDeclaration.FullName];
 
-                            ilGenerator.Emit(OpCodes.Ldloc, localBuilder);
-                        }
+            //                ilGenerator.Emit(OpCodes.Ldloc, localBuilder);
+            //            }
 
-                    }
-                }
-                //this class static field
-                else
-                {
-                }
-            }
+            //        }
+            //    }
+            //    //this class static field
+            //    else
+            //    {
+            //    }
+            //}
         }
 
         private void GenerateAtom(Atom atomNode, ILGenerator ilGenerator)
@@ -661,29 +703,31 @@ namespace MathLang.CodeGeneration
 
         private void PopAndStore(ExtendedId exId, ILGenerator ilGenerator)
         {
-            //local var
-            if (varsLocalBuilders.Keys.Contains(exId.VariableDeclaration.FullName))
-            {
-                var localBuilder = varsLocalBuilders[exId.VariableDeclaration.FullName];
-                //pop var from the stack and store in a value
-                ilGenerator.Emit(OpCodes.Stloc, localBuilder);
-            }
-            //func argument var
-            else
-            {
-                if (exId.VariableDeclaration != null)
-                {
-                    if (exId.VariableDeclaration is FunctionVariableDeclarationParameter fdParam)
-                    {
-                        //pop var from the stack and store in a func arg
-                        ilGenerator.Emit(OpCodes.Starg, (int)exId.VariableDeclaration.Index);
+            PopAndStore(exId.VariableDeclaration.FullName, exId.VariableDeclaration.Index, ilGenerator);
 
-                    }
-                }
-            }
+            ////local var
+            //if (varsLocalBuilders.Keys.Contains(exId.VariableDeclaration.FullName))
+            //{
+            //    var localBuilder = varsLocalBuilders[exId.VariableDeclaration.FullName];
+            //    //pop var from the stack and store in a value
+            //    ilGenerator.Emit(OpCodes.Stloc, localBuilder);
+            //}
+            ////func argument var
+            //else
+            //{
+            //    if (exId.VariableDeclaration != null)
+            //    {
+            //        if (exId.VariableDeclaration is FunctionVariableDeclarationParameter fdParam)
+            //        {
+            //            //pop var from the stack and store in a func arg
+            //            ilGenerator.Emit(OpCodes.Starg, (int)exId.VariableDeclaration.Index);
+
+            //        }
+            //    }
+            //}
         }
 
-        private void PopAndStore(string name, int index, ILGenerator ilGenerator)
+        private void PopAndStore(string name, int? index, ILGenerator ilGenerator)
         {
             //local var
             if (varsLocalBuilders.Keys.Contains(name))
@@ -693,10 +737,15 @@ namespace MathLang.CodeGeneration
                 ilGenerator.Emit(OpCodes.Stloc, localBuilder);
             }
             //func argument var
-            else
+            else if (index != null)
             {           //pop var from the stack and store in a func arg
-                ilGenerator.Emit(OpCodes.Starg, index);
+                ilGenerator.Emit(OpCodes.Starg, (int)index);
+            }
+            else if (fieldBuilders.ContainsKey(name))
+            {
+                var fieldBuilder = fieldBuilders[name];
 
+                ilGenerator.Emit(OpCodes.Stsfld, fieldBuilder);
             }
         }
 
@@ -710,14 +759,21 @@ namespace MathLang.CodeGeneration
             }
             else
             {
-                if (extendedIdNode.VariableDeclaration != null)
+                if (extendedIdNode.VariableDeclaration != null )
                 {
                     if (extendedIdNode.VariableDeclaration is FunctionVariableDeclarationParameter fdParam)
                     {
                         ilGenerator.Emit(OpCodes.Ldarg, (int)extendedIdNode.VariableDeclaration.Index);
-
+                        return;
                     }
+                    
                 }
+            }
+            if (fieldBuilders.ContainsKey(extendedIdNode.VariableDeclaration.FullName))
+            {
+                var fieldBuilder = fieldBuilders[extendedIdNode.VariableDeclaration.FullName];
+                
+                ilGenerator.Emit(OpCodes.Ldsfld, fieldBuilder);
             }
         }
     }
