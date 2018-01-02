@@ -133,15 +133,16 @@ namespace MathLang.CodeGeneration
 
                 var paths = attribute.FunctionCallParameters[0].CastTo<StringExpression>().Value.Replace("\"", "").Split('/');
 
-                if(paths.Count() < 2)
+                if(paths.Count() < 3)
                     throw new ArgumentException("No class or method name in attribute");
 
-                string className = paths[0];
-                string methodName = paths[1];
+                string libName = paths[0];
+                string className = paths[1];
+                string methodName = paths[2];
 
                 var typesNamesTuple2 = GenerationHelper.GetTypesAndNamesOfFuncParams(functionDeclarationNode.ParameterNodes);
                 
-                Type externalClassType = Assembly.Load(className).GetTypes().First(t => t.Name == className);//Type.GetType(className);
+                Type externalClassType = Assembly.Load(libName).GetTypes().First(t => t.Name == className);
 
                 if (externalClassType == null)
                     throw new ApplicationException($"No external class with name {className} found");

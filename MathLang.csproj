@@ -55,6 +55,9 @@
     <Compile Include="Helpers\FilePrinter.cs" />
     <Compile Include="Helpers\TreeConsolePrinter.cs" />
     <Compile Include="Program.cs" />
+    <None Include="RunScripts\libs\Library.class">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="RunScripts\output\Input.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -141,11 +144,13 @@
       <DependentUpon>@(AntlrGrammarFile)</DependentUpon>
     </Content>
     <Content Include="RunScripts\Antlr3.Runtime.dll" />
+    <None Include="RunScripts\libs\DotNetLib.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="RunScripts\JasminSharp.dll" />
     <Content Include="RunScripts\jasmin_build.bat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="RunScripts\Library.class" />
     <Content Include="RunScripts\MathLang.exe" />
     <Content Include="RunScripts\System.ValueTuple.dll" />
   </ItemGroup>

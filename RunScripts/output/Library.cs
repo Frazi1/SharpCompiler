@@ -4,13 +4,14 @@
     //static extern void PrintString(string s);
 
     [JavaRef("Library/printInt")]
-    [DotNetRef("Library/PrintInt")]
+    [DotNetRef("DotNetLib/Library/PrintInt")]
     static extern void PrintInt(int i);
 
     [JavaRef("Library/printBool")]
+    [DotNetRef("DotNetLib/Library/PrintBool")]
     static extern void PrintBool(bool b);
 
     [JavaRef("Library/printChar")]
-    [DotNetRef("Library/PrintChar")]
+    [DotNetRef("DotNetLib/Library/PrintChar")]
     static extern void PrintChar(char c);
 }
