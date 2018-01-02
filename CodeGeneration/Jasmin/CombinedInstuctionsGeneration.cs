@@ -53,7 +53,7 @@ namespace MathLang.CodeGeneration
                 //else
                 //    correctedName = $"{splittedName[0]}/{splittedName[1].ToCamelCase()}";
                 invokestaticInstruction invokestaticInstruction = InvokestaticInstruction
-                    .WithMethodFullName( /*correctedName*/functionCall.FunctionDeclaration.FullName.ToCamelCase())
+                    .WithMethodFullName( /*correctedName*/functionCall.FunctionDeclaration.FullNameCamelCased)
                     .WithReturnType(ReturnTypeToJavaConverter.ConvertToFullRepresentation(functionCall.ReturnType));
                 functionDeclaration
                     .ParameterNodes

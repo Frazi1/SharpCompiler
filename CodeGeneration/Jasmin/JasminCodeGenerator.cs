@@ -62,7 +62,7 @@ namespace MathLang.CodeGeneration
         public JasminFunctionModule BuildJasminFunction(FunctionDeclaration function)
         {
             JasminFunctionModule jasminFunction = new JasminFunctionModule()
-                .WithName(function.Name.ToCamelCase())
+                .WithName(function.NameCamelCased/*.ToCamelCase()*/)
                 .WithModifiers(JasminModifier.Public, JasminModifier.Static)
                 .WithReturnType(ReturnTypeToJavaConverter.ConvertToFullRepresentation(function.ReturnType));
 
