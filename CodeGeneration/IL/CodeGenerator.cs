@@ -25,6 +25,8 @@ namespace MathLang.CodeGeneration
 
         protected MethodBuilder mainMethodbuilder;
 
+        protected Dictionary<string, TypeBuilder> classTypeBuilders = new Dictionary<string, TypeBuilder>();
+
         protected Dictionary<string, MethodBuilder> funcsMethodBuilders = new Dictionary<string, MethodBuilder>();
 
         protected Dictionary<string, LocalBuilder> varsLocalBuilders = new Dictionary<string, LocalBuilder>();
@@ -49,6 +51,10 @@ namespace MathLang.CodeGeneration
 
         public void GenerateProgram(Tree.Nodes.Program programNode)
         {
+            foreach (var classNode in programNode.ClassNodes)
+            {
+                DeclareClass(classNode, module);
+            }
 
             foreach (var classNode in programNode.ClassNodes)
             {
@@ -57,18 +63,34 @@ namespace MathLang.CodeGeneration
 
         }
 
-        public void GenerateClass(ClassDeclaration classNode, ModuleBuilder module)
+        public void DeclareClass(ClassDeclaration classNode, ModuleBuilder module)
         {
             if (classNode.Name == "Console") return;
 
             // create public static class
             TypeBuilder typeBuilder = module.DefineType(classNode.Name, TypeAttributes.Public |
-                TypeAttributes.Class | TypeAttributes.Sealed | TypeAttributes.Abstract);
+                                                                        TypeAttributes.Class | TypeAttributes.Sealed | TypeAttributes.Abstract);
+
+            classTypeBuilders.Add(classNode.Name, typeBuilder);
 
             foreach (var funcNode in classNode.FunctionDeclarationNodes)
             {
                 GeclareFunc(funcNode, typeBuilder);
             }
+        }
+
+        public void GenerateClass(ClassDeclaration classNode, ModuleBuilder module)
+        {
+            //if (classNode.Name == "Console") return;
+
+            TypeBuilder typeBuilder = null;
+
+            if (classTypeBuilders.ContainsKey(classNode.Name))
+            {
+                typeBuilder = classTypeBuilders[classNode.Name];
+            }
+
+            if (typeBuilder == null) return;
 
             foreach (var funcNode in classNode.FunctionDeclarationNodes)
             {
@@ -211,13 +233,13 @@ namespace MathLang.CodeGeneration
                 //call WriteLine
                 ilGenerator.EmitCall(OpCodes.Call, writeLineMI, null);
             }
-            if (ids.Length == 1)
+            //if (ids.Length == 1)
             {
                 foreach (var functionCallParameter in funcCallNode.FunctionCallParameters)
                 {
                     GenerateExpression(functionCallParameter, ilGenerator);
                 }
-
+                
                 if (funcsMethodBuilders.Keys.Contains(funcCallNode.Name.GetFullPath))
                 {
                     var methodbuilder = funcsMethodBuilders[funcCallNode.Name.GetFullPath];

@@ -43,8 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AstNodePrinter.cs" />
-    <Compile Include="CodeGeneration\CodeGenerator.cs" />
-    <Compile Include="CodeGeneration\GenerationHelper.cs" />
+    <Compile Include="CodeGeneration\IL\CodeGenerator.cs" />
+    <Compile Include="CodeGeneration\IL\GenerationHelper.cs" />
     <Compile Include="ErrorService.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Extensions\TreeConsolePrinter.cs" />
