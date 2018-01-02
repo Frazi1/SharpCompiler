@@ -45,7 +45,7 @@ namespace MathLang.CodeGeneration
             }
         }
 
-        public static Tuple<Type[], string[]> GetTypesAndNamesOfFuncParams(List<FunctionDeclarationParameter> funcParams)
+        public static Tuple<Type[], string[]> GetTypesAndNamesOfFuncParams(List<FunctionVariableDeclarationParameter> funcParams)
         {
             List<string> names = new List<string>();
             List<Type> types = new List<Type>();

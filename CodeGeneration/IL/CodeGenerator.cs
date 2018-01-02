@@ -149,7 +149,7 @@ namespace MathLang.CodeGeneration
             {
                 var methodbuilder = funcsMethodBuilders[functionDeclarationNode.Name];
 
-                GenerateFuncStatementBlock(functionDeclarationNode.StatemenBlock, methodbuilder);
+                GenerateFuncStatementBlock(functionDeclarationNode.StatementBlock, methodbuilder);
             }
             else
             {
@@ -186,7 +186,7 @@ namespace MathLang.CodeGeneration
                 case ArrayElementAssignment arrayElementAssignment:
                     GenerateArrayElementAssignment(arrayElementAssignment, ilGenerator);
                     break;
-                case Declaration declaration:
+                case VariableDeclaration declaration:
                     GenerateDeclaration(declaration, ilGenerator);
                     break;
                 case FunctionCall functionCall:
@@ -215,7 +215,8 @@ namespace MathLang.CodeGeneration
         #region statements
         public void GenerateFuncCall(FunctionCall funcCallNode, ILGenerator ilGenerator)
         {
-            var ids = funcCallNode.Name.GetFullPath.Split('.');
+            //TODO CHECK .
+            var ids = funcCallNode.FunctionDeclaration.FullName.Split('.');
 
             if (ids.Length == 2 && ids[0] == "Console")
             {
@@ -240,20 +241,20 @@ namespace MathLang.CodeGeneration
                     GenerateExpression(functionCallParameter, ilGenerator);
                 }
                 
-                if (funcsMethodBuilders.Keys.Contains(funcCallNode.Name.GetFullPath))
+                if (funcsMethodBuilders.Keys.Contains(funcCallNode.FunctionDeclaration.FullName))
                 {
-                    var methodbuilder = funcsMethodBuilders[funcCallNode.Name.GetFullPath];
+                    var methodbuilder = funcsMethodBuilders[funcCallNode.FunctionDeclaration.FullName];
 
                     ilGenerator.EmitCall(OpCodes.Call, methodbuilder, null);
                 }
                 else
                 {
-                    throw new NotSupportedException($"Cannot find func {funcCallNode.Name.GetFullPath} when calling.");
+                    throw new NotSupportedException($"Cannot find func {funcCallNode.FunctionDeclaration.FullName} when calling.");
                 }
             }
         }
 
-        public void GenerateDeclaration(Declaration declNode, ILGenerator ilGenerator)
+        public void GenerateDeclaration(VariableDeclaration declNode, ILGenerator ilGenerator)
         {
             LocalBuilder localBuilder = ilGenerator.DeclareLocal(declNode.ReturnType.ConvertToType());
 
@@ -275,22 +276,21 @@ namespace MathLang.CodeGeneration
             GenerateExpression(varAssignmentNode.AssignmentValue, ilGenerator);
 
             //local var
-            if (varsLocalBuilders.Keys.Contains(varAssignmentNode.VariableName.GetFullPath))
+            if (varsLocalBuilders.Keys.Contains(varAssignmentNode.VariableName.VariableDeclaration.FullName))
             {
-                var localBuilder = varsLocalBuilders[varAssignmentNode.VariableName.GetFullPath];
+                var localBuilder = varsLocalBuilders[varAssignmentNode.VariableName.VariableDeclaration.FullName];
                 //pop var from the stack and store in a value
                 ilGenerator.Emit(OpCodes.Stloc, localBuilder);
             }
             //func argument var
             else
             {
-                if (varAssignmentNode.VariableName.Declaration != null)
+                if (varAssignmentNode.VariableName.VariableDeclaration != null)
                 {
-                    if (varAssignmentNode.VariableName.Declaration is FunctionDeclarationParameter fdParam)
+                    if (varAssignmentNode.VariableName.VariableDeclaration is FunctionVariableDeclarationParameter fdParam)
                     {
                         //pop var from the stack and store in a func arg
-                        ilGenerator.Emit(OpCodes.Starg, (int)varAssignmentNode.VariableName.Declaration.Index);
-
+                        ilGenerator.Emit(OpCodes.Starg, varAssignmentNode.VariableName.VariableDeclaration.Index.Value);
                     }
                 }
             }
@@ -300,20 +300,20 @@ namespace MathLang.CodeGeneration
         {
             #region load_arr_onto_stack
             //local var
-            if (varsLocalBuilders.Keys.Contains(arrayElementAssignmentNode.ArrayElementReference.Name.GetFullPath))
+            if (varsLocalBuilders.Keys.Contains(arrayElementAssignmentNode.ArrayElementReference.ArrayDeclaration.FullName))
             {
-                var localBuilder = varsLocalBuilders[arrayElementAssignmentNode.ArrayElementReference.Name.GetFullPath];
+                var localBuilder = varsLocalBuilders[arrayElementAssignmentNode.ArrayElementReference.ArrayDeclaration.FullName];
                 //load var into the stack
                 ilGenerator.Emit(OpCodes.Ldloc, localBuilder);
             }
             //func arg
             else
             {
-                if (arrayElementAssignmentNode.ArrayElementReference.Name.Declaration != null)
+                if (arrayElementAssignmentNode.ArrayElementReference.Name.VariableDeclaration != null)
                 {
-                    if (arrayElementAssignmentNode.ArrayElementReference.Name.Declaration is FunctionDeclarationParameter fdParam)
+                    if (arrayElementAssignmentNode.ArrayElementReference.Name.VariableDeclaration is FunctionVariableDeclarationParameter fdParam)
                     {
-                        ilGenerator.Emit(OpCodes.Ldarg, (int)arrayElementAssignmentNode.ArrayElementReference.Name.Declaration.Index);
+                        ilGenerator.Emit(OpCodes.Ldarg, (int)arrayElementAssignmentNode.ArrayElementReference.Name.VariableDeclaration.Index);
 
                     }
                 }
@@ -457,26 +457,27 @@ namespace MathLang.CodeGeneration
 
         private void GenerateExtendedId(ExtendedId extendedIdNode, ILGenerator ilGenerator)
         {
-            var ids = extendedIdNode.GetFullPath.Split('.');
+            //TODO: Check .
+            var ids = extendedIdNode.VariableDeclaration.FullName.Split('.');
 
             //local var/func argument or this class static field
             if (ids.Length == 1)
             {
                 //local var/func argument or 
-                if (extendedIdNode.Declaration != null)
+                if (extendedIdNode.VariableDeclaration != null)
                 {
-                    if (extendedIdNode.Declaration is FunctionDeclarationParameter fdParam)
+                    if (extendedIdNode.VariableDeclaration is FunctionVariableDeclarationParameter fdParam)
                     {
-                        ilGenerator.Emit(OpCodes.Ldarg, (int)extendedIdNode.Declaration.Index);
+                        ilGenerator.Emit(OpCodes.Ldarg, (int)extendedIdNode.VariableDeclaration.Index);
 
                     }
                     else
                     {
                         //ilGenerator.Emit(OpCodes.Ldloc, (int)extendedIdNode.Declaration.Index);
 
-                        if (varsLocalBuilders.Keys.Contains(extendedIdNode.GetFullPath))
+                        if (varsLocalBuilders.Keys.Contains(extendedIdNode.VariableDeclaration.FullName))
                         {
-                            var localBuilder = varsLocalBuilders[extendedIdNode.GetFullPath];
+                            var localBuilder = varsLocalBuilders[extendedIdNode.VariableDeclaration.FullName];
 
                             ilGenerator.Emit(OpCodes.Ldloc, localBuilder);
                         }
@@ -493,28 +494,22 @@ namespace MathLang.CodeGeneration
         private void GenerateAtom(Atom atomNode, ILGenerator ilGenerator)
         {
             //constant we put onto stack
-            string value = atomNode.Value.Replace("\'", "").Replace("true", "1").Replace("false", "0");
+            //string value = atomNode.Value.Replace("\'", "").Replace("true", "1").Replace("false", "0");
 
-            int num;
-            if (Int32.TryParse(value, out num))
+            switch (atomNode)
             {
-                ilGenerator.Emit(OpCodes.Ldc_I4, num);
+                case IntExpression intExpression:
+                    ilGenerator.Emit(OpCodes.Ldc_I4, intExpression.Value);
+                    break;
+                case BoolExpression boolExpression:
+                    ilGenerator.Emit(OpCodes.Ldc_I4, boolExpression.Value ? 1 : 0);
+                    break;
+                case CharExpression charExpression:
+                    ilGenerator.Emit(OpCodes.Ldc_I4_S, charExpression.Value);
+                    break;
+                default:
+                    throw new InvalidOperationException($"Bad value : {atomNode.Value}");
             }
-            else
-            {
-                char ch;
-                if (Char.TryParse(value, out ch))
-                {
-                    ilGenerator.Emit(OpCodes.Ldc_I4_S, (int)ch);
-                }
-                else
-                {
-                    throw new InvalidOperationException($"Bad value : {value}");
-                }
-            }
-
-
-
         }
 
         private void GenerateNewArray(NewArray newArrayNode, ILGenerator ilGenerator)
@@ -622,21 +617,21 @@ namespace MathLang.CodeGeneration
         private void PopAndStore(ExtendedId exId, ILGenerator ilGenerator)
         {
             //local var
-            if (varsLocalBuilders.Keys.Contains(exId.GetFullPath))
+            if (varsLocalBuilders.Keys.Contains(exId.VariableDeclaration.FullName))
             {
-                var localBuilder = varsLocalBuilders[exId.GetFullPath];
+                var localBuilder = varsLocalBuilders[exId.VariableDeclaration.FullName];
                 //pop var from the stack and store in a value
                 ilGenerator.Emit(OpCodes.Stloc, localBuilder);
             }
             //func argument var
             else
             {
-                if (exId.Declaration != null)
+                if (exId.VariableDeclaration != null)
                 {
-                    if (exId.Declaration is FunctionDeclarationParameter fdParam)
+                    if (exId.VariableDeclaration is FunctionVariableDeclarationParameter fdParam)
                     {
                         //pop var from the stack and store in a func arg
-                        ilGenerator.Emit(OpCodes.Starg, (int)exId.Declaration.Index);
+                        ilGenerator.Emit(OpCodes.Starg, (int)exId.VariableDeclaration.Index);
 
                     }
                 }
@@ -662,19 +657,19 @@ namespace MathLang.CodeGeneration
 
         private void LoadOntoStack(ExtendedId extendedIdNode, ILGenerator ilGenerator)
         {
-            if (varsLocalBuilders.Keys.Contains(extendedIdNode.GetFullPath))
+            if (varsLocalBuilders.Keys.Contains(extendedIdNode.VariableDeclaration.FullName))
             {
-                var localBuilder = varsLocalBuilders[extendedIdNode.GetFullPath];
+                var localBuilder = varsLocalBuilders[extendedIdNode.VariableDeclaration.FullName];
 
                 ilGenerator.Emit(OpCodes.Ldloc, localBuilder);
             }
             else
             {
-                if (extendedIdNode.Declaration != null)
+                if (extendedIdNode.VariableDeclaration != null)
                 {
-                    if (extendedIdNode.Declaration is FunctionDeclarationParameter fdParam)
+                    if (extendedIdNode.VariableDeclaration is FunctionVariableDeclarationParameter fdParam)
                     {
-                        ilGenerator.Emit(OpCodes.Ldarg, (int)extendedIdNode.Declaration.Index);
+                        ilGenerator.Emit(OpCodes.Ldarg, (int)extendedIdNode.VariableDeclaration.Index);
 
                     }
                 }
