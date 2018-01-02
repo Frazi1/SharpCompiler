@@ -25,6 +25,7 @@ namespace MathLang.Tree
                 case "bool": return ReturnType.Bool;
                 case "char": return ReturnType.Char;
                 case "void": return ReturnType.Void;
+                case "string": return ReturnType.String;
                 default: throw new ArgumentException(nameof(type));
             }
         }
@@ -73,12 +74,12 @@ namespace MathLang.Tree
                 case FUNC_CALL: return new FunctionCall(parent, parentScope);
                 //case VARDECLARATION: return new VariableDeclaration(parent, parentScope);
                 //case VARASSIGNMENT: return new VariableAssignment(parent, parentScope);
-                case ID: return new VariableReference(parent, parentScope);
                 case ARRAY_INITIALIZER: return new NewArray(parent, parentScope);
                 case ARRAYELEMENT: return new ArrayElementReference(parent, parentScope);
                 case EXTENDED_ID: return new ExtendedId(parent, parentScope);
                 case CHAR: return new CharExpression(parent, parentScope);
                 case NUMBER: return new IntExpression(parent, parentScope);
+                case STRING: return new StringExpression(parent, parentScope);
             }
             return new Expression(parent, parentScope);
         }
@@ -131,9 +132,7 @@ namespace MathLang.Tree
                 case RETURN: return new ReturnStatement(parentNode, parentScope).AsListOf<IStatement>();
                 case FUNC_CALL: return new FunctionCall(parentNode, parentScope).AsListOf<IStatement>();
                 case VARDECLARATION: return new VariableDeclaration(parentNode, parentScope).AsListOf<IStatement>();
-                case ID: return new VariableReference(parentNode, parentScope).AsListOf<IStatement>();
                 case BLOCK: return new BlockStatement(parentNode, parentScope).AsListOf<IStatement>();
-                case ARRAYDECLARATION: return new ArrayDeclaration(parentNode, parentScope).AsListOf<IStatement>();
                 case ARRAY_INITIALIZER: return new NewArray(parentNode, parentScope).AsListOf<IStatement>();
                 case ARRAYELEMENTASSIGNMENT:
                     return new ArrayElementAssignment(parentNode, parentScope).AsListOf<IStatement>();

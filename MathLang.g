@@ -25,7 +25,6 @@ tokens {
   PARAMS              ;
   VARDECLARATION ;
   FUNCDECLARATION ;
-  ARRAYDECLARATION ;
   VARASSIGNMENT ;
   ARRAYELEMENTASSIGNMENT;
   ARRAYELEMENT ;
@@ -38,14 +37,15 @@ tokens {
   STATIC_DECLARATION;
   CLASSBLOCK;
   CLASS_WORD = 'class';
-  CALL;
-  VARS;
-  MULT_ARRAY_DECL;
   FOR_INITIALIZATION;
   FOR_CONDITION;
   FOR_ITERATION;
   ARRAY_SIZE;
   EXTENDED_ID;
+  MODIFIERS;
+  FUNCTION_BODY;
+  ATTRIBUTES;
+  ATTRIBUTE_USAGE;
 }
 
 
@@ -76,8 +76,9 @@ tokens {
 public execute:
 	class_list EOF!  -> ^(PROGRAM class_list) 
 ;
+modifiers: MODIFIER* -> ^(MODIFIERS MODIFIER*);
 
-class_declaration: MODIFIER CLASS_WORD ID class_block -> ^(CLASS_WORD ID class_block) ;
+class_declaration: modifiers CLASS_WORD ID class_block -> ^(CLASS_WORD ID modifiers class_block) ;
 
 class_block: '{'! static_func_or_var_declaration* '}'! -> ^(CLASSBLOCK static_func_or_var_declaration * );
 
@@ -99,7 +100,7 @@ statement: ( declaration
 	| emptystatement
 	 ) ;
 
-type: TYPE ;
+type: array_type | TYPE ;
 array_type: t+=TYPE t+=ARRAY_DECLARATION_MARK ;
 any_type: array_type | type | VOID;
 number :  NUMBER
@@ -107,17 +108,15 @@ number :  NUMBER
 		| funccallbody
 		| CHAR
 		| arrayelement
-		
+		| STRING
 		;
 mathexpression: term ;
 
 expression:  
 			 newexpression
-		| funccallbody
 		| boolexpression
 		| mathexpression
-		
-		
+	//	| funccallbody
 ;
 extended_id: ID (DOT! ID)? -> ^(EXTENDED_ID ID ID?);
 
@@ -125,33 +124,22 @@ arrayelement:  extended_id OPEN_SQUARE_BRACE mathexpression CLOSE_SQUARE_BRACE -
 static_declaration:  MODIFIER declaration -> ^(STATIC_DECLARATION declaration);
 
 declaration: var_declaration 
- | array_declaration;
+;
 var_declaration: t=type! d_list[t.Tree] ';'!;
-array_declaration: at=array_type! d_array_list[at.Tree] ';'!;
 
 d_list[object type]: d[type] (','! d[type])* ;
-d_array_list[object type]: d_array[type] (','! d_array[type])* ;
 
 d[object type]: declarationbody_d[type] | longdeclarationbody_d[type] ;
-d_array[object type]: declarationbody_array_d[type] | longdeclarationbody_array_d[type];
 
 declarationbody_d[object type]: (ID -> ^(VARDECLARATION ^(RETURN_TYPE {$type}) ID) );				
-declarationbody_array_d[object type]: ( ID -> ^(ARRAYDECLARATION ^(RETURN_TYPE {$type}) ID));
 
 longdeclarationbody_d[object type]: (ID ASSIGN expression  -> ^(VARDECLARATION ^(RETURN_TYPE {$type}) ID expression));
-longdeclarationbody_array_d[object type]: (ID ASSIGN expression -> ^(ARRAYDECLARATION ^(RETURN_TYPE {$type}) ID expression));
 
-
-//declarationbody: (type ID -> ^(VARDECLARATION type ID) )
-//				| (array_type ID -> ^(ARRAYDECLARATION array_type) ID)
-//				;
 declarationbody: 
 					type ID -> ^(VARDECLARATION ^(RETURN_TYPE type) ID )
-			| array_type ID -> ^(ARRAYDECLARATION ^(RETURN_TYPE array_type) ID)
-		 ;
+;
 
 longdeclarationbody: ( type ID ASSIGN expression  -> ^(VARDECLARATION ^(RETURN_TYPE type) ID expression))
-					| (array_type ID ASSIGN expression -> ^(ARRAYDECLARATION ^(RETURN_TYPE array_type) ID expression))
 					;
 
 add: mul ( (ADD | SUB)^ mul )*;
@@ -176,14 +164,17 @@ boolvar: TRUE
 block_or_statement: block | statement;
 ifstatement: IF^ OPEN_BRACE! boolexpression CLOSE_BRACE! block_or_statement (ELSE! block_or_statement)* ;
 whilestatement: WHILE^ OPEN_BRACE! boolexpression CLOSE_BRACE! block_or_statement  ;
-forstatement: FOR^ OPEN_BRACE! longdeclarationbody? ';'! boolexpression? ';'! assignmentbody? CLOSE_BRACE! block_or_statement
-		-> ^(FOR ^(FOR_INITIALIZATION longdeclarationbody) ^(FOR_CONDITION boolexpression) ^(FOR_ITERATION assignmentbody) block_or_statement);
+for_initialization: (longdeclarationbody?) -> ^(FOR_INITIALIZATION longdeclarationbody?)
+			| (assignmentbody?) -> ^(FOR_INITIALIZATION assignmentbody?)
+			;
+forstatement: FOR^ OPEN_BRACE! for_initialization ';'! boolexpression? ';'! assignmentbody? CLOSE_BRACE! block_or_statement
+		-> ^(FOR for_initialization ^(FOR_CONDITION boolexpression?) ^(FOR_ITERATION assignmentbody?) block_or_statement);
 returnstatement: RETURN^ expression? ';'! ;
 dowhilestatement: DO^ (block | statement) WHILE! OPEN_BRACE! boolexpression CLOSE_BRACE! ';'! ;
 emptystatement: ';'! ;
 
-funcdeclaration: MODIFIER any_type ID^ ( OPEN_BRACE! paramsdeclaration CLOSE_BRACE! ) block 
-		-> ^(FUNCDECLARATION ID ^(RETURN_TYPE any_type) OPEN_BRACE! paramsdeclaration CLOSE_BRACE! block);
+funcdeclaration: attribute_usage* modifiers any_type ID^ ( OPEN_BRACE! paramsdeclaration CLOSE_BRACE! ) (block | ';') 
+		-> ^(FUNCDECLARATION ID modifiers ^(ATTRIBUTES attribute_usage*) ^(RETURN_TYPE any_type) paramsdeclaration ^(FUNCTION_BODY block?));
 paramsdeclaration: ( declarationbody ( ','! declarationbody)* )?  -> ^(PARAMETERS ( declarationbody)* );
 
 funccallbody: extended_id^ OPEN_BRACE expressioncommalist? CLOSE_BRACE -> ^(FUNC_CALL extended_id ^(PARAMETERS expressioncommalist)?);
@@ -202,11 +193,9 @@ block: '{'! statementlist '}'!;
 
 statementlist: statement* -> ^(BLOCK statement*) ;
 
-/*console_write_statement: CONSOLE_WORD '.'! ('WriteLine' | 'Write') OPEN_BRACE! expression CLOSE_BRACE! ';'! -> ^(PRINT expression)  ;
-console_read_statement: console_read_body ';'! ;
+attribute_usage: OPEN_SQUARE_BRACE extended_id OPEN_BRACE expressioncommalist? CLOSE_BRACE CLOSE_SQUARE_BRACE 
+	-> ^(ATTRIBUTE_USAGE extended_id ^(PARAMETERS expressioncommalist)?) ;
 
-console_read_body: CONSOLE_WORD '.'! ('ReadLine' | 'Read') OPEN_BRACE CLOSE_BRACE -> INPUT  ;
-*/
 
 /*
  * Lexer Rules
@@ -217,7 +206,12 @@ OPEN_SQUARE_BRACE:'[';
 CLOSE_SQUARE_BRACE:']';
 OPEN_BRACE: '(';
 CLOSE_BRACE: ')';
-TYPE: 'int' | 'bool' | 'char';
+TYPE: 'int' 
+	| 'bool'
+	| 'char'
+	| 'string'
+;
+
 VOID: 'void';
 NUMBER: ('0'..'9')+ ;
 ADD:    '+'     ;
@@ -243,12 +237,13 @@ WS:
   }
 ;
 DOT: '.';
-MODIFIER: 'static';
+MODIFIER: 'static' | 'public' | 'extern';
 //CHAR:  '\''('a'..'z')'\'' ;
-CHAR:  '\'' . '\'' ;
 ID:		( 'a'..'z' | 'A'..'Z' | '_' )
         ( 'a'..'z' | 'A'..'Z' | '_' | '0'..'9' )*
 ;
+STRING: '"' .*'"';
+CHAR:  '\'' . '\'' ;
 
 
 SL_COMMENT:
@@ -261,5 +256,3 @@ ML_COMMENT:
     $channel=Hidden;
   }
 ;
-
-

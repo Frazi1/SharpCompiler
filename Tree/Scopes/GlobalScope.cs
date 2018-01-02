@@ -1,5 +1,4 @@
 ﻿using MathLang.Tree.Nodes.Declarations;
-using MathLang.Tree.Scopes.Exceptions;
 
 namespace MathLang.Tree.Scopes
 {
@@ -29,7 +28,7 @@ namespace MathLang.Tree.Scopes
 
         }
 
-        public override Declaration GlobalVariableSearch(string name)
+        public override VariableDeclaration GlobalVariableSearch(string name)
         {
             var splitName = SplitName(name);
             if (splitName.Length < 2)

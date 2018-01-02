@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Antlr.Runtime.Tree;
 using MathLang.Extensions;
@@ -13,21 +14,37 @@ namespace MathLang.Tree.Nodes.Declarations
         public Scope Scope { get; }
 
         public string Name { get; set; }
-        public List<Declaration> VarDeclarationNodes { get; } = new List<Declaration>();
+        public List<VariableDeclaration> VarDeclarationNodes { get; } = new List<VariableDeclaration>();
         public List<FunctionDeclaration> FunctionDeclarationNodes { get; } = new List<FunctionDeclaration>();
+        public List<Modifier> ModifiersList { get; } = new List<Modifier>();
         public bool IsPrintable { get; }
-        
-        public ClassDeclaration(INode parent, Scope parentScope, bool isPrintable = true)
+        public bool IsStatic { get; internal set; }
+        public bool IsExtern { get; internal set; }
+        public bool CodeGeneration { get; }
+        public virtual bool IsAttribute => false;
+
+        public ClassDeclaration(INode parent, Scope parentScope, bool isPrintable = true, bool codeGeneration = true)
         {
             Parent = parent;
             Scope = new LocalScope(parentScope);
             IsPrintable = isPrintable;
+            CodeGeneration = codeGeneration;
         }
 
         public void Construct(CommonTree syntaxClass)
         {
             Name = syntaxClass.Children[0].Text;
-            var classblock = syntaxClass.GetChild(1).CastTo<CommonTree>();
+            var syntaxModifiers = syntaxClass.GetChild(1).CastTo<CommonTree>();
+            if (syntaxModifiers.ChildCount > 0)
+            {
+                syntaxModifiers.Children.ForEach(mod =>
+                {
+                    if(mod.Text == Modifiers.Extern) ModifiersList.Add(Modifier.Extern);
+                    else if(mod.Text == Modifiers.Static) ModifiersList.Add(Modifier.Static);
+                    else throw new Exception($"Modifier {mod.Text} is not defined");
+                });
+            }
+            var classblock = syntaxClass.GetChild(2).CastTo<CommonTree>();
             if(classblock.ChildCount == 0) return;
             classblock.Children
                 .Cast<CommonTree>()
@@ -43,7 +60,7 @@ namespace MathLang.Tree.Nodes.Declarations
                             {
                                 var variableDeclaration = TreeHelper
                                     .GetStatements(this, Scope, syntaxVariableDeclaration).First()
-                                    .CastTo<Declaration>();
+                                    .CastTo<VariableDeclaration>();
                                 variableDeclaration.Construct(syntaxVariableDeclaration);
                                 return variableDeclaration;
                             })

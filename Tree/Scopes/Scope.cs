@@ -19,7 +19,7 @@ namespace MathLang.Tree.Scopes
 
         protected readonly ScopeTable<ClassDeclaration> ClassDeclarations = new ScopeTable<ClassDeclaration>();
         protected readonly ScopeTable<FunctionDeclaration> FunctionDeclarations = new ScopeTable<FunctionDeclaration>();
-        protected readonly ScopeTable<Declaration> VariableDeclarations = new ScopeTable<Declaration>();
+        protected readonly ScopeTable<VariableDeclaration> VariableDeclarations = new ScopeTable<VariableDeclaration>();
 
         public int ScopeLevel { get; }
 
@@ -29,8 +29,8 @@ namespace MathLang.Tree.Scopes
         public virtual void AddFunction(FunctionDeclaration functionDeclaration) =>
             FunctionDeclarations.Add(functionDeclaration.Name, functionDeclaration);
 
-        public virtual void AddVariable(Declaration declaration) =>
-            VariableDeclarations.Add(declaration.Name, declaration);
+        public virtual void AddVariable(VariableDeclaration variableDeclaration) =>
+            VariableDeclarations.Add(variableDeclaration.Name, variableDeclaration);
 
         public bool ContainsClass(string name) => ClassDeclarations.Contains(name);
         public bool ContainsFunction(string name) => FunctionDeclarations.Contains(name);
@@ -38,13 +38,13 @@ namespace MathLang.Tree.Scopes
 
         public ClassDeclaration LocalClassSearch(string name) => ClassDeclarations.FindByKey(name);
         public FunctionDeclaration LocalFunctionSearch(string name) => FunctionDeclarations.FindByKey(name);
-        public Declaration LocalVariableSearch(string name) => VariableDeclarations.FindByKey(name);
+        public VariableDeclaration LocalVariableSearch(string name) => VariableDeclarations.FindByKey(name);
 
         public abstract ClassDeclaration GlobalClassSearch(string name);
         public abstract FunctionDeclaration GlobalFunctionSearch(string name);
-        public abstract Declaration GlobalVariableSearch(string name);
+        public abstract VariableDeclaration GlobalVariableSearch(string name);
 
-        public Declaration GlobalVariableSearch(string name, int upToLevel)
+        public VariableDeclaration GlobalVariableSearch(string name, int upToLevel)
         {
             if (ScopeLevel < upToLevel) return null;
             var result = LocalVariableSearch(name) 

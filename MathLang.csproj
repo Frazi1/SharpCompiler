@@ -42,27 +42,44 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AstNodePrinter.cs" />
+    <Compile Include="Helpers\AstNodePrinter.cs" />
+    <Compile Include="CodeGeneration\Helpers\Converters\ReturnTypeToJavaConverter.cs" />
+    <Compile Include="CodeGeneration\Jasmin\CombinedInstuctionsGeneration.cs" />
+    <Compile Include="CodeGeneration\Jasmin\ExpressionInstructionsGeneration.cs" />
+    <Compile Include="CodeGeneration\Jasmin\JasminCodeGenerator.cs" />
+    <Compile Include="CodeGeneration\Jasmin\StatementInstructionsGeneration.cs" />
     <Compile Include="CodeGeneration\IL\CodeGenerator.cs" />
     <Compile Include="CodeGeneration\IL\GenerationHelper.cs" />
-    <Compile Include="ErrorService.cs" />
+    <Compile Include="Helpers\ErrorService.cs" />
     <Compile Include="Extensions\Extensions.cs" />
-    <Compile Include="Extensions\TreeConsolePrinter.cs" />
+    <Compile Include="Helpers\FilePrinter.cs" />
+    <Compile Include="Helpers\TreeConsolePrinter.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Tree\Nodes\Declarations\Declaration.cs" />
+    <None Include="RunScripts\output\Input.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="RunScripts\output\Library.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Compile Include="Tree\Nodes\AttributeUsage.cs" />
+    <Compile Include="Tree\Nodes\Declarations\AttributeDeclaration.cs" />
+    <Compile Include="Tree\Nodes\Declarations\FunctionVariableDeclarationParameter.cs" />
+    <Compile Include="Tree\Nodes\Declarations\VariableDeclaration.cs" />
     <Compile Include="Tree\Nodes\Expressions\ArrayElementReference.cs" />
     <Compile Include="Tree\Nodes\Expressions\BoolExpression.cs" />
     <Compile Include="Tree\Nodes\Expressions\CastExpression\CastExpression.cs" />
+    <Compile Include="Tree\Nodes\Expressions\StringExpression.cs" />
     <Compile Include="Tree\Nodes\Expressions\VoidExpression.cs" />
+    <Compile Include="Tree\Nodes\Modifiers.cs" />
+    <Compile Include="Tree\Semantics\FunctionIndexingStrategy.cs" />
     <Compile Include="Tree\Semantics\Library\Builder.cs" />
     <Compile Include="Tree\Semantics\Library\ConsoleBuilder.cs" />
+    <Compile Include="Tree\Semantics\Library\JavaRefAttributeBuilder.cs" />
     <Compile Include="Tree\Semantics\Tables\CastsTable.cs" />
     <Compile Include="Tree\Nodes\Expressions\CharExpression.cs" />
     <Compile Include="Tree\Nodes\Expressions\ExtendedId.cs" />
     <Compile Include="Tree\Nodes\Expressions\IntExpression.cs" />
     <Compile Include="Tree\Nodes\Expressions\NewArray.cs" />
-    <Compile Include="Tree\Nodes\Expressions\VariableReference.cs" />
-    <Compile Include="Tree\Nodes\Declarations\ArrayDeclaration.cs" />
     <Compile Include="Tree\Nodes\Statements\ArrayElementAssignment.cs" />
     <Compile Include="Tree\Nodes\Statements\BlockStatement.cs" />
     <Compile Include="Tree\Nodes\Statements\DoWhileStatement.cs" />
@@ -78,9 +95,7 @@
     <Compile Include="Tree\Nodes\Interfaces\INode.cs" />
     <Compile Include="Tree\Nodes\Interfaces\IStatement.cs" />
     <Compile Include="Tree\Nodes\Program.cs" />
-    <Compile Include="Tree\Nodes\Declarations\FunctionDeclarationParameter.cs" />
     <Compile Include="Tree\Nodes\Enums\ReturnType.cs" />
-    <Compile Include="Tree\Nodes\Declarations\VariableDeclaration.cs" />
     <Compile Include="Tree\Nodes\Statements\ReturnStatement.cs" />
     <Compile Include="Tree\Semantics\Exceptions\ExpressionException.cs" />
     <Compile Include="Tree\Semantics\Exceptions\ScopeException.cs" />
@@ -96,9 +111,11 @@
     <Compile Include="Tree\TreeHelper.cs" />
     <Compile Include="Tree\Nodes\Statements\VariableAssignment.cs" />
     <Compile Include="Tree\Nodes\Statements\WhileStatement.cs" />
+    <None Include="RunScripts\output\TestClass.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Input.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -127,9 +144,26 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>@(AntlrGrammarFile)</DependentUpon>
     </Content>
+    <Content Include="RunScripts\Antlr3.Runtime.dll" />
+    <Content Include="RunScripts\JasminSharp.dll" />
+    <Content Include="RunScripts\jasmin_build.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="RunScripts\Library.class" />
+    <Content Include="RunScripts\MathLang.exe" />
+    <Content Include="RunScripts\System.ValueTuple.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="JasminSharp\JasminSharp.csproj">
+      <Project>{bebd05a2-6382-41a3-8108-b11960ed60b0}</Project>
+      <Name>JasminSharp</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <JavaHome>C:\Program_Files\Java\jdk7</JavaHome>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
   <Target Name="GenerateAntlrCode" Inputs="@(AntlrGrammarFile)" Outputs="$(AntlrLexerFile);$(AntlrParserFile)">
     <Exec Command="&quot;$(JavaHome)\bin\java&quot; -classpath antlr\java\antlr-3.3-complete.jar org.antlr.Tool -message-format vs2005 @(AntlrGrammarFile)" />
@@ -144,6 +178,14 @@
   </PropertyGroup>
   <PropertyGroup>
     <RebuildDependsOn>CleanAntlrCode;$(RebuildDependsOn)</RebuildDependsOn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>xcopy  *.exe ..\..\RunScripts\ /Y
+xcopy  *.dll ..\..\RunScripts\ /Y</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>xcopy  *.exe ..\..\RunScripts\ /Y
+xcopy  *.dll ..\..\RunScripts\ /Y</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

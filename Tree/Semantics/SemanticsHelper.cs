@@ -6,10 +6,10 @@ namespace MathLang.Tree.Semantics
 {
     public static class SemanticsHelper
     {
-        public static void CheckName(this Declaration declaration, Scope scopeToCheck)
+        public static void CheckName(this VariableDeclaration variableDeclaration, Scope scopeToCheck)
         {
-            if (scopeToCheck.ContainsVariable(declaration.Name))
-                throw new ScopeException($"Variable with name: \"{declaration.Name}\" already exists");
+            if (scopeToCheck.ContainsVariable(variableDeclaration.Name))
+                throw new ScopeException($"Variable with name: \"{variableDeclaration.Name}\" already exists");
         }
 
         public static void CheckName(this FunctionDeclaration functionDeclaration, Scope scopeToCheck)

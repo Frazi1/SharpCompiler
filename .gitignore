@@ -263,3 +263,6 @@ Debug
 /MathLang.tokens
 /MathLangLexer.cs
 /MathLangParser.cs
+/CodeGeneration/Jasmin/java_decompiled.txt
+/RunScripts
+/CodeGeneration/Jasmin/Main.class

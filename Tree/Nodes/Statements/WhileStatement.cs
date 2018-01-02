@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Antlr.Runtime.Tree;
+﻿using Antlr.Runtime.Tree;
 using MathLang.Extensions;
 using MathLang.Tree.Nodes.Interfaces;
 using MathLang.Tree.Scopes;
@@ -27,16 +25,10 @@ namespace MathLang.Tree.Nodes.Statements
             ConditionExpression = TreeHelper.GetExpression(this, Scope, syntaxCondition);
             ConditionExpression.Construct(syntaxCondition);
 
-            //var syntaxTrueStatementsBlock = syntaxWhile.GetChild(1).CastTo<CommonTree>();
             if (syntaxWhile.ChildCount > 1)
             {
                 var syntaxBlockOrSingleStatement = syntaxWhile.GetChild(1).CastTo<CommonTree>();
-
-                if (syntaxBlockOrSingleStatement.Type == MathLangParser.MULT_ARRAY_DECL)
-                    
-                    throw new InvalidOperationException("Single declarations are not supported");
-
-                
+               
                 BlockOrSingleStatement =
                     TreeHelper.GetStatements(this, Scope, syntaxBlockOrSingleStatement)[0];
                 BlockOrSingleStatement.Construct(syntaxBlockOrSingleStatement);

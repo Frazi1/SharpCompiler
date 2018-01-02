@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using MathLang.Tree.Nodes.Enums;
 
 namespace MathLang.Tree.Nodes.Expressions

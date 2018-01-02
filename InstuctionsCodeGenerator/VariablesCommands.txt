@@ -1,0 +1,11 @@
+ret var-num
+aload var-num
+astore var-num
+dload var-num
+dstore var-num
+fload var-num
+fstore var-num
+iload var-num
+istore var-num
+lload var-num
+lstore var-num

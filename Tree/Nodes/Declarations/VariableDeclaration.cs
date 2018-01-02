@@ -7,16 +7,44 @@ using MathLang.Tree.Scopes;
 
 namespace MathLang.Tree.Nodes.Declarations
 {
-    public class VariableDeclaration : Declaration
+    public class VariableDeclaration : IStatement
     {
-        //This may be useful for semantics
+        private IExpression _value;
 
-        public VariableDeclaration(INode parent, Scope parentScope)
-            : base(parent, parentScope)
+        public INode Parent { get; set; }
+        public Scope Scope { get; }
+        public bool IsConstructed { get; private set; }
+
+        public string Name { get; set; }
+        public ReturnType ReturnType { get; set; }
+
+        public int? Index { get; set; }
+        public bool IsStatic => Index == null;
+
+        public IExpression Value
         {
+            get { return _value; }
+            set
+            {
+                _value = value;
+                Initialized = true;
+            }
         }
 
-        public override void Construct(CommonTree syntaxVariableDeclaration)
+        //This may be useful for semantics
+        public bool Initialized { get; protected set; }
+
+        public string FullName => IsStatic 
+            ? $"{Parent.CastTo<ClassDeclaration>().Name}/{Name}" 
+            : Name;
+
+        public VariableDeclaration(INode parent, Scope parentScope)
+        {
+            Parent = parent;
+            Scope = parentScope;
+        }
+
+        public virtual void Construct(CommonTree syntaxVariableDeclaration)
         {
             if (IsConstructed) throw new InvalidOperationException("Variable already constructed-");
             var syntaxReturnType = syntaxVariableDeclaration.GetChild(0).CastTo<CommonTree>();
@@ -29,7 +57,7 @@ namespace MathLang.Tree.Nodes.Declarations
                 Value = TreeHelper.GetExpression(this, Scope, syntaxValueExpression);
                 Value.Construct(syntaxValueExpression);
             }
-            base.Construct(syntaxVariableDeclaration);
+            IsConstructed = true;
         }
     }
 }

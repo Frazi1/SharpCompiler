@@ -18,20 +18,20 @@ namespace MathLang.Tree.Semantics
             foreach (var paramTuple in paramTuples)
             {
                 var paramDeclaration =
-                    new FunctionDeclarationParameter(funcDeclaration, funcDeclaration.Scope)
+                    new FunctionVariableDeclarationParameter(funcDeclaration, funcDeclaration.Scope)
                     {
                         Name = paramTuple.name,
                         ReturnType = paramTuple.returnType
                     };
                 funcDeclaration.ParameterNodes.Add(paramDeclaration);
             }
-            funcDeclaration.StatemenBlock = new BlockStatement(funcDeclaration, funcDeclaration.Scope);
+            funcDeclaration.StatementBlock = new BlockStatement(funcDeclaration, funcDeclaration.Scope);
             if (funcDeclaration.ReturnType != ReturnType.Void)
             {
                 var returnStatement = new ReturnStatement(funcDeclaration, funcDeclaration.Scope);
                 returnStatement.ReturnExpression = new CharExpression(returnStatement, returnStatement.Scope);
                 returnStatement.ReturnExpression.ReturnType = returnType;
-                funcDeclaration.StatemenBlock.Statements.Add(returnStatement);
+                funcDeclaration.StatementBlock.Statements.Add(returnStatement);
             }
             return funcDeclaration;
         }
