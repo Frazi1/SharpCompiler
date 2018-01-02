@@ -20,7 +20,7 @@ namespace MathLang.Tree.Semantics
                 .Build());
 
             program.ClassNodes.Add(new AttributeBuilder(program)
-                .WithName("DotNet")
+                .WithName("DotNetRef")
                 .WithParameter(ReturnType.String, "ReferencePath", 0)
                 .Build());
         }
