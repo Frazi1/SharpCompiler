@@ -48,9 +48,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy  *.dll ..\..\..\RunScripts\libs\ /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy  *.dll ..\..\..\RunScripts\libs\natives\dotnet\ /Y</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>xcopy  *.dll ..\..\..\RunScripts\libs\ /Y</PreBuildEvent>
+    <PreBuildEvent>xcopy  *.dll ..\..\..\RunScripts\libs\natives\dotnet\ /Y</PreBuildEvent>
   </PropertyGroup>
 </Project>
