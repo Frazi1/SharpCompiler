@@ -16,12 +16,12 @@ namespace MathLang.Tree.Semantics
         {
             program.ClassNodes.Add(new AttributeBuilder(program)
                 .WithName("JavaRef")
-                .WithParameter(ReturnType.String, "ReferencePath", 0)
+                .WithParameter(TypeDefinition.String, "ReferencePath", 0)
                 .Build());
 
             program.ClassNodes.Add(new AttributeBuilder(program)
                 .WithName("DotNetRef")
-                .WithParameter(ReturnType.String, "ReferencePath", 0)
+                .WithParameter(TypeDefinition.String, "ReferencePath", 0)
                 .Build());
         }
     }

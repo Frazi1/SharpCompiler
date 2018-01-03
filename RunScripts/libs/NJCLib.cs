@@ -1,7 +1,7 @@
 ﻿static extern class NJCLib
 {
-    //[JavaRef("Library/printString")]
-    //static extern void PrintString(string s);
+    [JavaRef("Library/printString")]
+    static extern void PrintString(string s);
 
     [JavaRef("Library/printInt")]
     [DotNetRef("DotNetLib/Library/PrintInt")]

@@ -11,48 +11,48 @@ namespace MathLang.CodeGeneration
 {
     public static class GenerationHelper
     {
-        public static Type ConvertToType(this ReturnType returnType, bool array = true)
+        public static Type ConvertToType(this TypeDefinition returnType, bool array = true)
         {
             switch (returnType)
             {
-                case BoolReturnType boolReturnType:
+                case BoolTypeDefinition boolReturnType:
                     return typeof(bool);
-                case CharReturnType charReturnType:
+                case CharTypeDefinition charReturnType:
                     return typeof(char);
-
-                case IntReturnType intReturnType:
+                case IntTypeDefinition intReturnType:
                     return typeof(int);
-                case VoidReturnType voidReturnType:
+                case VoidTypeDefinition voidReturnType:
                     return typeof(void);
-                case ArrayReturnType arrayReturnType:
+                case ArrayTypeDefinition arrayReturnType:
+                {
+                    switch (arrayReturnType.InnerTypeDefinition)
                     {
-                        switch (arrayReturnType.InnerType)
-                        {
-                            case BoolReturnType boolReturnType:
-                                return array? typeof(bool[]) : typeof(bool);
-                            case CharReturnType charReturnType:
-                                return array ? typeof(char[]): typeof(char);
-                            case IntReturnType intReturnType:
-                                return array ? typeof(int[]): typeof(int);
-                            default: throw new InvalidOperationException(
-                                $"Bad inner type {(returnType as ArrayReturnType)?.InnerType}" +
+                        case BoolTypeDefinition boolReturnType:
+                            return array ? typeof(bool[]) : typeof(bool);
+                        case CharTypeDefinition charReturnType:
+                            return array ? typeof(char[]) : typeof(char);
+                        case IntTypeDefinition intReturnType:
+                            return array ? typeof(int[]) : typeof(int);
+                        default:
+                            throw new InvalidOperationException(
+                                $"Bad inner type {(returnType as ArrayTypeDefinition)?.InnerTypeDefinition}" +
                                 $" of type {returnType} (cannot convert)");
-                        }
-
                     }
+                }
                 default:
                     throw new InvalidOperationException($"Bad type {returnType} (cannot convert)");
             }
         }
 
-        public static Tuple<Type[], string[]> GetTypesAndNamesOfFuncParams(List<FunctionVariableDeclarationParameter> funcParams)
+        public static Tuple<Type[], string[]> GetTypesAndNamesOfFuncParams(
+            List<FunctionVariableDeclarationParameter> funcParams)
         {
             List<string> names = new List<string>();
             List<Type> types = new List<Type>();
 
             foreach (var functionDeclarationParameter in funcParams)
             {
-                types.Add(functionDeclarationParameter.ReturnType.ConvertToType());
+                types.Add(functionDeclarationParameter.TypeDefinition.ConvertToType());
 
                 names.Add(functionDeclarationParameter.Name);
             }
@@ -64,7 +64,5 @@ namespace MathLang.CodeGeneration
 
             return new Tuple<Type[], string[]>(types.ToArray(), names.ToArray());
         }
-
-        
     }
 }

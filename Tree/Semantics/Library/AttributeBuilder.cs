@@ -39,11 +39,11 @@ namespace MathLang.Tree.Semantics
             return this;
         }
 
-        public AttributeBuilder WithParameter(ReturnType type, string name, int index)
+        public AttributeBuilder WithParameter(TypeDefinition type, string name, int index)
         {
             Parameters.Add(new FunctionVariableDeclarationParameter(Attribute, Attribute.Scope)
             {
-                ReturnType = ReturnType.String,
+                TypeDefinition= TypeDefinition.String,
                 Name = name,
                 Index = index
             });

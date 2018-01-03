@@ -111,7 +111,7 @@ namespace MathLang.CodeGeneration
         public void DeclareField(VariableDeclaration  varDeclarationNode, TypeBuilder typeBuilder, ILGenerator ilGenerator)
         {
             FieldBuilder fieldBuilder = typeBuilder.DefineField(varDeclarationNode.Name,
-                varDeclarationNode.ReturnType.ConvertToType(), FieldAttributes.Public | FieldAttributes.Static);
+                varDeclarationNode.TypeDefinition.ConvertToType(), FieldAttributes.Public | FieldAttributes.Static);
 
             fieldBuilders.Add(varDeclarationNode.FullName, fieldBuilder);
             
@@ -179,7 +179,7 @@ namespace MathLang.CodeGeneration
                         MethodAttributes.HideBySig |
                         MethodAttributes.Static |
                         MethodAttributes.Public,
-                        functionDeclarationNode.ReturnType.ConvertToType(),
+                        functionDeclarationNode.TypeDefinition.ConvertToType(),
                         /*new Type[] { typeof(string[]) }*/
                         typesNamesTuple.Item1);
 
@@ -251,7 +251,7 @@ namespace MathLang.CodeGeneration
 
             if (blockStatementNode.Parent is FunctionDeclaration funcDecl)
             {
-                if(funcDecl.ReturnType == ReturnType.Void)
+                if(funcDecl.TypeDefinition == TypeDefinition.Void)
                     ilGenerator.Emit(OpCodes.Ret);
             }
             
@@ -337,7 +337,7 @@ namespace MathLang.CodeGeneration
 
         public void GenerateDeclaration(VariableDeclaration declNode, ILGenerator ilGenerator)
         {
-            LocalBuilder localBuilder = ilGenerator.DeclareLocal(declNode.ReturnType.ConvertToType());
+            LocalBuilder localBuilder = ilGenerator.DeclareLocal(declNode.TypeDefinition.ConvertToType());
 
             localBuilder.SetLocalSymInfo(declNode.Name);
             //add our local to dictionary
@@ -411,13 +411,13 @@ namespace MathLang.CodeGeneration
             //load value onto stack
             GenerateExpression(arrayElementAssignmentNode.AssignmentExpression, ilGenerator);
 
-            if (arrayElementAssignmentNode.ArrayElementReference.ReturnType.ConvertToType() == typeof(char))
+            if (arrayElementAssignmentNode.ArrayElementReference.TypeDefinition.ConvertToType() == typeof(char))
             {
                 ilGenerator.Emit(OpCodes.Stelem_I2);
             }
             else
             {
-                if (arrayElementAssignmentNode.ArrayElementReference.ReturnType.ConvertToType() == typeof(bool))
+                if (arrayElementAssignmentNode.ArrayElementReference.TypeDefinition.ConvertToType() == typeof(bool))
                 {
                     ilGenerator.Emit(OpCodes.Stelem_I1);
                 }
@@ -605,7 +605,7 @@ namespace MathLang.CodeGeneration
             //load arr size onto stack
             GenerateExpression(newArrayNode.ArraySize, ilGenerator);
             //new array
-            ilGenerator.Emit(OpCodes.Newarr, newArrayNode.ReturnType.ConvertToType(false));
+            ilGenerator.Emit(OpCodes.Newarr, newArrayNode.TypeDefinition.ConvertToType(false));
             //pop var from stack and store
 
             //if (newArrayNode.Parent is Declaration declaration)
@@ -627,7 +627,7 @@ namespace MathLang.CodeGeneration
             //load index
             GenerateExpression(arrayElementReferenceNode.ArrayIndex, ilGenerator);
             //load array element with index onto stack
-            ilGenerator.Emit(OpCodes.Ldelem, arrayElementReferenceNode.ReturnType.ConvertToType());
+            ilGenerator.Emit(OpCodes.Ldelem, arrayElementReferenceNode.TypeDefinition.ConvertToType());
 
         }
 
