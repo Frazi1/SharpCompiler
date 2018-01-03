@@ -7,6 +7,7 @@ namespace MathLang.Tree.Semantics
         public static void Run(Nodes.Program program, FunctionIndexingStrategy indexingStrategy)
         {
             AddLibraryClasses(program);
+            program.ProcessTypes();
             program.PreProcess();
             program.Process();
             program.SetVariableIndexes(indexingStrategy);

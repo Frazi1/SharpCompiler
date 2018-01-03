@@ -53,7 +53,7 @@ namespace MathLang.Tree.Nodes.Declarations
             BlockStatement.Construct(syntaxBlock);
         }
 
-        public ConstructorDeclarationNode GetDefaultConstructor(ClassDeclaration classDeclaration, Scope scope) =>
+        public static ConstructorDeclarationNode GetDefaultConstructor(ClassDeclaration classDeclaration, Scope scope) =>
             new ConstructorDeclarationNode(classDeclaration, scope);
     }
 }

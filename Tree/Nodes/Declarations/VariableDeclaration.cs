@@ -17,6 +17,7 @@ namespace MathLang.Tree.Nodes.Declarations
         public bool IsConstructed { get; protected set; }
 
         public string Name { get; set; }
+        public string TypeName { get; private set; }
         public TypeDefinition TypeDefinition { get; set; }
         public Modifier Modifier { get; private set; }
 
@@ -57,7 +58,8 @@ namespace MathLang.Tree.Nodes.Declarations
             var syntaxModifiers = syntaxVariableDeclaration.GetChild(0).CastTo<CommonTree>();
             Modifier = TreeHelper.GetModifiersFromSyntaxModifiersNode(syntaxModifiers);
             var syntaxReturnType = syntaxVariableDeclaration.GetChild(1).CastTo<CommonTree>();
-            TypeDefinition = TreeHelper.GetReturnType(TreeHelper.GetStringTypeFromSyntaxNode(syntaxReturnType));
+            //TypeDefinition = TreeHelper.GetReturnType(TreeHelper.GetStringTypeFromSyntaxNode(syntaxReturnType), Scope);
+            TypeName = TreeHelper.GetStringTypeFromSyntaxNode(syntaxReturnType);
             Name = syntaxVariableDeclaration.GetChild(2).Text;
             //Check if we have a value assigned to the variable
             if (syntaxVariableDeclaration.ChildCount > 3)

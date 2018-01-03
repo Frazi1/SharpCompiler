@@ -12,6 +12,7 @@ namespace MathLang.Tree.Nodes.Expressions
         public INode Parent { get; set; }
         public Scope Scope { get; }
 
+        public string TypeName { get; private set; }
         public TypeDefinition TypeDefinition { get; set; }
         public TypeDefinition CastToType { get; set; }
         public List<IExpression> InitializationParameters { get; } = new List<IExpression>();
@@ -25,7 +26,7 @@ namespace MathLang.Tree.Nodes.Expressions
         public void Construct(CommonTree tree)
         {
             var syntaxReturnType = tree.GetChild(0).CastTo<CommonTree>();
-            TypeDefinition = TreeHelper.GetReturnType(TreeHelper.GetStringTypeFromSyntaxNode(syntaxReturnType));
+            TypeName = TreeHelper.GetStringTypeFromSyntaxNode(syntaxReturnType);
         }
     }
 }

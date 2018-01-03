@@ -19,15 +19,21 @@ namespace MathLang.Tree.Semantics
         private const string MainClassName = "Main";
         private const string MainFuncName = "Main";
 
+        public static void ProcessTypes(this Nodes.Program program)
+        {
+            program.ClassNodes.ForEach(classDeclaration =>
+            {
+                classDeclaration.CheckName(program.Scope);
+                program.Scope.AddClass(classDeclaration);
+            });
+        }
+
         #region PreProcss
 
         public static void PreProcess(this Nodes.Program program)
         {
-            var scope = program.Scope;
             program.ClassNodes.ForEach(classDeclaration =>
             {
-                classDeclaration.CheckName(scope);
-                scope.AddClass(classDeclaration);
                 classDeclaration.PreProcess();
 
                 //FunctionDeclaration func = classDeclaration.Scope.LocalFunctionSearch(MainClassName);
@@ -111,6 +117,8 @@ namespace MathLang.Tree.Semantics
         private static void Process(this VariableDeclaration variableDeclaration, bool checkName = true,
             int? upTpLevel = null)
         {
+                variableDeclaration.TypeDefinition =
+                    variableDeclaration.Scope.GlobalClassSearch(variableDeclaration.TypeName);
             //Process assignment value
             if (checkName)
             {
@@ -356,16 +364,20 @@ namespace MathLang.Tree.Semantics
             if (functionDeclaration == null)
                 throw new ScopeException($"Function with name \"{functionCall.ExtendedId.Name}\" does not exist");
 
-            CheckCallParameters(functionCall, functionCall.FunctionCallParameters, functionDeclaration.ParameterNodes);
+            bool parametersCompatible = CheckCallParameters(functionCall, functionCall.FunctionCallParameters, functionDeclaration.ParameterNodes);
+            if(!parametersCompatible)
+                throw new ScopeException(
+                    $"Function \"{functionCall}\" call signature is different from defined function with that name");
             functionCall.TypeDefinition = functionDeclaration.TypeDefinition;
         }
 
-        private static void CheckCallParameters(INode invoker, IList<IExpression> callParameters,
+        private static bool CheckCallParameters(INode invoker, IList<IExpression> callParameters,
             IList<FunctionVariableDeclarationParameter> declarationParameters)
         {
             if (declarationParameters.Count != callParameters.Count)
-                throw new ScopeException(
-                    $"Function \"{invoker}\" call signature is different from defined function with that name");
+                return false;
+                //throw new ScopeException(
+                //    $"Function \"{invoker}\" call signature is different from defined function with that name");
             for (int i = 0; i < declarationParameters.Count; i++)
             {
                 var parameter = declarationParameters[i];
@@ -376,9 +388,11 @@ namespace MathLang.Tree.Semantics
                 if (callParameter.TypeDefinition.IsCastableTo(parameter.TypeDefinition))
                     callParameter.CastToType = parameter.TypeDefinition;
                 else
-                    throw new ScopeException(
-                        $"Type {callParameter.TypeDefinition} can not be matched to type {parameter.TypeDefinition} in {invoker}");
+                    return false;
+                //throw new ScopeException(
+                //    $"Type {callParameter.TypeDefinition} can not be matched to type {parameter.TypeDefinition} in {invoker}");
             }
+            return true;
         }
 
         private static void Process(this NewArray newArray)
@@ -429,6 +443,13 @@ namespace MathLang.Tree.Semantics
 
         private static void ProcessNewExpression(this NewExpression newExpression)
         {
+            //newExpression
+                newExpression.TypeDefinition = newExpression.Scope.GlobalClassSearch(newExpression.TypeName);
+            //TODO: continue here
+            if (newExpression.TypeDefinition.Constructors.Count == 0)
+            {
+                //if(CheckCallParameters(newExpression, newExpression.InitializationParameters, ConstructorDeclarationNode.GetDefaultConstructor(newExpression.TypeDefinition,)))
+            }
         }
 
         #endregion

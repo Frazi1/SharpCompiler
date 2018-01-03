@@ -18,7 +18,7 @@ namespace MathLang.Tree.Nodes.Enums
     {
         public string Name { get; protected internal set; }
         public List<ConstructorDeclarationNode> Constructors { get; } = new List<ConstructorDeclarationNode>();
-
+        public virtual bool IsCustom => false;
         protected TypeDefinition()
         {
         }
@@ -152,6 +152,8 @@ namespace MathLang.Tree.Nodes.Enums
 
     public sealed class CustomTypeDefinition : SimpleTypeDefinition
     {
+        public override bool IsCustom => true;
+
         public CustomTypeDefinition(string name) : base(name)
         {
         }
