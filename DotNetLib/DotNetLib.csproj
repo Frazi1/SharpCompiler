@@ -50,4 +50,7 @@
   <PropertyGroup>
     <PostBuildEvent>xcopy  *.dll ..\..\..\RunScripts\libs\ /Y</PostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>xcopy  *.dll ..\..\..\RunScripts\libs\ /Y</PreBuildEvent>
+  </PropertyGroup>
 </Project>

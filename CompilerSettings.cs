@@ -7,20 +7,23 @@ namespace MathLang
 {
     public class CompilerSettings
     {
-        public IEnumerable<string> FilesPaths { get; set; }
-        public CodeGenerationTarget CodeGenerationTarget { get; set; }
-        public bool PrintSyntaxTree { get; set; }
-        public bool PrintAstTree { get; set; }
-        public bool ShowJasminBytecode { get; set; }
+        private static string DuplicateSetting(string setting) => $"Parameter {setting} was already specified";
+
+        public IEnumerable<string> FilesPaths { get; private set; }
+        public CodeGenerationTarget CodeGenerationTarget { get; private set; }
+        public bool PrintSyntaxTree { get; private set; }
+        public bool PrintAstTree { get; private set; }
+        public bool ShowJasminBytecode { get; private set; }
 
         public static CompilerSettings ParseCompilerSettings(IEnumerable<string> files, IEnumerable<string> parameters)
         {
-            CompilerSettings c = new CompilerSettings {FilesPaths = files.ToList()};
-            parameters.ForEach(p =>
+            CompilerSettings compilerSettings = new CompilerSettings {FilesPaths = files.ToList()};
+            parameters.ForEach(parameter =>
             {
-                if (p.Contains("--target")) ProcessTargetSetting(c, p);
+                if (parameter.Contains("--target")) ProcessTargetSetting(compilerSettings, parameter);
+                if (parameter.Contains("--print")) ProcessPrintSetting(compilerSettings, parameter);
             });
-            return c;
+            return compilerSettings;
         }
 
         private static void ProcessTargetSetting(CompilerSettings settings, string targetSetting)
@@ -37,6 +40,21 @@ namespace MathLang
                     break;
                 default:
                     throw new Exception($"target setting does not support value {targetSetting}");
+            }
+        }
+
+        private static void ProcessPrintSetting(CompilerSettings settings, string printSettting)
+        {
+            switch (printSettting)
+            {
+                case "--print-ast":
+                    if (settings.PrintAstTree) throw new Exception(DuplicateSetting(printSettting));
+                    settings.PrintAstTree = true;
+                    break;
+                case "--print-syntax":
+                    if (settings.PrintSyntaxTree) throw new Exception(DuplicateSetting(printSettting));
+                    settings.PrintSyntaxTree = true;
+                    break;
             }
         }
     }

@@ -183,8 +183,8 @@ xcopy  *.dll ..\..\RunScripts\ /Y
 xcopy ..\..\RunScripts\libs *  /Y</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>xcopy  *.exe ..\..\RunScripts\ /Y
+xcopy  *.dll ..\..\RunScripts\ /Y</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
