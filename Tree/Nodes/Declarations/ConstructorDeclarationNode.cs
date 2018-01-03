@@ -1,6 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Antlr.Runtime.Tree;
+using MathLang.Extensions;
+using MathLang.Tree.Nodes.Expressions;
 using MathLang.Tree.Nodes.Interfaces;
+using MathLang.Tree.Nodes.Statements;
 using MathLang.Tree.Scopes;
 
 namespace MathLang.Tree.Nodes.Declarations
@@ -12,8 +16,9 @@ namespace MathLang.Tree.Nodes.Declarations
 
         public ClassDeclaration DeclaringType { get; }
         public Modifier Modifier { get; private set; }
-        public List<IExpression> Parameters { get; } = new List<IExpression>();
-        public List<IStatement> Statements { get; } = new List<IStatement>();
+        public ExtendedId ExtendedId { get; private set; }
+        public List<FunctionVariableDeclarationParameter> Parameters { get; } = new List<FunctionVariableDeclarationParameter>();
+        public BlockStatement BlockStatement { get; private set; }
 
         public ConstructorDeclarationNode(ClassDeclaration type, Scope scope)
         {
@@ -23,7 +28,29 @@ namespace MathLang.Tree.Nodes.Declarations
 
         public void Construct(CommonTree syntaxConstructor)
         {
-            throw new System.NotImplementedException();
+            //Modifier
+            Modifier = TreeHelper.GetModifiersFromSyntaxModifiersNode(
+                syntaxConstructor.GetChild(0).CastTo<CommonTree>());
+            //ExtendedId
+            ExtendedId = new ExtendedId(this, Scope);
+            ExtendedId.Construct(syntaxConstructor.GetChild(1).CastTo<CommonTree>());
+
+            //Parameters
+            var syntaxParameters = syntaxConstructor.GetChild(2).CastTo<CommonTree>();
+            if (syntaxParameters.ChildCount > 0)
+            {
+                syntaxParameters.Children.Cast<CommonTree>()
+                    .ForEach(syntaxParameter =>
+                    {
+                        FunctionVariableDeclarationParameter parameter = new FunctionVariableDeclarationParameter(this, Scope);
+                        parameter.Construct(syntaxParameter);
+                        Parameters.Add(parameter);
+                    });
+            }
+            //Block
+            var syntaxBlock = syntaxConstructor.GetChild(3).CastTo<CommonTree>();
+            BlockStatement = new BlockStatement(this, Scope, false);
+            BlockStatement.Construct(syntaxBlock);
         }
 
         public ConstructorDeclarationNode GetDefaultConstructor(ClassDeclaration classDeclaration, Scope scope) =>

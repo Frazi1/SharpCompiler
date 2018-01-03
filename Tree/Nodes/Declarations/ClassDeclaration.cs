@@ -79,6 +79,12 @@ namespace MathLang.Tree.Nodes.Declarations
 //                        Scope.AddFunction(function);
                         function.Construct(child);
                     }
+                    else if(child.Type == MathLangParser.CONSTRUCTOR_DECLARATION)
+                    {
+                        ConstructorDeclarationNode constructor = new ConstructorDeclarationNode(this, Scope);
+                        Constructors.Add(constructor);
+                        constructor.Construct(child);
+                    }
                 });
         }
     }

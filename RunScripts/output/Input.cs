@@ -3,11 +3,14 @@
 
     static void Main(string[] args)
     {
-        Valera a = new Valera();
+        int a = 10;
     }
 }
 
 class Valera
 {
-    
+    public static Valera(int a)
+    {
+        
+    }
 }
