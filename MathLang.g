@@ -46,6 +46,7 @@ tokens {
   ATTRIBUTES;
   ATTRIBUTE_USAGE;
   NAMESPACE_DECLARATION;
+  CONSTRUCTOR_DECLARATION;
 }
 
 
@@ -82,17 +83,19 @@ public execute:
 namespace_declaration: NAMESPACE extended_id OPEN_CURLY_BRACE class_list? CLOSE_CURLY_BRACE -> ^(NAMESPACE_DECLARATION extended_id class_list?); 
 modifiers: MODIFIER* -> ^(MODIFIERS MODIFIER*);
 
+
+
 class_declaration: modifiers CLASS_WORD ID class_block -> ^(CLASS_WORD ID modifiers class_block) ;
 
-class_block: '{'! static_func_or_var_declaration* '}'! -> ^(CLASSBLOCK static_func_or_var_declaration * );
+class_block: '{'! field_or_function_declaration* '}'! -> ^(CLASSBLOCK field_or_function_declaration * );
 
-static_func_or_var_declaration: declaration | funcdeclaration ;
+field_or_function_declaration: var_declaration | funcdeclaration ;
 
 class_list:  class_declaration* ;
 
 func_list : funcdeclaration* -> ^(PROGRAM funcdeclaration*)  ;
 
-statement: ( declaration 
+statement: ( var_declaration 
 	| assignment
 	| ifstatement
 	| whilestatement
@@ -126,7 +129,6 @@ extended_id: ID (DOT ID)* -> ^(EXTENDED_ID ID*);
 
 arrayelement:  extended_id OPEN_SQUARE_BRACE mathexpression CLOSE_SQUARE_BRACE -> ^(ARRAYELEMENT extended_id mathexpression) ;
 
-declaration: var_declaration;
 var_declaration: m=modifiers! t=type! declaration_list[t.Tree, m.Tree] ';'!;
 
 declaration_list[object type, object mod]: d[type, mod] (','! d[type, mod])* ;
