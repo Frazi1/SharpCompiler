@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using Antlr.Runtime.Tree;
 using MathLang.Extensions;
+using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Interfaces;
 using MathLang.Tree.Scopes;
 
 namespace MathLang.Tree.Nodes.Declarations
 {
-    public class ClassDeclaration : INode
+    public class ClassDeclaration : TypeDefinition, INode
     {
         public INode Parent { get; set; }
         public Scope Scope { get; }
 
-        public string Name { get; set; }
         public List<VariableDeclaration> VarDeclarationNodes { get; } = new List<VariableDeclaration>();
         public List<FunctionDeclaration> FunctionDeclarationNodes { get; } = new List<FunctionDeclaration>();
         public List<Modifier> ModifiersList { get; } = new List<Modifier>();
@@ -24,14 +24,21 @@ namespace MathLang.Tree.Nodes.Declarations
         public bool IsStatic => ModifiersList.Contains(Modifier.Static);
         public bool IsExtern => ModifiersList.Contains(Modifier.Extern);
 
-
         public ClassDeclaration(INode parent, Scope parentScope, bool isPrintable = true, bool codeGeneration = true)
+            : this(null, parent, parentScope, isPrintable, codeGeneration)
         {
+        }
+
+        public ClassDeclaration(string name, INode parent, Scope parentScope, bool isPrintable = true,
+            bool codeGeneration = true)
+        {
+            Name = name;
             Parent = parent;
             Scope = new LocalScope(parentScope);
             IsPrintable = isPrintable;
             CodeGeneration = codeGeneration;
         }
+
 
         public void Construct(CommonTree syntaxClass)
         {
@@ -41,13 +48,13 @@ namespace MathLang.Tree.Nodes.Declarations
             {
                 syntaxModifiers.Children.ForEach(mod =>
                 {
-                    if(mod.Text == Modifiers.Extern) ModifiersList.Add(Modifier.Extern);
-                    else if(mod.Text == Modifiers.Static) ModifiersList.Add(Modifier.Static);
+                    if (mod.Text == Modifiers.Extern) ModifiersList.Add(Modifier.Extern);
+                    else if (mod.Text == Modifiers.Static) ModifiersList.Add(Modifier.Static);
                     else throw new Exception($"Modifier {mod.Text} is not defined");
                 });
             }
             var classblock = syntaxClass.GetChild(2).CastTo<CommonTree>();
-            if(classblock.ChildCount == 0) return;
+            if (classblock.ChildCount == 0) return;
             classblock.Children
                 .Cast<CommonTree>()
                 .ForEach(child =>
@@ -57,11 +64,11 @@ namespace MathLang.Tree.Nodes.Declarations
 //                        child.Children.Cast<CommonTree>()
 //                            .Select(syntaxVariableDeclaration =>
 //                            {
-                                var variableDeclaration = TreeHelper
-                                    .GetStatements(this, Scope, child).First()
-                                    .CastTo<VariableDeclaration>();
-                                variableDeclaration.Construct(child, true);
-                                VarDeclarationNodes.Add(variableDeclaration);
+                        var variableDeclaration = TreeHelper
+                            .GetStatements(this, Scope, child).First()
+                            .CastTo<VariableDeclaration>();
+                        variableDeclaration.Construct(child, true);
+                        VarDeclarationNodes.Add(variableDeclaration);
 //                            })
 //                            .ForEach(declaration => VarDeclarationNodes.Add(declaration));
                     }

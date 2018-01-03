@@ -5,7 +5,7 @@ namespace MathLang.Tree.Nodes.Interfaces
 {
     public interface INode
     {
-        INode Parent { get; set; }
+        INode Parent { get; }
 
         Scope Scope { get; }
         //bool IsConstructed { get; }

@@ -1,4 +1,7 @@
-﻿namespace MathLang.Tree.Nodes.Enums
+﻿using System.Collections.Generic;
+using MathLang.Tree.Nodes.Declarations;
+
+namespace MathLang.Tree.Nodes.Enums
 {
     public enum ReturnTypeEnum
     {
@@ -13,7 +16,12 @@
 
     public abstract class TypeDefinition
     {
-        public string Name { get; }
+        public string Name { get; protected internal set; }
+        public List<ConstructorDefinition> Constructors { get; } = new List<ConstructorDefinition>();
+
+        protected TypeDefinition()
+        {
+        }
 
         protected TypeDefinition(string name)
         {
@@ -25,10 +33,13 @@
         public static IntTypeDefinition Int => new IntTypeDefinition();
         public static CharTypeDefinition Char => new CharTypeDefinition();
         public static VoidTypeDefinition Void => new VoidTypeDefinition();
-        public static ArrayTypeDefinition ArrayOf(TypeDefinition typeDefinition) => new ArrayTypeDefinition(typeDefinition);
+
+        public static ArrayTypeDefinition ArrayOf(TypeDefinition typeDefinition) =>
+            new ArrayTypeDefinition(typeDefinition);
+
         public static StringTypeDefinition String => new StringTypeDefinition();
         public static CustomTypeDefinition CustomType(string name) => new CustomTypeDefinition(name);
-        
+
         protected bool Equals(TypeDefinition other)
         {
             return string.Equals(Name, other.Name);
@@ -62,7 +73,6 @@
         {
             return !(a == b);
         }
-
     }
 
     public abstract class SimpleTypeDefinition : TypeDefinition
@@ -134,12 +144,12 @@
 
     public sealed class StringTypeDefinition : SimpleTypeDefinition
     {
-        public StringTypeDefinition() 
+        public StringTypeDefinition()
             : base("String")
         {
         }
     }
-    
+
     public sealed class CustomTypeDefinition : SimpleTypeDefinition
     {
         public CustomTypeDefinition(string name) : base(name)

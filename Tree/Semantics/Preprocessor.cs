@@ -232,6 +232,9 @@ namespace MathLang.Tree.Semantics
                 case ArrayElementReference arrayElementReference:
                     arrayElementReference.Process();
                     break;
+                case NewExpression newExpression:
+                    newExpression.ProcessNewExpression();
+                    break;
                 default: throw new ArgumentOutOfRangeException(nameof(iexpression));
             }
         }
@@ -411,6 +414,11 @@ namespace MathLang.Tree.Semantics
                     $"Index of array element reference \"{arrayElementReference.Name}\" must be of type {TypeDefinition.Int}, but received {arrayElementReference.ArrayIndex.TypeDefinition}");
             arrayElementReference.ArrayDeclaration = arrayElementReference.Scope
                 .GlobalVariableSearch(arrayElementReference.Name.Name);
+        }
+
+        private static void ProcessNewExpression(this NewExpression newExpression)
+        {
+                
         }
 
         #endregion

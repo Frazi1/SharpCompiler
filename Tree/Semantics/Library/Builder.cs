@@ -38,7 +38,7 @@ namespace MathLang.Tree.Semantics
 
         public static ClassDeclaration BuildClassDeclaration(Nodes.Program program, string name)
         {
-            var classDeclaration = new ClassDeclaration(program, program.Scope, false) {Name = name};
+            var classDeclaration = new ClassDeclaration(name, program, program.Scope, false);
             return classDeclaration;
         }
     }
