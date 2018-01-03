@@ -56,9 +56,7 @@
     <Compile Include="Helpers\FilePrinter.cs" />
     <Compile Include="Helpers\TreeConsolePrinter.cs" />
     <Compile Include="Program.cs" />
-    <None Include="RunScripts\libs\Library.class">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="RunScripts\libs\Library.class" />
     <None Include="RunScripts\output\Input.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -145,9 +143,7 @@
       <DependentUpon>@(AntlrGrammarFile)</DependentUpon>
     </Content>
     <Content Include="RunScripts\Antlr3.Runtime.dll" />
-    <None Include="RunScripts\libs\DotNetLib.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="RunScripts\libs\DotNetLib.dll" />
     <Content Include="RunScripts\JasminSharp.dll" />
     <Content Include="RunScripts\jasmin_build.bat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -183,11 +179,12 @@
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>xcopy  *.exe ..\..\RunScripts\ /Y
-xcopy  *.dll ..\..\RunScripts\ /Y</PostBuildEvent>
+xcopy  *.dll ..\..\RunScripts\ /Y
+xcopy ..\..\RunScripts\libs *  /Y</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>xcopy  *.exe ..\..\RunScripts\ /Y
-xcopy  *.dll ..\..\RunScripts\ /Y</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
