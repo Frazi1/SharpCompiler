@@ -64,7 +64,7 @@
     <None Include="RunScripts\libs\NJCLib.cs" />
     <Compile Include="Tree\Nodes\AttributeUsage.cs" />
     <Compile Include="Tree\Nodes\Declarations\AttributeDeclaration.cs" />
-    <Compile Include="Tree\Nodes\Declarations\ConstructorDefinition.cs" />
+    <Compile Include="Tree\Nodes\Declarations\ConstructorDeclarationNode.cs" />
     <Compile Include="Tree\Nodes\Declarations\FunctionVariableDeclarationParameter.cs" />
     <Compile Include="Tree\Nodes\Declarations\VariableDeclaration.cs" />
     <Compile Include="Tree\Nodes\Expressions\ArrayElementReference.cs" />

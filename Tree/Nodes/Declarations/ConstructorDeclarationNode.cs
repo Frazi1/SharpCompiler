@@ -5,7 +5,7 @@ using MathLang.Tree.Scopes;
 
 namespace MathLang.Tree.Nodes.Declarations
 {
-    public class ConstructorDefinition : INode
+    public class ConstructorDeclarationNode : INode
     {
         public INode Parent => DeclaringType;
         public Scope Scope { get; }
@@ -15,7 +15,7 @@ namespace MathLang.Tree.Nodes.Declarations
         public List<IExpression> Parameters { get; } = new List<IExpression>();
         public List<IStatement> Statements { get; } = new List<IStatement>();
 
-        public ConstructorDefinition(ClassDeclaration type, Scope scope)
+        public ConstructorDeclarationNode(ClassDeclaration type, Scope scope)
         {
             DeclaringType = type;
             Scope = scope;
@@ -26,7 +26,7 @@ namespace MathLang.Tree.Nodes.Declarations
             throw new System.NotImplementedException();
         }
 
-        public ConstructorDefinition GetDefaultConstructor(ClassDeclaration classDeclaration, Scope scope) =>
-            new ConstructorDefinition(classDeclaration, scope);
+        public ConstructorDeclarationNode GetDefaultConstructor(ClassDeclaration classDeclaration, Scope scope) =>
+            new ConstructorDeclarationNode(classDeclaration, scope);
     }
 }

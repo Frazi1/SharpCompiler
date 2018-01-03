@@ -17,7 +17,7 @@ namespace MathLang.Tree.Nodes.Enums
     public abstract class TypeDefinition
     {
         public string Name { get; protected internal set; }
-        public List<ConstructorDefinition> Constructors { get; } = new List<ConstructorDefinition>();
+        public List<ConstructorDeclarationNode> Constructors { get; } = new List<ConstructorDeclarationNode>();
 
         protected TypeDefinition()
         {
