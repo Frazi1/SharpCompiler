@@ -9,7 +9,7 @@
     <StartArguments>RunScripts/output/%2a.cs --target=java --print-ast --print-syntax</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <StartArguments>RunScripts/output/Input.cs RunScripts/output/TestClass.cs RunScripts/output/Library.cs</StartArguments>
+    <StartArguments>RunScripts/output/Input.cs RunScripts/output/TestClass.cs</StartArguments>
   </PropertyGroup>
   <PropertyGroup>
     <JavaHome>C:\Program Files\Java\jdk1.8.0_144</JavaHome>

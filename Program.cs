@@ -7,6 +7,7 @@ using Antlr.Runtime;
 using Antlr.Runtime.Tree;
 using MathLang.CodeGeneration;
 using MathLang.Extensions;
+using MathLang.Helpers;
 using MathLang.Tree.Semantics;
 
 
@@ -26,6 +27,7 @@ namespace MathLang
                 if(compilerSettings.CodeGenerationTarget == CodeGenerationTarget.None)
                     throw new Exception("Specify code generation target with argument --target=java or --target=net");
                 RunCompiler(compilerSettings);
+                CopyNativeLibs(compilerSettings);
             }
             catch (Exception e)
             {
@@ -38,6 +40,14 @@ namespace MathLang
 #if DEBUG
             Console.ReadKey();
 #endif
+        }
+
+        private static void CopyNativeLibs(CompilerSettings compilerSettings)
+        {
+            if (compilerSettings.CodeGenerationTarget == CodeGenerationTarget.Dotnet)
+                IOHelper.CopyDirItems(CompilerSettings.DotNetNativesPath, CompilerSettings.CurrentDirectory);
+            else if(compilerSettings.CodeGenerationTarget == CodeGenerationTarget.Java)
+                IOHelper.CopyDirItems(CompilerSettings.JavaNativesPath, CompilerSettings.CurrentDirectory);
         }
 
         private static void RunCompiler(CompilerSettings compilerSettings)

@@ -54,15 +54,14 @@
     <Compile Include="Helpers\ErrorService.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Helpers\FilePrinter.cs" />
+    <Compile Include="Helpers\IOHelper.cs" />
     <Compile Include="Helpers\TreeConsolePrinter.cs" />
     <Compile Include="Program.cs" />
-    <None Include="RunScripts\libs\Library.class" />
+    <None Include="RunScripts\libs\natives\java\Library.class" />
     <None Include="RunScripts\output\Input.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="RunScripts\output\Library.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="RunScripts\libs\NJCLib.cs" />
     <Compile Include="Tree\Nodes\AttributeUsage.cs" />
     <Compile Include="Tree\Nodes\Declarations\AttributeDeclaration.cs" />
     <Compile Include="Tree\Nodes\Declarations\FunctionVariableDeclarationParameter.cs" />
@@ -143,11 +142,11 @@
       <DependentUpon>@(AntlrGrammarFile)</DependentUpon>
     </Content>
     <Content Include="RunScripts\Antlr3.Runtime.dll" />
-    <None Include="RunScripts\libs\DotNetLib.dll" />
     <Content Include="RunScripts\JasminSharp.dll" />
     <Content Include="RunScripts\jasmin_build.bat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="RunScripts\libs\natives\dotnet\DotNetLib.dll" />
     <Content Include="RunScripts\MathLang.exe" />
     <Content Include="RunScripts\System.ValueTuple.dll" />
   </ItemGroup>

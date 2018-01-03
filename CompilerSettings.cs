@@ -8,12 +8,21 @@ namespace MathLang
 {
     public class CompilerSettings
     {
-        private static string CurrentDirectory => Directory.GetCurrentDirectory();
-        private static string HomeDirectory => AppDomain.CurrentDomain.BaseDirectory;
 
         private static string DuplicateSetting(string setting) => $"Parameter {setting} was already specified";
-        private const string NJCLibName = "NJCLib.cs";
-        private const string LibsDir = "libs";
+
+        public static string CurrentDirectory => Directory.GetCurrentDirectory();
+        public static string HomeDirectory => AppDomain.CurrentDomain.BaseDirectory;
+        public static string LibsFolderPath => Path.Combine(HomeDirectory, LibsFolderName);
+        public static string NativesFolderPath => Path.Combine(LibsFolderPath, NativesFolderName);
+        public static string DotNetNativesPath => Path.Combine(NativesFolderPath, DotNetFolderName);
+        public static string JavaNativesPath => Path.Combine(NativesFolderPath, JavaFolderName);
+
+        public const string NJCLibName = "NJCLib.cs";
+        public const string LibsFolderName = "libs";
+        public const string NativesFolderName = "Natives";
+        public const string DotNetFolderName = "dotnet";
+        public const string JavaFolderName = "java";
 
         public IEnumerable<string> FilesPaths { get; private set; }
         public CodeGenerationTarget CodeGenerationTarget { get; private set; }
@@ -104,7 +113,7 @@ namespace MathLang
 
                 if (!settings.NJCLibFound)
                 {
-                    var libsDir = directoryInfo.GetDirectories(LibsDir);
+                    var libsDir = directoryInfo.GetDirectories(LibsFolderName);
                     settings.NJCLibPath = libsDir.FirstOrDefault()
                         ?.GetFiles(NJCLibName).FirstOrDefault()
                         ?.FullName;
