@@ -24,7 +24,7 @@ namespace MathLang
                 var compilerSettings = CompilerSettings.ParseCompilerSettings(paths, parameters);
                 if (!compilerSettings.NJCLibFound)
                     Console.WriteLine($"NJCLib was not found");
-                if(compilerSettings.CodeGenerationTarget == CodeGenerationTarget.None)
+                if (compilerSettings.CodeGenerationTarget == CodeGenerationTarget.None)
                     throw new Exception("Specify code generation target with argument --target=java or --target=net");
                 RunCompiler(compilerSettings);
                 CopyNativeLibs(compilerSettings);
@@ -46,7 +46,7 @@ namespace MathLang
         {
             if (compilerSettings.CodeGenerationTarget == CodeGenerationTarget.Dotnet)
                 IOHelper.CopyDirItems(CompilerSettings.DotNetNativesPath, CompilerSettings.CurrentDirectory);
-            else if(compilerSettings.CodeGenerationTarget == CodeGenerationTarget.Java)
+            else if (compilerSettings.CodeGenerationTarget == CodeGenerationTarget.Java)
                 IOHelper.CopyDirItems(CompilerSettings.JavaNativesPath, CompilerSettings.CurrentDirectory);
         }
 
@@ -88,6 +88,7 @@ namespace MathLang
                 JasminCodeGenerator generator = new JasminCodeGenerator();
                 generator.GenerateCode(astProgram);
                 generator.SaveFiles();
+                RunJasminBuildScript();
             }
             else if (compilerSettings.CodeGenerationTarget == CodeGenerationTarget.Dotnet)
             {
@@ -147,7 +148,7 @@ namespace MathLang
 #if DEBUG
             startInfo.FileName = "RunScripts/jasmin_build.bat";
 #else
-            startInfo.FileName = "jasmin_build.bat";
+            startInfo.FileName = Path.Combine(CompilerSettings.HomeDirectory, "run_jasmin.bat");
 #endif
             //            startInfo.Arguments = "/C copy /b Image1.jpg + Archive.rar Image2.jpg";
             //            startInfo.Arguments = "-jar %JASMIN_PATH% *.j >jasmin_buildlog.txt 2>&1";
