@@ -1,8 +1,12 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
+VisualStudioVersion = 15.0.27004.2008
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathLang", "MathLang.csproj", "{043EF514-440A-4527-BF6A-0681EB349FA9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E9945C17-3BC6-434E-B8DE-2D33BA26C7C1} = {E9945C17-3BC6-434E-B8DE-2D33BA26C7C1}
+		{20771B55-2DAA-4CDF-915E-3AA58848592C} = {20771B55-2DAA-4CDF-915E-3AA58848592C}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JasminSharp", "JasminSharp\JasminSharp.csproj", "{BEBD05A2-6382-41A3-8108-B11960ED60B0}"
 EndProject
@@ -12,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		UnitTestProject1\UnitTestProject1.csproj = UnitTestProject1\UnitTestProject1.csproj
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetLib", "DotNetLib\DotNetLib.csproj", "{20771B55-2DAA-4CDF-915E-3AA58848592C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +37,10 @@ Global
 		{E9945C17-3BC6-434E-B8DE-2D33BA26C7C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E9945C17-3BC6-434E-B8DE-2D33BA26C7C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E9945C17-3BC6-434E-B8DE-2D33BA26C7C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20771B55-2DAA-4CDF-915E-3AA58848592C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20771B55-2DAA-4CDF-915E-3AA58848592C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20771B55-2DAA-4CDF-915E-3AA58848592C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20771B55-2DAA-4CDF-915E-3AA58848592C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

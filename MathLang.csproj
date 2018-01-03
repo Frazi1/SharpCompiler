@@ -9,7 +9,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MathLang</RootNamespace>
-    <AssemblyName>MathLang</AssemblyName>
+    <AssemblyName>NJC</AssemblyName>
     <NoWarn>3021</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -42,23 +42,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompilerSettings.cs" />
     <Compile Include="Helpers\AstNodePrinter.cs" />
     <Compile Include="CodeGeneration\Helpers\Converters\ReturnTypeToJavaConverter.cs" />
     <Compile Include="CodeGeneration\Jasmin\CombinedInstuctionsGeneration.cs" />
     <Compile Include="CodeGeneration\Jasmin\ExpressionInstructionsGeneration.cs" />
     <Compile Include="CodeGeneration\Jasmin\JasminCodeGenerator.cs" />
     <Compile Include="CodeGeneration\Jasmin\StatementInstructionsGeneration.cs" />
+    <Compile Include="CodeGeneration\IL\CodeGenerator.cs" />
+    <Compile Include="CodeGeneration\IL\GenerationHelper.cs" />
     <Compile Include="Helpers\ErrorService.cs" />
     <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="Helpers\FilePrinter.cs" />
+    <Compile Include="Helpers\IOHelper.cs" />
     <Compile Include="Helpers\TreeConsolePrinter.cs" />
     <Compile Include="Program.cs" />
+    <None Include="RunScripts\libs\natives\java\Library.class" />
     <None Include="RunScripts\output\Input.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="RunScripts\output\Library.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="RunScripts\libs\NJCLib.cs" />
     <Compile Include="Tree\Nodes\AttributeUsage.cs" />
     <Compile Include="Tree\Nodes\Declarations\AttributeDeclaration.cs" />
     <Compile Include="Tree\Nodes\Declarations\FunctionVariableDeclarationParameter.cs" />
@@ -72,8 +75,7 @@
     <Compile Include="Tree\Nodes\Modifiers.cs" />
     <Compile Include="Tree\Semantics\FunctionIndexingStrategy.cs" />
     <Compile Include="Tree\Semantics\Library\Builder.cs" />
-    <Compile Include="Tree\Semantics\Library\ConsoleBuilder.cs" />
-    <Compile Include="Tree\Semantics\Library\JavaRefAttributeBuilder.cs" />
+    <Compile Include="Tree\Semantics\Library\AttributeBuilder.cs" />
     <Compile Include="Tree\Semantics\Tables\CastsTable.cs" />
     <Compile Include="Tree\Nodes\Expressions\CharExpression.cs" />
     <Compile Include="Tree\Nodes\Expressions\ExtendedId.cs" />
@@ -110,9 +112,6 @@
     <Compile Include="Tree\TreeHelper.cs" />
     <Compile Include="Tree\Nodes\Statements\VariableAssignment.cs" />
     <Compile Include="Tree\Nodes\Statements\WhileStatement.cs" />
-    <None Include="RunScripts\output\TestClass.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -148,7 +147,7 @@
     <Content Include="RunScripts\jasmin_build.bat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="RunScripts\Library.class" />
+    <Content Include="RunScripts\libs\natives\dotnet\DotNetLib.dll" />
     <Content Include="RunScripts\MathLang.exe" />
     <Content Include="RunScripts\System.ValueTuple.dll" />
   </ItemGroup>
@@ -180,7 +179,8 @@
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>xcopy  *.exe ..\..\RunScripts\ /Y
-xcopy  *.dll ..\..\RunScripts\ /Y</PostBuildEvent>
+xcopy  *.dll ..\..\RunScripts\ /Y
+xcopy ..\..\RunScripts\libs *  /Y</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>xcopy  *.exe ..\..\RunScripts\ /Y

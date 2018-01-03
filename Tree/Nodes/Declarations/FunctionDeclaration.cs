@@ -22,7 +22,9 @@ namespace MathLang.Tree.Nodes.Declarations
         public bool IsStatic { get; internal set; }
         public bool IsExternal { get; internal set; }
 
-        public string FullName => $"{Parent.CastTo<ClassDeclaration>().Name}/{Name.ToCamelCase()}";
+        public string NameCamelCased => Name.ToCamelCase();
+        public string FullName => $"{Parent.CastTo<ClassDeclaration>().Name}/{Name}";
+        public string FullNameCamelCased => $"{Parent.CastTo<ClassDeclaration>().Name}/{Name.ToCamelCase()}";
         public List<FunctionVariableDeclarationParameter> ParameterNodes { get; } = new List<FunctionVariableDeclarationParameter>();
         public List<Modifier> ModifiersList { get; } = new List<Modifier>();
         public List<AttributeUsage> AttributeUsages { get; } = new List<AttributeUsage>();
