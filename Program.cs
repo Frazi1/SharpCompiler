@@ -16,12 +16,15 @@ namespace MathLang
     {
         public static void Main(string[] args)
         {
-            ProcessArguments(args, out var files, out var parameters);
-
-            var paths = ExpandWildCard(files);
-            var compilerSettings = CompilerSettings.ParseCompilerSettings(paths, parameters);
             try
             {
+                ProcessArguments(args, out var files, out var parameters);
+                var paths = ExpandWildCard(files);
+                var compilerSettings = CompilerSettings.ParseCompilerSettings(paths, parameters);
+                if (!compilerSettings.NJCLibFound)
+                    Console.WriteLine($"NJCLib was not found");
+                if(compilerSettings.CodeGenerationTarget == CodeGenerationTarget.None)
+                    Console.WriteLine("Specify code generation target with argument --target=java or --target=net");
                 RunCompiler(compilerSettings);
             }
             catch (Exception e)
@@ -51,6 +54,10 @@ namespace MathLang
                 else
                     astProgram.Construct(tree.CastTo<CommonTree>());
             });
+            if (compilerSettings.NJCLibFound)
+                astProgram.Construct(
+                    RunSyntaxAnalysys(compilerSettings.NJCLibPath)
+                        .CastTo<CommonTree>());
 
             //AST
             if (ErrorService.Instance.HasErrors) return;

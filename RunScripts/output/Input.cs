@@ -26,7 +26,7 @@ static class AnnaTest
 
     static void PrintHelen()
     {
-        Library.PrintInt(42);
-        Library.PrintInt(Helen);
+        NJCLib.PrintInt(42);
+        NJCLib.PrintInt(Helen);
     }
 }
