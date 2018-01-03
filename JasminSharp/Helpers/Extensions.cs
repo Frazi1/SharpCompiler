@@ -32,5 +32,10 @@ namespace JasminSharp.Helpers
         {
             return e.GetFlags().Cast<T>();
         }
+
+        public static IEnumerable<T> GetFlagsWithoutDefault<T>(this Enum e)
+        {
+            return GetFlags<T>(e).Where(flag => !flag.Equals(default(T)));
+        }
     }
 }
