@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JasminSharp.Helpers;
 using MathLang.Tree.Nodes.Declarations;
 using MathLang.Tree.Nodes.Enums;
 using MathLang.Tree.Nodes.Expressions;
@@ -124,8 +125,17 @@ namespace MathLang.Tree.Semantics
             if (variableDeclaration.IsField)
             {
                 var parentClass = variableDeclaration.Parent.CastTo<ClassDeclaration>();
-                if(parentClass.IsStatic && !variableDeclaration.IsStatic)
-                    throw new ScopeException($"Static class {parentClass.Name} can not contain a non static field {variableDeclaration.Name}");
+                if (parentClass.IsStatic && !variableDeclaration.IsStatic)
+                    throw new ScopeException(
+                        $"Static class {parentClass.Name} can not contain a non static field {variableDeclaration.Name}");
+            }
+
+            if (!variableDeclaration.IsField && variableDeclaration.Modifier != 0)
+            {
+                var enumerable = variableDeclaration.Modifier.GetFlagsWithoutDefault<Modifier>().ToList();
+                throw new ScopeException(
+                    $"Local variables can not have modifiers: \"{string.Join(", ", enumerable)}\"" +
+                    $" ({variableDeclaration.FullName} in {variableDeclaration.Parent})");
             }
 
             IExpression variableDeclarationValueExpression = variableDeclaration.Value;
@@ -135,7 +145,8 @@ namespace MathLang.Tree.Semantics
 
                 if (!(variableDeclaration.TypeDefinition == variableDeclarationValueExpression.TypeDefinition))
                 {
-                    if (variableDeclarationValueExpression.TypeDefinition.IsCastableTo(variableDeclaration.TypeDefinition))
+                    if (variableDeclarationValueExpression.TypeDefinition.IsCastableTo(variableDeclaration
+                        .TypeDefinition))
                     {
                         variableDeclarationValueExpression.CastToType = variableDeclaration.TypeDefinition;
                     }
@@ -418,7 +429,6 @@ namespace MathLang.Tree.Semantics
 
         private static void ProcessNewExpression(this NewExpression newExpression)
         {
-                
         }
 
         #endregion
