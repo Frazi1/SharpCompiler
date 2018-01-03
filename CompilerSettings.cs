@@ -8,6 +8,9 @@ namespace MathLang
 {
     public class CompilerSettings
     {
+        private static string CurrentDirectory => Directory.GetCurrentDirectory();
+        private static string HomeDirectory => AppDomain.CurrentDomain.BaseDirectory;
+
         private static string DuplicateSetting(string setting) => $"Parameter {setting} was already specified";
         private const string NJCLibName = "NJCLib.cs";
         private const string LibsDir = "libs";
@@ -89,16 +92,23 @@ namespace MathLang
 
         private static void FindNJCLib(CompilerSettings settings)
         {
-            DirectoryInfo directoryInfo = new DirectoryInfo(Directory.GetCurrentDirectory());
-            var filesInfos = directoryInfo.GetFiles(NJCLibName);
-            settings.NJCLibPath = filesInfos.FirstOrDefault()?.Name;
+            FindNJCLibInternal(CurrentDirectory);
+            if(!settings.NJCLibFound)
+                FindNJCLibInternal(HomeDirectory);
 
-            if (!settings.NJCLibFound)
+            void FindNJCLibInternal(string path)
             {
-                var libsDir = directoryInfo.GetDirectories(LibsDir);
-                settings.NJCLibPath = libsDir.FirstOrDefault()
-                    ?.GetFiles(NJCLibName).FirstOrDefault()
-                    ?.Name;
+                DirectoryInfo directoryInfo = new DirectoryInfo(path);
+                var filesInfos = directoryInfo.GetFiles(NJCLibName);
+                settings.NJCLibPath = filesInfos.FirstOrDefault()?.FullName;
+
+                if (!settings.NJCLibFound)
+                {
+                    var libsDir = directoryInfo.GetDirectories(LibsDir);
+                    settings.NJCLibPath = libsDir.FirstOrDefault()
+                        ?.GetFiles(NJCLibName).FirstOrDefault()
+                        ?.FullName;
+                }
             }
         }
     }

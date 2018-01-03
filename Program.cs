@@ -24,7 +24,7 @@ namespace MathLang
                 if (!compilerSettings.NJCLibFound)
                     Console.WriteLine($"NJCLib was not found");
                 if(compilerSettings.CodeGenerationTarget == CodeGenerationTarget.None)
-                    Console.WriteLine("Specify code generation target with argument --target=java or --target=net");
+                    throw new Exception("Specify code generation target with argument --target=java or --target=net");
                 RunCompiler(compilerSettings);
             }
             catch (Exception e)
