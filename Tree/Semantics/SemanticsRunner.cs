@@ -4,12 +4,12 @@ namespace MathLang.Tree.Semantics
 {
     public static class SemanticsRunner
     {
-        public static void Run(Nodes.Program program)
+        public static void Run(Nodes.Program program, FunctionIndexingStrategy indexingStrategy)
         {
             AddLibraryClasses(program);
             program.PreProcess();
             program.Process();
-            program.SetVariableIndexes(FunctionIndexingStrategy.United);
+            program.SetVariableIndexes(indexingStrategy);
         }
 
         public static void AddLibraryClasses(Nodes.Program program)

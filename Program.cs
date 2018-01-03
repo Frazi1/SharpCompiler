@@ -42,7 +42,7 @@ namespace MathLang
             var astProgram = new Tree.Nodes.Program();
             compilerSettings.FilesPaths.ForEach(path =>
             {
-                ITree tree = RunSyntaxAnalysys(path, astProgram);
+                ITree tree = RunSyntaxAnalysys(path);
                 if (compilerSettings.PrintSyntaxTree)
                     AstNodePrinter.Print(tree);
 
@@ -54,7 +54,11 @@ namespace MathLang
 
             //AST
             if (ErrorService.Instance.HasErrors) return;
-            SemanticsRunner.Run(astProgram);
+
+            SemanticsRunner.Run(astProgram,
+                compilerSettings.CodeGenerationTarget == CodeGenerationTarget.Dotnet
+                    ? FunctionIndexingStrategy.Splitted
+                    : FunctionIndexingStrategy.United);
 
             if (compilerSettings.PrintAstTree)
             {
@@ -77,7 +81,7 @@ namespace MathLang
             //RunJasminBuildScript();
         }
 
-        private static ITree RunSyntaxAnalysys(string arg, Tree.Nodes.Program astProgram)
+        private static ITree RunSyntaxAnalysys(string arg)
         {
             ICharStream input = new ANTLRFileStream(arg);
             MathLangLexer lexer = new MathLangLexer(input);
