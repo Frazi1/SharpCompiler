@@ -92,8 +92,9 @@ namespace MathLang
             }
             else if (compilerSettings.CodeGenerationTarget == CodeGenerationTarget.Dotnet)
             {
+                var trimEnd = Path.ChangeExtension(Path.GetFileName(compilerSettings.FilesPaths.First()), "").TrimEnd('.');
                 CodeGenerator cg =
-                    new CodeGenerator(Path.ChangeExtension(compilerSettings.FilesPaths.First(), "").TrimEnd('.'),
+                    new CodeGenerator(trimEnd,
                         astProgram);
             }
             //Helpers.FilePrinter.WriteTextToFile(generator.CodeListing, "output.j");
