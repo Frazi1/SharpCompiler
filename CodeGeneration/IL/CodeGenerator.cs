@@ -1,6 +1,7 @@
 ﻿using MathLang.Tree.Nodes.Declarations;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -142,7 +143,11 @@ namespace MathLang.CodeGeneration
 
                 var typesNamesTuple2 = GenerationHelper.GetTypesAndNamesOfFuncParams(functionDeclarationNode.ParameterNodes);
                 
-                Type externalClassType = Assembly.Load(libName).GetTypes().First(t => t.Name == className);
+                //Type externalClassType = Assembly.Load(
+                //    CompilerSettings.CurrentDirectory.TrimEnd(Path.DirectorySeparatorChar) +Path.DirectorySeparatorChar+libName+".dll"
+                //    ).GetTypes().First(t => t.Name == className);
+                var libpath = Path.Combine(CompilerSettings.CurrentDirectory, libName)+ ".dll";
+                Type externalClassType = Assembly.LoadFrom(libpath).GetTypes().First(t => t.Name == className);
 
                 if (externalClassType == null)
                     throw new ApplicationException($"No external class with name {className} found");
@@ -251,8 +256,10 @@ namespace MathLang.CodeGeneration
 
             if (blockStatementNode.Parent is FunctionDeclaration funcDecl)
             {
-                if(funcDecl.ReturnType == ReturnType.Void)
-                    ilGenerator.Emit(OpCodes.Ret);
+                //if(funcDecl.ReturnType == ReturnType.Void)
+                //the poblem is that if "ret" is not the last il command, CLR throws InvalidProgramException,
+                //so we gotta write this even if function returns not void 
+                ilGenerator.Emit(OpCodes.Ret);
             }
             
         }
