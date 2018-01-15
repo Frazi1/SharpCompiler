@@ -645,7 +645,9 @@ namespace MathLang.CodeGeneration
             
             {
                 GenerateExpression(expressionNode.Left, ilGenerator);
-                GenerateExpression(expressionNode.Right, ilGenerator);
+
+                if(expressionNode.Right != null)
+                    GenerateExpression(expressionNode.Right, ilGenerator);
 
                 switch (expressionNode.ExpressionType)
                 {
@@ -686,6 +688,17 @@ namespace MathLang.CodeGeneration
                         ilGenerator.Emit(OpCodes.Ldc_I4_0);
                         ilGenerator.Emit(OpCodes.Ceq);
                         break;
+                    case ExpressionType.And:
+                        ilGenerator.Emit(OpCodes.And);
+                        break;
+                    case ExpressionType.Or:
+                        ilGenerator.Emit(OpCodes.Or);
+                        break;
+                    case ExpressionType.Not:
+                        ilGenerator.Emit(OpCodes.Ldc_I4_0);
+                        ilGenerator.Emit(OpCodes.Ceq);
+                        break;
+                            
                 }
             }
 
