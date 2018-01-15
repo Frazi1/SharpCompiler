@@ -3,14 +3,7 @@
 
     static void Main(string[] args)
     {
-        //Console.WriteLineInt(790);
-        //Console.WriteLineChar('i');
-        //Console.WriteLineBool(true);
-        //Console.WriteLineBool(false);
-
-        int len = AnnaTest.GetLen(50000);
-
-        AnnaTest.PrintHelen();
+        int len = 10;
 
         int[] myArr = new int[len];
 
@@ -29,6 +22,10 @@
         QuickSort(myArr, 0, len - 1);
 
         ArrayPrint(myArr, len);
+
+        int result = BinarySearch(myArr, 0, len - 1, 6);
+        NJCLib.PrintChar('h');
+        NJCLib.PrintInt(result);
     }
 
 
@@ -45,28 +42,6 @@
         NJCLib.PrintChar('-');
 
     }
-
-    //static void Arraprint(int[] arra)
-    //{
-    //    NJCLib.PrintInt(arra[0]);
-
-    //    if (1 < 2)
-    //    {
-    //        Console.WriteLineChar('t');
-    //    }
-    //    else
-    //    {
-    //        Console.WriteLineChar('f');
-    //    }
-
-    //    Console.WriteLineBool(1 < 2);
-    //    Console.WriteLineBool(1 > 2);
-    //    Console.WriteLineBool(1 <= 2);
-    //    Console.WriteLineBool(1 >= 2);
-    //    Console.WriteLineBool(1 == 2);
-    //    Console.WriteLineBool(1 == 1);
-    //    Console.WriteLineBool(1 != 2);
-    //}
 
     static void QuickSort(int[] arr, int first, int last)
     {
@@ -105,28 +80,22 @@
         a1[i1] = a2[i2];
         a2[i2] = temp;
     }
-}
 
-static class AnnaTest
-{
-    static int Helen = 89;
-
-    static int GetLen(int yy)
+    static int BinarySearch(int[] arr, int l, int r, int x)
     {
-        Helen = yy;
-        return yy;
-    }
-
-    static void PrintHelen()
-    {
-        NJCLib.PrintInt(Helen);
-    }
-}
-
-static class Cat
-{
-    static void Meow(char uiui)
-    {
-        NJCLib.PrintChar(uiui);
+        if (r >= l)
+        {
+            int mid = l + (r - l) / 2;
+            if (arr[mid] == x)
+            {
+                return mid;
+            }
+            if (arr[mid] > x)
+            {
+                return BinarySearch(arr, l, mid - 1, x);
+            }
+            return BinarySearch(arr, mid + 1, r, x);
+        }
+        return -1;
     }
 }

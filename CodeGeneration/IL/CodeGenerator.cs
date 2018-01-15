@@ -442,12 +442,12 @@ namespace MathLang.CodeGeneration
             GenerateExpression(ifStatementNode.ConditionExpression, ilGenerator);
 
             //jump if false
-            ilGenerator.Emit(OpCodes.Brfalse_S, falseCase);
+            ilGenerator.Emit(OpCodes.Brfalse, falseCase);
 
             GenerateStatement(ifStatementNode.TrueCaseBlockStatement, ilGenerator);
 
             //unconditional
-            ilGenerator.Emit(OpCodes.Br_S, trueCase);
+            ilGenerator.Emit(OpCodes.Br, trueCase);
 
             
             ilGenerator.MarkLabel(falseCase);
