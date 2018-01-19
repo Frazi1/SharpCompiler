@@ -29,7 +29,7 @@ namespace MathLang.CodeGeneration
 
         protected Dictionary<string, TypeBuilder> classTypeBuilders = new Dictionary<string, TypeBuilder>();
 
-        protected  Dictionary<string, FieldBuilder> fieldBuilders  = new Dictionary<string, FieldBuilder>();
+        protected Dictionary<string, FieldBuilder> fieldBuilders = new Dictionary<string, FieldBuilder>();
 
         /// <summary>
         /// contains both method builders (for our methods) and method infos (for external libraries methods)
@@ -74,7 +74,8 @@ namespace MathLang.CodeGeneration
 
         public void DeclareClass(ClassDeclaration classNode, ModuleBuilder module)
         {
-
+            if (classNode.IsAttribute) return;
+            
             TypeBuilder typeBuilder = null;
 
             if (!classNode.IsExtern)
@@ -85,37 +86,39 @@ namespace MathLang.CodeGeneration
                                                                 TypeAttributes.Abstract);
 
                 classTypeBuilders.Add(classNode.Name, typeBuilder);
-            }
 
-            if (classNode.VarDeclarationNodes.Count > 0)
-            {
-                ConstructorBuilder constructor = typeBuilder.DefineConstructor(
-                    MethodAttributes.Private | MethodAttributes.Static | MethodAttributes.HideBySig |
-                    MethodAttributes.SpecialName | MethodAttributes.RTSpecialName, CallingConventions.Standard, new Type[0]);
 
-                ILGenerator ilGenerator = constructor.GetILGenerator();
-                
-                foreach (var declarationNode in classNode.VarDeclarationNodes)
+                if (classNode.VarDeclarationNodes.Count > 0)
                 {
-                    DeclareField(declarationNode, typeBuilder, ilGenerator);
-                }
+                    ConstructorBuilder constructor = typeBuilder.DefineConstructor(
+                        MethodAttributes.Private | MethodAttributes.Static | MethodAttributes.HideBySig |
+                        MethodAttributes.SpecialName | MethodAttributes.RTSpecialName, CallingConventions.Standard,
+                        new Type[0]);
 
-                ilGenerator.Emit(OpCodes.Ret);
+                    ILGenerator ilGenerator = constructor.GetILGenerator();
+
+                    foreach (var declarationNode in classNode.VarDeclarationNodes)
+                    {
+                        DeclareField(declarationNode, typeBuilder, ilGenerator);
+                    }
+
+                    ilGenerator.Emit(OpCodes.Ret);
+                }
             }
             foreach (var funcNode in classNode.FunctionDeclarationNodes)
             {
                 DeclareFunc(funcNode, typeBuilder);
             }
-            
+
         }
-        
-        public void DeclareField(VariableDeclaration  varDeclarationNode, TypeBuilder typeBuilder, ILGenerator ilGenerator)
+
+        public void DeclareField(VariableDeclaration varDeclarationNode, TypeBuilder typeBuilder, ILGenerator ilGenerator)
         {
             FieldBuilder fieldBuilder = typeBuilder.DefineField(varDeclarationNode.Name,
                 varDeclarationNode.ReturnType.ConvertToType(), FieldAttributes.Public | FieldAttributes.Static);
 
             fieldBuilders.Add(varDeclarationNode.FullName, fieldBuilder);
-            
+
             if (varDeclarationNode.Value != null)
             {
                 GenerateExpression(varDeclarationNode.Value, ilGenerator);
@@ -134,7 +137,7 @@ namespace MathLang.CodeGeneration
 
                 var paths = attribute.FunctionCallParameters[0].CastTo<StringExpression>().Value.Replace("\"", "").Split('/');
 
-                if(paths.Count() < 3)
+                if (paths.Count() < 3)
                     throw new ArgumentException("No class or method name in attribute");
 
                 string libName = paths[0];
@@ -143,23 +146,20 @@ namespace MathLang.CodeGeneration
 
                 var typesNamesTuple2 = GenerationHelper.GetTypesAndNamesOfFuncParams(functionDeclarationNode.ParameterNodes);
                 
-                //Type externalClassType = Assembly.Load(
-                //    CompilerSettings.CurrentDirectory.TrimEnd(Path.DirectorySeparatorChar) +Path.DirectorySeparatorChar+libName+".dll"
-                //    ).GetTypes().First(t => t.Name == className);
-                var libpath = Path.Combine(CompilerSettings.CurrentDirectory, libName)+ ".dll";
+                var libpath = Path.Combine(CompilerSettings.CurrentDirectory, libName) + ".dll";
                 Type externalClassType = Assembly.LoadFrom(libpath).GetTypes().First(t => t.Name == className);
 
                 if (externalClassType == null)
                     throw new ApplicationException($"No external class with name {className} found");
 
                 MethodInfo methodInfo = externalClassType.GetMethod(methodName, typesNamesTuple2.Item1);
-                
+
                 funcsMethodBuilders.Add(functionDeclarationNode.FullName, methodInfo);
 
                 return;
             }
 
-           
+
 
             MethodBuilder methodbuilder;
 
@@ -185,7 +185,6 @@ namespace MathLang.CodeGeneration
                         MethodAttributes.Static |
                         MethodAttributes.Public,
                         functionDeclarationNode.ReturnType.ConvertToType(),
-                        /*new Type[] { typeof(string[]) }*/
                         typesNamesTuple.Item1);
 
                 //set names to parameters
@@ -203,7 +202,7 @@ namespace MathLang.CodeGeneration
         {
             //we don't generate external classes, we only declare methods in them 
             //(by finding appropriate methods in external dll)
-            if (classNode.IsExtern) return;
+            if (classNode.IsExtern || classNode.IsAttribute) return;
 
             TypeBuilder typeBuilder = null;
 
@@ -219,13 +218,12 @@ namespace MathLang.CodeGeneration
                 GenerateFunc(funcNode, typeBuilder);
             }
 
-            // ??? will it work if it calls func from another class, that is not baked yet?
             Type helloWorldType = typeBuilder.CreateType();
         }
 
         public void GenerateFunc(FunctionDeclaration functionDeclarationNode, TypeBuilder typeBuilder)
         {
-            if(functionDeclarationNode.IsExternal) return;
+            if (functionDeclarationNode.IsExternal) return;
 
             varsLocalBuilders.Clear();
 
@@ -241,7 +239,7 @@ namespace MathLang.CodeGeneration
             {
                 throw new NotSupportedException($"Cannot find func {functionDeclarationNode.FullName}");
             }
-            
+
         }
 
         public void GenerateFuncStatementBlock(BlockStatement blockStatementNode, MethodBuilder methodBuilder)
@@ -252,8 +250,7 @@ namespace MathLang.CodeGeneration
             {
                 GenerateStatement(statement, ilGenerator);
             }
-            //ilGenerator.EmitWriteLine("Hello world");
-
+            
             if (blockStatementNode.Parent is FunctionDeclaration funcDecl)
             {
                 //if(funcDecl.ReturnType == ReturnType.Void)
@@ -261,7 +258,7 @@ namespace MathLang.CodeGeneration
                 //so we gotta write this even if function returns not void 
                 ilGenerator.Emit(OpCodes.Ret);
             }
-            
+
         }
 
         public void GenerateStatement(IStatement statement, ILGenerator ilGenerator)
@@ -303,43 +300,23 @@ namespace MathLang.CodeGeneration
         #region statements
         public void GenerateFuncCall(FunctionCall funcCallNode, ILGenerator ilGenerator)
         {
-            //TODO CHECK .
-            //var ids = funcCallNode.FunctionDeclaration.FullName.Split('/');
 
-            //if (ids.Length == 2 && ids[0] == "Console")
-            //{
-            //    //get argument type for Write line
-            //    Type[] param = new Type[]
-            //    {
-            //        funcCallNode.FunctionCallParameters[0].ReturnType.ConvertToType()
-            //    };
-            //    //generate method
-            //    MethodInfo writeLineMI = typeof(Console).GetMethod(
-            //        "WriteLine",
-            //        param);
-            //    //load parameter onto the stack
-            //    GenerateExpression(funcCallNode.FunctionCallParameters[0], ilGenerator);
-            //    //call WriteLine
-            //    ilGenerator.EmitCall(OpCodes.Call, writeLineMI, null);
-            //}
-            //if (ids.Length == 1)
+            foreach (var functionCallParameter in funcCallNode.FunctionCallParameters)
             {
-                foreach (var functionCallParameter in funcCallNode.FunctionCallParameters)
-                {
-                    GenerateExpression(functionCallParameter, ilGenerator);
-                }
-                
-                if (funcsMethodBuilders.Keys.Contains(funcCallNode.FunctionDeclaration.FullName))
-                {
-                    var methodbuilder = funcsMethodBuilders[funcCallNode.FunctionDeclaration.FullName];
-
-                    ilGenerator.EmitCall(OpCodes.Call, methodbuilder, null);
-                }
-                else
-                {
-                    throw new NotSupportedException($"Cannot find func {funcCallNode.FunctionDeclaration.FullName} when calling.");
-                }
+                GenerateExpression(functionCallParameter, ilGenerator);
             }
+
+            if (funcsMethodBuilders.Keys.Contains(funcCallNode.FunctionDeclaration.FullName))
+            {
+                var methodbuilder = funcsMethodBuilders[funcCallNode.FunctionDeclaration.FullName];
+
+                ilGenerator.EmitCall(OpCodes.Call, methodbuilder, null);
+            }
+            else
+            {
+                throw new NotSupportedException($"Cannot find func {funcCallNode.FunctionDeclaration.FullName} when calling.");
+            }
+
         }
 
         public void GenerateDeclaration(VariableDeclaration declNode, ILGenerator ilGenerator)
@@ -362,56 +339,14 @@ namespace MathLang.CodeGeneration
         public void GenerateVarAssignment(VariableAssignment varAssignmentNode, ILGenerator ilGenerator)
         {
             GenerateExpression(varAssignmentNode.AssignmentValue, ilGenerator);
-            
-            PopAndStore(varAssignmentNode.VariableName.VariableDeclaration.FullName, 
+
+            PopAndStore(varAssignmentNode.VariableName.VariableDeclaration.FullName,
                 varAssignmentNode.VariableName.VariableDeclaration.Index, ilGenerator);
-            ////local var
-            //if (varsLocalBuilders.Keys.Contains(varAssignmentNode.VariableName.VariableDeclaration.FullName))
-            //{
-            //    var localBuilder = varsLocalBuilders[varAssignmentNode.VariableName.VariableDeclaration.FullName];
-            //    //pop var from the stack and store in a value
-            //    ilGenerator.Emit(OpCodes.Stloc, localBuilder);
-            //}
-            ////func argument var
-            //else
-            //{
-            //    if (varAssignmentNode.VariableName.VariableDeclaration != null)
-            //    {
-            //        if (varAssignmentNode.VariableName.VariableDeclaration is FunctionVariableDeclarationParameter fdParam)
-            //        {
-            //            //pop var from the stack and store in a func arg
-            //            ilGenerator.Emit(OpCodes.Starg, varAssignmentNode.VariableName.VariableDeclaration.Index.Value);
-            //        }
-            //    }
-            //}
         }
 
         public void GenerateArrayElementAssignment(ArrayElementAssignment arrayElementAssignmentNode, ILGenerator ilGenerator)
         {
-            #region load_arr_onto_stack
-            ////local var
-            //if (varsLocalBuilders.Keys.Contains(arrayElementAssignmentNode.ArrayElementReference.ArrayDeclaration.FullName))
-            //{
-            //    var localBuilder = varsLocalBuilders[arrayElementAssignmentNode.ArrayElementReference.ArrayDeclaration.FullName];
-            //    //load var into the stack
-            //    ilGenerator.Emit(OpCodes.Ldloc, localBuilder);
-            //}
-            ////func arg
-            //else
-            //{
-            //    if (arrayElementAssignmentNode.ArrayElementReference.Name.VariableDeclaration != null)
-            //    {
-            //        if (arrayElementAssignmentNode.ArrayElementReference.Name.VariableDeclaration is FunctionVariableDeclarationParameter fdParam)
-            //        {
-            //            ilGenerator.Emit(OpCodes.Ldarg, (int)arrayElementAssignmentNode.ArrayElementReference.Name.VariableDeclaration.Index);
-
-            //        }
-            //    }
-            //}
-
             LoadOntoStack(arrayElementAssignmentNode.ArrayElementReference.Name, ilGenerator);
-
-            #endregion
 
             //load arr index onto stack
             GenerateExpression(arrayElementAssignmentNode.ArrayElementReference.ArrayIndex, ilGenerator);
@@ -432,7 +367,7 @@ namespace MathLang.CodeGeneration
                     ilGenerator.Emit(OpCodes.Stelem_I4);
             }
         }
-        
+
         public void GenerateIfStatement(IfStatement ifStatementNode, ILGenerator ilGenerator)
         {
             //ifStatementNode.TrueCaseBlockStatement
@@ -442,21 +377,21 @@ namespace MathLang.CodeGeneration
             GenerateExpression(ifStatementNode.ConditionExpression, ilGenerator);
 
             //jump if false
-            ilGenerator.Emit(OpCodes.Brfalse_S, falseCase);
+            ilGenerator.Emit(OpCodes.Brfalse, falseCase);
 
             GenerateStatement(ifStatementNode.TrueCaseBlockStatement, ilGenerator);
 
             //unconditional
-            ilGenerator.Emit(OpCodes.Br_S, trueCase);
+            ilGenerator.Emit(OpCodes.Br, trueCase);
 
-            
+
             ilGenerator.MarkLabel(falseCase);
 
             if (ifStatementNode.FasleCaseBlockStatement != null)
             {
                 GenerateStatement(ifStatementNode.FasleCaseBlockStatement, ilGenerator);
             }
-            
+
             ilGenerator.MarkLabel(trueCase);
         }
 
@@ -465,23 +400,23 @@ namespace MathLang.CodeGeneration
             Label conditionCheck = ilGenerator.DefineLabel();
             Label forBody = ilGenerator.DefineLabel();
 
-            GenerateStatement( forStatement.InitializationStatement, ilGenerator);
+            GenerateStatement(forStatement.InitializationStatement, ilGenerator);
 
             //unconditional
-            ilGenerator.Emit(OpCodes.Br_S, conditionCheck);
+            ilGenerator.Emit(OpCodes.Br, conditionCheck);
 
             ilGenerator.MarkLabel(forBody);
-            
+
             GenerateStatement(forStatement.BlockOrSingleStatement, ilGenerator);
-            
+
             GenerateStatement(forStatement.IterationStatement, ilGenerator);
 
             ilGenerator.MarkLabel(conditionCheck);
-            
+
             GenerateExpression(forStatement.ConditionExpression, ilGenerator);
 
             //jump if true
-            ilGenerator.Emit(OpCodes.Brtrue_S, forBody);
+            ilGenerator.Emit(OpCodes.Brtrue, forBody);
         }
 
         public void GenerateWhileStatement(WhileStatement whileStatementNode, ILGenerator ilGenerator)
@@ -490,7 +425,7 @@ namespace MathLang.CodeGeneration
             Label whileBody = ilGenerator.DefineLabel();
 
             //unconditional
-            ilGenerator.Emit(OpCodes.Br_S, conditionCheck);
+            ilGenerator.Emit(OpCodes.Br, conditionCheck);
 
             ilGenerator.MarkLabel(whileBody);
 
@@ -501,14 +436,14 @@ namespace MathLang.CodeGeneration
             GenerateExpression(whileStatementNode.ConditionExpression, ilGenerator);
 
             //jump if true
-            ilGenerator.Emit(OpCodes.Brtrue_S, whileBody);
+            ilGenerator.Emit(OpCodes.Brtrue, whileBody);
         }
 
         public void GenerateBlockStatement(BlockStatement blockStatementNode, ILGenerator ilGenerator)
         {
             foreach (var statement in blockStatementNode.Statements)
             {
-                GenerateStatement(statement, ilGenerator);    
+                GenerateStatement(statement, ilGenerator);
             }
         }
 
@@ -546,51 +481,16 @@ namespace MathLang.CodeGeneration
             }
         }
 
-        
+
 
         private void GenerateExtendedId(ExtendedId extendedIdNode, ILGenerator ilGenerator)
         {
-            //TODO: Check .
-            //var ids = extendedIdNode.VariableDeclaration.FullName.Split('.');
-
             LoadOntoStack(extendedIdNode, ilGenerator);
-
-            //local var/func argument or this class static field
-            //if (ids.Length == 1)
-            //{
-            //    //local var/ func argument or
-            //    if (extendedIdNode.VariableDeclaration != null)
-            //    {
-            //        if (extendedIdNode.VariableDeclaration is FunctionVariableDeclarationParameter fdParam)
-            //        {
-            //            ilGenerator.Emit(OpCodes.Ldarg, (int)extendedIdNode.VariableDeclaration.Index);
-
-            //        }
-            //        else
-            //        {
-            //            ilGenerator.Emit(OpCodes.Ldloc, (int)extendedIdNode.Declaration.Index);
-
-            //            if (varsLocalBuilders.Keys.Contains(extendedIdNode.VariableDeclaration.FullName))
-            //            {
-            //                var localBuilder = varsLocalBuilders[extendedIdNode.VariableDeclaration.FullName];
-
-            //                ilGenerator.Emit(OpCodes.Ldloc, localBuilder);
-            //            }
-
-            //        }
-            //    }
-            //    //this class static field
-            //    else
-            //    {
-            //    }
-            //}
         }
 
         private void GenerateAtom(Atom atomNode, ILGenerator ilGenerator)
         {
             //constant we put onto stack
-            //string value = atomNode.Value.Replace("\'", "").Replace("true", "1").Replace("false", "0");
-
             switch (atomNode)
             {
                 case IntExpression intExpression:
@@ -613,17 +513,6 @@ namespace MathLang.CodeGeneration
             GenerateExpression(newArrayNode.ArraySize, ilGenerator);
             //new array
             ilGenerator.Emit(OpCodes.Newarr, newArrayNode.ReturnType.ConvertToType(false));
-            //pop var from stack and store
-
-            //if (newArrayNode.Parent is Declaration declaration)
-            //{
-            //    PopAndStore(declaration.Name, (int)declaration.Index, ilGenerator);
-            //}
-            //else
-            //    if (newArrayNode.Parent is VariableAssignment varAssignment)
-            //    {
-            //        PopAndStore(varAssignment.VariableName, ilGenerator);
-            //    }
         }
 
         private void GenerateArrayElementReference(ArrayElementReference arrayElementReferenceNode,
@@ -640,13 +529,10 @@ namespace MathLang.CodeGeneration
 
         private void GenerateExpression(Expression expressionNode, ILGenerator ilGenerator)
         {
-            //IsMathematicalComparison
-
-            
             {
                 GenerateExpression(expressionNode.Left, ilGenerator);
 
-                if(expressionNode.Right != null)
+                if (expressionNode.Right != null)
                     GenerateExpression(expressionNode.Right, ilGenerator);
 
                 switch (expressionNode.ExpressionType)
@@ -698,54 +584,20 @@ namespace MathLang.CodeGeneration
                         ilGenerator.Emit(OpCodes.Ldc_I4_0);
                         ilGenerator.Emit(OpCodes.Ceq);
                         break;
-                            
+
                 }
             }
 
-
-            //    case ExpressionType.Not:
-            //        break;
-            //    case ExpressionType.Or:
-            //        break;
-            //    case ExpressionType.And:
-            //        break;
-            //    case ExpressionType.FunctionCall:
-            //        break;
-            //    case ExpressionType.VariableDeclaration:
-            //        break;
-            //    case ExpressionType.VariableReference:
-            //        break;
-            //    case ExpressionType.ArrayElementReference:
-            //        break;
-            //    default:
-            //        throw new ArgumentOutOfRangeException();
-            //}
         }
 
+        /// <summary>
+        /// obsolete
+        /// </summary>
+        /// <param name="exId"></param>
+        /// <param name="ilGenerator"></param>
         private void PopAndStore(ExtendedId exId, ILGenerator ilGenerator)
         {
             PopAndStore(exId.VariableDeclaration.FullName, exId.VariableDeclaration.Index, ilGenerator);
-
-            ////local var
-            //if (varsLocalBuilders.Keys.Contains(exId.VariableDeclaration.FullName))
-            //{
-            //    var localBuilder = varsLocalBuilders[exId.VariableDeclaration.FullName];
-            //    //pop var from the stack and store in a value
-            //    ilGenerator.Emit(OpCodes.Stloc, localBuilder);
-            //}
-            ////func argument var
-            //else
-            //{
-            //    if (exId.VariableDeclaration != null)
-            //    {
-            //        if (exId.VariableDeclaration is FunctionVariableDeclarationParameter fdParam)
-            //        {
-            //            //pop var from the stack and store in a func arg
-            //            ilGenerator.Emit(OpCodes.Starg, (int)exId.VariableDeclaration.Index);
-
-            //        }
-            //    }
-            //}
         }
 
         private void PopAndStore(string name, int? index, ILGenerator ilGenerator)
@@ -780,20 +632,20 @@ namespace MathLang.CodeGeneration
             }
             else
             {
-                if (extendedIdNode.VariableDeclaration != null )
+                if (extendedIdNode.VariableDeclaration != null)
                 {
                     if (extendedIdNode.VariableDeclaration is FunctionVariableDeclarationParameter fdParam)
                     {
                         ilGenerator.Emit(OpCodes.Ldarg, (int)extendedIdNode.VariableDeclaration.Index);
                         return;
                     }
-                    
+
                 }
             }
             if (fieldBuilders.ContainsKey(extendedIdNode.VariableDeclaration.FullName))
             {
                 var fieldBuilder = fieldBuilders[extendedIdNode.VariableDeclaration.FullName];
-                
+
                 ilGenerator.Emit(OpCodes.Ldsfld, fieldBuilder);
             }
         }

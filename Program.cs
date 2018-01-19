@@ -17,8 +17,8 @@ namespace MathLang
     {
         public static void Main(string[] args)
         {
-            try
-            {
+            //try
+            //{
                 ProcessArguments(args, out var files, out var parameters);
                 var paths = ExpandWildCard(files);
                 var compilerSettings = CompilerSettings.ParseCompilerSettings(paths, parameters);
@@ -28,15 +28,15 @@ namespace MathLang
                     throw new Exception("Specify code generation target with argument --target=java or --target=net");
                 CopyNativeLibs(compilerSettings);
                 RunCompiler(compilerSettings);
-            }
-            catch (Exception e)
-            {
-#if DEBUG
-                Console.WriteLine("Error: {0}", e);
-#else
-                Console.WriteLine("Error: {0}", e.Message);
-#endif
-            }
+            //}
+            //catch (Exception e)
+            //{
+//#if DEBUG
+//                Console.WriteLine("Error: {0}", e);
+//#else
+//                Console.WriteLine("Error: {0}", e.Message);
+//#endif
+//            }
 #if DEBUG
             Console.ReadKey();
 #endif
@@ -44,10 +44,10 @@ namespace MathLang
 
         private static void CopyNativeLibs(CompilerSettings compilerSettings)
         {
-            if (compilerSettings.CodeGenerationTarget == CodeGenerationTarget.Dotnet)
-                IOHelper.CopyDirItems(CompilerSettings.DotNetNativesPath, CompilerSettings.CurrentDirectory);
-            else if (compilerSettings.CodeGenerationTarget == CodeGenerationTarget.Java)
-                IOHelper.CopyDirItems(CompilerSettings.JavaNativesPath, CompilerSettings.CurrentDirectory);
+            string targetPath = compilerSettings.CodeGenerationTarget == CodeGenerationTarget.Dotnet
+                ? CompilerSettings.DotNetNativesPath
+                : CompilerSettings.JavaNativesPath;
+            IOHelper.CopyDirItems(targetPath, CompilerSettings.CurrentDirectory);
         }
 
         private static void RunCompiler(CompilerSettings compilerSettings)
@@ -92,7 +92,8 @@ namespace MathLang
             }
             else if (compilerSettings.CodeGenerationTarget == CodeGenerationTarget.Dotnet)
             {
-                var trimEnd = Path.ChangeExtension(Path.GetFileName(compilerSettings.FilesPaths.First()), "").TrimEnd('.');
+                var trimEnd = Path.ChangeExtension(Path.GetFileName(compilerSettings.FilesPaths.First()), "")
+                    .TrimEnd('.');
                 CodeGenerator cg =
                     new CodeGenerator(trimEnd,
                         astProgram);
