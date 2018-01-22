@@ -17,8 +17,8 @@ namespace MathLang
     {
         public static void Main(string[] args)
         {
-            //try
-            //{
+            try
+            {
                 ProcessArguments(args, out var files, out var parameters);
                 var paths = ExpandWildCard(files);
                 var compilerSettings = CompilerSettings.ParseCompilerSettings(paths, parameters);
@@ -28,15 +28,15 @@ namespace MathLang
                     throw new Exception("Specify code generation target with argument --target=java or --target=net");
                 CopyNativeLibs(compilerSettings);
                 RunCompiler(compilerSettings);
-            //}
-            //catch (Exception e)
-            //{
-//#if DEBUG
-//                Console.WriteLine("Error: {0}", e);
-//#else
-//                Console.WriteLine("Error: {0}", e.Message);
-//#endif
-//            }
+            }
+            catch (Exception e)
+            {
+#if DEBUG
+                Console.WriteLine("Error: {0}", e);
+#else
+                Console.WriteLine("Error: {0}", e.Message);
+#endif
+            }
 #if DEBUG
             Console.ReadKey();
 #endif
